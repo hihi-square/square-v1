@@ -1,9 +1,6 @@
-## PJT WEEK 2 
-### New Git Repo
+## PJT WEEK 2
 
-## test2
-<<<<<<< HEAD
-.
-=======
-good
->>>>>>> eefd8c703a66bc2ee6b1f198ae86167f6e795c5a
+### 7월 17일
+
+- 요구사항 명세서 수정 중
+- GIT(COMMIT) CONVENTION 설정
