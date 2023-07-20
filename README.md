@@ -9,7 +9,6 @@
 
 ### 7월 18일
 - SEL01 ~ SEL08 논의
-- 오늘 회의 실화냐
 
 notion 링크
 https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa288f4262536&pm=s
