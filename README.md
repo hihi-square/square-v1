@@ -90,3 +90,6 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
     => 이벤트 table 생성
 2. 이벤트
     - 배너사진, 이벤트명, 이벤트 내용, 생성일, 종료일 + 쿠폰 DB 연결
+
+### 7월 20일
+- ERD 확인중
