@@ -109,3 +109,9 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
 
 - api 명세 작성중
 - erd 수정 중
+
+### 7월 24일
+- 서버 배포중
+- ERD 초본 완성
+  - Schema 생성 완료
+- spring 추후 추가
