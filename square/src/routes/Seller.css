@@ -1,0 +1,20 @@
+.full-size{
+  height: 100vh;
+}
+
+.sidebar{
+  background-color: #225a41;
+}
+
+.component-page{
+  background-color: #faf7f2;
+}
+
+.button{
+  height: 10%;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  border-bottom: solid 2px;
+  border-color: #1d4b36;
+}
