@@ -107,5 +107,9 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
     - 재고 삭제
 - 쿠폰 기능 삭제
 
+### 7월 24일
+- DB 구축
+- Server 구축 
+
 - api 명세 작성중
 - erd 수정 중
