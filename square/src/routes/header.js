@@ -21,15 +21,14 @@ function Header() {
 		setIsSearchVisible(true);
 	};
 
+
 	useEffect(() => {
 		const handleClickOutside = event => {
-			if (searchButtonRef.current &&
-				!searchButtonRef.current.contains(event.target) &&
-				!searchInputRef.current.contains(event.target)) {
+			if (searchButtonRef.current && !searchButtonRef.current.contains(event.target) && searchInputRef.current && !searchInputRef.current.contains(event.target)) {
 				setIsSearchVisible(false);
 			}
 		};
-
+	
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
