@@ -2,6 +2,14 @@
   height: 100vh;
 }
 
+.full-compo{
+  height: 100%;
+}
+
+.half-size{
+  height: 50%;
+}
+
 .sidebar{
   background-color: #225a41;
 }
@@ -17,4 +25,5 @@
   align-items: center;
   border-bottom: solid 2px;
   border-color: #1d4b36;
+  color: white;
 }
