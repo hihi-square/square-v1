@@ -119,3 +119,5 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
 - ERD 초본 완성
   - Schema 생성 완료
 - spring 추후 추가
+
+### 7월 25일 
