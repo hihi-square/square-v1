@@ -44,13 +44,13 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-//@SpringApplication이 선언된 MainClass 설정
-bootJar {
-	mainClassName='com.hihi.square.SquareApplication'
-}
-
-//profiles 설정
-bootRun {
-	String activeProfile = System.properties['spring.profiles.active']
-	systemProperty "spring.profiles.active", activeProfile
-}
+////@SpringApplication이 선언된 MainClass 설정
+//bootJainr {
+//		maClassName='com.hihi.square.SquareApplication'
+//}
+//
+////profiles 설정
+//bootRun {
+//	String activeProfile = System.properties['spring.profiles.active']
+//	systemProperty "spring.profiles.active", activeProfile
+//}
