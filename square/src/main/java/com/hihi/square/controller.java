@@ -10,6 +10,7 @@ public class controller {
 	@GetMapping
 	public ResponseEntity<String> test(){
 		System.out.println("들어왔다");
+		System.out.println("다시 실행");
 		return new ResponseEntity<>("성공", HttpStatus.OK);
 	}
 }
