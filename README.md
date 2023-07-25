@@ -113,3 +113,6 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
 
 - api 명세 작성중
 - erd 수정 중
+
+## 7월 25일
+- Docker 공부 및 실습습
