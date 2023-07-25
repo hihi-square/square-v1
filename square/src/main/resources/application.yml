@@ -1,0 +1,33 @@
+
+spring:
+  datasource:
+    driver-class-name : com.mysql.cj.jdbc.Driver
+    url : jdbc:mysql://localhost:3306/square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username : root
+    password : ssafy
+  jpa :
+    show-sql : true
+    properties :
+      hibernate :
+        format_sql : true
+  security:
+    user:
+      name: admin
+      password: admin
+
+# JPA log
+logging :
+  level :
+    org :
+      hibernate :
+        SQL : DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder : TRACE
+
+# jwt
+jwt:
+  secret: d39gssddf6SsdahASDFFaesdGHJFDGjsdfsddfsdhSDS2HSZDasEsd48Os923459780012I4E3IdjSLOFJaseyH
+server:
+  port: 8811
