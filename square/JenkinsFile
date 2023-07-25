@@ -6,6 +6,7 @@ pipeline {
             steps {
                 git branch: 'backend-master',
                     url: 'https://lab.ssafy.com/s09-webmobile2-sub2/S09P12B208.git'
+                sh 'echo "Successfully Cloned Repository"'
             }
 
             post {
@@ -80,6 +81,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'docker run --name docker-jenkins-pipeline-test2 -d -p 8083:8083 docker-jenkins-pipeline-test2'
+                sh 'echo " deploy"'
             }
 
             post {
