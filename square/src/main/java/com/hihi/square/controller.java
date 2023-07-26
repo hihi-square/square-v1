@@ -10,6 +10,6 @@ public class controller {
 	@GetMapping
 	public ResponseEntity<String> test(){
 		System.out.println("merge test");
-		return new ResponseEntity<>("성공 - b_soyeon. merge-version", HttpStatus.OK);
+		return new ResponseEntity<>("성공", HttpStatus.OK);
 	}
 }
