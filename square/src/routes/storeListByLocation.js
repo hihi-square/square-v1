@@ -3,7 +3,7 @@ import Drawer from '@mui/material/Drawer';
 import { useSwipeable } from 'react-swipeable';
 import '../App.css';
 
-export default function BottomSheet() {
+export default function StoreListByLocation() {
   const [state, setState] = React.useState({
     bottom: false,
   });
