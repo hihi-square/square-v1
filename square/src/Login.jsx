@@ -26,7 +26,7 @@ export default function Login() {
     const handleEmail = (e) => {
       setEmail(e.target.value);
       const regex = 
-
+      // eslint-disable-next-line no-useless-escape
       /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
       
       if (regex.test(e.target.value)) {
@@ -59,7 +59,12 @@ export default function Login() {
         // 서버 응답 처리
         if (response.data.success) {
           alert('로그인에 성공했습니다.');
-          navigate.push('/dashboard'); // 로그인 성공 시 대시보드 페이지로 이동
+
+          // 리프레시 토큰과 엑세스 토큰을 로컬 스토리지에 저장 0726
+          localStorage.setItem('refreshToken', response.data.refreshToken);
+          localStorage.setItem('accessToken', response.data.accessToken);
+
+          navigate('/dashboard'); // 로그인 성공 시 대시보드 페이지로 이동
         } else {
           alert('등록되지 않은 회원입니다.');
         }
@@ -75,9 +80,7 @@ export default function Login() {
     return (
       <div className="page">
         <div className="titleWrap">
-          이메일과 비밀번호를
-          <br />
-          입력해주세요
+          Login
         </div>
 
         <div className="contentWrap">
