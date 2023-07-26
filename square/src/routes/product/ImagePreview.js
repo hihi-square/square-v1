@@ -16,11 +16,11 @@ function ImagePreview() {
 
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      <br />
       {image && (
-        <img src={image} alt="preview" style={{ height: "200px", width: "200px" }} />
+        <img src={image} alt="preview" style={{ height: "400px", width: "400px" }} />
       )}
+      <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <br />   
     </div>
   );
 }

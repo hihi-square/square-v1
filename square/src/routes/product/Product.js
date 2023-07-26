@@ -101,6 +101,9 @@ export default function Product(props) {
         <Button variant="contained" color="success" onClick={()=>{handleClickOpen()}}>
           추가
         </Button>
+        <Button variant="contained" color="success" onClick={()=>{handleClickOpen()}}>
+          카테고리 수정
+        </Button>
         <ProductForm open={open} close={handleClose}/>
         </Paper>
       </Grid>
