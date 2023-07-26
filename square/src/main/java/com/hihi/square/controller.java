@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class controller {
 	@GetMapping
 	public ResponseEntity<String> test(){
-		System.out.println("들어왔다");
-		System.out.println("다시 실행");
-		return new ResponseEntity<>("성공 - b_soyeon", HttpStatus.OK);
+		System.out.println("merge test");
+		return new ResponseEntity<>("성공 - b_soyeon. merge-version", HttpStatus.OK);
 	}
 }
