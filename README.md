@@ -121,3 +121,6 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
 - spring 추후 추가
 
 ### 7월 25일 
+### 7월 26일 
+- intellij 환경설정 정리
+- JPA order CRUD 구현중
