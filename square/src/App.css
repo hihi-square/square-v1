@@ -17,6 +17,9 @@
 }
 
 .App-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
   background-color: lightgray;
   min-height: 10vh;
   display: flex;
@@ -38,6 +41,9 @@
   margin-right: auto;
 }
 .App-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
   background-color: lightgray     ;
   min-height: 10vh;
   display: flex;
