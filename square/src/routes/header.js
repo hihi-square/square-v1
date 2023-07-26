@@ -14,10 +14,9 @@ function Header() {
 		setSelectedOption(event.target.value);
 	};
 	const handleCartClick = () => {
-		console.log("장바구니 버튼이 클릭되었습니다.");
+		// 장바구니 ㄱㄱ
 	};
 	const handleSearchClick = () => {
-		console.log("검색 ㄱㄱ");
 		setIsSearchVisible(true);
 	};
 
@@ -37,7 +36,8 @@ function Header() {
 	return (
 		<header className="App-header">
 			<select className="App-header-location" value={selectedOption} onChange={handleChange}>
-				<option value="loc1">덕명동</option>
+			{/* 여기에 활동반경 데이터 받아오기 */}
+				<option value="loc1">덕명동</option> 
 				<option value="loc2">구암동</option>
 				<option value="loc3">봉명동</option>
 			</select>

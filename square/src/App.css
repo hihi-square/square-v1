@@ -79,6 +79,19 @@
   padding: 10px;
   font-weight: bold;
 }
+.swipe-handler {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: grey;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* .App-header-search{
   font-family: "Pretendard-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
