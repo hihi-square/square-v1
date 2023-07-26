@@ -11,6 +11,6 @@ public class controller {
 	public ResponseEntity<String> test(){
 		System.out.println("들어왔다");
 		System.out.println("다시 실행");
-		return new ResponseEntity<>("성공", HttpStatus.OK);
+		return new ResponseEntity<>("성공 했습니다", HttpStatus.OK);
 	}
 }
