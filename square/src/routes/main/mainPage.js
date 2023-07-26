@@ -3,7 +3,7 @@ import Category from "./category";
 import DiscountNow from "./discountNow";
 import Header from "./header";
 
-function Main() {
+function MainPage() {
 	return (
 		<div className="main-container">
 			<Header />
@@ -16,4 +16,4 @@ function Main() {
 	);
 }
 
-export default Main;
+export default MainPage;
