@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @AllArgsConstructor
-@Table(name="User")
+@Table(name="user")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name="authenticate", discriminatorType = DiscriminatorType.STRING)
 public class User {

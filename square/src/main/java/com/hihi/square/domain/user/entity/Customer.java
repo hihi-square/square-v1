@@ -24,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="Customer")
+@Table(name="customer")
 @DiscriminatorValue("UA")
 public class Customer extends User{
 
