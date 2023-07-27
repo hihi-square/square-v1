@@ -23,6 +23,7 @@
     "image": "/img/product/thumbnail/0.png",
     "thumbnail": "/img/product/1.png",
     "category": "건강한 샐러드",
+<<<<<<< HEAD
     "type": "샐러드",
     "name": "연짜이는 못먹는 오이샐러드",
     "represent": false,
@@ -33,5 +34,15 @@
     "create_at": "2023-01-01T18:00:00",
     "modified_at": "2023-01-01T18:00:00",
     "description": "와구와구 쩝쩝 따끈따끈한 빵"
+=======
+    "name": "연자걍는 못먹21는 오이샐러드입니다.",
+    "represent": false,
+    "popular": false,
+    "visible": false,
+    "timesale": 0,
+    "linksale": 0,
+    "price": 25000,
+    "status": 2
+>>>>>>> frontend-master
   }
 ]
