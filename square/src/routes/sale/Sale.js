@@ -73,7 +73,7 @@ export default function Product(props) {
                   <TableCell align="center">{sale.name}</TableCell>
                   <TableCell align="center">{sale.started_at}</TableCell>
                   <TableCell align="center">{sale.finished_at}</TableCell>
-                  <TableCell align="center">{sale.price}원</TableCell>
+                  <TableCell align="center">{sale.price}원이에요</TableCell>
                   <TableCell align="center">1000</TableCell>
                   <TableCell align="center">{getProduct(sale.menu)}</TableCell>
                   <TableCell align="center">{sale.status}</TableCell>
