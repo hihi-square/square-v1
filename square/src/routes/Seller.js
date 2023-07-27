@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Appbar from "./Appbar.js";
 import Main from "./main/Main.js";
 import Product from "./product/Product.js";
+import Sale from "./sale/Sale.js";
 import "./Seller.css";
 
 export default function Seller(props) {
@@ -20,7 +21,8 @@ export default function Seller(props) {
 						onClick={()=>{navigate("/product");}}>상품 관리</Typography>
 					</Box>
 					<Box className="button">
-						<Typography variant="h5" component="div" sx={{flexGrow: 1,fontWeight: 700}}>세일 관리</Typography>
+						<Typography variant="h5" component="div" sx={{flexGrow: 1,fontWeight: 700}}
+						onClick={()=>{navigate("/sale");}}>세일 관리</Typography>
 					</Box>
 					<Box className="button">
 						<Typography variant="h5" component="div" sx={{flexGrow: 1,fontWeight: 700}}>주문 관리</Typography>
@@ -35,10 +37,11 @@ export default function Seller(props) {
 						<Typography variant="h5" component="div" sx={{flexGrow: 1,fontWeight: 700}}>커뮤니티</Typography>
 					</Box>
 				</Grid>
-				<Grid xs={10} className="full-size component-page" container>
+				<Grid xs={10} className="full-size component-page">
 					<Routes>
 						<Route path="/" element={<Main />} />
 						<Route path="/product" element={<Product />} />
+						<Route path="/sale" element={<Sale />} />
 					</Routes>
 				</Grid>
 			</Grid>

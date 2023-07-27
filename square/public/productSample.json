@@ -1,28 +1,37 @@
 [
   {
     "id": 0,
-    "thumbnail": "/img/product/0.png",
-    "category": "따끈따끈한 빵",
+    "image": "/img/product/thumbnail/0.png",
+    "thumbnail": "/img/product/thumbnail/0.png",
+    "category_id": 1,
+		"category": "따끈따끈한 빵",
+		"type_id": 1,
+    "type": "빵",
     "name": "맛있는 펭귄 크루아상",
     "represent": true,
     "popular": true,
-    "visible": true,
-    "timesale": 1,
-    "linksale": 2,
     "price": 2500,
-    "status": 1
+    "status_code": 1,
+		"status": "판매중",
+    "create_at": "2023-01-01T18:00:00", 
+    "modified_at": "2023-01-01T18:00:00",
+    "sal_record": 2,
+    "description": "와구와구 쩝쩝 따끈따끈한 빵"
   },
   {
-    "id": 1,
+    "id": 2,
+    "image": "/img/product/thumbnail/0.png",
     "thumbnail": "/img/product/1.png",
     "category": "건강한 샐러드",
+    "type": "샐러드",
     "name": "연짜이는 못먹는 오이샐러드",
     "represent": false,
     "popular": false,
-    "visible": false,
-    "timesale": 0,
-    "linksale": 0,
     "price": 2500,
-    "status": 2
+    "status": 2,
+    "sal_record":0,
+    "create_at": "2023-01-01T18:00:00",
+    "modified_at": "2023-01-01T18:00:00",
+    "description": "와구와구 쩝쩝 따끈따끈한 빵"
   }
 ]
