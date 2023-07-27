@@ -50,7 +50,7 @@ export default function Login() {
 
 // 여기서부터 라우터 적용을 위한 코드
 
-  const navigate = useNavigate(); // useHistory 훅을 사용하여 history 객체를 가져옴
+  const navigate = useNavigate(); 
 
   const onClickConfirmButton = () => {
     axios
@@ -61,8 +61,8 @@ export default function Login() {
           alert('로그인에 성공했습니다.');
 
           // 리프레시 토큰과 엑세스 토큰을 로컬 스토리지에 저장 0726
-          localStorage.setItem('refreshToken', response.data.refreshToken);
-          localStorage.setItem('accessToken', response.data.accessToken);
+          // localStorage.setItem('refreshToken', response.data.refreshToken);
+          // localStorage.setItem('accessToken', response.data.accessToken);
 
           navigate('/dashboard'); // 로그인 성공 시 대시보드 페이지로 이동
         } else {
