@@ -36,6 +36,16 @@ export default function Product(props) {
   };
 
   useEffect(() => {
+    const API_URL = "http://i9b208.p.ssafy.io:8811/";
+
+      axios({
+        url: API_URL,
+        method: "GET",
+      })
+      .then((res) => {
+      // eslint-disable-next-line no-console
+      console.log(res);});
+      
     axios.get("./productSample.json")
     .then((res)=>{setProducts(res.data)});
   }, []);
@@ -56,9 +66,7 @@ export default function Product(props) {
                 <TableCell align="center">카테고리</TableCell>
                 <TableCell align="center">상품명</TableCell>
                 <TableCell align="center">대표</TableCell>
-                <TableCell align="center">인기!</TableCell>
-                <TableCell align="center">노출</TableCell>
-                <TableCell align="center">이벤트</TableCell>
+                <TableCell align="center">인기</TableCell>
                 <TableCell align="center">가격(원)</TableCell>
                 <TableCell align="center">상태</TableCell>
               </TableRow>
@@ -76,19 +84,6 @@ export default function Product(props) {
                   <TableCell align="center">{product.name}</TableCell>
                   <TableCell align="center">{product.represent?"O":"X"}</TableCell>
                   <TableCell align="center">{product.popular?"O":"X"}</TableCell>
-                  <TableCell align="center">{product.visible?"O":"X"}</TableCell>
-                    <TableCell align="center">
-                    {
-                      (product.timesale === 0 && product.linksale === 0) 
-                        ? "-"
-                        : (
-                            <>
-                              <div>타임세일: {product.timesale}개</div>
-                              <div>연계세일: {product.linksale}개</div>
-                            </>
-                          )
-                    }
-                    </TableCell>
                   <TableCell align="center">{product.price}원</TableCell>
                   <TableCell align="center">{product.status}</TableCell>
 
