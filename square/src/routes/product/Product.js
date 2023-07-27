@@ -56,7 +56,7 @@ export default function Product(props) {
                 <TableCell align="center">카테고리</TableCell>
                 <TableCell align="center">상품명</TableCell>
                 <TableCell align="center">대표</TableCell>
-                <TableCell align="center">인기</TableCell>
+                <TableCell align="center">인기!</TableCell>
                 <TableCell align="center">노출</TableCell>
                 <TableCell align="center">이벤트</TableCell>
                 <TableCell align="center">가격(원)</TableCell>
