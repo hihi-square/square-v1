@@ -1,31 +1,32 @@
-
 spring:
   datasource:
-    driver-class-name : com.mysql.cj.jdbc.Driver
-    url : jdbc:mysql://localhost:3306/square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-    username : root
-    password : ssafy
-  jpa :
-    show-sql : true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://43.201.255.188:8432/Square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: tp
+    password: 8811
+  jpa:
+    show-sql: true
     database: mysql
-    properties :
-      hibernate :
-        format_sql : true
+    properties:
+      hibernate:
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        format_sql: true
   security:
     user:
       name: admin
       password: admin
 
 # JPA log
-logging :
-  level :
-    org :
-      hibernate :
-        SQL : DEBUG
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
         type:
           descriptor:
             sql:
-              BasicBinder : TRACE
+              BasicBinder: TRACE
 
 # jwt
 jwt:
