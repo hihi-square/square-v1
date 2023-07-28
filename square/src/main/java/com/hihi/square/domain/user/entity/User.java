@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CollectionId;
 
 @Entity
 @Getter
@@ -42,5 +43,7 @@ public class User {
 	private Integer mainAddress;
 	@Column(name="marketing_agree")
 	private boolean marketingAgree;
+//	@Column(name="refresh_token")
+//	private Token refreshToken;
 
 }

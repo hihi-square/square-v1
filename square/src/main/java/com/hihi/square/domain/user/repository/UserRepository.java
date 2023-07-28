@@ -1,30 +1,15 @@
 package com.hihi.square.domain.user.repository;
 
+import com.hihi.square.domain.user.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-import org.springframework.stereotype.Repository;
+    public Optional<User> findByUid(String uid);
 
-import com.hihi.square.domain.user.entity.User;
+    public Optional<User> findByNickname(String nickname);
 
-import lombok.RequiredArgsConstructor;
-
-@Repository
-@RequiredArgsConstructor
-public class UserRepository {
-
-	private final EntityManager em;
-
-	public Optional<User> findByUid(String uid) {
-		return em.createQuery("select u from User u where u.uid = :uid", User.class).setParameter("uid", uid).getResultList().stream().findAny();
-	}
-
-	public Optional<User> findByNickname(String nickname) {
-		return em.createQuery("select u from User u where u.nickname = :nickname", User.class).setParameter("nickname", nickname).getResultList().stream().findAny();
-	}
-
-	public void save(User user) {
-		em.persist(user);
-	}
+//    public void save(User user);
 }

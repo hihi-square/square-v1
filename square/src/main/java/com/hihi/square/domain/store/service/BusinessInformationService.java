@@ -1,8 +1,7 @@
 package com.hihi.square.domain.store.service;
 
+import com.hihi.square.domain.store.repository.BusinessInformationRepository;
 import org.springframework.stereotype.Service;
-
-import com.hihi.square.domain.store.repository.BusinessInformationRepostiory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -10,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BusinessInformationService {
 
-	private final BusinessInformationRepostiory businessInformationRepostiory;
+	private final BusinessInformationRepository businessInformationRepository;
 	public boolean validateDuplicateCompanyRegistration(Integer number) {
-		return businessInformationRepostiory.findByCompanyRegistrationNumber(number).isPresent();
+		return businessInformationRepository.findByCompanyRegistrationNumber(number).isPresent();
 	}
 }
