@@ -34,7 +34,7 @@ export default function Product(props) {
   const [sales, setSales] = useState([]);
 
   useEffect(() => {
-    axios.get("./saleSample.json")
+    axios.get(".saleSample.json")
     .then((res)=>{setSales(res.data)});
   }, []);
   

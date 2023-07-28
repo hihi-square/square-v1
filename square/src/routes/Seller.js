@@ -6,6 +6,7 @@ import Appbar from "./Appbar.js";
 import Main from "./main/Main.js";
 import Product from "./product/Product.js";
 import Sale from "./sale/Sale.js";
+import Order from "./order/Order.js";
 import "./Seller.css";
 
 export default function Seller(props) {
@@ -25,7 +26,8 @@ export default function Seller(props) {
 						onClick={()=>{navigate("/sale");}}>세일 관리</Typography>
 					</Box>
 					<Box className="button">
-						<Typography variant="h5" component="div" sx={{flexGrow: 1,fontWeight: 700}}>주문 관리</Typography>
+						<Typography variant="h5" component="div" sx={{flexGrow: 1,fontWeight: 700}}
+						onClick={()=>{navigate("/order");}}>주문 관리</Typography>
 					</Box>
 					<Box className="button">
 						<Typography variant="h5" component="div" sx={{flexGrow: 1,fontWeight: 700}}>고객 관리</Typography>
@@ -42,6 +44,7 @@ export default function Seller(props) {
 						<Route path="/" element={<Main />} />
 						<Route path="/product" element={<Product />} />
 						<Route path="/sale" element={<Sale />} />
+						<Route path="/order" element={<Order />} />
 					</Routes>
 				</Grid>
 			</Grid>

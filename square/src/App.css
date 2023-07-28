@@ -28,6 +28,12 @@
   color: #61dafb;
 }
 
+.table-text {
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
