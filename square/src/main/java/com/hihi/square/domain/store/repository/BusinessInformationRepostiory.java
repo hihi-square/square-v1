@@ -19,4 +19,8 @@ public class BusinessInformationRepostiory {
 	public Optional<BusinessInformation> findByCompanyRegistrationNumber(Integer number) {
 		return em.createQuery("select b from BusinessInformation b where b.companyRegistrationNumber = :number", BusinessInformation.class).setParameter("number", number).getResultList().stream().findAny();
 	}
+
+	public void save(BusinessInformation businessInformation) {
+		em.persist(businessInformation);
+	}
 }

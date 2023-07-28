@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
 import com.hihi.square.domain.user.service.CustomerService;
 import com.hihi.square.domain.user.service.UserService;
@@ -33,9 +32,7 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> singup(@RequestBody @Valid CustomerRegisterRequestDto request) {
 		Customer customer = request.toEntity();
-		System.out.println("중복체크 들어감");
 		//아이디 중복 체크
-
 		if (userService.validateDuplicateUid(customer.getUid())){
 			CommonResponseDto response = CommonResponseDto.builder()
 					.statusCode("409")
@@ -43,7 +40,6 @@ public class UserController {
 				.build();
 			return new ResponseEntity<CommonResponseDto>(response, HttpStatus.CONFLICT);
 		}
-		System.out.println("아이디 중복체크 완료");
 		//닉네임 중복 체크
 		if (userService.validateDuplicateNickname(customer.getNickname())) {
 			CommonResponseDto response = CommonResponseDto.builder()
@@ -52,7 +48,6 @@ public class UserController {
 				.build();
 			return new ResponseEntity<CommonResponseDto>(response, HttpStatus.CONFLICT);
 		}
-		System.out.println("닉네임 중복체크 완료");
 		//저장
 		customerService.save(customer);
 		CommonResponseDto response = CommonResponseDto.builder()
@@ -61,5 +56,7 @@ public class UserController {
 			.build();
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
+
+
 
 }
