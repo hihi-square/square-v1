@@ -1,6 +1,6 @@
 package com.hihi.square.domain.user.entity;
 
-public enum UserStatus {
+public enum UserStatusType {
 	ST01, // 일반
 	ST02, // 정지
 	ST03, // 탈퇴

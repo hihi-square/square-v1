@@ -5,11 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -41,7 +37,7 @@ public class User {
 	@Column(name="last_login")
 	private LocalDateTime lastLogin;
 	@Enumerated(EnumType.STRING)
-	private UserStatus status;
+	private UserStatusType status;
 	@Column(name="main_address")
 	private Integer mainAddress;
 	@Column(name="marketing_agree")
