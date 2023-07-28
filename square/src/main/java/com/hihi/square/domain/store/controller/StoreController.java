@@ -40,5 +40,33 @@ public class StoreController {
 		}
 	}
 
+	@PostMapping()
+	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
+		Store store = request.toEntityStore();
+		BusinessInformation businessInformation = request.toEntityBusinessInformation();
+		CommonResponseDto response = CommonResponseDto.builder()
+				.statusCode(409)
+				.message("ALREADY_EXISTS_UID")
+				.build();
+		if (userService.validateDuplicateUid(store.getUid())) {
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		//닉네임 중복 체크
+		if (userService.validateDuplicateNickname(store.getNickname())) {
+			response.setMessage("ALREADY_EXISTS_NICKNAME");
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		//사업자번호 중복체크
+		if (businessInformationService.validateDuplicateCompanyRegistration(businessInformation.getCompanyRegistrationNumber())){
+			response.setMessage("ALREADY_EXISTS_COMPANY_REGISTER_NUMBER");
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		// 저장
+		storeService.save(store, businessInformation);
+		response.setStatusCode(201);
+		response.setMessage("SIGNUP_SUCCESS");
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+
 
 }
