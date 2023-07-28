@@ -52,4 +52,8 @@ public class BusinessInformation {
 
 	@Column(name="business_file")
 	private String businessFile;
+
+	public void setStore(Store store){
+		this.store = store;
+	}
 }

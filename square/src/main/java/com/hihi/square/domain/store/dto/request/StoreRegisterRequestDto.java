@@ -3,20 +3,38 @@ package com.hihi.square.domain.store.dto.request;
 import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import com.hihi.square.domain.store.entity.BankType;
 import com.hihi.square.domain.store.entity.BusinessInformation;
 import com.hihi.square.domain.store.entity.Store;
-import com.hihi.square.domain.user.dto.request.UserRegisterDto;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.UserStatusType;
 
 import lombok.Data;
 
 @Data
-public class StoreRegisterRequestDto extends UserRegisterDto {
+public class StoreRegisterRequestDto{
 
 
 	@NotEmpty
+	protected String uid;
+	@NotEmpty
+	protected String password;
+	@NotEmpty
+	protected String nickname;
+	@NotEmpty
+	protected String name;
+	@NotEmpty
+	protected String phone;
+	@NotEmpty
+	@Pattern(regexp = "[a-zA-z0-9]+@[a-zA-z]+[.]+[a-zA-z.]+")
+	protected String email;
+	@NotNull
+	protected boolean marketingAgree;
+
+	@NotNull
 	private Integer aemId;
 	@NotEmpty
 	private String address;
@@ -25,12 +43,11 @@ public class StoreRegisterRequestDto extends UserRegisterDto {
 	@NotEmpty
 	private String storePhone;
 	private String content;
-	@NotEmpty
 	private BankType bank;
 	@NotEmpty
 	private String account;
 
-	@NotEmpty
+
 	private BusinessInformationRegisterRequestDto businessInformation;
 
 	public Store toEntityStore(){
@@ -46,6 +63,7 @@ public class StoreRegisterRequestDto extends UserRegisterDto {
 			.modifiedAt(LocalDateTime.now())
 			.lastLogin(LocalDateTime.now())
 			.status(UserStatusType.valueOf(UserStatusType.ST02.name()))
+			.emdAddress(EmdAddress.builder().aemId(aemId).build())
 			.address(address)
 			.storeName(storeName)
 			.storePhone(storePhone)

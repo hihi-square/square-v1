@@ -20,7 +20,6 @@ public class StoreService {
 
 	@Transactional
 	public void save(Store store, BusinessInformation businessInformation) {
-		storeRepository.save(store);
-		biRepostiory.save(businessInformation);
+		storeRepository.save(store, businessInformation);
 	}
 }

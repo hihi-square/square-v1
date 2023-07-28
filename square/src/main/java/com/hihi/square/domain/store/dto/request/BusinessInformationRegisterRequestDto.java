@@ -11,17 +11,18 @@ import lombok.Data;
 
 @Data
 public class BusinessInformationRegisterRequestDto {
+
 	@NotEmpty
 	private Integer companyRegistrationNumber;
-	@NotNull
+	@NotEmpty
 	private String ceoName;
 	@NotNull
 	private LocalDate openingDate;
 	@NotNull
 	private Integer corporateRegistrationNumber;
-	@NotNull
+	@NotEmpty
 	private String businessName;
-	@NotNull
+	@NotEmpty
 	private String businessFile;
 
 	public BusinessInformation toEntity(){

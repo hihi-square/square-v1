@@ -16,9 +16,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-// @NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
-public class CustomerRegisterRequestDto extends UserRegisterDto{
+public class CustomerRegisterRequestDto {
+	@NotEmpty
+	private String uid;
+	@NotEmpty
+	private String password;
+	@NotEmpty
+	private String nickname;
+	@NotEmpty
+	private String name;
+	@NotEmpty
+	private String phone;
+	@NotEmpty
+	@Pattern(regexp = "[a-zA-z0-9]+@[a-zA-z]+[.]+[a-zA-z.]+")
+	private String email;
+	@NotNull
+	private boolean marketingAgree;
 
 	public Customer toEntity(){
 		Customer customer = Customer.builder()

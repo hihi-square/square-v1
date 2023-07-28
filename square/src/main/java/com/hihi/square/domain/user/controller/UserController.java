@@ -2,6 +2,11 @@ package com.hihi.square.domain.user.controller;
 
 import javax.validation.Valid;
 
+import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
+import com.hihi.square.domain.store.entity.BusinessInformation;
+import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.service.BusinessInformationService;
+import com.hihi.square.domain.store.service.StoreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +31,8 @@ public class UserController {
 
 	private final UserService userService;
 	private final CustomerService customerService;
-
+	private final StoreService storeService;
+	private final BusinessInformationService businessInformationService;
 
 	//회원가입
 	@PostMapping
@@ -57,6 +63,37 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-
+	@PostMapping("/store")
+	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
+		Store store = request.toEntityStore();
+		BusinessInformation businessInformation = request.toEntityBusinessInformation();
+		if (userService.validateDuplicateUid(store.getUid())) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode("409")
+					.message("ALREADY_EXISTS_UID")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		//닉네임 중복 체크
+		if (userService.validateDuplicateNickname(store.getNickname())) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode("409")
+					.message("ALREADY_EXISTS_NICKNAME")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		//사업자번호 중복체크
+		if (businessInformationService.validateDuplicateCompanyRegistration(businessInformation.getCompanyRegistrationNumber())){
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode("409")
+					.message("ALREADY_EXISTS_COMPANY_REGISTER_NUMBER")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		// 저장
+		storeService.save(store, businessInformation);
+		CommonResponseDto response = CommonResponseDto.builder().message("SIGNUP_SUCCESS").statusCode("201").build();
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
 
 }
