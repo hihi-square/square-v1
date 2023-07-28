@@ -33,12 +33,6 @@ public class SecurityConfig {
 			.authorizeHttpRequests((authorizeRequests) ->{
 				authorizeRequests.anyRequest().permitAll();
 			})
-
-
-
-			// spring security jwt filter load
-			// .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
-
 		;
 
 		return http.build();
