@@ -9,10 +9,7 @@ import com.hihi.square.domain.store.service.BusinessInformationService;
 import com.hihi.square.domain.store.service.StoreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
@@ -38,28 +35,23 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> singup(@RequestBody @Valid CustomerRegisterRequestDto request) {
 		Customer customer = request.toEntity();
+		CommonResponseDto response = CommonResponseDto.builder()
+				.statusCode(409)
+				.message("ALREADY_EXISTS_UID")
+				.build();
 		//아이디 중복 체크
 		if (userService.validateDuplicateUid(customer.getUid())){
-			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode("409")
-						.message("ALREADY_EXISTS_UID")
-				.build();
-			return new ResponseEntity<CommonResponseDto>(response, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//닉네임 중복 체크
 		if (userService.validateDuplicateNickname(customer.getNickname())) {
-			CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode("409")
-				.message("ALREADY_EXISTS_NICKNAME")
-				.build();
-			return new ResponseEntity<CommonResponseDto>(response, HttpStatus.CONFLICT);
+			response.setMessage("ALREADY_EXISTS_NICKNAME");
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//저장
 		customerService.save(customer);
-		CommonResponseDto response = CommonResponseDto.builder()
-			.statusCode("201")
-			.message("SIGNUP_SUCCESS")
-			.build();
+		response.setStatusCode(201);
+		response.setMessage("SIGNUP_SUCCESS");
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
@@ -67,33 +59,42 @@ public class UserController {
 	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
 		Store store = request.toEntityStore();
 		BusinessInformation businessInformation = request.toEntityBusinessInformation();
+		CommonResponseDto response = CommonResponseDto.builder()
+				.statusCode(409)
+				.message("ALREADY_EXISTS_UID")
+				.build();
 		if (userService.validateDuplicateUid(store.getUid())) {
-			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode("409")
-					.message("ALREADY_EXISTS_UID")
-					.build();
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//닉네임 중복 체크
 		if (userService.validateDuplicateNickname(store.getNickname())) {
-			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode("409")
-					.message("ALREADY_EXISTS_NICKNAME")
-					.build();
+			response.setMessage("ALREADY_EXISTS_NICKNAME");
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//사업자번호 중복체크
 		if (businessInformationService.validateDuplicateCompanyRegistration(businessInformation.getCompanyRegistrationNumber())){
-			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode("409")
-					.message("ALREADY_EXISTS_COMPANY_REGISTER_NUMBER")
-					.build();
+			response.setMessage("ALREADY_EXISTS_COMPANY_REGISTER_NUMBER");
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		// 저장
 		storeService.save(store, businessInformation);
-		CommonResponseDto response = CommonResponseDto.builder().message("SIGNUP_SUCCESS").statusCode("201").build();
+		response.setStatusCode(201);
+		response.setMessage("SIGNUP_SUCCESS");
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+
+	@GetMapping("/id/{id}")
+	public ResponseEntity validateUid(@PathVariable String id){
+		CommonResponseDto response = CommonResponseDto.builder()
+				.statusCode(200)
+				.message("INVALID")
+				.build();
+		if (userService.validateDuplicateUid(id)){
+			return new ResponseEntity(response, HttpStatus.CONFLICT);
+		} else {
+			response.setMessage("VALID");
+			return new ResponseEntity(response, HttpStatus.CONFLICT);
+		}
 	}
 
 }

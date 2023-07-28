@@ -2,11 +2,12 @@ package com.hihi.square.global.common;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 public class CommonResponseDto {
-	private String statusCode;
+	private Integer statusCode;
 	private String message;
 
 }

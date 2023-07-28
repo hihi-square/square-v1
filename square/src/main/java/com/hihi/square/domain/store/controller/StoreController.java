@@ -32,10 +32,10 @@ public class StoreController {
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
 		if (businessInformationService.validateDuplicateCompanyRegistration(number)){
-			return new ResponseEntity<>(CommonResponseDto.builder().message("ALREADY_EXISTS_CRN").statusCode("409").build(),
+			return new ResponseEntity<>(CommonResponseDto.builder().message("ALREADY_EXISTS_CRN").statusCode(409).build(),
 				HttpStatus.CONFLICT);
 		} else {
-			return new ResponseEntity<>(CommonResponseDto.builder().message("VALID").statusCode("200").build(),
+			return new ResponseEntity<>(CommonResponseDto.builder().message("VALID").statusCode(200).build(),
 				HttpStatus.OK);
 		}
 	}
