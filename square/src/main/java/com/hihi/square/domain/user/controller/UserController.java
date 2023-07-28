@@ -1,24 +1,18 @@
 package com.hihi.square.domain.user.controller;
 
-import javax.validation.Valid;
-
-import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
-import com.hihi.square.domain.store.entity.BusinessInformation;
-import com.hihi.square.domain.store.entity.Store;
-import com.hihi.square.domain.store.service.BusinessInformationService;
-import com.hihi.square.domain.store.service.StoreService;
+import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
+import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
+import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.service.CustomerService;
+import com.hihi.square.domain.user.service.UserService;
+import com.hihi.square.global.common.CommonResponseDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
-import com.hihi.square.domain.user.service.CustomerService;
-import com.hihi.square.domain.user.service.UserService;
-import com.hihi.square.global.common.CommonResponseDto;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -67,4 +61,9 @@ public class UserController {
 		}
 	}
 
+	@PostMapping("/login")
+	public void login(@RequestBody @Valid UserLoginRequestDto request){
+
+
+	}
 }
