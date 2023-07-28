@@ -122,3 +122,9 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
 
 ## 7월 25일
 - Docker 공부 및 실습
+
+## 7월 27일 목요일
+- 판매 Controller, dto, repository, entity 작성
+
+## 7월 28일 금요일
+- 판매 Controller, DTO 수정
