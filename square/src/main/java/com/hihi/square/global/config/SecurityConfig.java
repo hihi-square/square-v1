@@ -1,6 +1,5 @@
 package com.hihi.square.global.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hihi.square.domain.user.repository.UserRepository;
 import com.hihi.square.domain.user.service.LoginService;
 import com.hihi.square.global.jwt.JwtAuthenticationProcessingFilter;
@@ -10,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,7 +28,6 @@ public class SecurityConfig {
 	private final LoginService loginService;
 	private final JwtService jwtService;
 	private final UserRepository userRepository;
-	private final ObjectMapper objectMapper;
 
 	private final String[] allowedUrls = {
 			"/store", // 가게 회원 정보 등록
@@ -82,5 +83,11 @@ public class SecurityConfig {
 		return jwtAuthenticationFilter;
 	}
 
-
+	@Bean
+	public AuthenticationManager authenticationManager() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setPasswordEncoder(passwordEncoder());
+		provider.setUserDetailsService(loginService);
+		return new ProviderManager(provider);
+	}
 }

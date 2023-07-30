@@ -66,4 +66,9 @@ public class UserService {
 	public Optional<User> findUserId(UserFindIdRequestDto request) {
 		return userRepository.findByEmailAndPhone(request.getEmail(), request.getPhone());
 	}
+
+	@Transactional
+	public void updatePassword(String uid, String newPassword) {
+		userRepository.updatePassword(uid, passwordEncoder.encode(newPassword));
+	}
 }

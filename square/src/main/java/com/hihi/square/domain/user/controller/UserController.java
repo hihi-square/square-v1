@@ -1,6 +1,7 @@
 package com.hihi.square.domain.user.controller;
 
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
+import com.hihi.square.domain.user.dto.request.UserChangePasswordDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
 import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +57,7 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	// 아이디 중복확인
 	@GetMapping("/id/{id}")
 	public ResponseEntity<CommonResponseDto> validateUid(@PathVariable String id){
 		CommonResponseDto response = CommonResponseDto.builder()
@@ -69,6 +72,7 @@ public class UserController {
 		}
 	}
 
+	// 로그인
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody @Valid UserLoginRequestDto request){
 		CommonResponseDto fResponse = CommonResponseDto.builder().statusCode(400).build();
@@ -97,7 +101,7 @@ public class UserController {
 	}
 	
 	
-	// 아이디 찾기 
+	// 아이디 찾기
 	@PostMapping("/find/id")
 	public ResponseEntity<?> findUserId(@RequestBody @Valid UserFindIdRequestDto request) {
 		Optional<User> optionalUser = userService.findUserId(request);
@@ -106,5 +110,22 @@ public class UserController {
 		} else {
 			return new ResponseEntity<>(UserFindIdResponseDto.builder().statusCode(200).message("VALID").uid(optionalUser.get().getUid()).build(), HttpStatus.OK);
 		}
+	}
+
+	// 비밀번호 변경
+	@PatchMapping("/password")
+	public ResponseEntity<CommonResponseDto> changePassword(Authentication authentication, @RequestBody @Valid UserChangePasswordDto request) {
+		String uid = authentication.getName();
+		Optional<User> optionalUser = userService.findByUid(uid);
+		if (!optionalUser.isPresent()){
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_ACCESS_TOKEN").build(), HttpStatus.BAD_REQUEST);
+		}
+		User user = optionalUser.get();
+		if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INCORRECT_PASSWORD").build(), HttpStatus.BAD_REQUEST);
+		}
+		userService.updatePassword(uid, request.getNewPassword());
+		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("CHANGED_PASSWORD").build(), HttpStatus.OK);
+
 	}
 }

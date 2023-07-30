@@ -17,10 +17,10 @@ public class LoginService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
 		User user = userRepository.findByUid(uid)
-			.orElseThrow(() -> new UsernameNotFoundException("NOT_EXSITS_USER"));
+			.orElseThrow(() -> new UsernameNotFoundException("NOT_EXISTS_USER"));
 
 		return org.springframework.security.core.userdetails.User.builder()
-			.username(user.getEmail())
+			.username(user.getUid())
 			.password(user.getPassword())
 			.roles(user.getDecriminatorValue())
 			.build();
