@@ -1,8 +1,14 @@
 package com.hihi.square.domain.user.controller;
 
+import java.util.Optional;
+
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
 import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
+import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.service.CustomerService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
@@ -48,22 +54,43 @@ public class UserController {
 	}
 
 	@GetMapping("/id/{id}")
-	public ResponseEntity validateUid(@PathVariable String id){
+	public ResponseEntity<CommonResponseDto> validateUid(@PathVariable String id){
 		CommonResponseDto response = CommonResponseDto.builder()
 				.statusCode(200)
 				.message("INVALID")
 				.build();
 		if (userService.validateDuplicateUid(id)){
-			return new ResponseEntity(response, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		} else {
 			response.setMessage("VALID");
-			return new ResponseEntity(response, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 	}
 
 	@PostMapping("/login")
-	public void login(@RequestBody @Valid UserLoginRequestDto request){
-
-
+	public ResponseEntity<?> login(@RequestBody @Valid UserLoginRequestDto request){
+		CommonResponseDto fResponse = CommonResponseDto.builder().statusCode(400).build();
+		Optional<User> optionalUser =userService.findByUid(request.getUid());
+		// 아이디 존재하지 않음
+		if (!optionalUser.isPresent()){
+			fResponse.setMessage("INVALID_UID");
+			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
+		}
+		// 비밀번호 틀림
+		User user= optionalUser.get();
+		if (!user.getPassword().equals(request.getPassword())) {
+			fResponse.setMessage("INVALID_PASSWORD");
+			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
+		}
+		// 접근 권한이 없음 || // 로그인 방법 상이
+		if(!request.getAuthenticate().toString().equals(user.getDecriminatorValue()) || ((user instanceof Customer) && !((Customer)user).getSocial().equals(
+			UserSocialLoginType.US01))) {
+			fResponse.setMessage("NOT_AUTHENTICATED");
+			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
+		}
+		UserLoginResponseDto sResponse = UserLoginResponseDto.builder().build();
+		sResponse.setStatusCode(200);
+		sResponse.setMessage("SUCCESS_LOGIN");
+		return new ResponseEntity<>(sResponse, HttpStatus.OK);
 	}
 }

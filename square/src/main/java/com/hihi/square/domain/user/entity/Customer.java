@@ -8,11 +8,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-	@SuperBuilder
+@SuperBuilder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="customer")

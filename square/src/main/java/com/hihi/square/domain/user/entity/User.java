@@ -24,11 +24,15 @@ public class User {
 	@Column(name="usr_id")
 	private Integer usrId;
 
+	@Column(unique = true)
 	private String uid;
 	private String password;
 	private String phone;
+
+	@Column(unique = true)
 	private String nickname;
 	private String name;
+	@Column(unique = true)
 	@Pattern(regexp = "[a-zA-z0-9]+@[a-zA-z]+[.]+[a-zA-z.]+")
 	private String email;
 	@Column(name="created_at")
@@ -43,7 +47,14 @@ public class User {
 	private Integer mainAddress;
 	@Column(name="marketing_agree")
 	private boolean marketingAgree;
-//	@Column(name="refresh_token")
-//	private Token refreshToken;
+	@Column(name="refresh_token")
+	private String refreshToken;
 
+	@Transient
+	public String getDecriminatorValue() {
+		return this.getClass().getAnnotation(DiscriminatorValue.class).value();
+	}
+	public void updateRefreshToken(String updateRefreshToken) {
+		this.refreshToken = updateRefreshToken;
+	}
 }
