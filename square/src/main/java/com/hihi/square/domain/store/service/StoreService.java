@@ -22,7 +22,7 @@ public class StoreService {
 
 	@Transactional
 	public void save(Store store, BusinessInformation businessInformation) {
-//		store.passwordEncode(passwordEncoder);
+		store.passwordEncode(passwordEncoder);
 		storeRepository.save(store);
 		businessInformation.setStore(store);
 		biRepostiory.save(businessInformation);

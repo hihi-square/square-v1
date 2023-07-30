@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 public class BusinessInformationService {
 
 	private final BusinessInformationRepository businessInformationRepository;
+
 	public boolean validateDuplicateCompanyRegistration(Integer number) {
 		return businessInformationRepository.findByCompanyRegistrationNumber(number).isPresent();
 	}

@@ -1,20 +1,12 @@
 package com.hihi.square.domain.store.entity;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import javax.persistence.*;
 
 @Entity
 @SuperBuilder
@@ -36,8 +28,5 @@ public class Store extends User {
 	@Enumerated(EnumType.STRING)
 	private BankType bank;
 	private String account;
-
-
-
 
 }
