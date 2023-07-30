@@ -1,7 +1,9 @@
 package com.hihi.square.domain.user.controller;
 
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
+import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
+import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
@@ -92,5 +94,17 @@ public class UserController {
 		UserLoginResponseDto sResponse = userService.updateRefreshToken(user);
 
 		return new ResponseEntity<>(sResponse, HttpStatus.OK);
+	}
+	
+	
+	// 아이디 찾기 
+	@PostMapping("/find/id")
+	public ResponseEntity<?> findUserId(@RequestBody @Valid UserFindIdRequestDto request) {
+		Optional<User> optionalUser = userService.findUserId(request);
+		if (!optionalUser.isPresent()){
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID").build(), HttpStatus.BAD_REQUEST);
+		} else {
+			return new ResponseEntity<>(UserFindIdResponseDto.builder().statusCode(200).message("VALID").uid(optionalUser.get().getUid()).build(), HttpStatus.OK);
+		}
 	}
 }

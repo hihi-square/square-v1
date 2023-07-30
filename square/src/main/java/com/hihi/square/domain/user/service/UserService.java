@@ -1,5 +1,6 @@
 package com.hihi.square.domain.user.service;
 
+import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.repository.CustomerRepository;
@@ -60,5 +61,9 @@ public class UserService {
 		userRepository.updateRefreshToken(refreshToken, user.getUid());
 		return successLogin;
 
+	}
+
+	public Optional<User> findUserId(UserFindIdRequestDto request) {
+		return userRepository.findByEmailAndPhone(request.getEmail(), request.getPhone());
 	}
 }

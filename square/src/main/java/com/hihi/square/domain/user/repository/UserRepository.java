@@ -22,4 +22,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("update User u set u.refreshToken = :refreshToken where u.uid = :uid")
     int updateRefreshToken(@Param("refreshToken") String refreshToken, @Param("uid")String uid);
 
+    Optional<User> findByEmailAndPhone(String email, String phone);
 }
