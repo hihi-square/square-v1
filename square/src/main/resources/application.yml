@@ -12,6 +12,8 @@ spring:
       hibernate :
         format_sql : true
         dialect: org.hibernate.dialect.MySQL8Dialect
+        discriminator:
+          ignore_explicit_for_joined: true
     .open-in-view: false
   security:
     user:

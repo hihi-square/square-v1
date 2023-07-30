@@ -2,13 +2,13 @@ package com.hihi.square.global.jwt;
 
 
 import io.jsonwebtoken.security.Keys;
+import org.springframework.data.util.Pair;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import org.springframework.data.util.Pair;
 
 public class JwtKey {
         /**
@@ -33,7 +33,7 @@ public class JwtKey {
         public static Pair<String, Key> getRandomKey() {
             String kid = KID_SET[randomIndex.nextInt(KID_SET.length)];
             String secretKey = SECRET_KEY_SET.get(kid);
-            return new Pair<>(kid, Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)));
+            return Pair.of(kid, Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)));
         }
 
         /**
@@ -48,7 +48,6 @@ public class JwtKey {
                 return null;
             }
             return Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
-
 
     }
 }

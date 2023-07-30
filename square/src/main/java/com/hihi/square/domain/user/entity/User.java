@@ -1,15 +1,14 @@
 package com.hihi.square.domain.user.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.*;
-import javax.validation.constraints.Pattern;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CollectionId;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -54,7 +53,16 @@ public class User {
 	public String getDecriminatorValue() {
 		return this.getClass().getAnnotation(DiscriminatorValue.class).value();
 	}
+
 	public void updateRefreshToken(String updateRefreshToken) {
 		this.refreshToken = updateRefreshToken;
+	}
+
+	 public void passwordEncode(PasswordEncoder passwordEncoder){
+		this.password=passwordEncoder.encode(this.password);
+	 }
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 }

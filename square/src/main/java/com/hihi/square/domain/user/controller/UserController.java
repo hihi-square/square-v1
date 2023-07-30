@@ -1,8 +1,5 @@
 package com.hihi.square.domain.user.controller;
 
-import java.util.Optional;
-
-import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
 import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
@@ -16,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -28,11 +27,12 @@ public class UserController {
 
 	private final UserService userService;
 	private final CustomerService customerService;
+	private final PasswordEncoder passwordEncoder;
 
 	//회원가입
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> singup(@RequestBody @Valid CustomerRegisterRequestDto request) {
-		Customer customer = request.toEntity();
+		Customer customer =  request.toEntity();
 		CommonResponseDto response = CommonResponseDto.builder()
 				.statusCode(409)
 				.message("ALREADY_EXISTS_UID")
@@ -78,7 +78,7 @@ public class UserController {
 		}
 		// 비밀번호 틀림
 		User user= optionalUser.get();
-		if (!user.getPassword().equals(request.getPassword())) {
+		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			fResponse.setMessage("INVALID_PASSWORD");
 			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
 		}
@@ -88,9 +88,9 @@ public class UserController {
 			fResponse.setMessage("NOT_AUTHENTICATED");
 			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
 		}
-		UserLoginResponseDto sResponse = UserLoginResponseDto.builder().build();
-		sResponse.setStatusCode(200);
-		sResponse.setMessage("SUCCESS_LOGIN");
+		// 로그인
+		UserLoginResponseDto sResponse = userService.updateRefreshToken(user);
+
 		return new ResponseEntity<>(sResponse, HttpStatus.OK);
 	}
 }

@@ -1,23 +1,21 @@
 package com.hihi.square.domain.user.dto.request;
 
-import java.time.LocalDateTime;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.UserRankType;
 import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.entity.UserStatusType;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class CustomerRegisterRequestDto {
 	@NotEmpty
 	private String uid;
@@ -35,7 +33,9 @@ public class CustomerRegisterRequestDto {
 	@NotNull
 	private boolean marketingAgree;
 
+
 	public Customer toEntity(){
+
 		Customer customer = Customer.builder()
 			.uid(uid)
 			.password(password)
