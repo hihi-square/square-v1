@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.BaseTime;
-import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.user.entity.User;
 
 import lombok.Getter;
 
@@ -25,7 +25,7 @@ public class MenuCategory extends BaseTime {
 
 	@ManyToOne
 	@JoinColumn(name = "usr_id")
-	private Store store;
+	private User user;
 
 	@Column(nullable = false)
 	private String name;

@@ -1,5 +1,7 @@
 package com.hihi.square.domain.board.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -27,22 +29,28 @@ public class Post extends BaseTime {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "pob_id", referencedColumnName = "id")
+	@JoinColumn(name = "pob_id", referencedColumnName = "name")
 	private Board board;
 
 	@ManyToOne
-	@JoinColumn(name = "usr_id", referencedColumnName = "usrId")
+	@JoinColumn(name = "usr_id")
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "aem_id", referencedColumnName = "aemId")
+	@JoinColumn(name = "aem_id")
 	private EmdAddress emdAddress;
 
 	@Column(name = "view_cnt")
 	private Integer viewCnt;
 	private String title;
 	private String content;
-	
+
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+	@Column(name = "create_at")
+	private LocalDateTime createdAt;
+
+	@Column(name = "modieified_at")
+	private LocalDateTime modifiedAt;
 }

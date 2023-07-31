@@ -1,5 +1,8 @@
 package com.hihi.square.domain.board.entity;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,10 +25,13 @@ public class Dibs extends BaseTime {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "usrId")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "pos_id", referencedColumnName = "id")
+	@JoinColumn(name = "pos_id")
 	private Post post;
+
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
 }

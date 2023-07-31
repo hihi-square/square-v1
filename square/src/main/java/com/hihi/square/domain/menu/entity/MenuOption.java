@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.hihi.square.domain.BaseTime;
-import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -28,16 +28,16 @@ public class MenuOption extends BaseTime {
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "moc_id")
+	@JoinColumn(name = "moc_id", referencedColumnName = "name")
 	private MenuOptionCategory optionCategory;
 
 	@ManyToOne
-	@JoinColumn(name = "men_id")
+	@JoinColumn(name = "men_id", referencedColumnName = "name")
 	private Menu menu;
 
 	@ManyToOne
 	@JoinColumn(name = "usr_id")
-	private Store store;
+	private User user;
 
 	@Column(nullable = false)
 	private String name;

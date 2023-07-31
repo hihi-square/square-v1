@@ -1,5 +1,7 @@
 package com.hihi.square.domain.board.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -26,16 +28,22 @@ public class Review extends BaseTime {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "usrId")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "re_user_id", referencedColumnName = "usrId")
+	@JoinColumn(name = "re_user_id")
 	private User reUser;    //대댓글
 
 	private String comment;
 	private Integer depth;
-	
+
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
+
+	@Column(name = "modified_at")
+	private LocalDateTime modifiedAt;
 }
