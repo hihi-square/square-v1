@@ -34,6 +34,8 @@ public class StoreController {
 	private final StoreService storeService;
 	private final BusinessInformationService businessInformationService;
 	private final UserService userService;
+
+	// 사업자 등록번호 중복확인
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
 		if (businessInformationService.validateDuplicateCompanyRegistration(number)){
@@ -45,6 +47,7 @@ public class StoreController {
 		}
 	}
 
+	// 가게 회원가입
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
 		Store store = request.toEntityStore();
@@ -73,6 +76,7 @@ public class StoreController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	// 가게정보 업데이트
 	@PatchMapping
 	public ResponseEntity<?> updateStoreInfo(Authentication authentication, @RequestBody @Valid StoreUpdateRequestDto request) {
 		String uid = authentication.getName();
