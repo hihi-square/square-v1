@@ -1,4 +1,4 @@
-package com.hihi.square.menu.api;
+package com.hihi.square.domain.menu.api;
 
 import org.springframework.web.bind.annotation.RestController;
 

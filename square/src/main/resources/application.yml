@@ -9,8 +9,8 @@ spring:
     database: mysql
     properties:
       hibernate:
-        naming:
-          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        #        naming:
+        #          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         format_sql: true
   security:
     user:

@@ -1,4 +1,4 @@
-package com.hihi.square.menu.entity;
+package com.hihi.square.domain.menu.entity;
 
 import java.time.LocalDateTime;
 

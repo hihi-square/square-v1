@@ -1,4 +1,4 @@
-package com.hihi.square.menu.entity;
+package com.hihi.square.domain.menu.entity.enums;
 
 public enum MenuStatus {
 	//판매
