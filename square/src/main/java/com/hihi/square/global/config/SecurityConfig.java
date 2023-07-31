@@ -64,6 +64,7 @@ public class SecurityConfig {
 			.formLogin().disable()
 			.authorizeRequests()
 			.antMatchers("/user/login", "/user", "/store", "/user/find/id").permitAll()
+			// .antMatchers("/**").permitAll()
 			// 위 3가지(로그인, 구매자/가게 회원가입)을 제외한 POST 요청을 막아둠
 			.antMatchers(HttpMethod.POST, "/**").authenticated()
 			// 토큰을 활용하는 경우 모든 요청에 대해 인가에 대해서 적용
