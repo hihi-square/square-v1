@@ -19,7 +19,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "post_dibs")
-public class Dibs extends BaseTime {
+public class PostDibs extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
