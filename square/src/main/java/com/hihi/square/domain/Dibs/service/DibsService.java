@@ -1,14 +1,18 @@
 package com.hihi.square.domain.Dibs.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.hihi.square.domain.Dibs.dto.response.DibsResponseDto;
 import com.hihi.square.domain.Dibs.entity.Dibs;
 import com.hihi.square.domain.Dibs.respository.DibsRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.EmdAddress;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,5 +32,22 @@ public class DibsService {
 
 	public void dibCancel(Dibs dibs) {
 		dibsRepository.delete(dibs);
+	}
+
+	public List<DibsResponseDto> getUserDibs(Customer customer) {
+		List<Dibs> dibsList =dibsRepository.findByCustomer(customer);
+		List<DibsResponseDto> result = new ArrayList<>();
+		for(Dibs d : dibsList){
+			result.add(DibsResponseDto.builder()
+					.dibId(d.getDibId())
+					.usrId(d.getCustomer().getUsrId())
+					.uid(d.getCustomer().getUid())
+					.emdAddress(d.getStore().getEmdAddress())
+					.address(d.getStore().getAddress())
+					.storeName(d.getStore().getStoreName())
+					.storePhone(d.getStore().getStorePhone())
+				.build());
+		}
+		return result;
 	}
 }

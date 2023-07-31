@@ -1,17 +1,21 @@
 package com.hihi.square.domain.Dibs.controller;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hihi.square.domain.Dibs.dto.response.DibsResponseDto;
+import com.hihi.square.domain.Dibs.dto.response.UserDibsResponseDto;
 import com.hihi.square.domain.Dibs.entity.Dibs;
 import com.hihi.square.domain.Dibs.service.DibsService;
 import com.hihi.square.domain.store.entity.Store;
@@ -20,6 +24,7 @@ import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 
+import jdk.javadoc.doclet.Reporter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -81,6 +86,13 @@ public class DibsController {
 		dibsService.dibCancel(optionalDibs.get());
 		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_CANCEL_DIB").build(),
 			HttpStatus.OK);
+	}
 
+	@GetMapping
+	public ResponseEntity getUserDibsList(Authentication authentication){
+		String uid = authentication.getName();
+		Customer customer = (Customer)userService.findByUid(uid).get();
+		List<DibsResponseDto> result = dibsService.getUserDibs(customer);
+		return new ResponseEntity(UserDibsResponseDto.builder().statusCode(200).message("COMPLETE").dibsList(result).build(), HttpStatus.OK);
 	}
 }
