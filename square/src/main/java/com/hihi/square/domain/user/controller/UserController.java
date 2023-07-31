@@ -1,6 +1,7 @@
 package com.hihi.square.domain.user.controller;
 
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
+import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserChangePasswordDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
@@ -128,10 +129,23 @@ public class UserController {
 		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("CHANGED_PASSWORD").build(), HttpStatus.OK);
 	}
 
+	// 로그아웃
 	@GetMapping("/logout")
 	public ResponseEntity<CommonResponseDto> logout(Authentication authentication){
 		userService.logout(authentication.getName());
 		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_LOGOUT").build(), HttpStatus.OK);
 	}
 
+	// 구매자 정보 수정
+	@PatchMapping
+	public ResponseEntity updateCustomer(Authentication authentication, @Valid @RequestBody CustomerUpdateRequestDto request){
+		String uid = authentication.getName();
+		// 닉네임은 유니크 !
+		if (userService.validateDuplicateNickname(request.getNickname())){
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(409).message("ALREADY_EXISTS_NICKNAME"), HttpStatus.CONFLICT);
+		}
+		userService.updateUserInfo(uid, request);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+	}
+	
 }

@@ -22,4 +22,5 @@ public class CustomerService {
 		customer.passwordEncode(passwordEncoder);
 		customerRepository.save(customer);
 	}
+
 }

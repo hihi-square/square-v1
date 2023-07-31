@@ -1,5 +1,6 @@
 package com.hihi.square.domain.user.service;
 
+import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.User;
@@ -77,5 +78,11 @@ public class UserService {
 	public void logout(String uid) {
 		User user = userRepository.findByUid(uid).get();
 		user.resetRefreshToken();
+	}
+
+	@Transactional
+	public void updateUserInfo(String uid, CustomerUpdateRequestDto request) {
+		User user = userRepository.findByUid(uid).get();
+		user.updateUserInfo(request.getNickname(), request.getPhone());
 	}
 }

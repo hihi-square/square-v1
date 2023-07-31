@@ -65,4 +65,9 @@ public class User {
 	 public void resetRefreshToken(){
 		this.refreshToken=null;
 	 }
+
+	public void updateUserInfo(String nickname, String phone) {
+		this.nickname = nickname;
+		this.phone = phone;
+	}
 }
