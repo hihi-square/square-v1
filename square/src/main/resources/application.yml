@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name : com.mysql.cj.jdbc.Driver
-    url : jdbc:mysql://localhost:3306/square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url : jdbc:mysql://i9b208.p.ssafy.io:8432/Square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username : root
     password : ssafy
   jpa :
@@ -11,6 +11,10 @@ spring:
     properties :
       hibernate :
         format_sql : true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        discriminator:
+          ignore_explicit_for_joined: true
+    .open-in-view: false
   security:
     user:
       name: admin
@@ -30,5 +34,13 @@ logging :
 # jwt
 jwt:
   secret: d39gssddf6SsdahASDFFaesdGHJFDGjsdfsddfsdhSDS2HSZDasEsd48Os923459780012I4E3IdjSLOFJaseyH
+  access:
+    expiration: 3600000 # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: Authorization
+
+  refresh:
+    expiration: 1209600000 #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    header: Authorization-refresh
+
 server:
   port: 8811
