@@ -23,15 +23,21 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// jwt
-	implementation "io.jsonwebtoken:jjwt:0.9.1"
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'com.auth0:java-jwt:4.2.1'
+
 	// - com.sun.xml.bind
 	implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
 	implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
 	// - javax.xml.bind
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -40,6 +46,17 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+//tasks.named('test') {
+//	useJUnitPlatform()
+//}
+
+////@SpringApplication이 선언된 MainClass 설정
+//bootJainr {
+//		maClassName='com.hihi.square.SquareApplication'
+//}
+//
+////profiles 설정
+//bootRun {
+//	String activeProfile = System.properties['spring.profiles.active']
+//	systemProperty "spring.profiles.active", activeProfile
+//}
