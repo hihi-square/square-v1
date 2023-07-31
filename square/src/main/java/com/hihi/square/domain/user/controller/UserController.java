@@ -126,6 +126,12 @@ public class UserController {
 		}
 		userService.updatePassword(uid, request.getNewPassword());
 		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("CHANGED_PASSWORD").build(), HttpStatus.OK);
-
 	}
+
+	@GetMapping("/logout")
+	public ResponseEntity<CommonResponseDto> logout(Authentication authentication){
+		userService.logout(authentication.getName());
+		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_LOGOUT").build(), HttpStatus.OK);
+	}
+
 }

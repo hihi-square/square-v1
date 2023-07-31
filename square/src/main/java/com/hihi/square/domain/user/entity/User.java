@@ -62,4 +62,7 @@ public class User {
 		this.password=passwordEncoder.encode(this.password);
 	 }
 
+	 public void resetRefreshToken(){
+		this.refreshToken=null;
+	 }
 }

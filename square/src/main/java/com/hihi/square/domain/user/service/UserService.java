@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -23,7 +25,6 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
-
 
 	private final CustomerRepository customerRepository;
 	public boolean validateDuplicateUid(String uid) {
@@ -70,5 +71,11 @@ public class UserService {
 	@Transactional
 	public void updatePassword(String uid, String newPassword) {
 		userRepository.updatePassword(uid, passwordEncoder.encode(newPassword));
+	}
+
+	@Transactional
+	public void logout(String uid) {
+		User user = userRepository.findByUid(uid).get();
+		user.resetRefreshToken();
 	}
 }
