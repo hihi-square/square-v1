@@ -26,4 +26,7 @@ public class DibsService {
 		return dibsRepository.findByCustomerAndStore(customer, store);
 	}
 
+	public void dibCancel(Dibs dibs) {
+		dibsRepository.delete(dibs);
+	}
 }
