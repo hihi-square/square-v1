@@ -54,7 +54,7 @@ export default function Login() {
 
   const onClickConfirmButton = () => {
     axios
-      .post('/api/login', { email, pw }) // 여기서 '/api/login'은 실제 서버의 로그인 API 엔드포인트입니다.
+      .post('http://43.201.255.188:8811/user/login', { email, pw }) // 여기서 '/api/login'은 실제 서버의 로그인 API 엔드포인트입니다.
       .then((response) => {
         // 서버 응답 처리
         if (response.data.success) {
