@@ -4,13 +4,18 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
+import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
+import com.hihi.square.domain.store.dto.response.StoreUpdateResponseDto;
 import com.hihi.square.domain.store.entity.BusinessInformation;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.service.BusinessInformationService;
@@ -40,7 +45,7 @@ public class StoreController {
 		}
 	}
 
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
 		Store store = request.toEntityStore();
 		BusinessInformation businessInformation = request.toEntityBusinessInformation();
@@ -68,5 +73,27 @@ public class StoreController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	@PatchMapping
+	public ResponseEntity<?> updateStoreInfo(Authentication authentication, @RequestBody @Valid StoreUpdateRequestDto request) {
+		String uid = authentication.getName();
+		if (!(userService.findByUid(uid).get() instanceof Store)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store  = storeService.findByUid(uid).get();
+		storeService.updateStoreInfo(store, request);
 
+		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
+			.storeName(store.getStoreName())
+			.storePhone(store.getStorePhone())
+			.emdAddress(store.getEmdAddress())
+			.address(store.getAddress())
+			.content(store.getContent())
+			.bank(store.getBank())
+			.account(store.getAccount())
+			.build();
+
+
+
+		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
+	}
 }

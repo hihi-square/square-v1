@@ -1,14 +1,18 @@
 package com.hihi.square.domain.store.entity;
 
+import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,4 +33,14 @@ public class Store extends User {
 	private BankType bank;
 	private String account;
 
+	public void updateStoreInfo(StoreUpdateRequestDto request, EmdAddress emdAddress) {
+		this.emdAddress = emdAddress;
+		this.address = request.getAddress();
+		this.storeName = request.getStoreName();
+		this.storePhone = request.getStorePhone();
+		this.content = request.getContent();
+		this.bank = request.getBank();
+		this.account = request.getAccount();
+
+	}
 }

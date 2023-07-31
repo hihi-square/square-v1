@@ -144,7 +144,7 @@ public class UserController {
 		if (userService.validateDuplicateNickname(request.getNickname())){
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(409).message("ALREADY_EXISTS_NICKNAME"), HttpStatus.CONFLICT);
 		}
-		userService.updateUserInfo(uid, request);
+
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
 	}
 	
