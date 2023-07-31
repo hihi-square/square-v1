@@ -20,14 +20,14 @@ public class Board extends BaseTime {
 	@Column(name = "pob_id")
 	private Integer id;
 	private String name;
-	private Integer anonymous;
+	private Boolean anonymous;
 	@Column(name = "store_access")
-	private Integer storeAccess;
+	private Boolean storeAccess;
 	@Column(name = "store_write")
-	private Integer storeWrite;
+	private Boolean storeWrite;
 	@Column(name = "user_access")
-	private Integer userAccess;
+	private Boolean userAccess;
 	@Column(name = "user_write")
-	private Integer userWrite;
-	private Integer used;
+	private Boolean userWrite;
+	private Boolean used;
 }
