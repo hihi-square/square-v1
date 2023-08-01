@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreNoticeWriteRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
 import com.hihi.square.domain.store.entity.Notice;
@@ -27,6 +28,7 @@ public class StoreNoticeService {
 	private final StoreNoticeRepository storeNoticeRepository;
 	private final ImageRepository imageRepository;
 
+
 	@Transactional
 	public void write(Store store, StoreNoticeWriteRequestDto request) {
 		Notice notice = Notice.builder()
@@ -43,7 +45,6 @@ public class StoreNoticeService {
 				.connectedId(notice.getSnoId())
 				.thumbnail(image.getThumbnail())
 				.build());
-
 		}
 	}
 
@@ -82,5 +83,21 @@ public class StoreNoticeService {
 	public Optional<Notice> getNotice(Integer snoId) {
 		return storeNoticeRepository.findBySnoId(snoId);
 
+	}
+
+	@Transactional
+	public void updateNotice(Notice notice, StoreNoticeUpdateRequestDto request) {
+		notice.updateContent(request.getContent());
+		storeNoticeRepository.save(notice);
+		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
+		for(ImageRequestDto image : request.getImages()){
+			imageRepository.save(Image.builder()
+				.url(image.getUrl())
+				.order(image.getOrder())
+				.type("SNO")
+				.connectedId(notice.getSnoId())
+				.thumbnail(image.getThumbnail())
+				.build());
+		}
 	}
 }
