@@ -19,7 +19,7 @@ public class OrderService {
     @Transactional
     public Integer save(OrderDetail orderDetail) {
         orderRepository.save(orderDetail);
-        return orderDetail.getId();
+        return orderDetail.getOdtId();
     }
 
     // 주문 내역 확인 주문 아이디를 통해 주문내역 조회

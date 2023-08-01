@@ -13,7 +13,7 @@ public class OrderMenu {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orm_id")
-    private Integer id;
+    private Integer ormId;
 
     @ManyToOne
     @JoinColumn(name = "odt_id")

@@ -107,6 +107,10 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
     - 재고 삭제
 - 쿠폰 기능 삭제
 
+### 7월 24일
+- DB 구축
+- Server 구축 
+
 - api 명세 작성중
 - erd 수정 중
 
@@ -115,3 +119,12 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
 - ERD 초본 완성
   - Schema 생성 완료
 - spring 추후 추가
+
+### 7월 25일 
+### 7월 26일 
+- intellij 환경설정 정리
+- JPA order CRUD 구현중
+
+### 7월 27일 
+- crud parameter 에러 해결못했음 
+- JPA에 대한 구체적인 이해도가 없어서 개발에 난항중...

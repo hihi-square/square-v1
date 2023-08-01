@@ -25,10 +25,9 @@ import lombok.Setter;
 @Setter
 public class OrderDetail {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "odt_id")
-	private Integer id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "odt_id")
+    private Integer odtId;
 
 	@ManyToOne
 	@JoinColumn(name = "ord_id")
