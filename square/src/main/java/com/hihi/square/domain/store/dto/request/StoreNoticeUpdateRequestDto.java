@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class StoreNoticeWriteRequestDto {
+public class StoreNoticeUpdateRequestDto {
+
+	private Integer snoId;
 
 	private String content;
 

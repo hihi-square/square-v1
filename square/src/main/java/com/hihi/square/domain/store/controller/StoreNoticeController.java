@@ -1,6 +1,7 @@
 package com.hihi.square.domain.store.controller;
 
 
+import java.nio.channels.ReadPendingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,10 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.image.dto.response.ImageResponseDto;
 import com.hihi.square.domain.image.respository.ImageRepository;
+import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreNoticeWriteRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreNoticesResponseDto;
@@ -41,6 +46,7 @@ public class StoreNoticeController {
 	private final StoreNoticeService storeNoticeService;
 	private final ImageRepository imageRepository;
 
+	//가게 공지 작성
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> postStoreNotice(Authentication authentication, @RequestBody @Valid StoreNoticeWriteRequestDto request) {
 		String uid = authentication.getName();
@@ -53,6 +59,7 @@ public class StoreNoticeController {
 		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(201).message("SUCCESS_WRITE").build(), HttpStatus.CREATED);
 	}
 
+	//가게 공지 모두 가져오기
 	@GetMapping("/list/{storeId}")
 	public ResponseEntity getStoreNotices(@PathVariable("storeId") Integer storeId){
 		User user = userService.findByUsrId(storeId).get();
@@ -68,6 +75,7 @@ public class StoreNoticeController {
 		return new ResponseEntity(result, HttpStatus.OK);
 	}
 
+	//가게 공지 상세 가져오기
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getStoreNotice(@PathVariable("id") Integer snoId) {
 		Optional<Notice> optionalNotice = storeNoticeService.getNotice(snoId);
@@ -81,6 +89,7 @@ public class StoreNoticeController {
 			StoreNoticeResponseDto result = StoreNoticeResponseDto.builder()
 				.snoId(notice.getSnoId())
 				.content(notice.getContent())
+				.state(notice.getState())
 				.createdAt(notice.getCreatedAt())
 				.modifiedAt(notice.getModifiedAt())
 				.images(resultImages).build();
@@ -88,5 +97,75 @@ public class StoreNoticeController {
 		} else {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(204).message("NOT_EXISTS_NOTICE").build(), HttpStatus.NO_CONTENT);
 		}
+	}
+	//가게 공지 수정
+	@PatchMapping
+	public ResponseEntity<?> updateStoreNotice(Authentication authentication,@RequestBody @Valid StoreNoticeUpdateRequestDto request){
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		// 사용자 검증
+		if (user.getUsrId() != request.getUsrId()){
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		Optional<Notice> notice = storeNoticeService.getNotice(request.getSnoId());
+		if (!notice.isPresent()){
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_EXISTS_NOTICE").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		storeNoticeService.updateNotice(notice.get(), request);
+		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("UPDATE_NOTICE").build(), HttpStatus.OK);
+	}
+
+	//가게 공지 삭제
+	@DeleteMapping("/{id}")
+	public ResponseEntity deleteStoreNotice(Authentication authentication, @PathVariable("id")Integer snoId) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Notice> optionalNotice =storeNoticeService.getNotice(snoId);
+		if (!optionalNotice.isPresent()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_NOTICE").build(),HttpStatus.BAD_REQUEST);
+		}
+		Notice notice = optionalNotice.get();
+		//사용자 검증
+		if (user.getUsrId() != notice.getStore().getUsrId()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICCATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		storeNoticeService.deleteNotice(notice);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("DELETE_NOTICE").build(), HttpStatus.OK);
+	}
+
+	//가게 공지 비공개 처리
+	@PatchMapping("/{id}/private")
+	public ResponseEntity updateStoreNoticePrivate(Authentication authentication, @PathVariable("id") Integer snoId){
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Notice> optionalNotice =storeNoticeService.getNotice(snoId);
+		if (!optionalNotice.isPresent()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_NOTICE").build(),HttpStatus.BAD_REQUEST);
+		}
+		Notice notice = optionalNotice.get();
+		//사용자 검증
+		if (user.getUsrId() != notice.getStore().getUsrId()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICCATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		storeNoticeService.updateNoticePrivate(notice);
+		return new ResponseEntity(CommonResponseDto.builder().message("COMPLETE").statusCode(200).build(), HttpStatus.OK);
+	}
+
+	//가게 공지 비공개 풀기
+	@PatchMapping("/{id}/public")
+	public ResponseEntity updateStoreNoticePublic(Authentication authentication, @PathVariable("id") Integer snoId){
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Notice> optionalNotice =storeNoticeService.getNotice(snoId);
+		if (!optionalNotice.isPresent()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_NOTICE").build(),HttpStatus.BAD_REQUEST);
+		}
+		Notice notice = optionalNotice.get();
+		//사용자 검증
+		if (user.getUsrId() != notice.getStore().getUsrId()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICCATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		storeNoticeService.updateNoticePublic(notice);
+		return new ResponseEntity(CommonResponseDto.builder().message("COMPLETE").statusCode(200).build(), HttpStatus.OK);
 	}
 }

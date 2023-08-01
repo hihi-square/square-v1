@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.BaseTime;
+import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
 
 import lombok.AllArgsConstructor;
@@ -39,4 +40,13 @@ public class Notice extends BaseTime {
 	@ManyToOne
 	private Store store;
 
+	private String state;
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
+
+	public void updateState(String state) {
+		this.state = state;
+	}
 }

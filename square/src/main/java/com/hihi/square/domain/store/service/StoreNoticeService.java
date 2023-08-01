@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreNoticeWriteRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
 import com.hihi.square.domain.store.entity.Notice;
@@ -27,11 +28,13 @@ public class StoreNoticeService {
 	private final StoreNoticeRepository storeNoticeRepository;
 	private final ImageRepository imageRepository;
 
+
 	@Transactional
 	public void write(Store store, StoreNoticeWriteRequestDto request) {
 		Notice notice = Notice.builder()
 			.emdAddress(store.getEmdAddress())
 			.content(request.getContent())
+			.state(request.getState())
 			.store(store)
 			.build();
 		storeNoticeRepository.save(notice);
@@ -43,7 +46,6 @@ public class StoreNoticeService {
 				.connectedId(notice.getSnoId())
 				.thumbnail(image.getThumbnail())
 				.build());
-
 		}
 	}
 
@@ -71,6 +73,7 @@ public class StoreNoticeService {
 					.content(notice.getContent())
 					.createdAt(notice.getCreatedAt())
 					.modifiedAt(notice.getModifiedAt())
+					.state(notice.getState())
 					.images(
 						imageResponseDtoList
 					).build());
@@ -82,5 +85,40 @@ public class StoreNoticeService {
 	public Optional<Notice> getNotice(Integer snoId) {
 		return storeNoticeRepository.findBySnoId(snoId);
 
+	}
+
+	@Transactional
+	public void updateNotice(Notice notice, StoreNoticeUpdateRequestDto request) {
+		notice.updateContent(request.getContent());
+		notice.updateState(request.getState());
+		storeNoticeRepository.save(notice);
+		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
+		for(ImageRequestDto image : request.getImages()){
+			imageRepository.save(Image.builder()
+				.url(image.getUrl())
+				.order(image.getOrder())
+				.type("SNO")
+				.connectedId(notice.getSnoId())
+				.thumbnail(image.getThumbnail())
+				.build());
+		}
+	}
+
+	@Transactional
+	public void deleteNotice(Notice notice) {
+		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
+		storeNoticeRepository.delete(notice);
+	}
+
+	@Transactional
+	public void updateNoticePrivate(Notice notice) {
+		notice.updateState("ST06");
+		storeNoticeRepository.save(notice);
+	}
+
+	@Transactional
+	public void updateNoticePublic(Notice notice) {
+		notice.updateState("ST01");
+		storeNoticeRepository.save(notice);
 	}
 }
