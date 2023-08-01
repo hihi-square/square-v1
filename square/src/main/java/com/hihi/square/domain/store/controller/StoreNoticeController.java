@@ -88,6 +88,7 @@ public class StoreNoticeController {
 			StoreNoticeResponseDto result = StoreNoticeResponseDto.builder()
 				.snoId(notice.getSnoId())
 				.content(notice.getContent())
+				.state(notice.getState())
 				.createdAt(notice.getCreatedAt())
 				.modifiedAt(notice.getModifiedAt())
 				.images(resultImages).build();

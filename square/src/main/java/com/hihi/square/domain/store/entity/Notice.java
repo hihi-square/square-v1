@@ -40,7 +40,13 @@ public class Notice extends BaseTime {
 	@ManyToOne
 	private Store store;
 
+	private String state;
+
 	public void updateContent(String content) {
 		this.content = content;
+	}
+
+	public void updateState(String state) {
+		this.state = state;
 	}
 }

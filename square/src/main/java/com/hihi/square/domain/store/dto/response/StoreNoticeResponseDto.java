@@ -16,6 +16,8 @@ public class StoreNoticeResponseDto {
 
 	private String content;
 
+	private String state;
+
 	private LocalDateTime createdAt;
 
 	private LocalDateTime modifiedAt;

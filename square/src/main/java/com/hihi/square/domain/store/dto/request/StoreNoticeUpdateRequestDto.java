@@ -18,6 +18,8 @@ public class StoreNoticeUpdateRequestDto {
 
 	private Integer usrId;
 
+	private String state;
+
 	private List<ImageRequestDto> images = new ArrayList<>();
 
 }

@@ -34,6 +34,7 @@ public class StoreNoticeService {
 		Notice notice = Notice.builder()
 			.emdAddress(store.getEmdAddress())
 			.content(request.getContent())
+			.state(request.getState())
 			.store(store)
 			.build();
 		storeNoticeRepository.save(notice);
@@ -72,6 +73,7 @@ public class StoreNoticeService {
 					.content(notice.getContent())
 					.createdAt(notice.getCreatedAt())
 					.modifiedAt(notice.getModifiedAt())
+					.state(notice.getState())
 					.images(
 						imageResponseDtoList
 					).build());
@@ -88,6 +90,7 @@ public class StoreNoticeService {
 	@Transactional
 	public void updateNotice(Notice notice, StoreNoticeUpdateRequestDto request) {
 		notice.updateContent(request.getContent());
+		notice.updateState(request.getState());
 		storeNoticeRepository.save(notice);
 		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
 		for(ImageRequestDto image : request.getImages()){
