@@ -1,4 +1,6 @@
 function StoreMenu() : JSX.Element {
-    return <div>가게 메뉴입니다.</div>;
+    return <div>
+      
+      </div>;
   }
 export default StoreMenu;

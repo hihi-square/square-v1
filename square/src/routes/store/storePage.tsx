@@ -23,6 +23,8 @@ function StorePage() : JSX.Element {
     }
   };
 
+  
+
   return (
     <>
       <StoreInfo />
