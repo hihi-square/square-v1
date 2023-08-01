@@ -96,8 +96,8 @@ public class StoreController {
 			.account(store.getAccount())
 			.build();
 
-
-
 		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
 	}
+
+
 }

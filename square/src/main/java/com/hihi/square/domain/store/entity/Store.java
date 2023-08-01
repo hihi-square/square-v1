@@ -1,9 +1,13 @@
 package com.hihi.square.domain.store.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -32,6 +36,11 @@ public class Store extends User {
 	@Enumerated(EnumType.STRING)
 	private BankType bank;
 	private String account;
+
+	@OneToMany(mappedBy = "store")
+	// @JoinColumn
+	@Builder.Default
+	private List<StoreBusinessDay> storeBusinessDayList = new ArrayList<>();
 
 	public void updateStoreInfo(StoreUpdateRequestDto request, EmdAddress emdAddress) {
 		this.emdAddress = emdAddress;

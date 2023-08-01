@@ -1,7 +1,6 @@
 package com.hihi.square.domain.store.entity;
 
 import java.sql.Time;
-import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.aspectj.weaver.patterns.PerObject;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @AllArgsConstructor
-@Table(name="store_business_day")
-public class StoreBusinessDay {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name="store_closed_day")
+public class StoreClosedDay {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="sbd_id")
 	private Integer sbdId;
 
@@ -37,10 +39,7 @@ public class StoreBusinessDay {
 	@Enumerated(EnumType.STRING)
 	private DayType day;
 
-	@Column(name="started_at")
-	private Time startedAt;
-
-	@Column(name="finished_at")
-	private Time finishedAt;
-
+	@Enumerated(EnumType.STRING)
+	private PeriodType period;
 }
+
