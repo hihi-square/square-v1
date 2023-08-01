@@ -1,4 +1,4 @@
-package com.hihi.square.domain.Dibs.service;
+package com.hihi.square.domain.dibs.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,12 +7,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.hihi.square.domain.Dibs.dto.response.DibsResponseDto;
-import com.hihi.square.domain.Dibs.entity.Dibs;
-import com.hihi.square.domain.Dibs.respository.DibsRepository;
+import com.hihi.square.domain.dibs.dto.response.DibsResponseDto;
+import com.hihi.square.domain.dibs.entity.Dibs;
+import com.hihi.square.domain.dibs.respository.DibsRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.domain.user.entity.EmdAddress;
 
 import lombok.RequiredArgsConstructor;
 

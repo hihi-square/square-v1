@@ -1,4 +1,4 @@
-package com.hihi.square.domain.Dibs.controller;
+package com.hihi.square.domain.dibs.controller;
 
 
 import java.util.List;
@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hihi.square.domain.Dibs.dto.response.DibsResponseDto;
-import com.hihi.square.domain.Dibs.dto.response.UserDibsResponseDto;
-import com.hihi.square.domain.Dibs.entity.Dibs;
-import com.hihi.square.domain.Dibs.service.DibsService;
+import com.hihi.square.domain.dibs.dto.response.DibsResponseDto;
+import com.hihi.square.domain.dibs.dto.response.UserDibsResponseDto;
+import com.hihi.square.domain.dibs.entity.Dibs;
+import com.hihi.square.domain.dibs.service.DibsService;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 
-import jdk.javadoc.doclet.Reporter;
 import lombok.RequiredArgsConstructor;
 
 @RestController

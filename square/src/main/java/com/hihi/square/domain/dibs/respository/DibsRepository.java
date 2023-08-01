@@ -1,12 +1,11 @@
-package com.hihi.square.domain.Dibs.respository;
+package com.hihi.square.domain.dibs.respository;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import com.hihi.square.domain.Dibs.entity.Dibs;
+import com.hihi.square.domain.dibs.entity.Dibs;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 

@@ -1,4 +1,4 @@
-package com.hihi.square.global.dto.request;
+package com.hihi.square.domain.image.dto.request;
 
 import javax.validation.constraints.NotEmpty;
 

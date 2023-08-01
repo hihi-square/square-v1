@@ -1,9 +1,7 @@
-package com.hihi.square.domain.Dibs.dto.response;
+package com.hihi.square.domain.dibs.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hihi.square.domain.Dibs.entity.Dibs;
 
 import lombok.Builder;
 import lombok.Data;

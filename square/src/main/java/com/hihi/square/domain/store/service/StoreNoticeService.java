@@ -1,9 +1,9 @@
 package com.hihi.square.domain.store.service;
 
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +13,10 @@ import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
 import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreNoticeRepository;
-import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.global.dto.request.ImageRequestDto;
-import com.hihi.square.global.dto.response.ImageResponseDto;
-import com.hihi.square.global.entity.Image;
-import com.hihi.square.global.respository.ImageRepository;
+import com.hihi.square.domain.image.dto.request.ImageRequestDto;
+import com.hihi.square.domain.image.dto.response.ImageResponseDto;
+import com.hihi.square.domain.image.entity.Image;
+import com.hihi.square.domain.image.respository.ImageRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -78,5 +77,10 @@ public class StoreNoticeService {
 		}
 
 		return result;
+	}
+
+	public Optional<Notice> getNotice(Integer snoId) {
+		return storeNoticeRepository.findBySnoId(snoId);
+
 	}
 }

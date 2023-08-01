@@ -1,4 +1,4 @@
-package com.hihi.square.global.dto.response;
+package com.hihi.square.domain.image.dto.response;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

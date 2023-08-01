@@ -1,10 +1,9 @@
-package com.hihi.square.domain.Dibs.dto.response;
+package com.hihi.square.domain.dibs.dto.response;
 
 import com.hihi.square.domain.user.entity.EmdAddress;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
