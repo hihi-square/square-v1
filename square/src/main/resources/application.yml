@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     driver-class-name : com.mysql.cj.jdbc.Driver
@@ -8,9 +7,9 @@ spring:
   jpa :
     show-sql : true
     database: mysql
-    properties :
-      hibernate :
-        format_sql : true
+    properties:
+      hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
         discriminator:
           ignore_explicit_for_joined: true
@@ -21,15 +20,15 @@ spring:
       password: admin
 
 # JPA log
-logging :
-  level :
-    org :
-      hibernate :
-        SQL : DEBUG
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
         type:
           descriptor:
             sql:
-              BasicBinder : TRACE
+              BasicBinder: TRACE
 
 # jwt
 jwt:
