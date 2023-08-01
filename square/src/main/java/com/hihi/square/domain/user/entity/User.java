@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,8 +74,16 @@ public class User {
 		this.refreshToken = updateRefreshToken;
 	}
 
-	// public void passwordEncode(PasswordEncoder passwordEncoder) {
-	// 	this.password = passwordEncoder.encode(this.password);
-	// }
+	public void passwordEncode(PasswordEncoder passwordEncoder) {
+		this.password = passwordEncoder.encode(this.password);
+	}
 
+	public void resetRefreshToken() {
+		this.refreshToken = null;
+	}
+
+	public void updateUserInfo(String nickname, String phone) {
+		this.nickname = nickname;
+		this.phone = phone;
+	}
 }

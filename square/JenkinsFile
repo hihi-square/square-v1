@@ -18,10 +18,6 @@ pipeline {
 
         stage('docker run'){
             steps{
-//                 sh 'docker ps -f name=spring-server -q | xargs --no-run-if-empty docker container stop'
-//                 sh 'docker container ls -a -f name=dockerhi -q | xargs -r docker container rm'
-//                 sh 'docker images --no-trunc --all --quiet --filter="dangling=true" | xargs --no-run-if-empty docker rmi'
-//                 sh 'docker run -d --name dockerhi -p 8081:8081 dockerhi:latest'
                    sh 'docker run -d -p 8811:8811 spring-server:latest'
             }
         }

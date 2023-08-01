@@ -16,7 +16,11 @@ public class MenuOptionCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "moc_id")
+<<<<<<< HEAD
 	private Long id;
+=======
+	private Integer id;
+>>>>>>> 5c5fec79860f2613543dbfd4cb240edcebdb6ad1
 	private String name;
 	private Integer order;
 }

@@ -11,8 +11,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.menu.entity.enums.MenuStatus;
-import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.user.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +31,7 @@ public class Menu extends BaseTime {
 
 	@ManyToOne
 	@JoinColumn(name = "sto_id", nullable = false)
-	private Store sto;
+	private User user;
 
 	// @OneToOne
 	// @JoinColumn(name = "scm_id")
@@ -52,5 +53,6 @@ public class Menu extends BaseTime {
 	@ColumnDefault("ON")
 	private MenuStatus status;
 	private String description;
+	private Integer sal_record;
 
 }

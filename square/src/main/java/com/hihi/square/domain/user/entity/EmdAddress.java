@@ -7,10 +7,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
+@Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,8 +26,4 @@ public class EmdAddress {
 	@Column(name = "adm_code")
 	private String amdCode;
 	private String name;
-
-	// @ManyToOne
-	// @JoinColumn(name = "asi_id")
-	// private SiggAddress siggAddress;
 }
