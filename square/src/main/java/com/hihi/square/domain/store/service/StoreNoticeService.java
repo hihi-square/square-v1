@@ -1,14 +1,21 @@
 package com.hihi.square.domain.store.service;
 
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hihi.square.domain.store.dto.request.StoreNoticeWriteRequestDto;
+import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
 import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreNoticeRepository;
+import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.dto.request.ImageRequestDto;
+import com.hihi.square.global.dto.response.ImageResponseDto;
 import com.hihi.square.global.entity.Image;
 import com.hihi.square.global.respository.ImageRepository;
 
@@ -39,5 +46,37 @@ public class StoreNoticeService {
 				.build());
 
 		}
+	}
+
+	public List<StoreNoticeResponseDto> getNoticeList(Store store) {
+		List<StoreNoticeResponseDto> result = new ArrayList<>();
+		List<Notice> notices = storeNoticeRepository.findAllByStoreOrderByCreatedAt(store);
+
+		for(Notice notice : notices){
+			List<Image> images = imageRepository.findAllByTypeAndConnectedId("SNO", notice.getSnoId());
+			List<ImageResponseDto> imageResponseDtoList = new ArrayList<>();
+			for(Image img : images){
+				imageResponseDtoList.add(
+					ImageResponseDto.builder()
+						.imgId(img.getImgId())
+						.url(img.getUrl())
+						.order(img.getOrder())
+						.type(img.getType())
+						.connectedId(img.getConnectedId())
+						.thumbnail(img.getThumbnail())
+						.build()
+				);
+			}
+			result.add(StoreNoticeResponseDto.builder()
+					.snoId(notice.getSnoId())
+					.content(notice.getContent())
+					.createdAt(notice.getCreatedAt())
+					.modifiedAt(notice.getModifiedAt())
+					.images(
+						imageResponseDtoList
+					).build());
+		}
+
+		return result;
 	}
 }
