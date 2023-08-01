@@ -89,6 +89,7 @@ public class UserService {
 	public void updateUserInfo(String uid, CustomerUpdateRequestDto request) {
 		User user = userRepository.findByUid(uid).get();
 		user.updateUserInfo(request.getNickname(), request.getPhone());
+		userRepository.save(user);
 	}
 
 }
