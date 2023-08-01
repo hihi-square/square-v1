@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+      "target": "es6", // 빌드할 JavaScript 버전 (ES6 이상 권장)
+      "module": "commonjs", // 모듈 시스템 (CommonJS, ESModules 등)
+      "jsx": "react", // JSX 문법 사용 설정 (react, preserve 등)
+      "strict": true, // 엄격한 타입 체크 사용 여부
+      "esModuleInterop": true, // ES 모듈 호환성 설정
+      "outDir": "./dist", // 생성된 JavaScript 파일이 저장될 폴더 지정
+    //   "jsx": "react-jsx" // 또는 "react-jsxdev" 또는 "react-jsxdev"를 사용
+
+    },
+    "exclude": ["node_modules"],
+  //   // storage 관련
+  //   "include": [
+  //   "src",
+  //   "../storage/" // 여기에 해당 경로를 추가합니다.
+  // ]
+
+  }
+  
