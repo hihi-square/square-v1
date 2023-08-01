@@ -109,4 +109,16 @@ public class StoreNoticeService {
 		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
 		storeNoticeRepository.delete(notice);
 	}
+
+	@Transactional
+	public void updateNoticePrivate(Notice notice) {
+		notice.updateState("ST06");
+		storeNoticeRepository.save(notice);
+	}
+
+	@Transactional
+	public void updateNoticePublic(Notice notice) {
+		notice.updateState("ST01");
+		storeNoticeRepository.save(notice);
+	}
 }

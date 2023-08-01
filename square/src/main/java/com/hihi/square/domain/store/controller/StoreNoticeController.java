@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -130,5 +131,41 @@ public class StoreNoticeController {
 		}
 		storeNoticeService.deleteNotice(notice);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("DELETE_NOTICE").build(), HttpStatus.OK);
+	}
+
+	//가게 공지 비공개 처리
+	@PatchMapping("/{id}/private")
+	public ResponseEntity updateStoreNoticePrivate(Authentication authentication, @PathVariable("id") Integer snoId){
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Notice> optionalNotice =storeNoticeService.getNotice(snoId);
+		if (!optionalNotice.isPresent()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_NOTICE").build(),HttpStatus.BAD_REQUEST);
+		}
+		Notice notice = optionalNotice.get();
+		//사용자 검증
+		if (user.getUsrId() != notice.getStore().getUsrId()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICCATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		storeNoticeService.updateNoticePrivate(notice);
+		return new ResponseEntity(CommonResponseDto.builder().message("COMPLETE").statusCode(200).build(), HttpStatus.OK);
+	}
+
+	//가게 공지 비공개 풀기
+	@PatchMapping("/{id}/public")
+	public ResponseEntity updateStoreNoticePublic(Authentication authentication, @PathVariable("id") Integer snoId){
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Notice> optionalNotice =storeNoticeService.getNotice(snoId);
+		if (!optionalNotice.isPresent()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_NOTICE").build(),HttpStatus.BAD_REQUEST);
+		}
+		Notice notice = optionalNotice.get();
+		//사용자 검증
+		if (user.getUsrId() != notice.getStore().getUsrId()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICCATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		storeNoticeService.updateNoticePublic(notice);
+		return new ResponseEntity(CommonResponseDto.builder().message("COMPLETE").statusCode(200).build(), HttpStatus.OK);
 	}
 }
