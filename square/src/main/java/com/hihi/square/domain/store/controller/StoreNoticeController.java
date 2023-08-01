@@ -1,6 +1,7 @@
 package com.hihi.square.domain.store.controller;
 
 
+import java.nio.channels.ReadPendingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -105,9 +107,27 @@ public class StoreNoticeController {
 		}
 		Optional<Notice> notice = storeNoticeService.getNotice(request.getSnoId());
 		if (!notice.isPresent()){
-			return new ResponseEntity<>(CommonResponseDto.builder().message("NO_EXISTS_NOTICE").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_EXISTS_NOTICE").statusCode(400).build(), HttpStatus.BAD_REQUEST);
 		}
 		storeNoticeService.updateNotice(notice.get(), request);
 		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("UPDATE_NOTICE").build(), HttpStatus.OK);
+	}
+
+	//가게 공지 삭제
+	@DeleteMapping("/{id}")
+	public ResponseEntity deleteStoreNotice(Authentication authentication, @PathVariable("id")Integer snoId) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Notice> optionalNotice =storeNoticeService.getNotice(snoId);
+		if (!optionalNotice.isPresent()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_NOTICE").build(),HttpStatus.BAD_REQUEST);
+		}
+		Notice notice = optionalNotice.get();
+		//사용자 검증
+		if (user.getUsrId() != notice.getStore().getUsrId()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICCATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		storeNoticeService.deleteNotice(notice);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("DELETE_NOTICE").build(), HttpStatus.OK);
 	}
 }

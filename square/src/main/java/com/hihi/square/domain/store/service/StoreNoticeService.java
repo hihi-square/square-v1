@@ -100,4 +100,10 @@ public class StoreNoticeService {
 				.build());
 		}
 	}
+
+	@Transactional
+	public void deleteNotice(Notice notice) {
+		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
+		storeNoticeRepository.delete(notice);
+	}
 }
