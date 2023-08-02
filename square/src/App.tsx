@@ -1,18 +1,17 @@
 import {  Route, Routes } from "react-router-dom";
+import MainPage from "routes/main/mainPage";
 import "./App.css";
-import StorePage from "./routes/store/storePage";
-import Cart from "./routes/deal/cart";
-import Pay from "./routes/deal/pay";
+
 
 
 
 function App() {
 	return (
 		<div className="App">
+
+
 		<Routes>
-			<Route path="/" element={<StorePage/>}/>
-			<Route path="/deal/cart" element={<Cart/>}/>
-			<Route path="/deal/cart/pay" element={<Pay/>}/>
+			<Route path="/" element={<MainPage/>}/>
 		</Routes>
 		
 		</div>

@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
 import StoreMenu from './storeMenu';
 import StoreFeed from './storeFeed';
 import StoreReview from './storeReview';
 import StoreInfo from './storeInfo';
-
-import Cart from '../deal/cart';
 
 function StorePage() : JSX.Element {
   const [selectedTab, setSelectedTab] = useState('menu');
@@ -38,9 +35,7 @@ function StorePage() : JSX.Element {
         {renderTabContent()}
       </div>
 
-      <Routes>
-        <Route path='/cart' element={<Cart/>}></Route>
-      </Routes>
+
     </>
   )
 }

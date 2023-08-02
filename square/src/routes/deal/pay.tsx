@@ -1,6 +1,6 @@
-import {  useNavigate,useLocation,Route, Routes } from "react-router-dom";
+import {  useNavigate,useLocation} from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import OrderComplete from "./orderComplete";
+
 
 
 function Pay():JSX.Element {
@@ -19,9 +19,7 @@ function Pay():JSX.Element {
     return(
     <>
     <ArrowBackIcon onClick={goBack} />
-    <Routes>
-        <Route path="/ordercomplete" element={<OrderComplete/>}/>
-    </Routes>
+
     </>
     )
 

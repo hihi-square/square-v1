@@ -1,10 +1,7 @@
-import { Route, Routes } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import Cart from "../deal/cart";
-import SearchResult from "./searchResult";
 import "../../App.css";
 
 function Header() {
@@ -54,10 +51,6 @@ function Header() {
 				<FaShoppingCart />
 			</button>
 
-			<Routes>
-				<Route path="/cart" element={<Cart />} />
-				<Route path="/searchresult/:searchword" element={<SearchResult />} />
-			</Routes>
 		</header>
 	);
 }
