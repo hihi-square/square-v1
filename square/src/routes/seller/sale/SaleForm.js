@@ -28,9 +28,6 @@ export default function ProductForm({open, close}) {
     name: "",
     createDate: "",
     modifiedDate: "",
-    represent: false,
-    popular: false,
-    visible: true,
     timesale: 0,
     linksale: 0,
     price: 0,
@@ -64,7 +61,7 @@ export default function ProductForm({open, close}) {
             </Grid>
             <Grid xs={8}>
               <DialogContentText>
-                상품명
+                상품명입니다.
               </DialogContentText>
               <TextField id="name"
                 name="name"
