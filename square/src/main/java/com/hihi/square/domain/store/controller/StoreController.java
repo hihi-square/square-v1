@@ -2,6 +2,11 @@ package com.hihi.square.domain.store.controller;
 
 import javax.validation.Valid;
 
+import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
+import com.hihi.square.domain.store.entity.StoreCategoryBig;
+import com.hihi.square.domain.store.entity.StoreCategorySelected;
+import com.hihi.square.domain.store.service.CategoryService;
+import com.hihi.square.domain.store.service.StoreCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,6 +31,8 @@ import com.hihi.square.global.common.CommonResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/store")
 @RequiredArgsConstructor
@@ -34,6 +41,7 @@ public class StoreController {
 	private final StoreService storeService;
 	private final BusinessInformationService businessInformationService;
 	private final UserService userService;
+
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
 		if (businessInformationService.validateDuplicateCompanyRegistration(number)){
@@ -96,4 +104,12 @@ public class StoreController {
 
 		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
 	}
+
+	// 사용자가 가게 카테고리 선택시 가게 리스트 보여주는 api
+	@GetMapping("/big-category/{id}")
+	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id) {
+		List<StoreListResponseDto> stores = storeService.findByCategoryId(id);
+		return new ResponseEntity<>(stores, HttpStatus.OK);
+	}
+
 }

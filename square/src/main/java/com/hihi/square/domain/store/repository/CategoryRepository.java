@@ -16,4 +16,6 @@ public interface CategoryRepository extends JpaRepository<StoreCategoryBig, Inte
     // 카테고리 이름 조회
     public Optional<StoreCategoryBig> findByName(String name);
 
+    Optional<StoreCategoryBig> findById(Integer id);
+
 }

@@ -23,13 +23,6 @@ public class CategoryService {
         categoryRepository.save(storeCategoryBig);
     }
 
-    // 카테고리 대분류 수정
-    @Transactional
-    public void updateStoreCategoryBig(StoreCategoryBig storeCategoryBig, ScbUpdateRequestDto request){
-        storeCategoryBig.updateScbCategory(request);
-        categoryRepository.save(storeCategoryBig);
-    }
-
     // 카테고리 삭제
     @Transactional
     public void deleteById(Integer id) {
@@ -46,6 +39,16 @@ public class CategoryService {
     public boolean validateDuplicateName(String name) {
         Optional<StoreCategoryBig> category = categoryRepository.findByName(name);
         return category.isPresent();
+    }
+
+    // 카테고리 상세 조회 (아이디로 찾기)
+    public Optional<StoreCategoryBig> findById(Integer id) {return categoryRepository.findById(id);}
+
+    // 카테고리 수정
+    @Transactional
+    public void updateCategoryBig(StoreCategoryBig storeCategoryBig, ScbUpdateRequestDto request) {
+        storeCategoryBig.updateScbCategory(request);
+        categoryRepository.save(storeCategoryBig);
     }
 
 }

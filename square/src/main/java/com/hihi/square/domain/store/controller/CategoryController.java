@@ -2,6 +2,7 @@ package com.hihi.square.domain.store.controller;
 
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
+import com.hihi.square.domain.store.dto.request.ScbUpdateRequestDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.repository.CategoryRepository;
 import com.hihi.square.domain.store.service.CategoryService;
@@ -48,6 +49,42 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponseDto> deleteBigCategory(@PathVariable Integer id) {
+        CommonResponseDto response = CommonResponseDto.builder()
+                .statusCode(200)
+                .message("SUCCESSFULLY_DELETED")
+                .build();
+        if(categoryService.findById(id).isEmpty()){
+            response.setStatusCode(409);
+            response.setMessage("NOT_EXISTED_CATEGORY");
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        }
+        categoryService.deleteById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
+    // id 로 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<?> selectById(@PathVariable Integer id) {
+        StoreCategoryBig category = categoryService.findById(id).get();
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
 
+    // 카테고리 수정
+    @PatchMapping("/{id}")
+    public ResponseEntity<CommonResponseDto> updateCategoryInfo(@PathVariable Integer id, @RequestBody ScbUpdateRequestDto request) {
+        CommonResponseDto response = CommonResponseDto.builder()
+                .statusCode(200)
+                .message("UPDATE_SUCCESS")
+                .build();
+        if(categoryService.validateDuplicateName(request.getName())) {
+            response.setMessage("ALREADY_EXISTS_CATEGORY_NAME");
+            response.setStatusCode(409);
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        }
+        StoreCategoryBig storeCategoryBig = categoryService.findById(id).get();
+        categoryService.updateCategoryBig(storeCategoryBig, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
