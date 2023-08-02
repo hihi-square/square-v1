@@ -128,3 +128,7 @@ https://www.notion.so/d147cbda52e24e439890736f1eb7fca9?p=e10ac1ebf4444c36aa7fa28
 ### 7월 27일 
 - crud parameter 에러 해결못했음 
 - JPA에 대한 구체적인 이해도가 없어서 개발에 난항중...
+
+### 8월 2일
+- DB 데이터 삽입
+- S3 연동 목표
