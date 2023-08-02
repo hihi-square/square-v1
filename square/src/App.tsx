@@ -1,6 +1,9 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Link, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Seller from "./routes/seller/Seller";
+import Main from "./routes/customer/main/mainPage";
+import Store from "./routes/customer/store/storePage";
 
 const theme = createTheme({
   typography: {
@@ -12,7 +15,13 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Seller></Seller>
+        <Link to="/">구매자 페이지로</Link>
+        <Link to="/seller">판매자 페이지로</Link>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/seller/*" element={<Seller />} />
+          <Route path="/storePage/*" element={<Store />} />
+        </Routes>
       </ThemeProvider>
     </div>
   );
