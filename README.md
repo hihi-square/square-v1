@@ -36,4 +36,8 @@
 
 ### 7월 24일
 
-- 프로젝트 개발 시작, 기본 react project(sqauare) 커밋어렵다
+- 프로젝트 개발 시작, 기본 react project(sqauare) 커밋
+
+### 8월 2일
+
+- 첫 결과 merge
