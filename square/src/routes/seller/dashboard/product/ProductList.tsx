@@ -31,7 +31,7 @@ import {
 import { Iproduct, Icategory, Itype } from "types";
 
 import ProductForm from "./ProductForm";
-import "../Seller.css";
+import "../../Seller.css";
 // ============================================================================================ //
 export default function ProductList() {
   const initState: Iproduct = {
@@ -271,7 +271,7 @@ export default function ProductList() {
                                     size="small"
                                   >
                                     <Select
-                                      labelId="demo-simple-select-label"
+                                      labelId="demo-simple-selecdt-label"
                                       id="demo-simple-select"
                                       value={product.status}
                                       onChange={handleChange}

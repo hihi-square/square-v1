@@ -19,7 +19,7 @@ import {
 import { Iproduct, Icategory, Itype } from "types";
 
 import ProductForm from "./ProductForm";
-import "../Seller.css";
+import "../../Seller.css";
 // ============================================================================================ //
 export default function Product() {
   const initState: Iproduct = {
