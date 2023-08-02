@@ -1,0 +1,42 @@
+[
+  {
+    "ord_id": 1,
+    "uid": "asdskylee",
+		"payment_method": "카카오페이",
+		"total_price": 8000,
+    "use_point": 500,
+    "requests": "맛있게 해주셈",
+		"status": "완료",
+    "created_at": "2023-01-01T18:00:00" 
+  },
+  {
+    "ord_id": 2,
+    "uid": "yllh325",
+		"payment_method": "신한카드",
+		"total_price": 3000,
+    "use_point": 600,
+    "requests": "끼룩끼룩",
+		"status": "픽업대기",
+    "created_at": "2023-01-01T18:00:00"
+  },
+  {
+    "ord_id": 3,
+    "uid": "yllh325",
+		"payment_method": "신한카드",
+		"total_price": 4000,
+    "use_point": 600,
+    "requests": "끼123룩끼룩",
+		"status": "수락대기",
+    "created_at": "2023-01-01T18:00:00"
+  },
+  {
+    "ord_id": 4,
+    "uid": "la28s5d",
+		"payment_method": "네이버페이",
+		"total_price":7000,
+    "use_point": 100,
+    "requests": "펭귄은 펭펭하고 울어욧",
+		"status": "거절",
+    "created_at": "2023-01-01T18:00:00"
+  }
+]
