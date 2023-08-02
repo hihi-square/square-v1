@@ -18,4 +18,7 @@ public interface StoreCategoryRepository extends JpaRepository<StoreCategorySele
     List<StoreCategorySelected> findByStoreCategoryBig(StoreCategoryBig storeCategoryBig);
 
     List<StoreCategorySelected> findByStore(Store store);
+
+    Optional<StoreCategorySelected> findByStoreAndStoreCategoryBig(Store store, StoreCategoryBig storeCategoryBig);
+
 }

@@ -19,6 +19,7 @@ public class StoreCategoryService {
 
     private final StoreCategoryRepository storeCategoryRepository;
     private final StoreRepository storeRepository;
+    private final CategoryService categoryService;
 
     // 카테고리에 의해 가게 정보 다 찾기
     public List<StoreCategorySelected> findByStoreCategoryBig(StoreCategoryBig storeCategoryBig) {
@@ -30,7 +31,20 @@ public class StoreCategoryService {
         return storeCategoryRepository.findByStore(store);
     }
 
+    // 가게 카테고리 중복 확인 ( 가게 아이디, 카테고리아이디)
+    public boolean validateDuplicateStoreCategory(Store store, StoreCategoryBig storeCategoryBig) {
+        Optional<StoreCategorySelected> storeCategory = storeCategoryRepository.findByStoreAndStoreCategoryBig(store, storeCategoryBig);
+        return storeCategory.isPresent();
+    }
+
     // 가게 카테고리 (대분류) 등록
+    public void save(Store store, StoreCategoryBig storeCategoryBig){
+        StoreCategorySelected storeCategorySelected = StoreCategorySelected.builder()
+                .store(store)
+                .storeCategoryBig(storeCategoryBig)
+                .build();
+        storeCategoryRepository.save(storeCategorySelected);
+    }
 
     // 가게 카테고리 삭제
 

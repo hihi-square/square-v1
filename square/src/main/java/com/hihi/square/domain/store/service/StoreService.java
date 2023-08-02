@@ -49,6 +49,8 @@ public class StoreService {
 		storeRepository.save(store);
 	}
 
+	public Optional<Store> findById(Integer id) {return storeRepository.findById(id);}
+
 	public Optional<Store> findByUid(String uid) {
 		return storeRepository.findByUid(uid);
 	}
