@@ -12,6 +12,23 @@ export default function SignUp() {
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
 
+  // 사업자 등록 번호
+  const [businessNumber, setBusinessNumber] = useState(''); // 사업자 등록번호 상태 추가
+  const [businessNumberValid, setBusinessNumberValid] = useState(true); // 사업자 등록번호 유효성 상태 추가
+  
+  const handleBusinessNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setBusinessNumber(input);
+
+    // 사업자 등록번호 유효성 검사
+    const regex = /^\d{3}-\d{2}-\d{5}$/;
+    const isValid = regex.test(input);
+
+    setBusinessNumberValid(isValid);
+    setNotAllow(!idValid || !pwValid || !isValid); // notAllow 업데이트
+  };
+
+
   const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     if (e.target.value.length >= 2) {
@@ -37,8 +54,7 @@ export default function SignUp() {
 
   const handleCheckId = () => {
     // 서버에 아이디 중복 확인 요청 보내기
-    axios
-      .post("/api/checkId", { id })
+    axios.get(`http://43.201.255.188:8811/user/id/${id}`)
       .then((response) => {
         // 서버 응답 처리
         setIsIdDuplicated(response.data.duplicated);
@@ -75,7 +91,7 @@ export default function SignUp() {
           window.location.href = "/login";
         } else {
           // eslint-disable-next-line no-alert
-          alert("이미 등록된 이메일입니다.");
+          alert("이미 등록된 아이디입니다.");
         }
       })
       .catch((error) => {
@@ -127,6 +143,31 @@ export default function SignUp() {
             <div>올바른 아이디를 입력해주세요.</div>
           )}
         </div>
+
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          사업자 등록번호
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="사업자 등록번호를 입력하세요 (예: 123-45-67890)"
+            value={businessNumber}
+            onChange={handleBusinessNumber}
+          />
+        </div>
+        {/* 사업자 등록번호 유효성 에러 메시지 */}
+        <div className="errorMessageWrap">
+          {!businessNumberValid && businessNumber.length > 0 && (
+            <div>올바른 사업자 등록번호 형식이 아닙니다. (예: 123-45-67890)</div>
+          )}
+        </div>
+
+
+
+
+
 
         <div style={{ marginTop: "26px" }} className="inputTitle">
           비밀번호
