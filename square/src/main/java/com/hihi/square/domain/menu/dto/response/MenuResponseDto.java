@@ -23,7 +23,7 @@ public class MenuResponseDto {
 	private LocalDateTime modifiedAt;
 	private Integer salRecord;
 	private String description;
-	private Integer order;
+	private Integer sequence;
 
 	public MenuResponseDto(Menu menu) {
 		this.id = menu.getMenuId();
@@ -40,7 +40,7 @@ public class MenuResponseDto {
 		this.modifiedAt = menu.getModifiedAt();
 		this.salRecord = menu.getSalRecord();
 		this.description = menu.getDescription();
-		this.order = menu.getOrder();
+		this.sequence = menu.getSequence();
 	}
 
 	//

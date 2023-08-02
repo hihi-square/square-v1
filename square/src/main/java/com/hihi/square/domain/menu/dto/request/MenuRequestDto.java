@@ -19,35 +19,39 @@ import lombok.NoArgsConstructor;
 public class MenuRequestDto {
 	private Long id;
 	@NotEmpty
-	private String uid;
+	private int userId;
 	private User user;
 	// private StoreMenuCategory storeMenuCategory;
-	@NotEmpty
 	private Long categoryId;
 	private MenuCategory menuCategory;
 	@NotEmpty
 	private String name;
 	private Integer price;
 	private String image;
+	private String thumbnail;
 	private boolean signature;
 	private boolean popularity;
 	private MenuStatus status;
 	private String description;
 	private Integer salRecord;
+	private Integer sequence;
 
 	public Menu toEntity() {
 		Menu menu = Menu.builder()
 			.menuId(id)
-			.user(user.builder().uid(uid).build())
+			.user(user.builder().usrId(userId).build())
 			// .scm_id(scm_id)    //객체 변환 필요
 			.menuCategory(menuCategory.builder().id(categoryId).build())
+			.name(name)
 			.price(price)
 			.image(image)
+			.thumbnail(thumbnail)
 			.signature(signature)
 			.popularity(popularity)
 			.status(status)
 			.description(description)
 			.salRecord(salRecord)
+			.sequence(sequence)
 			.build();
 		return menu;
 	}

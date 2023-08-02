@@ -3,8 +3,6 @@ package com.hihi.square.domain.menu.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.hihi.square.domain.BaseTime;
@@ -54,17 +51,20 @@ public class Menu extends BaseTime {
 	private Integer price;
 	private String image;
 	private String thumbnail;
-	@ColumnDefault("false")
+	// @ColumnDefault("false")
 	private boolean signature;
-	@ColumnDefault("false")
+	// @ColumnDefault("false")
 	private boolean popularity;
-	@Enumerated(EnumType.ORDINAL)
+	// @Enumerated(EnumType.ORDINAL)
 	@Column(name = "status")
-	@ColumnDefault("ON")
 	private MenuStatus status;
 	private String description;
-	@ColumnDefault("0")
+	// @ColumnDefault("0")
 	@Column(name = "sal_record")
 	private Integer salRecord;
-	private Integer order;
+	private Integer sequence;
+
+	public void updateStatus() {
+		this.status = MenuStatus.OFF;
+	}
 }
