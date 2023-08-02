@@ -4,7 +4,8 @@ import { Unstable_Grid2 as Grid, Box, Typography } from "@mui/material";
 import Appbar from "./Appbar.js";
 import Main from "./main/Main.js";
 import Product from "./product/Product";
-import Sale from "./sale/Sale.js";
+import ProductList from "./product/ProductList";
+// import Sale from "./sale/Sale.js";
 import Order from "./order/Order.js";
 import "./Seller.css";
 
@@ -84,7 +85,7 @@ export default function Seller() {
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/product" element={<Product />} />
-            <Route path="/sale" element={<Sale />} />
+            <Route path="/sale" element={<ProductList />} />
             <Route path="/order" element={<Order />} />
           </Routes>
         </Grid>

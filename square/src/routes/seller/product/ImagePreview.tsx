@@ -50,27 +50,23 @@ function ImagePreview({ error, helperText, onChange }: ImagePreviewProps) {
       <input
         accept="image/*"
         style={{ display: "none" }}
-        id="contained-button-file"
+        id="image"
+        name="image"
         type="file"
-        onChange={handleImageUpload}
+        onChange={(event) => {
+          handleImageUpload(event);
+          onChange(event);
+        }}
       />
-      <label htmlFor="contained-button-file" style={{ width: "100%" }}>
-        <Box
-          onClick={() =>
-            document.getElementById("contained-button-file")?.click()
-          }
-        >
+      <label htmlFor="image" style={{ width: "100%" }}>
+        <Box onClick={() => document.getElementById("image")?.click()}>
           <TextField
             variant="outlined"
-            id="image"
-            name="image"
             fullWidth
-            label="Upload"
             value={fileName}
-            disabled
-            onChange={onChange}
             error={Boolean(error)}
             helperText={helperText}
+            inputProps={{ readOnly: true }}
           />
         </Box>
       </label>

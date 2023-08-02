@@ -17,3 +17,13 @@ export interface Iproduct {
   sal_record: number;
   description: string;
 }
+
+export interface Icategory {
+  order: number;
+  name: string;
+}
+
+export interface Itype {
+  id: number;
+  name: string;
+}

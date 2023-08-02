@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Iproduct } from "types";
+import { Iproduct, Icategory, Itype } from "types";
 import Grid from "@mui/material/Unstable_Grid2";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,6 +14,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { FormHelperText } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -21,55 +22,65 @@ import ImagePreview from "./ImagePreview";
 
 interface Props {
   open: boolean;
-  close: () => void;
+  close: (close: boolean) => void;
+  categorys: Icategory[];
+  types: Itype[];
+  length: number;
+  create: (product: Iproduct, length: number) => void;
+  isCreateModal: boolean;
+  handleCreateModal: () => void;
+  currProduct: Iproduct;
+  handleCurrProduct: (key: string, value: string | boolean | number) => void;
 }
 
-export default function ProductForm({ open, close }: Props) {
-  const [age, setAge] = React.useState("");
-  const [product, setProduct] = React.useState<Iproduct>({
-    id: 0,
-    image: "",
-    thumbnail: "",
-    category_id: 0,
-    category: "",
-    type_id: 0,
-    type: "",
-    name: "",
-    represent: true,
-    popular: true,
-    price: 0,
-    status_code: 0,
-    status: "",
-    create_at: "",
-    modified_at: "",
-    sal_record: 0,
-    description: "",
-  });
+export default function ProductForm({
+  open,
+  close,
+  categorys,
+  types,
+  length,
+  create,
+  isCreateModal,
+  handleCreateModal,
+  currProduct,
+  handleCurrProduct,
+}: Props) {
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+    // const { name, value } = event.target;
+    // eslint-disable-next-line
+    console.log(event.target);
+  };
+
+  const handleCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleCurrProduct(event.target.name, event.target.checked);
   };
 
   const handleProductChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { name } = event.target;
+    let value: string | number = event.target.value;
 
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-    }));
+    if (name === "category_id" || name === "type_id") {
+      value = Number(value);
+    }
+
+    handleCurrProduct(name, value);
   };
 
   const [errors, setErrors] = useState({
     name: "",
     image: "",
+    category: "",
+    type: "",
+    price: "",
   });
 
   useEffect(() => {
-    if (!product.name) {
+    if (!currProduct.name) {
       setErrors((err) => ({ ...err, name: "상품명을 입력하세요." }));
     } else {
       setErrors((err) => ({ ...err, name: "" }));
     }
-    if (!product.image) {
+    if (!currProduct.image) {
       setErrors((err) => ({
         ...err,
         image: "상품 이미지 파일을 업로드하세요.",
@@ -77,7 +88,15 @@ export default function ProductForm({ open, close }: Props) {
     } else {
       setErrors((err) => ({ ...err, image: "" }));
     }
-  }, [product.name, product.image]);
+    if (!currProduct.price) {
+      setErrors((err) => ({
+        ...err,
+        price: "가격을 입력해주세요.",
+      }));
+    } else {
+      setErrors((err) => ({ ...err, price: "" }));
+    }
+  }, [currProduct.name, currProduct.image, currProduct.price]);
 
   const isFormValid = () =>
     !Object.values(errors).some((error) => error !== "");
@@ -107,6 +126,7 @@ export default function ProductForm({ open, close }: Props) {
             </DialogTitle>
           </Box>
           <DialogContent>
+            <Button onClick={() => handleCreateModal()}>수정</Button>
             <Grid container spacing={2}>
               <Grid
                 xs={12}
@@ -128,27 +148,31 @@ export default function ProductForm({ open, close }: Props) {
                 <TextField
                   id="name"
                   name="name"
+                  value={currProduct.name}
                   fullWidth
                   variant="outlined"
                   onChange={handleProductChange}
                   error={Boolean(errors.name)}
                   helperText={errors.name}
+                  disabled={!isCreateModal}
                 />
               </Grid>
               <Grid xs={6}>
                 <DialogContentText>카테고리</DialogContentText>
                 <FormControl fullWidth>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={age}
+                    name="category_id"
                     size="small"
                     label="Age"
+                    value={currProduct.category_id.toString()}
                     onChange={handleChange}
+                    disabled={!isCreateModal}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    {categorys.map((category) => (
+                      <MenuItem key={category.order} value={category.order}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -156,16 +180,18 @@ export default function ProductForm({ open, close }: Props) {
                 <DialogContentText>분류</DialogContentText>
                 <FormControl fullWidth>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={age}
+                    name="type_id"
+                    value={currProduct.type_id.toString()}
                     size="small"
                     label="Age"
                     onChange={handleChange}
+                    disabled={!isCreateModal}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    {types.map((type) => (
+                      <MenuItem key={type.id} value={type.id}>
+                        {type.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -175,20 +201,49 @@ export default function ProductForm({ open, close }: Props) {
                   <Input
                     id="standard-adornment-amount"
                     name="price"
+                    value={currProduct.price}
+                    onChange={handleProductChange}
+                    error={Boolean(errors.price)}
+                    disabled={!isCreateModal}
                     startAdornment={
                       <InputAdornment position="start">￦</InputAdornment>
                     }
                   />
+                  {errors.price && (
+                    <FormHelperText sx={{ color: "red" }}>
+                      {errors.price}
+                    </FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid xs={3}>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox />} label="대표" />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="represent"
+                        value={currProduct.represent}
+                        onChange={handleCheckChange}
+                        disabled={!isCreateModal}
+                      />
+                    }
+                    label="대표"
+                  />
                 </FormGroup>
               </Grid>
               <Grid xs={3}>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox />} label="인기" />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="popular"
+                        value={currProduct.popular}
+                        onChange={handleCheckChange}
+                        disabled={!isCreateModal}
+                      />
+                    }
+                    label="인기"
+                  />
                 </FormGroup>
               </Grid>
               <Grid xs={12}>
@@ -198,18 +253,19 @@ export default function ProductForm({ open, close }: Props) {
                   fullWidth
                   multiline
                   rows={4}
+                  value={currProduct.description}
+                  disabled={!isCreateModal}
                 />
               </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={close}>닫기</Button>
+            <Button onClick={() => close(false)}>닫기</Button>
             <Button
-              disabled={!isFormValid()}
+              disabled={!isFormValid() || !isCreateModal}
               onClick={() => {
-                // eslint-disable-next-line no-console
-                console.log(product);
-                close();
+                create(currProduct, length);
+                close(false);
               }}
             >
               등록
