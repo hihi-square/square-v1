@@ -23,7 +23,7 @@ export default function Seller() {
               component="div"
               sx={{ flexGrow: 1, fontWeight: 700 }}
               onClick={() => {
-                navigate("/product");
+                navigate("product");
               }}
             >
               상품 관리
@@ -35,7 +35,7 @@ export default function Seller() {
               component="div"
               sx={{ flexGrow: 1, fontWeight: 700 }}
               onClick={() => {
-                navigate("/sale");
+                navigate("sale");
               }}
             >
               세일 관리
@@ -47,7 +47,7 @@ export default function Seller() {
               component="div"
               sx={{ flexGrow: 1, fontWeight: 700 }}
               onClick={() => {
-                navigate("/order");
+                navigate("order");
               }}
             >
               주문 관리

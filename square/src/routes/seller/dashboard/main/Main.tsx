@@ -2,7 +2,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Paper from "@mui/material/Paper";
 import "../../Seller.css";
 
-export default function Main(props) {
+export default function Main() {
   return (
     <>
       <Grid className="half-size" xs={8} sx={{ paddingBottom: "10px" }}>
