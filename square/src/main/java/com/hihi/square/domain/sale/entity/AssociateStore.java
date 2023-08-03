@@ -1,6 +1,4 @@
-package com.hihi.square.domain.board.entity;
-
-import java.time.LocalDateTime;
+package com.hihi.square.domain.sale.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,27 +9,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.User;
 
 import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "post_dibs")
-public class Dibs extends BaseTime {
+@Table(name = "associate_store")
+public class AssociateStore {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "sas_id")
 	private Integer id;
-
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "usr_id")
 	private User user;
-
 	@ManyToOne
-	@JoinColumn(name = "pos_id")
-	private Post post;
-
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
+	@JoinColumn(name = "sac_id")
+	private Associate associate;
+	@Column(name = "accept_status")
+	private String acceptStatus;
 }

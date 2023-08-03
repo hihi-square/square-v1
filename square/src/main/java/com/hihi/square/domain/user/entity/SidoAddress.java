@@ -13,25 +13,26 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-// @Entity
-// @Data
-// @SuperBuilder
-// @NoArgsConstructor
-// @AllArgsConstructor
-// @Table(name="sido_address")
+@Entity
+@Getter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name="sido_address")
 public class SidoAddress {
 	@Id @GeneratedValue
 	@Column(name="asd_id")
 	private int asdId;
-	//
-	// @Column(name="adm_code")
-	// private String amdCode;
-	// private String name;
-	//
-	// @OneToMany(mappedBy = "asd_id")
+
+	@Column(name="adm_code")
+	private String amdCode;
+	private String name;
+
+	// @OneToMany(mappedBy = "sidoAddress")
 	// private List<SiggAddress> siggAddressList;
 
 }

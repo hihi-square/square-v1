@@ -8,5 +8,8 @@ public enum DayType {
 	DA05, // 금요일
 	DA06, // 토요일
 	DA07, // 일요일
-	DA08 // 공휴일
+	DA08, // 평일
+	DA09, // 주말
+	DA10 // 공휴일
+	
 }

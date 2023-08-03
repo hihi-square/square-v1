@@ -13,15 +13,16 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-// @Entity
-// @Data
-// @SuperBuilder
-// @NoArgsConstructor
-// @AllArgsConstructor
-// @Table(name="sigg_address")
+@Entity
+@Getter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name="sigg_address")
 public class SiggAddress {
 	@Id
 	@GeneratedValue
@@ -36,7 +37,8 @@ public class SiggAddress {
 	@JoinColumn(name = "asd_id")
 	private SidoAddress sidoAddress;
 
-	@OneToMany(mappedBy = "asi_id")
-	private List<EmdAddress> emdAddressList;
+	// @OneToMany(mappedBy = "siggAddress")
+	// private List<EmdAddress> emdAddressList;
+
 
 }

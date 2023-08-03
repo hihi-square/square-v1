@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -80,9 +81,15 @@ public class UserService {
 		user.resetRefreshToken();
 	}
 
+	public Optional<User> findByUsrId(Integer usrId) {
+		return userRepository.findByUsrId(usrId);
+	}
+
 	@Transactional
 	public void updateUserInfo(String uid, CustomerUpdateRequestDto request) {
 		User user = userRepository.findByUid(uid).get();
 		user.updateUserInfo(request.getNickname(), request.getPhone());
+		userRepository.save(user);
 	}
+
 }
