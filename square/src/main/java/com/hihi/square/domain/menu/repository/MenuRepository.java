@@ -7,12 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hihi.square.domain.menu.entity.Menu;
-import com.hihi.square.domain.menu.entity.MenuStatus;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 	@Transactional
 	@Modifying
-	@Query(value = "update menu set status = :status, sequence = :sequence  where men_id = :menuId", nativeQuery = true)
-	void updateMenuList(@Param("menuId") Long menuId, @Param("status") MenuStatus status,
+	@Query(value = "update menu set mec_id= :categoryId, status = :status, sequence = :sequence  where men_id = :menuId", nativeQuery = true)
+	void updateMenuList(@Param("menuId") Long menuId, @Param("categoryId") Long categoryId,
+		@Param("status") Integer status,
 		@Param("sequence") Integer sequence);
 }

@@ -38,9 +38,10 @@ public class MenuService {
 	public void updateMenuList(List<Menu> menuList) {
 		for (Menu menu : menuList) {
 			Long menuId = menu.getMenuId();
+			Long categoryId = menu.getMenuCategory().getId();
 			MenuStatus menuStatus = menu.getStatus();
 			Integer sequence = menu.getSequence();
-			menuRepository.updateMenuList(menuId, menuStatus, sequence);
+			menuRepository.updateMenuList(menuId, categoryId, menuStatus.ordinal(), sequence);
 		}
 	}
 

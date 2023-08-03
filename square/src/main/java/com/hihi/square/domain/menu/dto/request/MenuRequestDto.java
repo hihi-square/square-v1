@@ -39,7 +39,7 @@ public class MenuRequestDto {
 	private Integer salRecord;
 	private Integer sequence;
 
-	private List<Menu> data;
+	private List<MenuRequestDto> data;
 
 	public Menu toEntity() {
 		Menu menu = Menu.builder()
