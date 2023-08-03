@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +20,6 @@ import com.hihi.square.domain.menu.dto.response.MenuResponseDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.menu.service.MenuService;
-import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,11 +34,12 @@ public class MenuController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllMenus(Authentication authentication) {
-		String uid = authentication.getName();
-		User user = userService.findByUid(uid).get();
-
-		List<Menu> menuList = menuService.findAllByUserId(user.getUsrId());
+	public ResponseEntity<CommonResponseDto<?>> getAllMenus(@RequestHeader Integer userId) {
+		// String uid = authentication.getName();
+		// User user = userService.findByUid(uid).get();
+		//
+		// List<Menu> menuList = menuService.findAllByUserId(user.getUsrId());
+		List<Menu> menuList = menuService.findAllByUserId(userId);
 		List<MenuResponseDto> menuResponseDtoList = new ArrayList<>();
 
 		for (Menu menu : menuList) {
