@@ -6,11 +6,11 @@ import axios from "axios";
 export default function SignUp() {
   const [name, setName] = useState<string>(""); // 타입 명시
   const [id, setId] = useState<string>(""); // 타입 명시
-  const [pw, setPw] = useState<string>(""); // 타입 명시
+  const [pw] = useState<string>(""); // 타입 명시
   const [nameValid, setNameValid] = useState(false);
   const [idValid, setIdValid] = useState(false);
   const [isIdDuplicated, setIsIdDuplicated] = useState(false);
-  const [pwValid, setPwValid] = useState(false);
+  const [pwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
 
   const [businessNumber, setBusinessNumber] = useState<string>(""); // 타입 명시
