@@ -29,6 +29,8 @@ public class SiggAddress {
 	@Column(name="asi_id")
 	private int asiId;
 
+
+
 	@Column(name="adm_code")
 	private String amdCode;
 	private String name;
@@ -36,6 +38,9 @@ public class SiggAddress {
 	@ManyToOne
 	@JoinColumn(name = "asd_id")
 	private SidoAddress sidoAddress;
+
+	@Column(name="asd_name")
+	private String sidoName;
 
 	// @OneToMany(mappedBy = "siggAddress")
 	// private List<EmdAddress> emdAddressList;

@@ -129,7 +129,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 //            password = PasswordUtil.generateRandomPassword();
 //        }
         UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
-                .username(myUser.getUid())
+                .username(myUser.getUid()) // String type이라서 uid 넣은 것!
                 .password(password)
                 .roles(myUser.getDecriminatorValue())
                 .build();

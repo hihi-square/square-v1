@@ -18,6 +18,6 @@ public class StoreNoticeWriteRequestDto {
 
 	private String state;
 
-	private List<ImageRequestDto> images = new ArrayList<>();
+	private List<String> images = new ArrayList<>();
 
 }
