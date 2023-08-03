@@ -27,6 +27,9 @@ public class S3Service {
 			case "storeThumbnail":
 				url="static/store/"+id+"/thumbs";
 				break;
+			case "userProfile":
+				url="static/user/"+id+"/profile";
+				break;
 		}
 		return url;
 	}

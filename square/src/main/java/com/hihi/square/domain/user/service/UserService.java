@@ -1,5 +1,7 @@
 package com.hihi.square.domain.user.service;
 
+import com.hihi.square.domain.image.dto.ImageFileThumbDto;
+import com.hihi.square.domain.image.dto.request.ImageRequestDto;
 import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
@@ -7,11 +9,14 @@ import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.repository.UserRepository;
 import com.hihi.square.global.jwt.JwtService;
+import com.hihi.square.global.s3.S3Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +32,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
+	private final S3Service s3Service;
 
 	private final CustomerRepository customerRepository;
 	public boolean validateDuplicateUid(String uid) {
@@ -92,4 +98,16 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	@Transactional
+	public void updateUserProfile(User user, ImageRequestDto image) {
+		ImageFileThumbDto result = s3Service.uploadFile("userProfile",user.getUsrId(),image);
+		user.updateUserProfile(result.getUrl(), result.getThumbnail());
+		userRepository.save(user);
+	}
+
+	@Transactional
+	public void deleteUserProfile(User user) {
+		user.updateUserProfile(null, null);
+		userRepository.save(user);
+	}
 }
