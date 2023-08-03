@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hihi.square.domain.menu.entity.Menu;
+import com.hihi.square.domain.user.entity.User;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 	@Transactional
@@ -22,4 +23,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 	void updateMenuList(@Param("menuId") Long menuId, @Param("categoryId") Long categoryId,
 		@Param("status") Integer status,
 		@Param("sequence") Integer sequence);
+
+	List<Menu> findByUserAndPopularityIsTrue(User user);
 }

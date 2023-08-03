@@ -66,10 +66,10 @@ public class UserController {
 				.message("INVALID")
 				.build();
 		if (userService.validateDuplicateUid(id)){
-			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			response.setMessage("VALID");
-			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
 

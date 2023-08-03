@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.menu.entity.Menu;
+import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.BusinessInformationRepository;
+import com.hihi.square.domain.user.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,7 @@ public class StoreService {
 	private final EmdAddressRepository emdAddressRepository;
 	private final StoreCategoryService storeCategoryService;
 	private final CategoryService categoryService;
+	private final MenuRepository menuRepository;
 
 	@Transactional
 	public void save(Store store, BusinessInformation businessInformation) {
@@ -62,11 +66,22 @@ public class StoreService {
 		List<StoreListResponseDto> stores = new ArrayList<>();
 		for(StoreCategorySelected s : storeCategorySelectedList) {
 			Store store = s.getStore();
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User) store);
+
+			String menuName = "";
+			for(int i=0; i<menuList.size(); i++) {
+				if(i == menuList.size()-1) {
+					menuName += menuList.get(i).getName();
+				} else {
+					menuName += menuList.get(i).getName() + ", ";
+				}
+			}
 			StoreListResponseDto res = StoreListResponseDto.builder()
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
 					.storeAddress(store.getAddress())
+					.mainMenu(menuName)
 					.build();
 			stores.add(res);
 		}

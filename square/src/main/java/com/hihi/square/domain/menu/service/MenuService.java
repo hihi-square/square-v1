@@ -3,6 +3,7 @@ package com.hihi.square.domain.menu.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.user.entity.User;
 import org.springframework.stereotype.Service;
 
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
