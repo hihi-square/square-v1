@@ -26,7 +26,7 @@ import com.hihi.square.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("store/menuitem")
 @RequiredArgsConstructor
 public class MenuController {
 
