@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class MenuResponseDto {
 	private Long id;
+	private Integer userId;
 	private String image;
 	private String thumbnail;
 	private Long categoryId;
@@ -26,6 +27,7 @@ public class MenuResponseDto {
 
 	public MenuResponseDto(Menu menu) {
 		this.id = menu.getMenuId();
+		this.userId = menu.getUser().getUsrId();
 		this.image = menu.getImage();
 		this.thumbnail = menu.getThumbnail();
 		this.categoryId = menu.getMenuCategory().getId();
