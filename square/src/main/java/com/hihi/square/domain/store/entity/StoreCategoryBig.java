@@ -1,5 +1,6 @@
 package com.hihi.square.domain.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hihi.square.domain.store.dto.request.ScbUpdateRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,10 +29,12 @@ public class StoreCategoryBig {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @OneToMany(mappedBy = "storeCategoryBig")
-//    private List<StoreCategorySelected> storeCategorySelectedList = new ArrayList<>();
+    @JsonIgnore // 이거 없애면 모든 findAll에 데이터가 날라옴
+    @OneToMany(mappedBy = "storeCategoryBig", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<StoreCategorySelected> storeCategorySelectedList = new ArrayList<>();
 
     public void updateScbCategory(ScbUpdateRequestDto request) {
         this.name = request.getName();
+        this.createdAt = LocalDateTime.now();
     }
 }

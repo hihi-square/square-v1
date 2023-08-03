@@ -2,6 +2,12 @@ package com.hihi.square.domain.store.controller;
 
 import javax.validation.Valid;
 
+import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
+import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
+import com.hihi.square.domain.store.entity.StoreCategoryBig;
+import com.hihi.square.domain.store.entity.StoreCategorySelected;
+import com.hihi.square.domain.store.service.CategoryService;
+import com.hihi.square.domain.store.service.StoreCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,6 +32,8 @@ import com.hihi.square.global.common.CommonResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/store")
 @RequiredArgsConstructor
@@ -34,7 +42,8 @@ public class StoreController {
 	private final StoreService storeService;
 	private final BusinessInformationService businessInformationService;
 	private final UserService userService;
-
+	private final StoreCategoryService storeCategoryService;
+	private final CategoryService categoryService;
 	// 사업자 등록번호 중복확인
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
@@ -99,5 +108,46 @@ public class StoreController {
 		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
 	}
 
+	// 사용자가 가게 카테고리 선택시 가게 리스트 보여주는 api
+	@GetMapping("/big-category/{id}")
+	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id) {
+		List<StoreListResponseDto> stores = storeService.findByCategoryId(id);
+		return new ResponseEntity<>(stores, HttpStatus.OK);
+	}
+
+	// 판매자가 큰 카테고리에 자신의 가게를 등록하는 api 최대 3개
+	@PostMapping("/big-category")
+	public ResponseEntity<CommonResponseDto> registerStoreCategorySelectionByStore(Authentication authentication, @RequestBody ScsRegisterRequestDto request) {
+		CommonResponseDto response = CommonResponseDto.builder()
+				.statusCode(201)
+				.message("CREATE_SUCCESS")
+				.build();
+		String uid = authentication.getName();
+		// 판매자가 아니라면 등록불가
+		if (!(userService.findByUid(uid).get() instanceof Store)) {
+			response.setStatusCode(400);
+			response.setMessage("NOT_AUTHENTICATE");
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+		Store store = storeService.findById(request.getUsrId()).get();
+		StoreCategoryBig storeCategoryBig = categoryService.findById(request.getScbId()).get();
+
+		// 등록된 카테고리가 3개 이상이라면 등록 불가
+		if(storeCategoryService.findByStore(store).size() > 3) {
+			response.setStatusCode(400);
+			response.setMessage("MAXIMUM_COUNT");
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
+		// 이미 등록된 카테고리라면 등록 불가
+		if(storeCategoryService.validateDuplicateStoreCategory(store, storeCategoryBig)) {
+			response.setStatusCode(400);
+			response.setMessage("ALREADY_EXISTS");
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
+		storeCategoryService.save(store, storeCategoryBig);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
 
 }
