@@ -5,21 +5,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.hihi.square.domain.menu.intercept.StoreInterceptor;
 
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new StoreInterceptor()) // LogInterceptor 등록
-			.order(1)    // 적용할 필터 순서 설정
-			.addPathPatterns("/store/**")
-			.excludePathPatterns("/error"); // 인터셉터에서 제외할 패턴
-	}
+	// @Override
+	// public void addInterceptors(InterceptorRegistry registry) {
+	// 	registry.addInterceptor(new StoreInterceptor()) // LogInterceptor 등록
+	// 		.order(1)    // 적용할 필터 순서 설정
+	// 		.addPathPatterns("/store/**")
+	// 		.excludePathPatterns("/error"); // 인터셉터에서 제외할 패턴
+	// }
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
