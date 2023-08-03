@@ -38,5 +38,4 @@ public class MenuCategory {
 	@Column(nullable = false)
 	private String name;
 	private Integer sequence;
-
 }

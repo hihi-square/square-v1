@@ -56,6 +56,11 @@ public class MenuService {
 		return menuList;
 	}
 
+	public List<Menu> findAllByUserId(Integer userId) {
+		List<Menu> menuList = menuRepository.findAllByUserId(userId);
+		return menuList;
+	}
+
 	public Menu findById(Long menuId) {
 		Menu menu = menuRepository.findById(menuId).get();
 		return menu;

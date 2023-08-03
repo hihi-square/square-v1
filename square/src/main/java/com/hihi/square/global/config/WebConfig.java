@@ -10,15 +10,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
+	// @Override
+	// public void addInterceptors(InterceptorRegistry registry) {
+	// 	registry.addInterceptor(new StoreInterceptor()) // LogInterceptor 등록
+	// 		.order(1)    // 적용할 필터 순서 설정
+	// 		.addPathPatterns("/menu/**")
+	// 		.excludePathPatterns("/error"); // 인터셉터에서 제외할 패턴
+	// }
+
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-			                .allowedOrigins("http://localhost:3000", "http://i9b208.p.ssafy.io:80", "http://43.201.255.188:80")
-//			.allowedOrigins("*")
+			.allowedOrigins("http://localhost:3000", "http://i9b208.p.ssafy.io:80", "http://43.201.255.188:80")
+			//			.allowedOrigins("*")
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 			.allowedHeaders("*")
 			.maxAge(3600);
 	}
+
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();

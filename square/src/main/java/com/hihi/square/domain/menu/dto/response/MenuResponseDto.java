@@ -43,26 +43,4 @@ public class MenuResponseDto {
 		this.description = menu.getDescription();
 		this.sequence = menu.getSequence();
 	}
-
-	//
-	// public MenuResponseDto toDto(Menu menu) {
-	// 	MenuResponseDto menuResponseDto = MenuResponseDto.builder()
-	// 		.id(menu.getMenuId())
-	// 		.image(menu.getImage())
-	// 		.thumbnail(menu.getThumbnail())
-	// 		.categoryId(menu.getMenuCategory().getId())
-	// 		.categoryName(menu.getMenuCategory().getName())
-	// 		.name(menu.getName())
-	// 		.signature(menu.isSignature())
-	// 		.popular(menu.isPopularity())
-	// 		.price(menu.getPrice())
-	// 		.status(menu.getStatus())
-	// 		.createdAt(menu.getCreatedAt())
-	// 		.modifiedAt(menu.getModifiedAt())
-	// 		.salRecord(menu.getSalRecord())
-	// 		.description(menu.getDescription())
-	// 		.order(menu.getOrder())
-	// 		.build();
-	// 	return menuResponseDto;
-	// }
 }
