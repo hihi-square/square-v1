@@ -1,9 +1,13 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { Itype } from "types";
+import { Itype } from "modules/types";
 
 const user = createSlice({
   name: "user",
-  initialState: "ssafy",
+  initialState: {
+    usr_id: 24,
+    id: "hong33245",
+    nickname: "헬로",
+  },
   reducers: {},
 });
 

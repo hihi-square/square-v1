@@ -16,7 +16,7 @@ import {
   Typography,
   Pagination,
 } from "@mui/material";
-import { Iproduct, Icategory, Itype } from "types";
+import { Iproduct, Icategory, Itype } from "modules/types";
 
 import ProductForm from "./ProductForm";
 import "../../Seller.css";
@@ -28,6 +28,7 @@ export default function Product() {
     thumbnail: "",
     category_id: 1,
     category: "",
+    order: 1,
     type_id: 1,
     type: "",
     name: "",

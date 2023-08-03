@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Iproduct, Icategory, Itype } from "types";
+import { Iproduct } from "modules/types";
 import Grid from "@mui/material/Unstable_Grid2";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
@@ -23,8 +21,6 @@ import ImagePreview from "./ImagePreview";
 interface Props {
   open: boolean;
   close: (close: boolean) => void;
-  categorys: Icategory[];
-  types: Itype[];
   length: number;
   create: (product: Iproduct, length: number) => void;
   isCreateModal: boolean;
@@ -36,8 +32,6 @@ interface Props {
 export default function ProductForm({
   open,
   close,
-  categorys,
-  types,
   length,
   create,
   isCreateModal,
@@ -45,12 +39,6 @@ export default function ProductForm({
   currProduct,
   handleCurrProduct,
 }: Props) {
-  const handleChange = (event: SelectChangeEvent) => {
-    // const { name, value } = event.target;
-    // eslint-disable-next-line
-    console.log(event.target);
-  };
-
   const handleCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleCurrProduct(event.target.name, event.target.checked);
   };
@@ -59,7 +47,7 @@ export default function ProductForm({
     const { name } = event.target;
     let value: string | number = event.target.value;
 
-    if (name === "category_id" || name === "type_id") {
+    if (name === "price" || name === "category_id" || name === "type_id") {
       value = Number(value);
     }
 
@@ -70,8 +58,8 @@ export default function ProductForm({
     name: "",
     image: "",
     category: "",
-    type: "",
     price: "",
+    description: "",
   });
 
   useEffect(() => {
@@ -96,7 +84,17 @@ export default function ProductForm({
     } else {
       setErrors((err) => ({ ...err, price: "" }));
     }
-  }, [currProduct.name, currProduct.image, currProduct.price]);
+    if (!currProduct.description) {
+      setErrors((err) => ({ ...err, description: "상세 설명을 입력하세요." }));
+    } else {
+      setErrors((err) => ({ ...err, description: "" }));
+    }
+  }, [
+    currProduct.name,
+    currProduct.image,
+    currProduct.price,
+    currProduct.description,
+  ]);
 
   const isFormValid = () =>
     !Object.values(errors).some((error) => error !== "");
@@ -158,44 +156,6 @@ export default function ProductForm({
                 />
               </Grid>
               <Grid xs={6}>
-                <DialogContentText>카테고리</DialogContentText>
-                <FormControl fullWidth>
-                  <Select
-                    name="category_id"
-                    size="small"
-                    label="Age"
-                    value={currProduct.category_id.toString()}
-                    onChange={handleChange}
-                    disabled={!isCreateModal}
-                  >
-                    {categorys.map((category) => (
-                      <MenuItem key={category.order} value={category.order}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid xs={6}>
-                <DialogContentText>분류</DialogContentText>
-                <FormControl fullWidth>
-                  <Select
-                    name="type_id"
-                    value={currProduct.type_id.toString()}
-                    size="small"
-                    label="Age"
-                    onChange={handleChange}
-                    disabled={!isCreateModal}
-                  >
-                    {types.map((type) => (
-                      <MenuItem key={type.id} value={type.id}>
-                        {type.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid xs={6}>
                 <DialogContentText>가격</DialogContentText>
                 <FormControl fullWidth variant="outlined">
                   <Input
@@ -222,7 +182,7 @@ export default function ProductForm({
                     control={
                       <Checkbox
                         name="represent"
-                        value={currProduct.represent}
+                        value={currProduct.signature}
                         onChange={handleCheckChange}
                         disabled={!isCreateModal}
                       />
@@ -250,10 +210,14 @@ export default function ProductForm({
                 <DialogContentText>세부 설명</DialogContentText>
                 <TextField
                   id="outlined-multiline-static"
+                  name="description"
                   fullWidth
                   multiline
                   rows={4}
                   value={currProduct.description}
+                  onChange={handleProductChange}
+                  error={Boolean(errors.description)}
+                  helperText={errors.description}
                   disabled={!isCreateModal}
                 />
               </Grid>
