@@ -8,14 +8,15 @@ import org.springframework.stereotype.Service;
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
-import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MenuService {
 
 	private final MenuRepository menuRepository;
@@ -35,13 +36,14 @@ public class MenuService {
 		return menuRepository.save(saveMenu);
 	}
 
-	public void updateMenuList(List<Menu> menuList) {
-		for (Menu menu : menuList) {
-			Long menuId = menu.getMenuId();
-			Long categoryId = menu.getMenuCategory().getId();
-			MenuStatus menuStatus = menu.getStatus();
-			Integer sequence = menu.getSequence();
-			menuRepository.updateMenuList(menuId, categoryId, menuStatus.ordinal(), sequence);
+	public void updateMenuList(List<MenuRequestDto> menuRequestList) {
+		for (MenuRequestDto menuRequestDto : menuRequestList) {
+			Long menuId = menuRequestDto.getId();
+			Integer usrId = menuRequestDto.getUserId();
+			Long categoryId = menuRequestDto.getCategoryId();
+			Integer menuStatus = menuRequestDto.getStatus().ordinal();
+			Integer sequence = menuRequestDto.getSequence();
+			menuRepository.updateMenuList(menuId, categoryId, menuStatus, sequence);
 		}
 	}
 

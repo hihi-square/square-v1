@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Table(name = "menu_category")
+@ToString
 public class MenuCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

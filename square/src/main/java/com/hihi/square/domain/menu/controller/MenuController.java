@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,7 +35,7 @@ public class MenuController {
 	private final MenuCategoryService menuCategoryService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllMenus() {
+	public ResponseEntity<CommonResponseDto<?>> getAllMenus(Authentication authentication) {
 		List<Menu> menuList = menuService.findAll();
 		List<MenuResponseDto> menuResponseDtoList = new ArrayList<>();
 
@@ -80,19 +81,13 @@ public class MenuController {
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuResponseDto(menu)));
 	}
 
-	// @PatchMapping("/list")
-	// public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuRequestDto menuRequestDto) {
-	// 	List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
-	// 	// log.info("menuRequestDtos : {}", menuRequestDtos);
-	// 	List<Menu> menuList = new ArrayList<>();
-	//
-	// 	for (MenuRequestDto mrd : menuRequestDtos) {
-	// 		menuList.add(mrd.toEntity());
-	// 	}
-	// 	// log.info("menuList : {}", menuList);
-	// 	menuService.updateMenuList(menuList);
-	// 	return ResponseEntity.ok(CommonResponseDto.success(menuList));
-	// }
+	@PatchMapping("/list")
+	public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuRequestDto menuRequestDto) {
+		List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
+		List<Menu> menuList = new ArrayList<>();
+		menuService.updateMenuList(menuRequestDtos);
+		return ResponseEntity.ok(CommonResponseDto.success(null));
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CommonResponseDto<?>> deleteMenu(
