@@ -35,7 +35,6 @@ public class MenuCategory {
 
 	@Column(nullable = false)
 	private String name;
-	@Column(nullable = false)
-	private int order;
+	private Integer sequence;
 
 }

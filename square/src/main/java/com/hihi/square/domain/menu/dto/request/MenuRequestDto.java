@@ -1,5 +1,7 @@
 package com.hihi.square.domain.menu.dto.request;
 
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 
 import com.hihi.square.domain.menu.entity.Menu;
@@ -23,6 +25,7 @@ public class MenuRequestDto {
 	private User user;
 	// private StoreMenuCategory storeMenuCategory;
 	private Long categoryId;
+	private String categoryName;
 	private MenuCategory menuCategory;
 	@NotEmpty
 	private String name;
@@ -36,12 +39,14 @@ public class MenuRequestDto {
 	private Integer salRecord;
 	private Integer sequence;
 
+	private List<Menu> data;
+
 	public Menu toEntity() {
 		Menu menu = Menu.builder()
 			.menuId(id)
 			.user(user.builder().usrId(userId).build())
 			// .scm_id(scm_id)    //객체 변환 필요
-			.menuCategory(menuCategory.builder().id(categoryId).build())
+			.menuCategory(menuCategory.builder().id(categoryId).name(categoryName).build())
 			.name(name)
 			.price(price)
 			.image(image)

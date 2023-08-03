@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
+import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 
@@ -34,6 +35,15 @@ public class MenuService {
 		return menuRepository.save(saveMenu);
 	}
 
+	public void updateMenuList(List<Menu> menuList) {
+		for (Menu menu : menuList) {
+			Long menuId = menu.getMenuId();
+			MenuStatus menuStatus = menu.getStatus();
+			Integer sequence = menu.getSequence();
+			menuRepository.updateMenuList(menuId, menuStatus, sequence);
+		}
+	}
+
 	public void deleteMenu(Menu menu) {
 		menu.updateStatus();
 	}
@@ -48,10 +58,10 @@ public class MenuService {
 		return menu;
 	}
 
-	public boolean validateDuplicateMenuId(Long menuId) {
-		Optional<Menu> menu = menuRepository.findById(menuId);
-		return menu.isPresent();
-	}
+	// public boolean validateDuplicateMenuId(Long menuId) {
+	// 	Optional<Menu> menu = menuRepository.findById(menuId);
+	// 	return menu.isPresent();
+	// }
 
 	public boolean validateDuplicateCategoryId(Long categoryId) {
 		Optional<MenuCategory> menu = menuCategoryRepository.findById(categoryId);
