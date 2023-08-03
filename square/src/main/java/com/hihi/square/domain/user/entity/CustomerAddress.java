@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Builder
@@ -37,6 +36,7 @@ public class CustomerAddress {
 	private EmdAddress emdAddress;
 
 	private String address;
+	@Column(name="created_at")
 	private LocalDateTime createdAt;
 
 }

@@ -18,6 +18,11 @@ spring:
     user:
       name: admin
       password: admin
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 # JPA log
 logging:
@@ -43,3 +48,17 @@ jwt:
 
 server:
   port: 8811
+
+# AWS
+cloud:
+  aws:
+    s3:
+      bucket: ssafy-square-bucket # .bucket
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    credentials:
+      access-key: AKIAXFHB46BC5APX3VNV
+      secret-key: 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

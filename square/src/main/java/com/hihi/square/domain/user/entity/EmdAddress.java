@@ -27,14 +27,19 @@ public class EmdAddress {
 	@Column(name="aem_id")
 	private Integer aemId;
 
+	@Column(name="asd_name")
+	private String sidoName;
+
 	@Column(name="adm_code")
 	private String amdCode;
 	private String name;
 
 
+	@Column(name="asi_name")
+	private String siggName;
+
 	@ManyToOne
 	@JoinColumn(name = "asi_id")
 	private SiggAddress siggAddress;
-
 
 }
