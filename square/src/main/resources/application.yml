@@ -1,11 +1,11 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://i9b208.p.ssafy.io:8432/Square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-    username: hihi
-    password: 8811
-  jpa:
-    show-sql: true
+    driver-class-name : com.mysql.cj.jdbc.Driver
+    url : jdbc:mysql://i9b208.p.ssafy.io:8432/Square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username : hihi
+    password : 8811
+  jpa :
+    show-sql : true
     database: mysql
     properties:
       hibernate:

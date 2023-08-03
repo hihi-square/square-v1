@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -28,4 +30,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("update User u set u.password = :password where u.uid = :uid")
     void updatePassword(@Param("uid") String uid, @Param("password") String newPassword);
 
+    Optional<User> findByUsrId(Integer usrId);
 }
