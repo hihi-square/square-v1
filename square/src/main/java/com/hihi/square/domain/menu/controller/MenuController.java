@@ -18,7 +18,6 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuResponseDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.service.MenuService;
-import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MenuController {
 
 	private final MenuService menuService;
-	private final UserService userService;
+	// private final MenuCategoryService menuCategoryService;
 
 	@GetMapping
 	public ResponseEntity<CommonResponseDto<?>> getAllMenus() {
@@ -60,6 +59,11 @@ public class MenuController {
 		if (menuService.validateDuplicateMenuId(menu.getMenuId())) {
 			return ResponseEntity.ok(CommonResponseDto.error(409, "ALREADY_EXISTS_UID"));
 		}
+		// if (!menuService.validateDuplicateCategoryId(menu.getMenuCategory().getId())) {
+		// 	menuCategoryService.saveMenuCategory(menu.getMenuCategory());
+		// } else {
+		// 	menuCategoryService.updateMenuCategory(menu.getMenuCategory());
+		// }
 
 		menuService.saveMenu(menuRequestDto);
 		return ResponseEntity.ok(CommonResponseDto.success(null));

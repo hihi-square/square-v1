@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
 import com.hihi.square.domain.menu.entity.Menu;
+import com.hihi.square.domain.menu.entity.MenuCategory;
+import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class MenuService {
 
 	private final MenuRepository menuRepository;
+	private final MenuCategoryRepository menuCategoryRepository;
 
 	public void saveMenu(MenuRequestDto menuRequestDto) {
 		Menu menu = menuRequestDto.toEntity();
@@ -47,6 +50,11 @@ public class MenuService {
 
 	public boolean validateDuplicateMenuId(Long menuId) {
 		Optional<Menu> menu = menuRepository.findById(menuId);
+		return menu.isPresent();
+	}
+
+	public boolean validateDuplicateCategoryId(Long categoryId) {
+		Optional<MenuCategory> menu = menuCategoryRepository.findById(categoryId);
 		return menu.isPresent();
 	}
 }
