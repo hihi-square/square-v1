@@ -28,7 +28,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "menu")
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-// @ToString
 public class Menu extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

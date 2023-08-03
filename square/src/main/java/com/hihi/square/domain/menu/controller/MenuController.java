@@ -17,24 +17,30 @@ import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
 import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuResponseDto;
 import com.hihi.square.domain.menu.entity.Menu;
-import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.menu.service.MenuService;
+import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/menu")
 @RequiredArgsConstructor
-@Slf4j
 public class MenuController {
 
 	private final MenuService menuService;
 	private final MenuCategoryService menuCategoryService;
+	private final UserService userService;
 
 	@GetMapping
 	public ResponseEntity<CommonResponseDto<?>> getAllMenus() {
+		// String uid = authentication.getName();
+		// User user = userService.findByUid(uid).get();
+		// if (!(user instanceof Store)) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(400, "Is Not Store User"));
+		// }
+
+		// List<Menu> menuList = menuService.findAllByUserId(user.getUsrId());
 		List<Menu> menuList = menuService.findAll();
 		List<MenuResponseDto> menuResponseDtoList = new ArrayList<>();
 
@@ -59,17 +65,17 @@ public class MenuController {
 	public ResponseEntity<CommonResponseDto<?>> saveMenu(@RequestBody MenuRequestDto menuRequestDto) {
 		Menu menu = menuRequestDto.toEntity();
 		// log.debug("menu ", menuRequestDto);
-		MenuCategory menuCategory = MenuCategory.builder()
-			.user(menu.getUser())
-			.name(menuRequestDto.getCategoryName())
-			.build();
-		// 메뉴 카테고리 유무 검사
-		if (!menuService.validateDuplicateCategoryId(menu.getMenuCategory().getId())) {
-			menuCategoryService.saveMenuCategory(menuCategory);
-		}
+		// MenuCategory menuCategory = MenuCategory.builder()
+		// 	.user(menu.getUser())
+		// 	.name(menuRequestDto.getCategoryName())
+		// 	.build();
+		// // 메뉴 카테고리 유무 검사
+		// if (!menuService.validateDuplicateCategoryId(menu.getMenuCategory().getId())) {
+		// 	menuCategoryService.saveMenuCategory(menuCategory);
+		// }
 
 		menuService.saveMenu(menuRequestDto);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@PatchMapping("/{id}")
@@ -80,19 +86,13 @@ public class MenuController {
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuResponseDto(menu)));
 	}
 
-	// @PatchMapping("/list")
-	// public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuRequestDto menuRequestDto) {
-	// 	List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
-	// 	// log.info("menuRequestDtos : {}", menuRequestDtos);
-	// 	List<Menu> menuList = new ArrayList<>();
-	//
-	// 	for (MenuRequestDto mrd : menuRequestDtos) {
-	// 		menuList.add(mrd.toEntity());
-	// 	}
-	// 	// log.info("menuList : {}", menuList);
-	// 	menuService.updateMenuList(menuList);
-	// 	return ResponseEntity.ok(CommonResponseDto.success(menuList));
-	// }
+	@PatchMapping("/list")
+	public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuRequestDto menuRequestDto) {
+		List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
+		List<Menu> menuList = new ArrayList<>();
+		menuService.updateMenuList(menuRequestDtos);
+		return ResponseEntity.ok(CommonResponseDto.success(null));
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CommonResponseDto<?>> deleteMenu(
