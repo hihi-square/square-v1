@@ -64,8 +64,7 @@ public class StoreService {
 			Store store = s.getStore();
 			StoreListResponseDto res = StoreListResponseDto.builder()
 					.storeId(store.getUsrId())
-					.storeName(store.getName())
-					.storePhone(store.getPhone())
+					.storeName(store.getStoreName())
 					.content(store.getContent())
 					.storeAddress(store.getAddress())
 					.build();

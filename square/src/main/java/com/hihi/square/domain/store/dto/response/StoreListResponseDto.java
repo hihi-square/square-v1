@@ -9,7 +9,7 @@ public class StoreListResponseDto {
 
     private Integer storeId;
     private String storeName;
-    private String storePhone;
     private String content;
     private String storeAddress;
+//    private String mainMenu;
 }
