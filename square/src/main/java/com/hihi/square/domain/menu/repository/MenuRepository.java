@@ -1,5 +1,6 @@
 package com.hihi.square.domain.menu.repository;
 
+import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,4 +22,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 		@Param("sequence") Integer sequence);
 
 	List<Menu> findByUserAndPopularityIsTrue(User user);
+
+	List<Menu> findByMenuCategory(MenuCategory menuCategory);
 }

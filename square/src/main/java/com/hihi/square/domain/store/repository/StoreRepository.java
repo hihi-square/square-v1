@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StoreRepository extends JpaRepository<Store, Integer> {
 	Optional<Store> findByUid(String uid);
+
+	Optional<Store> findByUsrId(Integer id);
 }

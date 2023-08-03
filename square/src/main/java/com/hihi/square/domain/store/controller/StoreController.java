@@ -2,12 +2,16 @@ package com.hihi.square.domain.store.controller;
 
 import javax.validation.Valid;
 
+import com.hihi.square.domain.menu.dto.response.MenuCategoryResponseDto;
+import com.hihi.square.domain.menu.service.MenuCategoryService;
+import com.hihi.square.domain.menu.service.MenuService;
 import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
+import com.hihi.square.domain.user.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,6 +37,7 @@ import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/store")
@@ -44,6 +49,8 @@ public class StoreController {
 	private final UserService userService;
 	private final StoreCategoryService storeCategoryService;
 	private final CategoryService categoryService;
+	private final MenuCategoryService menuCategoryService;
+	private final MenuService menuService;
 	// 사업자 등록번호 중복확인
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
@@ -129,7 +136,7 @@ public class StoreController {
 			response.setMessage("NOT_AUTHENTICATE");
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
-		Store store = storeService.findById(request.getUsrId()).get();
+		Store store = storeService.findByUsrId(request.getUsrId()).get();
 		StoreCategoryBig storeCategoryBig = categoryService.findById(request.getScbId()).get();
 
 		// 등록된 카테고리가 3개 이상이라면 등록 불가
@@ -148,6 +155,27 @@ public class StoreController {
 
 		storeCategoryService.save(store, storeCategoryBig);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+
+	// 가게 정보 상단 조회
+	@GetMapping("/header/{id}")
+	public ResponseEntity<?> getStoreHeaderInfo(@PathVariable Integer id) {
+		Store store = storeService.findByUsrId(id).get();
+		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
+				.storeName(store.getStoreName())
+				.storePhone(store.getStorePhone())
+				.address(store.getAddress())
+				.content(store.getContent())
+				.build();
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+
+	// 가게 메뉴 전부 보기
+	@GetMapping("/menu/{usrId}")
+	public ResponseEntity<?> getAllMenuByCategory(@PathVariable Integer usrId) {
+		User user = userService.findByUsrId(usrId).get();
+		List<MenuCategoryResponseDto> response = menuCategoryService.getAllMenuByCategory(user);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }

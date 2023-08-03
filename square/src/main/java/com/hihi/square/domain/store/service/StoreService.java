@@ -53,12 +53,13 @@ public class StoreService {
 		storeRepository.save(store);
 	}
 
-	public Optional<Store> findById(Integer id) {return storeRepository.findById(id);}
+	public Optional<Store> findByUsrId(Integer id) {return storeRepository.findByUsrId(id);}
 
 	public Optional<Store> findByUid(String uid) {
 		return storeRepository.findByUid(uid);
 	}
 
+	@Transactional(readOnly = true)
 	public List<StoreListResponseDto> findByCategoryId(Integer id) {
 		StoreCategoryBig storeCategoryBig = categoryService.findById(id).get();
 		List<StoreCategorySelected> storeCategorySelectedList = storeCategoryService.findByStoreCategoryBig(storeCategoryBig);
