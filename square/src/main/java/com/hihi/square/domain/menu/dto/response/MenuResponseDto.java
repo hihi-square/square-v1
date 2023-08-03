@@ -3,7 +3,6 @@ package com.hihi.square.domain.menu.dto.response;
 import java.time.LocalDateTime;
 
 import com.hihi.square.domain.menu.entity.Menu;
-import com.hihi.square.domain.menu.entity.MenuStatus;
 
 import lombok.Data;
 
@@ -18,7 +17,7 @@ public class MenuResponseDto {
 	private boolean signature;
 	private boolean popular;
 	private Integer price;
-	private MenuStatus status;
+	private Integer status;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private Integer salRecord;
@@ -35,7 +34,7 @@ public class MenuResponseDto {
 		this.signature = menu.isSignature();
 		this.popular = menu.isPopularity();
 		this.price = menu.getPrice();
-		this.status = menu.getStatus();
+		this.status = menu.getStatus().ordinal();
 		this.createdAt = menu.getCreatedAt();
 		this.modifiedAt = menu.getModifiedAt();
 		this.salRecord = menu.getSalRecord();

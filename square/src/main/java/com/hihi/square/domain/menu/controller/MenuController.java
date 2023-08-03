@@ -82,9 +82,14 @@ public class MenuController {
 
 	// @PatchMapping("/list")
 	// public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuRequestDto menuRequestDto) {
-	// 	List<Menu> menuList = menuRequestDto.getData();
-	// 	log.info("menuList : {}", menuList);
+	// 	List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
+	// 	// log.info("menuRequestDtos : {}", menuRequestDtos);
+	// 	List<Menu> menuList = new ArrayList<>();
 	//
+	// 	for (MenuRequestDto mrd : menuRequestDtos) {
+	// 		menuList.add(mrd.toEntity());
+	// 	}
+	// 	// log.info("menuList : {}", menuList);
 	// 	menuService.updateMenuList(menuList);
 	// 	return ResponseEntity.ok(CommonResponseDto.success(menuList));
 	// }
