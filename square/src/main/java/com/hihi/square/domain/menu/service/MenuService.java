@@ -3,7 +3,6 @@ package com.hihi.square.domain.menu.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.hihi.square.domain.user.entity.User;
 import org.springframework.stereotype.Service;
 
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
@@ -13,11 +12,9 @@ import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MenuService {
 
 	private final MenuRepository menuRepository;

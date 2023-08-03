@@ -10,11 +10,9 @@ import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MenuCategoryService {
 	private final MenuCategoryRepository menuCategoryRepository;
 
@@ -37,6 +35,11 @@ public class MenuCategoryService {
 
 	public List<MenuCategory> findAll() {
 		List<MenuCategory> menuCategoryList = menuCategoryRepository.findAll();
+		return menuCategoryList;
+	}
+
+	public List<MenuCategory> findAllByUserId(Integer userId) {
+		List<MenuCategory> menuCategoryList = menuCategoryRepository.findAllByUserId(userId);
 		return menuCategoryList;
 	}
 

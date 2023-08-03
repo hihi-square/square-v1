@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -34,9 +35,14 @@ public class StoreInterceptor implements HandlerInterceptor {
 		// }
 		if (authentication != null && authentication.getPrincipal() instanceof User) {
 			User user = (User)authentication.getPrincipal();
-			log.info("user : {}", user.getAuthorities().getClass());
-			// if (!(user.getAuthorities() == UserAuthenticateType.UA02)) {
-			// User 객체가 STORE가 아닌 경우, 요청을 중단하고 에러 응답을 반환
+			log.info("user : {}", user.getAuthorities());
+
+			for (GrantedAuthority authority : user.getAuthorities()) {
+				if (authority.getAuthority().equals("ROLE_UA02")) {
+					return true;
+				}
+			}
+			// User 객체가 STORE(UA02)이 아닌 경우, 요청을 중단하고 에러 응답을 반환
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			return false;
 			// }
