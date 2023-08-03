@@ -46,7 +46,10 @@ public class UserService {
 		Optional<User> user = userRepository.findByNickname(nickname);
 		return user.isPresent();
 	}
-
+	public boolean validateDuplicateEmail(String email) {
+		Optional<User> user = userRepository.findByEmail(email);
+		return user.isPresent();
+	}
 
 	@Transactional
 	public void save(User user){
@@ -110,4 +113,6 @@ public class UserService {
 		user.updateUserProfile(null, null);
 		userRepository.save(user);
 	}
+
+
 }

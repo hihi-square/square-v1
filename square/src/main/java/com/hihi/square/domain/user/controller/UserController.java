@@ -1,12 +1,7 @@
 package com.hihi.square.domain.user.controller;
 
-import com.hihi.square.domain.image.dto.ImageFileThumbDto;
 import com.hihi.square.domain.image.dto.request.ImageRequestDto;
-import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
-import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
-import com.hihi.square.domain.user.dto.request.UserChangePasswordDto;
-import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
-import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
+import com.hihi.square.domain.user.dto.request.*;
 import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
@@ -17,8 +12,6 @@ import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -54,6 +47,11 @@ public class UserController {
 		//닉네임 중복 체크
 		if (userService.validateDuplicateNickname(customer.getNickname())) {
 			response.setMessage("ALREADY_EXISTS_NICKNAME");
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		// 이메일 중복 체크
+		if (userService.validateDuplicateEmail(customer.getEmail())) {
+			response.setMessage("ALREADY_EXISTS_EMAIL");
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//저장
