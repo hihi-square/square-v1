@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
 	// public void addInterceptors(InterceptorRegistry registry) {
 	// 	registry.addInterceptor(new StoreInterceptor()) // LogInterceptor 등록
 	// 		.order(1)    // 적용할 필터 순서 설정
-	// 		.addPathPatterns("/menu/**")
+	// 		.addPathPatterns("/store/**")
 	// 		.excludePathPatterns("/error"); // 인터셉터에서 제외할 패턴
 	// }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,20 +19,27 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
+import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/menuCategory")
+@RequestMapping("/store/menuCategory")
 @RequiredArgsConstructor
 @Slf4j
 public class MenuCategoryController {
 	private final MenuCategoryService menuCategoryService;
+	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllMenuCategory() {
-		List<MenuCategory> menuCategoryList = menuCategoryService.findAll();
+	public ResponseEntity<CommonResponseDto<?>> getAllMenuCategory(Authentication authentication) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
+		// List<MenuCategory> menuCategoryList = menuCategoryService.findAll();
 		List<MenuCategoryResponseDto> responseList = new ArrayList<>();
 
 		for (MenuCategory menuCategory : menuCategoryList) {
