@@ -6,7 +6,6 @@ COPY package*.json ./
 RUN npm install
 COPY . ./
 RUN npm run build
-CMD ["npm", "start"]
 
 # Stage 2 - the production environment wow1232
 FROM nginx:1.19.0-alpine
