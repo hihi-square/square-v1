@@ -64,7 +64,6 @@ export default function SignUp() {
   };
 
   const handleCheckId = () => {
-    console.log(id);
     axios
       .get(`http://i9b208.p.ssafy.io:8811/user/id/${id}`)
       .then((response) => {
@@ -74,16 +73,6 @@ export default function SignUp() {
       .catch((error) => {
         console.error("아이디 중복 확인 오류:", error);
       });
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const handlePw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPw(e.target.value);
-    const regex =
-      /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-
-    setPwValid(regex.test(e.target.value));
-    updateNotAllow();
   };
 
   const handleBusinessNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
