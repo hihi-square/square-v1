@@ -25,7 +25,7 @@ public class MenuOption extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "meo_id")
-	private int id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "moc_id", referencedColumnName = "name")

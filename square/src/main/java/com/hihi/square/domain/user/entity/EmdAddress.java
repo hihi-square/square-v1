@@ -9,11 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -21,20 +18,18 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="emd_address")
+@Table(name = "emd_address")
 public class EmdAddress {
-	@Id @GeneratedValue
-	@Column(name="aem_id")
+	@Id
+	@GeneratedValue
+	@Column(name = "aem_id")
 	private Integer aemId;
 
-	@Column(name="adm_code")
+	@Column(name = "adm_code")
 	private String amdCode;
 	private String name;
-
 
 	@ManyToOne
 	@JoinColumn(name = "asi_id")
 	private SiggAddress siggAddress;
-
-
 }

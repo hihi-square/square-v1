@@ -3,34 +3,42 @@ package com.hihi.square.domain.store.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="store")
+@Table(name = "store")
 @DiscriminatorValue("UA02")
 public class Store extends User {
 	@ManyToOne
-	@JoinColumn(name="aem_id")
+	@JoinColumn(name = "aem_id")
 	private EmdAddress emdAddress;
 
 	private String address;
-	@Column(name="store_name")
+	@Column(name = "store_name")
 	private String storeName;
-	@Column(name="store_phone")
+	@Column(name = "store_phone")
 	private String storePhone;
 	private String content;
 	@Enumerated(EnumType.STRING)

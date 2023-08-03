@@ -9,19 +9,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.User;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 @Table(name = "menu_category")
-public class MenuCategory extends BaseTime {
+public class MenuCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "mec_id")
-	private int id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "usr_id")
@@ -29,7 +35,6 @@ public class MenuCategory extends BaseTime {
 
 	@Column(nullable = false)
 	private String name;
-	@Column(nullable = false)
-	private int order;
+	private Integer sequence;
 
 }

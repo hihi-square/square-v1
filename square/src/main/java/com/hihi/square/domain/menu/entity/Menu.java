@@ -2,6 +2,7 @@ package com.hihi.square.domain.menu.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,33 +10,35 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.User;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "menu")
 @Getter
-@Setter
-// @EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)
+@ToString
 public class Menu extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "men_id")
-	private Long id;
+	private Long menuId;
 
 	@ManyToOne
-	@JoinColumn(name = "sto_id", nullable = false)
+	@JoinColumn(name = "usr_id", nullable = false)
 	private User user;
-
-	// @OneToOne
-	// @JoinColumn(name = "scm_id")
-	// private StoreMenuCategory storeMenuCategory;
-	private int scm_id;
 
 	@ManyToOne
 	@JoinColumn(name = "mec_id")
@@ -43,15 +46,22 @@ public class Menu extends BaseTime {
 
 	private String name;
 	private Integer price;
-	private Integer image;
-	@ColumnDefault("false")
+	private String image;
+	private String thumbnail;
+	// @ColumnDefault("false")
 	private boolean signature;
-	@ColumnDefault("false")
+	// @ColumnDefault("false")
 	private boolean popularity;
+	// @Enumerated(EnumType.ORDINAL)
 	@Column(name = "status")
-	@ColumnDefault("ON")
 	private MenuStatus status;
 	private String description;
-	private Integer sal_record;
+	// @ColumnDefault("0")
+	@Column(name = "sal_record")
+	private Integer salRecord;
+	private Integer sequence;
 
+	public void updateStatus() {
+		this.status = MenuStatus.OFF;
+	}
 }
