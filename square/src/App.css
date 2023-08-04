@@ -110,22 +110,65 @@
   align-items: flex-start;
 }
 
-
 .category-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2개의 열로 구성 */
+  gap: 10px; /* 버튼 사이의 간격 */
+  width: 100%; /* 컨테이너 전체 너비를 사용 */
+  margin-top: 20px; /* 컨테이너 위쪽 여백 설정 */
 }
 
 .category-button {
-  width: 18%; /* 100%를 5로 나눈 값에 조금 더 여유를 줍니다. */
-  margin: 1%;
+  width: 100%; /* 버튼이 열 전체 너비를 차지하도록 설정 */
   padding: 10px;
   text-align: center;
   border: 1px solid #000;
   border-radius: 4px;
   box-sizing: border-box;
+  font-size: 16px; /* 버튼 내용의 글자 크기 조절 */
+}
+.list-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.store-row {
+  display: flex;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.store-thumbnail {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.store-thumbnail .MuiAvatar-root {
+  width: 80px;
+  height: 80px;
+}
+
+.store-details {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.store-name,
+.store-menu,
+.store-address {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.store-name {
+  font-weight: bold;
 }
 .discountNow{
   margin-left: 20px;

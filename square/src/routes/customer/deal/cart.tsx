@@ -32,7 +32,7 @@ function Cart() {
     if (previousState) {
       navigate(previousState);
     } else {
-      navigate("/");
+      navigate(-1);
     }
   };
 
@@ -95,7 +95,7 @@ function Cart() {
         ))}
       </div>
 
-      <Link to="/deal/cart/pay">
+      <Link to="/pay">
         <button style={paymentButtonStyle}>
           <div>{itemCount} 항목</div>
           <div>결제</div>

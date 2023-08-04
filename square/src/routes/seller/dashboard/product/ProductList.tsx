@@ -399,7 +399,6 @@ export default function ProductList() {
         >
           상품 관리
         </Typography>
-
         <Typography
           component="div"
           sx={{ flexGrow: 1, textAlign: "left", fontWeight: 500 }}

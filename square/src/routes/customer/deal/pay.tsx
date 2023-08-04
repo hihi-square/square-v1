@@ -1,26 +1,33 @@
-import { useNavigate, useLocation, Route, Routes } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import OrderComplete from "./orderComplete";
 
 function Pay() {
   const navigate = useNavigate();
   const location = useLocation();
+  const menu = location.state?.menu; // 이전 컴포넌트에서 전달한 메뉴 정보
+
+  console.log("넘어온 메뉴 정보:", menu);
+
+  console.log("ㅎㅇ");
   const goBack = () => {
     const previousState = location.state?.from;
 
     if (previousState) {
       navigate(previousState);
     } else {
-      navigate("/deal/cart");
+      navigate("/cart");
     }
   };
 
   return (
     <>
       <ArrowBackIcon onClick={goBack} />
-      <Routes>
-        <Route path="/ordercomplete" element={<OrderComplete />} />
-      </Routes>
+      <div>
+        {/* 여기에 메뉴 정보를 띄우면 됩니다. */}
+        <h2>{menu?.menuName}</h2>
+        <p>{menu?.menuDescription}</p>
+        <p>{menu?.price}원</p>
+      </div>
     </>
   );
 }

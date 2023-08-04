@@ -50,7 +50,7 @@ export default function Login() {
     // eslint-disable-next-line no-console
     console.log(`${id}/${pw}`);
     axios({
-      url: "http://43.201.255.188:8811/user/login", 
+      url: "http://43.201.255.188:8811/user/login",
       method: "POST",
       data: {
         uid: id,
@@ -61,9 +61,8 @@ export default function Login() {
       .then((response) => {
         // console.log(response.data.refreshToken)
         // console.log(response.data.accessToken)
-        localStorage.setItem('accessToken', response.data.accessToken)
-        localStorage.setItem('refreshToken', response.data.refreshToken)
-
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
 
         navigate("/dashboard");
       })
@@ -127,4 +126,3 @@ export default function Login() {
     </div>
   );
 }
-

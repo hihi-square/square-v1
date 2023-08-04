@@ -25,7 +25,6 @@ function App() {
           <Route path="/storePage/*" element={<Store />} />
           {/* <Route path="/customer/*" element={<CustomerSignUp />} />
           <Route path="/customer/*" element={<CustomerLogin />} /> */}
-
         </Routes>
       </ThemeProvider>
     </div>

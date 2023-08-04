@@ -1,10 +1,7 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import { useSwipeable } from "react-swipeable";
 import "App.css";
-
-import StorePage from "../store/storePage";
 
 export default function StoreListByLocation() {
   const [state, setState] = React.useState({
@@ -76,10 +73,6 @@ export default function StoreListByLocation() {
           />
         </div>
       </div>
-
-      <Routes>
-        <Route path="/:storeid" element={<StorePage />} />
-      </Routes>
     </div>
   );
 }

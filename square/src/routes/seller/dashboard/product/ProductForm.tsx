@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+
 import { Iproduct } from "modules/types";
 import Grid from "@mui/material/Unstable_Grid2";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Input from "@mui/material/Input";
@@ -21,6 +23,7 @@ import ImagePreview from "./ImagePreview";
 interface Props {
   open: boolean;
   close: (close: boolean) => void;
+
   length: number;
   create: (product: Iproduct, length: number) => void;
   isCreateModal: boolean;

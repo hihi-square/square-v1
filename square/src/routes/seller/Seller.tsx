@@ -8,7 +8,7 @@ export default function Seller() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/signup/*" element={<SignUp />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path="/dashboard/*" element={<Dashboard />} />
     </Routes>
   );
