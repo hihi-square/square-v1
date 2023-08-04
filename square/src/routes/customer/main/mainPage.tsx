@@ -1,8 +1,8 @@
 import {  Link } from "react-router-dom";
-import Category from "./category";
-import DiscountNow from "./discountNow";
-import Header from "./header";
-import Footer from "./footer";
+import Category from "./component/category";
+import DiscountNow from "./component/discountNow";
+import Header from "./component/header";
+import Footer from "./component/footer";
 
 function MainPage() {
   return (

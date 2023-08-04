@@ -1,7 +1,7 @@
 import React from "react";
 
-function StoreFeed() {
-  return <div>가게 피드입니다.</div>;
+function StoreFeed({ storeId }: { storeId?: string }) {
+  return <div>{storeId} 피드입니다.</div>;
 }
 
 export default StoreFeed;

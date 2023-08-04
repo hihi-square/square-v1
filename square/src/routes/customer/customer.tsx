@@ -25,13 +25,13 @@ export default function Customer() {
     <Routes>
         <Route path="/" element={<MainPage/>}/>
         <Route
-          path="/storelist/:categoryid"
+          path="/storelist/:category"
           element={<StoreListByCategory />}
         />
         <Route path="/storelist/location" element={<StoreListByLocation />} />
 
         {/* 스토어 아이디 데이터 있기 전까진 일단 그냥 대표페이지로 가게하고 나중에 바인드 */}
-        <Route path="/storePage" element={<StorePage />} />
+        <Route path="/storePage/:store" element={<StorePage />} />
         <Route path="/searchmap" element={<SearchMap />} />
         <Route path="/board" element={<Board />} />
         <Route path="/chat" element={<Chat />} />

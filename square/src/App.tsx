@@ -14,8 +14,9 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Link to="/">구매자 페이지로</Link>
+          <Link to="/">구매자 페이지로</Link>  
         <Link to="/seller">판매자 페이지로</Link>
+
         <Routes>
           <Route path="/*" element={<Customer />} />
           <Route path="/seller/*" element={<Seller />} />

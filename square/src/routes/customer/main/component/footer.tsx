@@ -1,6 +1,6 @@
 
 import React from "react"; // 따옴표로 변경
-import "../../../App.css";
+import "../../../../App.css";
 
 
 function Footer() {
