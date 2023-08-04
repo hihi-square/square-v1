@@ -66,7 +66,7 @@ export default function Login() {
         localStorage.setItem('refreshToken', response.data.refreshToken)
 
 
-        navigate("/dashboard");
+        navigate("/");
       })
       .catch((error) => {
         // eslint-disable-next-line no-console

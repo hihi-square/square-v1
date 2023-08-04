@@ -5,6 +5,8 @@ import Seller from "./routes/seller/Seller";
 import Main from "./routes/customer/main/mainPage";
 import Store from "./routes/customer/store/storePage";
 import CustomerSignUp from "routes/customer/signup/CustomerSignup";
+import CustomerLogin from "routes/customer/login/CustomerLogin";
+
 
 
 const theme = createTheme({
@@ -24,7 +26,7 @@ function App() {
           <Route path="/seller/*" element={<Seller />} />
           <Route path="/storePage/*" element={<Store />} />
           <Route path="/customer/signup" element={<CustomerSignUp />} />
-          {/* <Route path="/customer/*" element={<CustomerLogin />} /> */}
+          <Route path="/customer/*" element={<CustomerLogin />} />
 
         </Routes>
       </ThemeProvider>

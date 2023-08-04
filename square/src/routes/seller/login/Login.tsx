@@ -63,9 +63,9 @@ export default function Login() {
         // console.log(response.data.accessToken)
         localStorage.setItem('accessToken', response.data.accessToken)
         localStorage.setItem('refreshToken', response.data.refreshToken)
+        
 
-
-        navigate("/dashboard");
+        navigate("/seller/dashboard");
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
