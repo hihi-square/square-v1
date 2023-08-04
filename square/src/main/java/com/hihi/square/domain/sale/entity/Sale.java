@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,9 +31,11 @@ public class Sale extends BaseTime {
 	@Column(name = "real_finished_at")
 	private LocalDateTime realFinishedAt;
 	private Integer price;
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private Status status;
 	@ManyToOne
 	@JoinColumn(name = "usr_id")
 	private User user;
+	@OneToMany(mappedBy = "sale")
+	private List<SaleMenu> menus = new ArrayList<>();
 }

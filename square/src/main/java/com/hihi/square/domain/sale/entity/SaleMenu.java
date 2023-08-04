@@ -30,10 +30,7 @@ public class SaleMenu {
 	@JoinColumn(name = "men_id")
 	private Menu menu;
 
-	@ManyToOne
-	@JoinColumn(name = "usr_id")
-	private User user;
-
-	private Integer price;
-	private Integer quantity;
+	// @ManyToOne
+	// @JoinColumn(name = "usr_id")
+	// private User user;
 }

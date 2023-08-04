@@ -32,7 +32,7 @@ public class SaleController {
         if (!(user instanceof Store)){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED"), HttpStatus.BAD_REQUEST);
         }
-        saleService.createSale(request);
+        saleService.createSale(request, user);
         return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS_CREATE").build(), HttpStatus.CREATED);
     }
 
