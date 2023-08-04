@@ -55,6 +55,7 @@ public class SaleService {
         for(Sale sale : saleList){
             result.add(StoreSaleDto.builder()
                     .id(sale.getId())
+                            .name(sale.getName())
                             .finishedAt(sale.getFinishedAt())
                             .startedAt(sale.getStartedAt())
                             .realFinishedAt(sale.getRealFinishedAt())
@@ -72,6 +73,7 @@ public class SaleService {
         for(Sale sale : saleList){
             result.add(StoreSaleDto.builder()
                     .id(sale.getId())
+                    .name(sale.getName())
                     .finishedAt(sale.getFinishedAt())
                     .startedAt(sale.getStartedAt())
                     .realFinishedAt(sale.getRealFinishedAt())

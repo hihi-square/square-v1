@@ -22,7 +22,7 @@ public class SaleCreateRequestDto {
     private Status status;
 
     public Sale toEntity(User user) {
-        Sale sale = Sale.builder().user(user).startedAt(startAt).finishedAt(finishedAt).realFinishedAt(finishedAt).price(price).status(status).build();
+        Sale sale = Sale.builder().user(user).name(name).startedAt(startAt).finishedAt(finishedAt).realFinishedAt(finishedAt).price(price).status(status).build();
         return sale;
     }
 }

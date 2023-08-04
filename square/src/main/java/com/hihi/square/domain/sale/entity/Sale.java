@@ -24,6 +24,7 @@ public class Sale extends BaseTime {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "sal_id")
 	private Integer id;
+	private String name;
 	@Column(name = "started_at")
 	private LocalDateTime startedAt;
 	@Column(name = "finished_at")

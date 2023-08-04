@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class StoreSaleDto {
     private Integer id;
+    private String name;
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
     private LocalDateTime realFinishedAt;
