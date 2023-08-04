@@ -71,7 +71,7 @@ public class SaleController {
     
     // 내 가게의 전체 세일 개요 확인
     @GetMapping("/sales")
-    public ResponseEntity<?> getStoreAllSale(Authentication authentication){
+    public ResponseEntity<?> getMyAllSale(Authentication authentication){
         String uid = authentication.getName();
         User user = userService.findByUid(uid).get();
         if (!(user instanceof Store)){
@@ -79,7 +79,26 @@ public class SaleController {
         }
         List<StoreSaleDto> result = saleService.getStoreAllSale(user);
         if (result.size() == 0){
-            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(204).message("NO_SALE").build(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("NO_SALE").build(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(StoreAllSaleResponseDto.builder().statusCode(200).message("SUCCESS").sales(result).build(), HttpStatus.OK);
+        }
+    }
+
+    // 어떤 가게의 진행중인 세일 가져오기
+    @GetMapping("/sales/{id}")
+    public ResponseEntity<?> getStoreAllSale(@PathVariable("id") Integer storeId){
+        Optional<User> optionalUser = userService.findByUsrId(storeId);
+        if (!optionalUser.isPresent()){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_STORE").build(), HttpStatus.BAD_REQUEST);
+        }
+        User user = optionalUser.get();
+        if (!(user instanceof Store)){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
+        }
+        List<StoreSaleDto> result = saleService.getStoreInProgressSales(user);
+        if (result.size() == 0){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("NO_SALE").build(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(StoreAllSaleResponseDto.builder().statusCode(200).message("SUCCESS").sales(result).build(), HttpStatus.OK);
         }

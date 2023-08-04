@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +61,23 @@ public class SaleService {
                             .price(sale.getPrice())
                             .menuNumber(sale.getMenus().size())
                             .status(sale.getStatus())
+                    .build());
+        }
+        return result;
+    }
+
+    public List<StoreSaleDto> getStoreInProgressSales(User user) {
+        List<StoreSaleDto> result = new ArrayList<>();
+        List<Sale> saleList = saleRepository.findAllInProgressSalesByUser(user, LocalDateTime.now());
+        for(Sale sale : saleList){
+            result.add(StoreSaleDto.builder()
+                    .id(sale.getId())
+                    .finishedAt(sale.getFinishedAt())
+                    .startedAt(sale.getStartedAt())
+                    .realFinishedAt(sale.getRealFinishedAt())
+                    .price(sale.getPrice())
+                    .menuNumber(sale.getMenus().size())
+                    .status(sale.getStatus())
                     .build());
         }
         return result;
