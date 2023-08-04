@@ -3,6 +3,8 @@ package com.hihi.square.domain.sale.controller;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.service.MenuService;
 import com.hihi.square.domain.sale.dto.request.SaleCreateRequestDto;
+import com.hihi.square.domain.sale.dto.response.StoreAllSaleResponseDto;
+import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.service.SaleService;
 import com.hihi.square.domain.store.entity.Store;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/store/sale")
+@RequestMapping("/store")
 @RequiredArgsConstructor
 public class SaleController {
 
@@ -30,7 +32,7 @@ public class SaleController {
     private final MenuService menuService;
 
     // 세일 등록
-    @PostMapping
+    @PostMapping("/sale")
     public ResponseEntity<?> createSale(Authentication authentication, @RequestBody @Valid SaleCreateRequestDto request) {
         String uid = authentication.getName();
         User user = userService.findByUid(uid).get();
@@ -51,7 +53,7 @@ public class SaleController {
     }
 
     // 세일 종료
-    @PostMapping("/{saleId}")
+    @PostMapping("/sale/{saleId}")
     public ResponseEntity<?> finishSale(Authentication authentication, @PathVariable Integer saleId){
         String uid = authentication.getName();
         User user = userService.findByUid(uid).get();
@@ -66,5 +68,20 @@ public class SaleController {
         saleService.finishSale(sale);
         return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_FINISH_SALE").build(), HttpStatus.OK);
     }
-
+    
+    // 내 가게의 전체 세일 개요 확인
+    @GetMapping("/sales")
+    public ResponseEntity<?> getStoreAllSale(Authentication authentication){
+        String uid = authentication.getName();
+        User user = userService.findByUid(uid).get();
+        if (!(user instanceof Store)){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
+        }
+        List<StoreSaleDto> result = saleService.getStoreAllSale(user);
+        if (result.size() == 0){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(204).message("NO_SALE").build(), HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(StoreAllSaleResponseDto.builder().statusCode(200).message("SUCCESS").sales(result).build(), HttpStatus.OK);
+        }
+    }
 }

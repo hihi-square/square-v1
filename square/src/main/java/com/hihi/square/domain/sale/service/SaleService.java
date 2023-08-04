@@ -3,6 +3,7 @@ package com.hihi.square.domain.sale.service;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.sale.dto.request.SaleCreateRequestDto;
+import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.entity.SaleMenu;
 import com.hihi.square.domain.sale.repository.SaleMenuRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,5 +46,22 @@ public class SaleService {
     public void finishSale(Sale sale) {
         sale.finishSale();
         saleRepository.save(sale);
+    }
+
+    public List<StoreSaleDto> getStoreAllSale(User user) {
+        List<StoreSaleDto> result = new ArrayList<>();
+        List<Sale> saleList = saleRepository.findAllByUser(user);
+        for(Sale sale : saleList){
+            result.add(StoreSaleDto.builder()
+                    .id(sale.getId())
+                            .finishedAt(sale.getFinishedAt())
+                            .startedAt(sale.getStartedAt())
+                            .realFinishedAt(sale.getRealFinishedAt())
+                            .price(sale.getPrice())
+                            .menuNumber(sale.getMenus().size())
+                            .status(sale.getStatus())
+                    .build());
+        }
+        return result;
     }
 }
