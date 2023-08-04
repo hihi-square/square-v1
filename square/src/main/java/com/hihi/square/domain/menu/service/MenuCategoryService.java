@@ -65,7 +65,7 @@ public class MenuCategoryService {
 		List<MenuCategory> menuCategories = menuCategoryRepository.findByUser(user);
 		for(MenuCategory menuCategory : menuCategories) {
 			List<MenuItemResponseDto> menus = new ArrayList<>();
-			List<Menu> menuList = menuRepository.findByMenuCategory(menuCategory);
+			List<Menu> menuList = menuRepository.findByMenuCategoryAndUser(menuCategory, user);
 			for(Menu menu : menuList) {
 				MenuItemResponseDto menuItemResponseDto = MenuItemResponseDto.builder()
 						.menuId(menu.getMenuId())

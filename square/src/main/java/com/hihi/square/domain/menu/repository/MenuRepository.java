@@ -27,5 +27,5 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 
 	List<Menu> findByUserAndPopularityIsTrue(User user);
 
-	List<Menu> findByMenuCategory(MenuCategory menuCategory);
+	List<Menu> findByMenuCategoryAndUser(MenuCategory menuCategory, User user);
 }
