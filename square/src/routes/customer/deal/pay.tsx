@@ -6,9 +6,6 @@ function Pay() {
   const location = useLocation();
   const menu = location.state?.menu; // 이전 컴포넌트에서 전달한 메뉴 정보
 
-  console.log("넘어온 메뉴 정보:", menu);
-
-  console.log("ㅎㅇ");
   const goBack = () => {
     const previousState = location.state?.from;
 

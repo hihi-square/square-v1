@@ -32,15 +32,14 @@ export default function StoreListByCategory() {
       })
         .then((response) => {
           // 성공적으로 데이터를 받아오면 상태를 업데이트합니다.
-          console.log("응답 데이터: ", response.data);
-          console.log(response.data[0].storeId);
+          // console.log("응답 데이터: ", response.data);
+          // console.log(response.data[0].storeId);
           setStores(response.data);
         })
         .catch((error) => {
           // 에러 처리
-
-          console.log(`${category}`);
-          console.error(error);
+          // console.log(`${category}`);
+          // console.error(error);
         });
     }
   }, [category]);
