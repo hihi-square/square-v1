@@ -15,6 +15,7 @@ public class MenuItemResponseDto {
     private Integer status;
     private boolean popularity;
     private Integer price;
+    private Integer menuSequence;
 //    private String menuThumbnail;
 //    private String menuImage;
 
