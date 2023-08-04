@@ -1,10 +1,7 @@
 package com.hihi.square.domain.user.controller;
 
-import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
-import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
-import com.hihi.square.domain.user.dto.request.UserChangePasswordDto;
-import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
-import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
+import com.hihi.square.domain.image.dto.request.ImageRequestDto;
+import com.hihi.square.domain.user.dto.request.*;
 import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
@@ -20,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -49,6 +47,11 @@ public class UserController {
 		//닉네임 중복 체크
 		if (userService.validateDuplicateNickname(customer.getNickname())) {
 			response.setMessage("ALREADY_EXISTS_NICKNAME");
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		// 이메일 중복 체크
+		if (userService.validateDuplicateEmail(customer.getEmail())) {
+			response.setMessage("ALREADY_EXISTS_EMAIL");
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//저장
@@ -144,9 +147,27 @@ public class UserController {
 		if (userService.validateDuplicateNickname(request.getNickname())){
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(409).message("ALREADY_EXISTS_NICKNAME"), HttpStatus.CONFLICT);
 		}
-		System.out.println("ddddddd");
 		userService.updateUserInfo(uid, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+	}
+
+	@PostMapping("/profile")
+	public ResponseEntity setProfileImage(Authentication authentication, @RequestPart MultipartFile profile, @RequestPart MultipartFile thumb){
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		userService.updateUserProfile(user, ImageRequestDto.builder().file(profile).thumbnail(thumb).build());
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(),
+			HttpStatus.OK);
+	}
+
+	@DeleteMapping("/profile")
+	public ResponseEntity deleteProfileImage(Authentication authentication) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		userService.deleteUserProfile(user);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(),
+			HttpStatus.OK);
+
 	}
 	
 }
