@@ -18,5 +18,5 @@ public class StoreSaleDetailDto {
     private LocalDateTime realFinishedAt;
     private Integer price;
     private Status status;
-    private List<MenuDto> menus = new ArrayList<>();
+    private List<SaleMenuDto> menus = new ArrayList<>();
 }

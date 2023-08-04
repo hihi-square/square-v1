@@ -3,8 +3,9 @@ package com.hihi.square.domain.sale.service;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.sale.dto.request.SaleCreateRequestDto;
+import com.hihi.square.domain.sale.dto.request.SaleMenuFormDto;
 import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
-import com.hihi.square.domain.sale.dto.response.MenuDto;
+import com.hihi.square.domain.sale.dto.response.SaleMenuDto;
 import com.hihi.square.domain.sale.dto.response.StoreSaleDetailDto;
 import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
@@ -31,13 +32,14 @@ public class SaleService {
     private final MenuRepository menuRepository;
 
     @Transactional
-    public void createSale(SaleCreateRequestDto request, List<Menu> menus, User user) {
+    public void createSale(SaleCreateRequestDto request, User user) {
         Sale sale = request.toEntity(user);
         saleRepository.save(sale);
-        for(Menu menu : menus){
+        for(SaleMenuFormDto menu : request.getMenus()){
             saleMenuRepository.save(SaleMenu.builder()
                     .sale(sale)
-                    .menu(menu)
+                    .menu(menuRepository.findById(menu.getMenuId()).get())
+                    .quantity(menu.getQuantity())
                     .build());
         }
     }
@@ -95,12 +97,13 @@ public class SaleService {
     }
 
     @Transactional
-    public void updateSale(Sale sale, SaleUpdateRequestDto request, List<Menu> menus) {
+    public void updateSale(Sale sale, SaleUpdateRequestDto request) {
         saleMenuRepository.deleteAllBySale(sale);
-        for(Menu menu : menus){
+        for(SaleMenuFormDto menu : request.getMenus()){
             saleMenuRepository.save(SaleMenu.builder()
                     .sale(sale)
-                    .menu(menu)
+                    .menu(menuRepository.findById(menu.getMenuId()).get())
+                    .quantity(menu.getQuantity())
                     .build());
         }
         sale.updateSale(request);
@@ -109,11 +112,11 @@ public class SaleService {
     }
 
     public StoreSaleDetailDto getSaleDetail(Sale sale) {
-        List<MenuDto> menuDtos = new ArrayList<>();
+        List<SaleMenuDto> saleMenuDtos = new ArrayList<>();
         List<SaleMenu> menus = saleMenuRepository.findAllBySale(sale);
         for(SaleMenu saleMenu : menus){
             Menu m = saleMenu.getMenu();
-            menuDtos.add(MenuDto.builder()
+            saleMenuDtos.add(SaleMenuDto.builder()
                             .menuId(m.getMenuId())
                             .name(m.getName())
                             .price(m.getPrice())
@@ -122,6 +125,7 @@ public class SaleService {
                             .status(m.getStatus())
                             .description(m.getDescription())
                             .sequence(m.getSequence())
+                            .quantity(saleMenu.getQuantity())
                     .build());
         }
         return StoreSaleDetailDto.builder()
@@ -132,7 +136,7 @@ public class SaleService {
                 .realFinishedAt(sale.getRealFinishedAt())
                 .price(sale.getPrice())
                 .status(sale.getStatus())
-                .menus(menuDtos)
+                .menus(saleMenuDtos)
                 .build();
     }
 }

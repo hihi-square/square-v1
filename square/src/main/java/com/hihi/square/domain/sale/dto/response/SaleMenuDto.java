@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class MenuDto {
+public class SaleMenuDto {
     private Long menuId;
     private String name;
     private Integer price;
@@ -15,4 +15,5 @@ public class MenuDto {
     private MenuStatus status;
     private String description;
     private Integer sequence;
+    private Integer quantity;
 }

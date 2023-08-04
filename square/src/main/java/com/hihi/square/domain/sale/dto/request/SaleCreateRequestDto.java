@@ -17,7 +17,7 @@ public class SaleCreateRequestDto {
     private LocalDateTime startAt; // 시작 일/시간
     private LocalDateTime finishedAt; // 마지막 일/시간
     private Integer price; // 총 가격 -> 팔 가격
-    private List<Long> menus = new ArrayList<>(); // 메뉴 리스트
+    private List<SaleMenuFormDto> menus = new ArrayList<>(); // 메뉴 리스트
     @Enumerated(EnumType.STRING)
     private Status status;
 
