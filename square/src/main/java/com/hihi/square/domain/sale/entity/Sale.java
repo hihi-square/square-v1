@@ -38,4 +38,8 @@ public class Sale extends BaseTime {
 	private User user;
 	@OneToMany(mappedBy = "sale")
 	private List<SaleMenu> menus = new ArrayList<>();
+
+	public void finishSale() {
+		this.realFinishedAt = LocalDateTime.now();
+	}
 }
