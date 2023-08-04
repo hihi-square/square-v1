@@ -24,6 +24,7 @@ public class MenuRequestDto {
 	private int userId;
 	private User user;
 	// private StoreMenuCategory storeMenuCategory;
+	@NotEmpty
 	private Long categoryId;
 	private String categoryName;
 	private MenuCategory menuCategory;

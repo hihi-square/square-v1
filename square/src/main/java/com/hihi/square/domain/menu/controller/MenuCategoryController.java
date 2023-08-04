@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hihi.square.domain.menu.dto.request.MenuCategoryRequestDto;
 import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuCategoryResponseDto;
+import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.user.service.UserService;
@@ -74,13 +75,14 @@ public class MenuCategoryController {
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuCategoryResponseDto(menuCategory)));
 	}
 
-	// @PatchMapping("/list")
-	// public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuRequestDto menuRequestDto) {
-	// 	List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
-	// 	List<Menu> menuList = new ArrayList<>();
-	// 	menuService.updateMenuList(menuRequestDtos);
-	// 	return ResponseEntity.ok(CommonResponseDto.success(null));
-	// }
+	@PatchMapping("/list")
+	public ResponseEntity<CommonResponseDto<?>> updateMenuCategoryList(@RequestBody MenuCategoryRequestDto request) {
+		List<MenuCategoryRequestDto> requestDtos = request.getData();
+		log.info("requestDtos : {}", requestDtos);
+		List<Menu> menuList = new ArrayList<>();
+		menuCategoryService.updateMenuList(requestDtos);
+		return ResponseEntity.ok(CommonResponseDto.success(null));
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CommonResponseDto<?>> deleteMenuCategory(
