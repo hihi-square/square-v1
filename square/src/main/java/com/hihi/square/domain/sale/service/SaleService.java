@@ -82,4 +82,10 @@ public class SaleService {
         }
         return result;
     }
+    @Transactional
+    public void deleteSale(Sale sale) {
+        // 일단 세일메뉴에 있는 것들 삭제
+        saleMenuRepository.deleteAllBySale(sale);
+        saleRepository.delete(sale);
+    }
 }

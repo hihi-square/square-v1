@@ -103,4 +103,28 @@ public class SaleController {
             return new ResponseEntity<>(StoreAllSaleResponseDto.builder().statusCode(200).message("SUCCESS").sales(result).build(), HttpStatus.OK);
         }
     }
+
+    // 세일 삭제
+    @DeleteMapping("/sale/{id}")
+    public ResponseEntity<CommonResponseDto> deleteSale(Authentication authentication, @PathVariable("id") Integer saleId){
+        String uid = authentication.getName();
+        User user = userService.findByUid(uid).get();
+        // 로그인 회원이 가게 회원인지 확인
+        if (!(user instanceof Store)){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
+        }
+        Optional<Sale> optionalSale = saleService.findById(saleId);
+        // 세일이 존재하는지 확인
+        if (!optionalSale.isPresent()){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_SALE_ID").build(), HttpStatus.BAD_REQUEST);
+        }
+        Sale sale = optionalSale.get();
+        // 로그인한 회원의 세일인지 확인
+        if (user.getUsrId() != sale.getUser().getUsrId()){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED_TO_DELETE").build(), HttpStatus.BAD_REQUEST);
+        }
+        saleService.deleteSale(sale);
+        return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_DELETE_SALE").build(), HttpStatus.OK);
+
+    }
 }
