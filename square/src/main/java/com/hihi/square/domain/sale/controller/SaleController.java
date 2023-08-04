@@ -78,7 +78,7 @@ public class SaleController {
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
         }
         List<StoreSaleDto> result = saleService.getStoreAllSale(user);
-        if (result.size() == 0){
+        if (result.isEmpty()){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("NO_SALE").build(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(StoreAllSaleResponseDto.builder().statusCode(200).message("SUCCESS").sales(result).build(), HttpStatus.OK);
@@ -97,7 +97,7 @@ public class SaleController {
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
         }
         List<StoreSaleDto> result = saleService.getStoreInProgressSales(user);
-        if (result.size() == 0){
+        if (result.isEmpty()){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("NO_SALE").build(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(StoreAllSaleResponseDto.builder().statusCode(200).message("SUCCESS").sales(result).build(), HttpStatus.OK);
