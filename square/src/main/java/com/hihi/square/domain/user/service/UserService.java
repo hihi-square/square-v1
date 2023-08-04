@@ -69,6 +69,9 @@ public class UserService {
 				.message("SUCCESS_LOGIN")
 				.accessToken(jwtService.createAccessToken(user.getUid()))
 				.refreshToken(refreshToken)
+				.userUid(user.getUid())
+				.usrId(user.getUsrId())
+				.userNickname(user.getNickname())
 				.build();
 		userRepository.updateRefreshToken(refreshToken, user.getUid());
 		return successLogin;
