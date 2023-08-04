@@ -4,6 +4,8 @@ import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.sale.dto.request.SaleCreateRequestDto;
 import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
+import com.hihi.square.domain.sale.dto.response.MenuDto;
+import com.hihi.square.domain.sale.dto.response.StoreSaleDetailDto;
 import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.entity.SaleMenu;
@@ -104,5 +106,33 @@ public class SaleService {
         sale.updateSale(request);
         saleRepository.save(sale);
 
+    }
+
+    public StoreSaleDetailDto getSaleDetail(Sale sale) {
+        List<MenuDto> menuDtos = new ArrayList<>();
+        List<SaleMenu> menus = saleMenuRepository.findAllBySale(sale);
+        for(SaleMenu saleMenu : menus){
+            Menu m = saleMenu.getMenu();
+            menuDtos.add(MenuDto.builder()
+                            .menuId(m.getMenuId())
+                            .name(m.getName())
+                            .price(m.getPrice())
+                            .signature(m.isSignature())
+                            .popularity(m.isPopularity())
+                            .status(m.getStatus())
+                            .description(m.getDescription())
+                            .sequence(m.getSequence())
+                    .build());
+        }
+        return StoreSaleDetailDto.builder()
+                .id(sale.getId())
+                .name(sale.getName())
+                .startedAt(sale.getStartedAt())
+                .finishedAt(sale.getFinishedAt())
+                .realFinishedAt(sale.getRealFinishedAt())
+                .price(sale.getPrice())
+                .status(sale.getStatus())
+                .menus(menuDtos)
+                .build();
     }
 }

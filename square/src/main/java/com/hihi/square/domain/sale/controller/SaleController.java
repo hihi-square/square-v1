@@ -1,10 +1,13 @@
 package com.hihi.square.domain.sale.controller;
 
+import com.amazonaws.Response;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.service.MenuService;
 import com.hihi.square.domain.sale.dto.request.SaleCreateRequestDto;
 import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
 import com.hihi.square.domain.sale.dto.response.StoreAllSaleResponseDto;
+import com.hihi.square.domain.sale.dto.response.StoreSaleDetailDto;
+import com.hihi.square.domain.sale.dto.response.StoreSaleDetailResponseDto;
 import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.service.SaleService;
@@ -158,5 +161,16 @@ public class SaleController {
         }
         saleService.updateSale(sale, request, menuList);
         return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_UPDATE_SALE").build(), HttpStatus.OK);
+    }
+    // 세일 디테일
+    @GetMapping("/sale/{id}")
+    public ResponseEntity<?> getSaleDetail(@PathVariable("id") Integer saleId){
+        Optional<Sale> optionalSale = saleService.findById(saleId);
+        if (!optionalSale.isPresent()){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_SALE_ID").build(), HttpStatus.BAD_REQUEST);
+        }
+        Sale sale = optionalSale.get();
+        StoreSaleDetailDto result = saleService.getSaleDetail(sale);
+        return new ResponseEntity<>(StoreSaleDetailResponseDto.builder().sale(result).message("SUCCESS").statusCode(200).build(), HttpStatus.OK);
     }
 }
