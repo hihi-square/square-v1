@@ -51,6 +51,7 @@ export default function ReadyItems({ product, dragProvided }: ReadyItemsProps) {
           >
             <Typography component="h4" variant="h4" color="text.primary">
               {product.name}
+              {product.id}
             </Typography>
             <Typography component="h5" variant="h5" color="red">
               {product.price}

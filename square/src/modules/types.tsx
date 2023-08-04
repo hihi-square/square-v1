@@ -19,6 +19,7 @@ export interface Iproduct {
 
 export interface Icategory {
   id: number;
+  userId: number;
   sequence: number;
   name: string;
 }
