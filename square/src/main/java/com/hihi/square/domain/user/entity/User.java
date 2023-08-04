@@ -64,6 +64,9 @@ public class User {
 	private boolean marketingAgree;
 	@Column(name = "refresh_token")
 	private String refreshToken;
+	private String profile;
+	@Column(name="profile_thumb")
+	private String profileThumb;
 
 	@Transient
 	public String getDecriminatorValue() {
@@ -85,5 +88,10 @@ public class User {
 	public void updateUserInfo(String nickname, String phone) {
 		this.nickname = nickname;
 		this.phone = phone;
+	}
+
+	public void updateUserProfile(String url, String thumbnail) {
+		this.profile = url;
+		this.profileThumb = thumbnail;
 	}
 }

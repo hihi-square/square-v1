@@ -1,5 +1,6 @@
 package com.hihi.square.domain.store.controller;
 
+<<<<<<< HEAD
 import javax.validation.Valid;
 
 import com.hihi.square.domain.menu.dto.response.MenuCategoryDto;
@@ -24,19 +25,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+=======
+import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
+import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
+>>>>>>> b_soyeon
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
+import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreUpdateResponseDto;
 import com.hihi.square.domain.store.entity.BusinessInformation;
 import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.service.BusinessInformationService;
+import com.hihi.square.domain.store.service.CategoryService;
+import com.hihi.square.domain.store.service.StoreCategoryService;
 import com.hihi.square.domain.store.service.StoreService;
-import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +91,11 @@ public class StoreController {
 		//닉네임 중복 체크
 		if (userService.validateDuplicateNickname(store.getNickname())) {
 			response.setMessage("ALREADY_EXISTS_NICKNAME");
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		}
+		// 이메일 중복 체크
+		if (userService.validateDuplicateEmail(store.getEmail())) {
+			response.setMessage("ALREADY_EXISTS_EMAIL");
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//사업자번호 중복체크
