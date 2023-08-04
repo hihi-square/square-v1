@@ -1,6 +1,5 @@
 package com.hihi.square.domain.store.controller;
 
-<<<<<<< HEAD
 import javax.validation.Valid;
 
 import com.hihi.square.domain.menu.dto.response.MenuCategoryDto;
@@ -8,6 +7,7 @@ import com.hihi.square.domain.menu.dto.response.MenuCategoryResponseDto;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.menu.service.MenuService;
 import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
+import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
@@ -25,10 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-=======
-import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
-import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
->>>>>>> b_soyeon
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
