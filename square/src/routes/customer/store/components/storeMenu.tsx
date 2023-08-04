@@ -43,15 +43,12 @@ function StoreMenu({ storeId }: { storeId?: string }) {
       params: {},
     })
       .then((response) => {
-        console.log("받아온 데이터:", response.data);
-        console.log(
-          "menuList:",
-          response.data.map((item: CategoryMenu) => item.menuItems)
-        ); // item의 타입을 명시적으로 선언
+        // console.log("받아온 데이터:", response.data);
+
         setMenus(response.data);
       })
       .catch((error) => {
-        console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
+        // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
       });
   }, [storeId]); // storeId가 변경될 때마다 API 호출을 다시 합니다.
 

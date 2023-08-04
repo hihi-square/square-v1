@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import "App.css";
 
 function Category() {
   const { category } = useParams();
   const navigate = useNavigate();
 
-  type CategoryType = { // 이름 변경
+  type CategoryType = {
+    // 이름 변경
     scbId: string;
     name: string;
     createdAt: {
@@ -28,11 +29,11 @@ function Category() {
       url: `http://43.201.255.188:8811/scb`,
       method: "GET",
     })
-      .then(response => {
+      .then((response) => {
         setCategories(response.data);
       })
-      .catch(error => {
-        console.error(error);
+      .catch((error) => {
+        // console.error(error);
       });
   }, []);
 
@@ -46,7 +47,9 @@ function Category() {
       <div className="category-container">
         {categories.map((categoryValue, index) => (
           <button
-            className={`category-button ${category === categoryValue.name ? "active" : ""}`}
+            className={`category-button ${
+              category === categoryValue.name ? "active" : ""
+            }`}
             key={index}
             onClick={() => handleCategoryClick(categoryValue.name)}
           >
