@@ -5,6 +5,7 @@ import net.bytebuddy.matcher.FilterableList;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class SaleCreateRequestDto {
