@@ -11,9 +11,5 @@ public class SimpleOrderRequestDto {
 
     @NotEmpty
     private Integer menuId;
-    private Integer quatinty;
-    private Integer price;
-    private String request;
-    private Integer usePoint;
 
 }

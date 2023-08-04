@@ -133,6 +133,7 @@ public class StoreController {
 	@GetMapping("/big-category/{id}")
 	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id) {
 		List<StoreListResponseDto> stores = storeService.findByCategoryId(id);
+
 		return new ResponseEntity<>(stores, HttpStatus.OK);
 	}
 

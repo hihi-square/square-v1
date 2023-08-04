@@ -78,6 +78,7 @@ public class StoreService {
 				}
 			}
 			StoreListResponseDto res = StoreListResponseDto.builder()
+					.scbId(id)
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
