@@ -1,4 +1,4 @@
-package com.hihi.square.global.config;
+package com.hihi.square.global.s3;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

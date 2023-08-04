@@ -25,6 +25,7 @@ public class SaleController {
     private final UserService userService;
     private final SaleService saleService;
 
+    // 세일 등록
     @PostMapping
     public ResponseEntity<?> createSale(Authentication authentication, @RequestBody @Valid SaleCreateRequestDto request) {
         String uid = authentication.getName();
