@@ -36,8 +36,8 @@ function Category() {
       });
   }, []);
 
-  const handleCategoryClick = (categoryValue: string) => {
-    navigate(`/storelist/${categoryValue}`);
+  const handleCategoryClick = (scbId: string) => {
+    navigate(`/storelist/${scbId}`);
   };
 
   return (
@@ -46,9 +46,9 @@ function Category() {
       <div className="category-container">
         {categories.map((categoryValue, index) => (
           <button
-            className={`category-button ${category === categoryValue.name ? "active" : ""}`}
+            className={`category-button ${category === categoryValue.scbId ? "active" : ""}`}
             key={index}
-            onClick={() => handleCategoryClick(categoryValue.name)}
+            onClick={() => handleCategoryClick(categoryValue.scbId)}
           >
             {categoryValue.name}
           </button>

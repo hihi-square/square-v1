@@ -9,7 +9,6 @@ function MainPage() {
     <div className="main-container">
       <Header />
       <Category />
-      <Link to="/storePage">ㅎㅇ</Link>
       <DiscountNow />
       <Footer />
     

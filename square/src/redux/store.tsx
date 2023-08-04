@@ -92,6 +92,9 @@ const cartInitialState: CartItem[] = [
   // 기타 가게
 ];
 
+
+
+
 const cartSlice = createSlice({
   name: "cart",
   initialState: cartInitialState,

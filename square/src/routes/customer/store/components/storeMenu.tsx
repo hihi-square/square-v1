@@ -25,7 +25,7 @@ function StoreMenu({ storeId }: { storeId?: string }) {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수를 가져옵니다.
 
   const handlePurchase = (menu: any) => { // menu 정보를 파라미터로 받음
-    navigate('/cart/pay', { state: { menu } }); // menu 정보를 state 객체에 넣어서 전달
+    navigate('/pay', { state: { menu } }); // menu 정보를 state 객체에 넣어서 전달
   };
 
   useEffect(() => {

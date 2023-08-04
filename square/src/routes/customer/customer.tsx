@@ -44,7 +44,7 @@ export default function Customer() {
         </Route>
         <Route path="/search/:searchword" element={<SearchResult />} />
         <Route path="/cart" element={<Cart />}/>
-          <Route path="/pay" element={<Pay />} />
+        <Route path="/pay" element={<Pay />} />
         
         <Route path="/orderlist" element={<OrderList />} />
       </Routes>
