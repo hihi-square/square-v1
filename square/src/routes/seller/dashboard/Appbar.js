@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const theme = createTheme({
   status: {
@@ -28,7 +27,7 @@ const theme = createTheme({
 
 export default function Appbar() {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const user = "ssafy";
 
   return (
     <ThemeProvider theme={theme}>
