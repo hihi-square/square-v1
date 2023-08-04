@@ -74,7 +74,7 @@ const data = [
   },
 ];
 
-export default function Order(props) {
+export default function Order() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {

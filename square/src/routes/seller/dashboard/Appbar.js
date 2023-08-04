@@ -27,7 +27,7 @@ const theme = createTheme({
 
 export default function Appbar() {
   const navigate = useNavigate();
-  const user = "ssafy";
+  const user = localStorage.getItem("userNick");
 
   return (
     <ThemeProvider theme={theme}>

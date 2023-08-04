@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Seller from "./routes/seller/Seller";
 import Customer from "./routes/customer/customer";
@@ -17,8 +17,8 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Link to="/">구매자 페이지로</Link>
-        <Link to="/seller">판매자 페이지로</Link>
+        {/* <Link to="/">구매자 페이지로</Link>
+        <Link to="/seller">판매자 페이지로</Link> */}
         <Routes>
           <Route path="/*" element={<Customer />} />
           <Route path="/seller/*" element={<Seller />} />

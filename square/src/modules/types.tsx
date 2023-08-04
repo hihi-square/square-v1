@@ -10,8 +10,8 @@ export interface Iproduct {
   popular: boolean;
   price: number;
   status: number;
-  createdAt: number[];
-  modifiedAt: number[];
+  createdAt: string;
+  modifiedAt: string;
   salRecord: number;
   description: string;
   sequence: number;

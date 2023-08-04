@@ -71,28 +71,31 @@ function StoreMenu({ storeId }: { storeId?: string }) {
                 </TableCell>
               </TableRow>
               {categoryMenu.menuItems &&
-                categoryMenu.menuItems.map((menu, innerIndex) => (
-                  <TableRow key={index * 100 + innerIndex}>
-                    <TableCell
-                      style={{
-                        fontWeight: menu.popularity ? "bold" : "normal",
-                      }}
-                    >
-                      {menu.menuName}
-                    </TableCell>
-                    <TableCell>{menu.menuDescription}</TableCell>
-                    <TableCell align="right">{menu.price}원</TableCell>
-                    <TableCell align="right">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handlePurchase(menu.menuId)}
+                categoryMenu.menuItems.map((menu, innerIndex) =>
+                  menu.status === 0 ? null : (
+                    <TableRow key={index * 100 + innerIndex}>
+                      <TableCell
+                        style={{
+                          fontWeight: menu.popularity ? "bold" : "normal",
+                        }}
                       >
-                        구매
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        {menu.menuName}
+                        {menu.menuId}
+                      </TableCell>
+                      <TableCell>{menu.menuDescription}</TableCell>
+                      <TableCell align="right">{menu.price}원</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handlePurchase(menu.menuId)}
+                        >
+                          구매
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
             </React.Fragment>
           ))}
         </TableBody>

@@ -46,6 +46,12 @@ export default function Login() {
 
   const navigate = useNavigate();
 
+  function handleKeyPress(event: React.KeyboardEvent) {
+    if (event.key === "Enter") {
+      onClickConfirmButton();
+    }
+  }
+
   const onClickConfirmButton = (): void => {
     // eslint-disable-next-line no-console
     console.log(`${id}/${pw}`);
@@ -59,12 +65,13 @@ export default function Login() {
       },
     })
       .then((response) => {
-        // console.log(response.data.refreshToken)
-        // console.log(response.data.accessToken)
+        // eslint-disable-next-line no-console
+        localStorage.setItem("userInfo", response.data.usrId);
+        localStorage.setItem("userNick", response.data.userNickname);
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
 
-        navigate("/dashboard");
+        navigate("/seller/dashboard");
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -87,6 +94,7 @@ export default function Login() {
             placeholder="testid"
             value={id}
             onChange={handleId}
+            onKeyDown={handleKeyPress}
           />
         </div>
         <div className="errorMessageWrap">
@@ -105,6 +113,7 @@ export default function Login() {
             placeholder="영문, 숫자, 특수문자 포함 8자 이상"
             value={pw}
             onChange={handlePw}
+            onKeyDown={handleKeyPress}
           />
         </div>
         <div className="errorMessageWrap">

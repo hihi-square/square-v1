@@ -8,8 +8,8 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
-import { RootState } from "redux/store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "redux/store";
 
 import {
   Unstable_Grid2 as Grid,
@@ -28,27 +28,27 @@ import "../../Seller.css";
 export default function ProductList() {
   // 초기값 설정
   const REST_API: string = "http://i9b208.p.ssafy.io:8811";
-  const user = useSelector((state: RootState) => state.user);
+  const user = Number(localStorage.getItem("userInfo"));
   const initProduct: Iproduct = useMemo(
     () => ({
       id: 0,
-      userId: user.usr_id,
+      userId: user,
       image: "",
       thumbnail: "",
-      categoryId: 0,
+      categoryId: 1,
       categoryName: "",
       name: "",
       signature: false,
       popular: false,
       price: 0,
-      status: 1,
-      createdAt: [],
-      modifiedAt: [],
+      status: 0,
+      createdAt: "",
+      modifiedAt: "",
       salRecord: 0,
       description: "",
       sequence: 1,
     }),
-    [user.usr_id]
+    [user]
   );
 
   // 제품 목록
@@ -59,15 +59,15 @@ export default function ProductList() {
       url: `${REST_API}/store/menuitem`,
       method: "GET",
       headers: {
-        userId: 24,
+        userId: user,
       },
     })
       .then((res) => {
         console.log(res);
         const arr: Iproduct[] = res.data.data;
-        const newArr = arr.filter((product: Iproduct) => product.status !== 2);
+        // const newArr = arr.filter((product: Iproduct) => product.status !== 2);
 
-        setProducts(newArr);
+        setProducts(arr);
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -83,7 +83,7 @@ export default function ProductList() {
       url: `${REST_API}/store/menuCategory`,
       method: "GET",
       headers: {
-        userId: 24,
+        userId: user,
       },
     })
       .then((res) => {
@@ -108,8 +108,10 @@ export default function ProductList() {
       const readyArr: Iproduct[] = [];
       const idxMap: Map<number, number> = new Map();
 
-      readyArr.push(...menuArr.filter((menuItem) => menuItem.categoryId === 0));
-      menuArr = menuArr.filter((readyItem) => readyItem.categoryId !== 0);
+      console.log(menuArr);
+
+      readyArr.push(...menuArr.filter((menuItem) => menuItem.status === 0));
+      menuArr = menuArr.filter((readyItem) => readyItem.status === 1);
 
       for (const category of categorys) {
         idxMap.set(category.id, category.sequence);
@@ -260,7 +262,7 @@ export default function ProductList() {
     console.log(menu);
 
     for (const readyItem of ready) {
-      newProducts.push({ ...readyItem, categoryId: 0, sequence: itemsequence });
+      newProducts.push({ ...readyItem, status: 0, sequence: itemsequence });
       itemsequence++;
     }
     itemsequence = 1;
@@ -268,10 +270,10 @@ export default function ProductList() {
       console.log(menuItem);
       if (menuItem.status !== 4) {
         newProducts.push({
-          userId: user.usr_id,
+          userId: user,
           id: menuItem.id,
           categoryId: cateCode,
-          status: menuItem.status,
+          status: 1,
           sequence: itemsequence,
         });
         itemsequence++;
@@ -279,7 +281,7 @@ export default function ProductList() {
         cateCode = menuItem.id;
         newCategorys.push({
           id: cateCode,
-          userId: user.usr_id,
+          userId: user,
           sequence: catesequence,
         });
         itemsequence = 1;
@@ -302,7 +304,7 @@ export default function ProductList() {
           url: `${REST_API}/store/menuitem`,
           method: "GET",
           headers: {
-            userId: 24,
+            userId: user,
           },
         })
           .then((resp) => {
@@ -336,7 +338,7 @@ export default function ProductList() {
           url: `${REST_API}/store/menuCategory`,
           method: "GET",
           headers: {
-            userId: 24,
+            userId: user,
           },
         })
           .then((resp) => {
@@ -360,9 +362,41 @@ export default function ProductList() {
   };
 
   const createProduct = (product: Iproduct, length: number) => {
+    console.log(product);
     if (product.id === 0) {
-      product.id = length;
-      setProducts((prev) => [...prev, product]);
+      axios({
+        url: `${REST_API}/store/menuitem`,
+        method: "POST",
+        data: {
+          ...product,
+        },
+      })
+        .then((res) => {
+          axios({
+            url: `${REST_API}/store/menuitem`,
+            method: "GET",
+            headers: {
+              userId: user,
+            },
+          })
+            .then((resp) => {
+              console.log(resp);
+              const arr: Iproduct[] = resp.data.data;
+              const newArr = arr.filter(
+                (productz: Iproduct) => productz.status !== 2
+              );
+
+              setProducts(newArr);
+            })
+            .catch((error) => {
+              // eslint-disable-next-line no-console
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.log(`${error}`);
+        });
     } else {
       setProducts((prev) => {
         const index = prev.findIndex((p) => p.id === product.id);
