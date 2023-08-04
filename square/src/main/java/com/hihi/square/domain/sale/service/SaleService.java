@@ -3,6 +3,7 @@ package com.hihi.square.domain.sale.service;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.sale.dto.request.SaleCreateRequestDto;
+import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
 import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.entity.SaleMenu;
@@ -89,5 +90,19 @@ public class SaleService {
         // 일단 세일메뉴에 있는 것들 삭제
         saleMenuRepository.deleteAllBySale(sale);
         saleRepository.delete(sale);
+    }
+
+    @Transactional
+    public void updateSale(Sale sale, SaleUpdateRequestDto request, List<Menu> menus) {
+        saleMenuRepository.deleteAllBySale(sale);
+        for(Menu menu : menus){
+            saleMenuRepository.save(SaleMenu.builder()
+                    .sale(sale)
+                    .menu(menu)
+                    .build());
+        }
+        sale.updateSale(request);
+        saleRepository.save(sale);
+
     }
 }

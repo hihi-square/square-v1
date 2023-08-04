@@ -3,6 +3,7 @@ package com.hihi.square.domain.sale.controller;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.service.MenuService;
 import com.hihi.square.domain.sale.dto.request.SaleCreateRequestDto;
+import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
 import com.hihi.square.domain.sale.dto.response.StoreAllSaleResponseDto;
 import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
@@ -125,6 +126,37 @@ public class SaleController {
         }
         saleService.deleteSale(sale);
         return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_DELETE_SALE").build(), HttpStatus.OK);
+    }
 
+    // 세일 수정
+    @PatchMapping("/sale")
+    public ResponseEntity<CommonResponseDto> updateSale(Authentication authentication, @RequestBody @Valid SaleUpdateRequestDto request) {
+        String uid = authentication.getName();
+        User user = userService.findByUid(uid).get();
+        // 로그인 회원이 가게 회원인지 확인
+        if (!(user instanceof Store)){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
+        }
+        Optional<Sale> optionalSale = saleService.findById(request.getSalId());
+        // 세일이 존재하는지 확인
+        if (!optionalSale.isPresent()){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_SALE_ID").build(), HttpStatus.BAD_REQUEST);
+        }
+        Sale sale = optionalSale.get();
+        // 로그인한 회원의 세일인지 확인
+        if (user.getUsrId() != sale.getUser().getUsrId()){
+            return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED_TO_UPDATE").build(), HttpStatus.BAD_REQUEST);
+        }
+        List<Menu> menuList = new ArrayList<>();
+        // 선택한 메뉴가 모두 해당 가게의 메뉴인지 확인
+        for(Long menId : request.getMenus()){
+            Menu menu = menuService.findById(menId);
+            if (menu.getUser().getUsrId() != user.getUsrId()){
+                return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("CONTAIN_NO_AUTHORIZED_MENU").build(), HttpStatus.BAD_REQUEST);
+            }
+            menuList.add(menu);
+        }
+        saleService.updateSale(sale, request, menuList);
+        return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_UPDATE_SALE").build(), HttpStatus.OK);
     }
 }
