@@ -8,9 +8,7 @@ function MainPage() {
   return (
     <>
       <Grid container xs={12}>
-        <Grid container xs={12} justifyContent="center">
-          <Header />
-        </Grid>
+        <Header />
         <Grid container xs={12} justifyContent="center">
           <Category />
         </Grid>
