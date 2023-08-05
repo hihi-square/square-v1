@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { FaShoppingCart } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 function Header() {
   const [location, setLocation] = useState("loc1");
@@ -89,7 +89,10 @@ function Header() {
             ref={searchButtonRef}
             onClick={handleSearchClick}
           >
-            <FontAwesomeIcon icon={faSearch} />
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              style={{ color: "#000000" }}
+            />
           </Button>
         </Grid>
         <Grid>
