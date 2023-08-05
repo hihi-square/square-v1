@@ -6,9 +6,19 @@ import Customer from "./routes/customer/customer";
 
 const theme = createTheme({
   typography: {
-    fontFamily: "Pretendard, sans-serif", // 원하는 폰트를 지정합니다.
+    fontFamily: "Pretendard, sans-serif",
+  },
+  components: {
+    MuiIcon: {
+      styleOverrides: {
+        root: {
+          color: 'white', // or any color you want for the icons
+        },
+      },
+    },
   },
 });
+
 
 function App() {
   return (

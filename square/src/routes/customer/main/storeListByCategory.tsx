@@ -1,13 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate,useLocation  } from 'react-router-dom';
 import { Paper, Avatar } from "@mui/material";
 import "../../../App.css";
+import HeaderModule from '../HeaderModule';
 
 export default function StoreListByCategory() {
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const categoryName = location.state?.categoryName ?? '';
 
 
   type Store = {
@@ -47,11 +50,11 @@ export default function StoreListByCategory() {
         });
     }
   }, [category]);
-
   return (
     <>
-      <div className="list-title">{category}</div>
-      <Paper>
+    <HeaderModule /> 
+      <div className="list-title" style={{ marginTop: '50px' }}>{categoryName}</div>
+ <Paper>
         {stores.map((store, index) => (
           <div
             key={index}
@@ -69,4 +72,5 @@ export default function StoreListByCategory() {
       </Paper>
     </>
   );
+  
 }

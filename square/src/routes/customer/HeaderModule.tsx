@@ -9,9 +9,32 @@ const HeaderModule: React.FC = () => {
   const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
-    setCartItemCount(cart.length);
+    const updateCart = () => {
+      const cartData = localStorage.getItem('cart');
+      const cartObj = cartData ? JSON.parse(cartData) : {};
+
+      let totalItemCount = 0;
+
+      Object.values(cartObj).forEach((store: any) => {
+        Object.values(store).forEach((quantity: unknown) => {
+          totalItemCount += quantity as number;
+        });
+      });
+
+      setCartItemCount(totalItemCount);
+    };
+
+    updateCart();
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'cart') {
+        updateCart();
+      }
+    });
+
+    return () => {
+      window.removeEventListener('storage', updateCart);
+    };
   }, []);
 
   return (
@@ -23,7 +46,7 @@ const HeaderModule: React.FC = () => {
       top: 0, 
       padding: '10px' 
     }}>
-      <ArrowBackIcon onClick={() => navigate(-1)} />
+      <ArrowBackIcon  onClick={() => navigate(-1)} />
       <Link to="/cart">
         <Badge 
           badgeContent={cartItemCount} 
@@ -31,7 +54,7 @@ const HeaderModule: React.FC = () => {
           overlap="circular"
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          <ShoppingCartIcon style={{ color: 'white' }} />
+      <ShoppingCartIcon  />
         </Badge>
       </Link>
     </div>

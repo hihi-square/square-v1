@@ -36,20 +36,20 @@ function Category() {
       });
   }, []);
 
-  const handleCategoryClick = (scbId: string) => {
-    navigate(`/storelist/${scbId}`);
+  const handleCategoryClick = (scbId: string, name: string) => {
+    navigate(`/storelist/${scbId}`, { state: { categoryName: name } });
   };
-
+  
   return (
     <div>
       <h4>카테고리별</h4>
       <div className="category-container">
         {categories.map((categoryValue, index) => (
           <button
-            className={`category-button ${category === categoryValue.scbId ? "active" : ""}`}
-            key={index}
-            onClick={() => handleCategoryClick(categoryValue.scbId)}
-          >
+  className={`category-button ${category === categoryValue.scbId ? "active" : ""}`}
+  key={index}
+  onClick={() => handleCategoryClick(categoryValue.scbId, categoryValue.name)}
+>
             {categoryValue.name}
           </button>
         ))}
