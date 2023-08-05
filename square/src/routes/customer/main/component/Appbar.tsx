@@ -12,7 +12,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-function Header() {
+export default function Header() {
   const [location, setLocation] = useState("loc1");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
@@ -69,7 +69,7 @@ function Header() {
             <MenuItem value={"loc2"}>구암동</MenuItem>
             <MenuItem value={"loc3"}>봉명동</MenuItem>
             <Divider></Divider>
-            <MenuItem value={"loc4"}>내위치 !설정</MenuItem>
+            <MenuItem value={"loc4"}>내위치 설정</MenuItem>
           </Select>
         </Button>
       </Grid>
@@ -104,5 +104,3 @@ function Header() {
     </Grid>
   );
 }
-
-export default Header;
