@@ -118,11 +118,11 @@ export default function Login() {
           justifyContent="center"
           alignItems="center"
         >
-          <Grid xs={12}>
+          <Grid xs={10}>
             <Typography
-              variant="h1"
-              component="h1"
-              sx={{ fontWeight: 700, textAlign: { xs: "center", md: "start" } }}
+              variant="h2"
+              component="h2"
+              sx={{ fontWeight: 800, textAlign: { xs: "center", md: "start" } }}
               gutterBottom
             >
               <Box component="span" sx={{ color: "primary.main" }}>
@@ -131,7 +131,7 @@ export default function Login() {
               quare
             </Typography>
           </Grid>
-          <Grid xs={11}>
+          <Grid xs={9}>
             <Box component="form">
               <Box sx={{ height: "130px" }}>
                 <Typography
@@ -176,17 +176,17 @@ export default function Login() {
               </Box>
             </Box>
           </Grid>
-          <Grid container xs={11} justifyContent="center">
+          <Grid container xs={9} justifyContent="center">
             <Grid xs={12}>
               <Button
                 onClick={onClickConfirmButton}
                 variant="contained"
                 color="primary"
-                sx={{ height: "70px" }}
+                sx={{ height: "60px" }}
                 fullWidth
               >
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   sx={{ fontWeight: 400, textAlign: "center" }}
                 >
                   로그인
@@ -211,7 +211,7 @@ export default function Login() {
             )}
             <Grid
               container
-              xs={9}
+              xs={12}
               justifyContent="space-between"
               sx={{ marginTop: "30px" }}
             >
@@ -220,7 +220,7 @@ export default function Login() {
                   <img
                     src="/img/icon/naver.png"
                     alt="네이버 로그인"
-                    style={{ width: "70px", height: "70px" }}
+                    style={{ width: "60px", height: "60px" }}
                   />
                 </Button>
               </Grid>
@@ -229,7 +229,7 @@ export default function Login() {
                   <img
                     src="/img/icon/kakao.png"
                     alt="카카오 로그인"
-                    style={{ width: "70px", height: "70px" }}
+                    style={{ width: "60px", height: "60px" }}
                   />
                 </Button>
               </Grid>
@@ -238,21 +238,21 @@ export default function Login() {
                   <img
                     src="/img/icon/google.png"
                     alt="구글 로그인"
-                    style={{ width: "70px", height: "70px" }}
+                    style={{ width: "60px", height: "60px" }}
                   />
                 </Button>
               </Grid>
             </Grid>
+          </Grid>
+          <Grid container xs={10}>
             <Grid xs={12}>
               <Divider sx={{ margin: "10px" }}></Divider>
             </Grid>
-            <Grid container xs={10}>
-              <Grid container xs={6} justifyContent="center">
-                <Button color="secondary"> 회원가입 </Button>
-              </Grid>
-              <Grid container xs={6} justifyContent="center">
-                <Button color="secondary"> 아이디/비밀번호 찾기 </Button>
-              </Grid>
+            <Grid container xs={6} justifyContent="start">
+              <Button color="secondary"> 회원가입 </Button>
+            </Grid>
+            <Grid container xs={6} justifyContent="end">
+              <Button color="secondary"> 아이디/비밀번호 찾기 </Button>
             </Grid>
           </Grid>
         </Grid>

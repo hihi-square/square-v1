@@ -1,5 +1,5 @@
 import { Unstable_Grid2 as Grid } from "@mui/material";
-import Category from "./component/category";
+import Category from "./component/Categorys";
 import DiscountNow from "./component/discountNow";
 import Header from "./component/Header";
 import Footer from "./component/footer";
@@ -7,7 +7,7 @@ import Footer from "./component/footer";
 function MainPage() {
   return (
     <>
-      <Grid container xs={12}>
+      <Grid container xs={12} direction="column">
         <Header />
         <Grid container xs={12} justifyContent="center">
           <Category />
