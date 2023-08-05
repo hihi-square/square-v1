@@ -1,7 +1,7 @@
 import { Unstable_Grid2 as Grid } from "@mui/material";
 import Category from "./component/Categorys";
 import DiscountNow from "./component/discountNow";
-import Header from "./component/Header";
+import Header from "./component/Header1";
 import Footer from "./component/footer";
 
 function MainPage() {
