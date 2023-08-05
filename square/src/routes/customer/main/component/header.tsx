@@ -69,7 +69,7 @@ function Header() {
             <MenuItem value={"loc2"}>구암동</MenuItem>
             <MenuItem value={"loc3"}>봉명동</MenuItem>
             <Divider></Divider>
-            <MenuItem value={"loc4"}>내위치 설정</MenuItem>
+            <MenuItem value={"loc4"}>내위치 !설정</MenuItem>
           </Select>
         </Button>
       </Grid>
