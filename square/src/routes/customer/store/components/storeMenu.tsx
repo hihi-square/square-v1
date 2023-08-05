@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // axios를 import합니다.
-import { Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios'; 
+import { Table, TableBody, TableCell, TableHead, TableRow, Button, TextField } from '@mui/material';
 
 function StoreMenu({ storeId }: { storeId?: string }) {
-
-
   type CategoryMenu = {
     categoryId: number;
     categorySequence: number;
@@ -21,32 +18,44 @@ function StoreMenu({ storeId }: { storeId?: string }) {
   };
 
   const [menus, setMenus] = useState<CategoryMenu[]>([]);
-  
-  const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수를 가져옵니다.
+  const [menuQuantities, setMenuQuantities] = useState<{ [menuId: number]: number }>({});
 
-  const handlePurchase = (menu: any) => { // menu 정보를 파라미터로 받음
-    navigate('/pay', { state: { menu } }); // menu 정보를 state 객체에 넣어서 전달
+  const handleAddCart = (menuId: number, quantity: number) => {
+    if (!storeId) {
+      console.error('Store ID is undefined');
+      return;
+    }
+
+    const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+
+    if (!cart[storeId]) {
+      cart[storeId] = {};
+    }
+
+    if (cart[storeId][menuId]) {
+      cart[storeId][menuId] += quantity;
+    } else {
+      cart[storeId][menuId] = quantity;
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
   };
 
   useEffect(() => {
-    // storeId를 사용해 메뉴 정보를 가져오는 API를 호출합니다.
-
     axios({
       url: `http://43.201.255.188:8811/store/menu/${storeId}`,
       method: "GET",
-      params: {
-   
-      }
+      params: {}
     })
     .then(response => {
       console.log('받아온 데이터:', response.data); 
-      console.log('menuList:', response.data.map((item: CategoryMenu) => item.menuItems)); // item의 타입을 명시적으로 선언
+      console.log('menuList:', response.data.map((item: CategoryMenu) => item.menuItems)); 
       setMenus(response.data);
     })
       .catch(error => {
         console.error('메뉴 정보를 불러오는데 실패했습니다.', error);
       });
-  }, [storeId]); // storeId가 변경될 때마다 API 호출을 다시 합니다.
+  }, [storeId]); 
 
   return (
     <div>
@@ -58,7 +67,7 @@ function StoreMenu({ storeId }: { storeId?: string }) {
             <React.Fragment key={index}>
               <TableRow>
                 <TableCell 
-                  colSpan={4} 
+                  colSpan={5} 
                   style={{ 
                     fontWeight: 'bolder', 
                     textAlign: 'center', 
@@ -72,11 +81,21 @@ function StoreMenu({ storeId }: { storeId?: string }) {
                   <TableCell style={{ fontWeight: menu.popularity ? 'bold' : 'normal' }}>{menu.menuName}</TableCell>
                   <TableCell>{menu.menuDescription}</TableCell>
                   <TableCell align="right">{menu.price}원</TableCell>
+                  <TableCell>
+                  <TextField 
+                      type="number"
+                      InputProps={{ inputProps: { min: 1 } }}
+                      value={menuQuantities[menu.menuId] || 1}
+                      onChange={(e) => setMenuQuantities({
+                        ...menuQuantities,
+                        [menu.menuId]: Number(e.target.value)
+                      })}
+                    /> 
+                  </TableCell>
                   <TableCell align="right">
-                  <Button variant="contained" color="primary" onClick={() => handlePurchase(menu.menuId)}>
-
-                      구매
-                    </Button>
+                  <Button variant="contained" color="primary" onClick={() => handleAddCart(menu.menuId, menuQuantities[menu.menuId] || 1)}>
+  담기
+</Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -28,10 +28,8 @@ export default function StoreListByCategory() {
   
   useEffect(() => {
     if (category) {
-      // 백엔드의 API 주소와 카테고리를 파라미터로 사용합니다.
-      // 해당 주소와 요청 방식은 백엔드와 협의하여 결정해야 합니다.
       axios({
-        url: `http://43.201.255.188:8811/store/big-category/4`,
+        url: `http://43.201.255.188:8811/store/big-category/${category}`,
         method: "GET",
         params: {
      
