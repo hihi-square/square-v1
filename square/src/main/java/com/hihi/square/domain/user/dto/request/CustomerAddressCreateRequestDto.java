@@ -9,5 +9,6 @@ public class CustomerAddressCreateRequestDto {
 	private String sidoName; // 시도
 	private String siggName; // 시군구
 	private String emdName; // 읍면동
-	private Integer usrId; // 유저 아이디
+	private String address; // 상세 주소
+	// private Integer usrId; // 유저 아이디
 }

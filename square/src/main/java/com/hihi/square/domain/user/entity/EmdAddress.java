@@ -41,4 +41,5 @@ public class EmdAddress {
 	@JoinColumn(name = "asi_id")
 	private SiggAddress siggAddress;
 
+
 }
