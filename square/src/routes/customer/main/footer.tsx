@@ -3,7 +3,7 @@ import React from "react"; // 따옴표로 변경
 import "../../App.css";
 // import SearchMap from "./searchMap";
 // import Board from "./board/boardMain";
-import MainPage from "./mainPage";
+import MainPage from "./Main";
 // import Chat from "./chat";
 // import MyPage from "../my/myPage";
 

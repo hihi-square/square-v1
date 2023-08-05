@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-
+import { Unstable_Grid2 as Grid } from "@mui/material";
 import StoreListByCategory from "./main/storeListByCategory";
 import StoreListByLocation from "./main/storeListByLocation";
 import StorePage from "./store/storePage";
@@ -17,17 +17,15 @@ import MyInfo from "./my/myInfo";
 import MyOrderHistory from "./my/myOrderHistory";
 import MyRegular from "./my/myRegular";
 import MyReview from "./my/myReview";
-import MainPage from "./main/mainPage";
+import Main from "./main/Main";
+import Login from "./login/Login";
 
 export default function Customer() {
   return (
-
-    <Routes>
-        <Route path="/" element={<MainPage/>}/>
-        <Route
-          path="/storelist/:category"
-          element={<StoreListByCategory />}
-        />
+    <Grid container xs={12} md={8} justifyContent="center">
+      <Routes>
+        <Route path="/main" element={<Main />} />
+        <Route path="/storelist/:category" element={<StoreListByCategory />} />
         <Route path="/storelist/location" element={<StoreListByLocation />} />
 
         {/* 스토어 아이디 데이터 있기 전까진 일단 그냥 대표페이지로 가게하고 나중에 바인드 */}
@@ -43,11 +41,12 @@ export default function Customer() {
           <Route path="myreview" element={<MyReview />} />
         </Route>
         <Route path="/search/:searchword" element={<SearchResult />} />
-        <Route path="/cart" element={<Cart />}/>
-          <Route path="/pay" element={<Pay />} />
-        
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/pay" element={<Pay />} />
+
         <Route path="/orderlist" element={<OrderList />} />
+        <Route path="*" element={<Login />} />
       </Routes>
-   
+    </Grid>
   );
 }

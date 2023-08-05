@@ -1,18 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
 import "App.css";
+import {
+  Unstable_Grid2 as Grid,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  Divider,
+  Button,
+} from "@mui/material";
 import { FaShoppingCart } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-
 function Header() {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [location, setLocation] = useState("loc1");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(event.target.value);
+  const handleChange = (event: SelectChangeEvent) => {
+    setLocation(event.target.value);
   };
   const handleCartClick = () => {
     // 장바구니 ㄱㄱ
@@ -40,35 +47,58 @@ function Header() {
   }, []);
 
   return (
-    <header className="App-header">
-      <select
-        className="App-header-location"
-        value={selectedOption}
-        onChange={handleChange}
-      >
-        {/* 여기에 활동반경 데이터 받아오기 */}
-        <option value="loc1">덕명동</option>
-        <option value="loc2">구암동</option>
-        <option value="loc3">봉명동</option>
-      </select>
-
+    <Grid xs={12} container component="header" justifyContent="space-between">
+      <Grid>
+        <Button>
+          <Select
+            value={location}
+            onChange={handleChange}
+            sx={{
+              width: "150px",
+              fontSize: "20px",
+              fontWeight: "500",
+              ".MuiOutlinedInput-notchedOutline": {
+                borderWidth: 0,
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderWidth: 0,
+              },
+            }}
+          >
+            <MenuItem value={"loc1"}>덕암동</MenuItem>
+            <MenuItem value={"loc2"}>구암동</MenuItem>
+            <MenuItem value={"loc3"}>봉명동</MenuItem>
+            <Divider></Divider>
+            <MenuItem value={"loc4"}>내위치 설정</MenuItem>
+          </Select>
+        </Button>
+      </Grid>
       {isSearchVisible && (
-        <input type="text" ref={searchInputRef} className="App-header-search" />
+        <Grid>
+          <input
+            type="text"
+            ref={searchInputRef}
+            className="App-header-search"
+          />
+        </Grid>
       )}
-
-      <button
-        className="App-header-button"
-        ref={searchButtonRef}
-        onClick={handleSearchClick}
-      >
-        <FontAwesomeIcon icon={faSearch} />
-      </button>
-      <button className="App-header-button" onClick={handleCartClick}>
-        <FaShoppingCart />
-      </button>
-
-
-    </header>
+      <Grid container>
+        <Grid>
+          <Button
+            className="App-header-button"
+            ref={searchButtonRef}
+            onClick={handleSearchClick}
+          >
+            <FontAwesomeIcon icon={faSearch} />
+          </Button>
+        </Grid>
+        <Grid>
+          <Button className="App-header-button" onClick={handleCartClick}>
+            <FaShoppingCart />
+          </Button>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 

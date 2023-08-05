@@ -55,11 +55,13 @@ export default function ProductList() {
   const [products, setProducts] = useState<Iproduct[]>([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
     axios({
       url: `${REST_API}/store/menuitem`,
       method: "GET",
       headers: {
-        userId: user,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {

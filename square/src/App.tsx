@@ -1,5 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Routes, Route } from "react-router-dom";
+import { Unstable_Grid2 as Grid } from "@mui/material";
+import { green, grey } from "@mui/material/colors";
 import "./App.css";
 import Seller from "./routes/seller/Seller";
 import Customer from "./routes/customer/customer";
@@ -11,20 +13,28 @@ const theme = createTheme({
   typography: {
     fontFamily: "Pretendard, sans-serif", // 원하는 폰트를 지정합니다.
   },
+  palette: {
+    primary: {
+      main: green[900],
+    },
+    secondary: {
+      main: grey[500],
+    },
+  },
 });
 
 function App() {
   return (
-    <div className="App">
+    <Grid container className="App">
       <ThemeProvider theme={theme}>
-        {/* <Link to="/">구매자 페이지로</Link>
-        <Link to="/seller">판매자 페이지로</Link> */}
-        <Routes>
-          <Route path="/*" element={<Customer />} />
-          <Route path="/seller/*" element={<Seller />} />
-        </Routes>
+        <Grid container justifyContent="center" xs>
+          <Routes>
+            <Route path="/*" element={<Customer />} />
+            <Route path="/seller/*" element={<Seller />} />
+          </Routes>
+        </Grid>
       </ThemeProvider>
-    </div>
+    </Grid>
   );
 }
 

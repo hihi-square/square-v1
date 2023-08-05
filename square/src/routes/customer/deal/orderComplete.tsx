@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import MainPage from "../main/mainPage";
+import MainPage from "../main/Main";
 
 function OrderComplete() {
   return (
