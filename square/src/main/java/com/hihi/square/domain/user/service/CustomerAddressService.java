@@ -26,6 +26,11 @@ public class CustomerAddressService {
 	private final EmdAddressRepository emdAddressRepository;
 
 	@Transactional
+	public void deleteAddress(CustomerAddress customerAddress) {
+		customerAddressRepository.delete(customerAddress);
+	}
+
+	@Transactional
 	public void addCustomerAddress(Customer customer, CustomerAddressCreateRequestDto request) {
 		Optional<EmdAddress> emd = emdAddressRepository.findByNames(request.getSidoName(), request.getSiggName(), request.getEmdName());
 		if (!emd.isPresent()) {
@@ -45,4 +50,9 @@ public class CustomerAddressService {
 	public List<CustomerAddress> findAllByCustomer(Customer customer) {
 		return customerAddressRepository.findAllByCustomer(customer);
 	}
+
+	public Optional<CustomerAddress> findById(Integer customerAddressId) {
+		return customerAddressRepository.findById(customerAddressId);
+	}
+
 }
