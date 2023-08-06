@@ -30,7 +30,7 @@ public class EmdAddress {
 	private String sidoName;
 
 	@Column(name="adm_code")
-	private String admCode;
+	private Long admCode;
 	private String name;
 
 

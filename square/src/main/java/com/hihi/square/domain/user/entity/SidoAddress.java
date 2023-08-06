@@ -29,7 +29,7 @@ public class SidoAddress {
 	private int asdId;
 
 	@Column(name="adm_code")
-	private String amdCode;
+	private Long amdCode;
 	private String name;
 
 	// @OneToMany(mappedBy = "sidoAddress")
