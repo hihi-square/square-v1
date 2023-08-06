@@ -69,15 +69,19 @@ public class StoreService {
 			Store store = s.getStore();
 			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User) store);
 
+			// 인기메뉴가 3개 이상이면 3개만 가져오도록 함
+			int size = menuList.size() >= 3 ? 3 : menuList.size();
+
 			String menuName = "";
-			for(int i=0; i<menuList.size(); i++) {
-				if(i == menuList.size()-1) {
+			for(int i=0; i<size; i++) {
+				if(i == size-1) {
 					menuName += menuList.get(i).getName();
 				} else {
 					menuName += menuList.get(i).getName() + ", ";
 				}
 			}
 			StoreListResponseDto res = StoreListResponseDto.builder()
+					.scbId(id)
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())

@@ -3,9 +3,13 @@ package com.hihi.square.domain.store.controller;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbUpdateRequestDto;
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
+import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.CategoryRepository;
 import com.hihi.square.domain.store.service.CategoryService;
+import com.hihi.square.domain.store.service.StoreCategoryService;
+import com.hihi.square.domain.store.service.StoreService;
 import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,6 +28,8 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final StoreCategoryService storeCategoryService;
+    private final StoreService storeService;
 
     // 카테고리 대분류 다 가져오기
     @GetMapping
@@ -87,4 +94,22 @@ public class CategoryController {
         categoryService.updateCategoryBig(storeCategoryBig, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    // 판매자 (store) 입장에서의 카테고리 CRUD ( C : StoreController 에 있음 )
+
+    // 가게에서 등록한 카테고리 모두 조회
+    @GetMapping("/store/{id}")
+    public ResponseEntity<?> selectAllByStoreId(@PathVariable Integer id) {
+        Store store = storeService.findByUsrId(id).get();
+        List<StoreCategorySelected> categories = storeCategoryService.findByStore(store);
+        List<StoreCategoryBig> storeCategory = new ArrayList<>();
+
+        for(StoreCategorySelected category : categories) {
+            storeCategory.add(category.getStoreCategoryBig());
+        }
+        return new ResponseEntity<>(storeCategory, HttpStatus.OK);
+    }
+
+
+
 }

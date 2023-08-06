@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class StoreListResponseDto {
 
+    private Integer scbId;
     private Integer storeId;
     private String storeName;
     private String content;
