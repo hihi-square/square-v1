@@ -15,7 +15,7 @@ function DiscountNow() {
   const discounts = [
     {
       thumbnail: "/img/sample/cookie1.png",
-      name: "",
+      name: "시원한 여름을 날려줄 ",
       storeName: "store1",
       period: 0,
       discountPrice: 10000,

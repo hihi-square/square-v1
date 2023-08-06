@@ -1,5 +1,6 @@
-import React, { useState, useRef, ChangeEvent, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "redux/store";
 import "App.css";
 import "animate.css";
@@ -12,57 +13,30 @@ import {
   SelectChangeEvent,
   Divider,
   Button,
-  TextField,
   IconButton,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faMagnifyingGlass,
   faShoppingCart,
   faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function Header() {
-  const [location, setLocation] = useState("loc1");
-  const [search, setSearch] = useState("");
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const searchButtonRef = useRef<HTMLButtonElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const sticky = useSelector((state: RootState) => state.sticky);
+interface Props {
+  cateNum: Number;
+  setAni: React.Dispatch<React.SetStateAction<boolean>> | null;
+}
 
+export default function Header({ cateNum, setAni }: Props) {
+  const navigate = useNavigate();
+  const [location, setLocation] = useState("loc1");
+  const pageType = useSelector((state: RootState) => state.page);
+  const sticky = useSelector((state: RootState) => state.sticky);
   const handleChange = (event: SelectChangeEvent) => {
     setLocation(event.target.value);
   };
   const handleCartClick = () => {
     // 장바구니 ㄱㄱ
   };
-  const handleSearchClick = () => {
-    setIsSearchVisible((prev) => !prev);
-  };
-
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
-    const input = e.target.value;
-
-    setSearch(input);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchButtonRef.current &&
-        !searchButtonRef.current.contains(event.target as Node) &&
-        searchInputRef.current &&
-        !searchInputRef.current.contains(event.target as Node)
-      ) {
-        setIsSearchVisible(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <Grid
@@ -78,10 +52,17 @@ export default function Header() {
         zIndex: 5,
       }}
     >
-      {isSearchVisible ? (
+      {pageType !== "메인" ? (
         <Grid container xs={12} alignItems="center" sx={{ height: "60px" }}>
           <Grid xs={2}>
-            <Button onClick={handleSearchClick}>
+            <Button
+              onClick={() => {
+                if (setAni) setAni(true);
+                setTimeout(() => {
+                  navigate(-1);
+                }, 100);
+              }}
+            >
               <FontAwesomeIcon
                 icon={faChevronLeft}
                 style={{ color: "#000000" }}
@@ -89,22 +70,16 @@ export default function Header() {
               />
             </Button>
           </Grid>
-          <Grid xs={9}>
-            <TextField
-              placeholder="검색..."
-              fullWidth
-              value={search}
-              onChange={handleSearch}
-              size="small"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderWidth: 1,
-                  borderColor: "black",
-                },
-              }}
-            />
+          <Grid xs={8}>
+            <Typography
+              variant="h4"
+              component="h4"
+              sx={{ fontWeight: 800, textAlign: "center" }}
+            >
+              {pageType}
+            </Typography>
           </Grid>
-          <Grid xs={1}></Grid>
+          <Grid xs={2}></Grid>
         </Grid>
       ) : (
         <Grid container xs={12} alignItems="center" sx={{ height: "60px" }}>
@@ -155,14 +130,6 @@ export default function Header() {
             sx={{ marginRight: "15px" }}
           >
             <Grid>
-              <IconButton onClick={handleSearchClick} sx={{ fontSize: "20px" }}>
-                <FontAwesomeIcon
-                  icon={faMagnifyingGlass}
-                  style={{ color: "#000000" }}
-                />
-              </IconButton>
-            </Grid>
-            <Grid>
               <IconButton onClick={handleCartClick} sx={{ fontSize: "20px" }}>
                 <FontAwesomeIcon
                   icon={faShoppingCart}
@@ -174,10 +141,8 @@ export default function Header() {
         </Grid>
       )}
 
-      {sticky === 1 ? (
+      {sticky === 1 || pageType === "가게 목록" ? (
         <Grid
-          container
-          justifyContent="space-around"
           className="animate__animated animate__fadeInDown"
           xs={12}
           sx={{
@@ -186,42 +151,76 @@ export default function Header() {
             "--animate-duration": "100ms",
           }}
         >
-          <Button>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ fontWeight: 700, textAlign: "center" }}
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Button
+              sx={{
+                flexGrow: 1,
+                backgroundColor: cateNum === 1 ? "lightgrey" : "initial",
+              }}
             >
-              카페/음료
-            </Typography>
-          </Button>
-          <Button>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ fontWeight: 700, textAlign: "center" }}
+              <Typography
+                variant="body1"
+                component="div"
+                sx={{
+                  fontWeight: 700,
+                  textAlign: "center",
+                }}
+              >
+                카페/음료
+              </Typography>
+            </Button>
+            <Button
+              sx={{
+                flexGrow: 1,
+                backgroundColor: cateNum === 2 ? "lightgrey" : "initial",
+              }}
             >
-              베이커리
-            </Typography>
-          </Button>
-          <Button>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ fontWeight: 700, textAlign: "center" }}
+              <Typography
+                variant="body1"
+                component="div"
+                sx={{
+                  fontWeight: 700,
+                  textAlign: "center",
+                }}
+              >
+                베이커리
+              </Typography>
+            </Button>
+            <Button
+              sx={{
+                flexGrow: 1,
+                backgroundColor: cateNum === 3 ? "lightgrey" : "initial",
+              }}
             >
-              분식/간식
-            </Typography>
-          </Button>
-          <Button>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ fontWeight: 700, textAlign: "center" }}
+              <Typography
+                variant="body1"
+                component="div"
+                sx={{
+                  fontWeight: 700,
+                  textAlign: "center",
+                }}
+              >
+                분식/간식
+              </Typography>
+            </Button>
+            <Button
+              sx={{
+                flexGrow: 1,
+                backgroundColor: cateNum === 4 ? "lightgrey" : "initial",
+              }}
             >
-              샐러드
-            </Typography>
-          </Button>
+              <Typography
+                variant="body1"
+                component="div"
+                sx={{
+                  fontWeight: 700,
+                  textAlign: "center",
+                }}
+              >
+                샐러드
+              </Typography>
+            </Button>
+          </Box>
         </Grid>
       ) : (
         <Grid xs={12}>

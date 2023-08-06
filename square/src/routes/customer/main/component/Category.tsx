@@ -51,14 +51,14 @@ export default function Category() {
 
   // 카테고리 정보를 저장할 상태 변수
   const [categories] = useState<Array<CategoryType>>([
-    { id: 5, name: "카페/음료", image: "drink.png" },
+    { id: 1, name: "카페/음료", image: "drink.png" },
     { id: 2, name: "베이커리", image: "bake.png" },
-    { id: 7, name: "분식/간식", image: "snack.png" },
-    { id: 6, name: "샐러드", image: "salad.png" },
+    { id: 3, name: "분식/간식", image: "snack.png" },
+    { id: 4, name: "샐러드", image: "salad.png" },
   ]); // 변경된 이름 사용
 
-  const handleCategoryClick = (categoryValue: number) => {
-    navigate(`/storelist/${categoryValue}`);
+  const handleCategoryClick = (categoryValue: Number, pageName: String) => {
+    navigate(`/list/${categoryValue}`);
   };
 
   return (
@@ -72,7 +72,7 @@ export default function Category() {
                 alt={item.name}
                 loading="lazy"
                 onClick={() => {
-                  handleCategoryClick(item.id);
+                  handleCategoryClick(item.id, item.name);
                 }}
               />
               <ImageListItemBar

@@ -19,7 +19,16 @@ const Sticky = createSlice({
   },
 });
 
+const page = createSlice({
+  name: "page",
+  initialState: "메인",
+  reducers: {
+    setPage: (state, action: PayloadAction<string>) => action.payload,
+  },
+});
+
 export const { setSticky } = Sticky.actions;
+export const { setPage } = page.actions;
 
 const types = createSlice({
   name: "types",
@@ -126,6 +135,7 @@ export const store = configureStore({
     types: types.reducer,
     cart: cartSlice.reducer,
     sticky: Sticky.reducer,
+    page: page.reducer,
   },
 });
 

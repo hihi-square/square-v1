@@ -1,7 +1,7 @@
 import React from "react";
 import "App.css";
 
-function DiscountNow() {
+export default function Feed() {
   const discounts = [
     {
       thumbnail: "",
@@ -20,6 +20,55 @@ function DiscountNow() {
     {
       thumbnail: "",
       name: "sale3",
+      storeName: "store3",
+      period: 3,
+      discountPrice: 30000,
+    },
+    {
+      thumbnail: "",
+      name: "sale4",
+      storeName: "store3",
+      period: 3,
+      discountPrice: 30000,
+    },
+    {
+      thumbnail: "",
+      name: "sale5",
+      storeName: "store3",
+      period: 3,
+      discountPrice: 30000,
+    },
+    {
+      thumbnail: "",
+      name: "sale6",
+      storeName: "store3",
+      period: 3,
+      discountPrice: 30000,
+    },
+    {
+      thumbnail: "",
+      name: "sale6",
+      storeName: "store3",
+      period: 3,
+      discountPrice: 30000,
+    },
+    {
+      thumbnail: "",
+      name: "sale6",
+      storeName: "store3",
+      period: 3,
+      discountPrice: 30000,
+    },
+    {
+      thumbnail: "",
+      name: "sale6",
+      storeName: "store3",
+      period: 3,
+      discountPrice: 30000,
+    },
+    {
+      thumbnail: "",
+      name: "sale6",
       storeName: "store3",
       period: 3,
       discountPrice: 30000,
@@ -45,5 +94,3 @@ function DiscountNow() {
     </div>
   );
 }
-
-export default DiscountNow;

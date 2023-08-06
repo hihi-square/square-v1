@@ -1,12 +1,12 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Unstable_Grid2 as Grid } from "@mui/material";
-import StoreListByCategory from "./main/storeListByCategory";
-import StoreListByLocation from "./main/storeListByLocation";
-import StorePage from "./store/storePage";
-import SearchMap from "./main/searchMap";
+import List from "./list/List";
+import StoreListByLocation from "./map/storeListByLocation";
+import Store from "./store/Store";
+import SearchMap from "./map/searchMap";
 import Board from "./main/board/boardMain";
-import Chat from "./main/chat";
+import Chat from "./chat/chat";
 import MyPage from "./my/myPage";
 import SearchResult from "./main/searchResult";
 import Cart from "./deal/cart";
@@ -25,14 +25,15 @@ export default function Customer() {
     <Grid container xs={12} md={8} justifyContent="center">
       <Routes>
         <Route path="/main" element={<Main />} />
-        <Route path="/storelist/:category" element={<StoreListByCategory />} />
-        <Route path="/storelist/location" element={<StoreListByLocation />} />
+        <Route path="/list/:category" element={<List />} />
+        <Route path="/lList/location" element={<StoreListByLocation />} />
 
         {/* 스토어 아이디 데이터 있기 전까진 일단 그냥 대표페이지로 가게하고 나중에 바인드 */}
-        <Route path="/storePage/:store" element={<StorePage />} />
+        <Route path="/store/:store" element={<Store />} />
         <Route path="/searchmap" element={<SearchMap />} />
         <Route path="/board" element={<Board />} />
         <Route path="/chat" element={<Chat />} />
+
         <Route path="/mypage" element={<MyPage />}>
           <Route path="myarea" element={<MyArea />} />
           <Route path="myinfo" element={<MyInfo />} />
