@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.order.entity.Order;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 
 import lombok.Getter;
@@ -27,8 +28,8 @@ public class Point extends BaseTime {
 
 	@OneToOne
 	@JoinColumn(name = "usr_id")
-	private User user;
+	private Customer customer;
 
-	private Integer amount;
+	private Long amount;
 	private Integer type;
 }
