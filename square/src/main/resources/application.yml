@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://3.36.97.232:8432/Square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://i9b208.p.ssafy.io:8432/Square?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: hihi
     password: 8811
   jpa:
@@ -62,3 +62,4 @@ cloud:
     credentials:
       access-key: AKIAXFHB46BC5APX3VNV
       secret-key: 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
+

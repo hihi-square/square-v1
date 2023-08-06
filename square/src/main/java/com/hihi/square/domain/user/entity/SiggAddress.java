@@ -32,7 +32,7 @@ public class SiggAddress {
 
 
 	@Column(name="adm_code")
-	private String amdCode;
+	private Long amdCode;
 	private String name;
 
 	@ManyToOne
