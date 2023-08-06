@@ -3,6 +3,7 @@ package com.hihi.square.domain.store.controller;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbUpdateRequestDto;
+import com.hihi.square.domain.store.dto.response.StoreCategoryResponseDto;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
@@ -102,13 +103,30 @@ public class CategoryController {
     public ResponseEntity<?> selectAllByStoreId(@PathVariable Integer id) {
         Store store = storeService.findByUsrId(id).get();
         List<StoreCategorySelected> categories = storeCategoryService.findByStore(store);
-        List<StoreCategoryBig> storeCategory = new ArrayList<>();
+
+        List<StoreCategoryResponseDto> storeCategoryInfo = new ArrayList<>();
 
         for(StoreCategorySelected category : categories) {
-            storeCategory.add(category.getStoreCategoryBig());
+            StoreCategoryResponseDto dto = StoreCategoryResponseDto.builder()
+                    .scsId(category.getScsId())
+                    .categoryName(category.getStoreCategoryBig().getName())
+                    .build();
+            storeCategoryInfo.add(dto);
         }
-        return new ResponseEntity<>(storeCategory, HttpStatus.OK);
+        return new ResponseEntity<>(storeCategoryInfo, HttpStatus.OK);
     }
+
+    // 가게에 등록된 카테고리 삭제
+    @DeleteMapping("/store/{id}")
+    public ResponseEntity<CommonResponseDto> deleteStoreCategory(@PathVariable Integer id) {
+        CommonResponseDto response = CommonResponseDto.builder()
+                .statusCode(200)
+                .message("SUCCESSFULLY_DELETED")
+                .build();
+        categoryService.deleteById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 
 
