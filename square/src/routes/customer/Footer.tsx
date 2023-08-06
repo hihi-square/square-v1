@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Paper, Grid, Box, Button, Typography } from "@mui/material";
+import {
+  Paper,
+  Unstable_Grid2 as Grid,
+  Box,
+  Button,
+  Typography,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,

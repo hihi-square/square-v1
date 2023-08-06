@@ -141,7 +141,7 @@ export default function Header({ cateNum, setAni }: Props) {
         </Grid>
       )}
 
-      {sticky === 1 || pageType === "가게 목록" ? (
+      {sticky.main === 1 || pageType === "가게 목록" ? (
         <Grid
           className="animate__animated animate__fadeInDown"
           xs={12}

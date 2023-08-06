@@ -1,6 +1,6 @@
-// import axios from "axios";
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Unstable_Grid2 as Grid,
   Typography,
@@ -10,11 +10,30 @@ import {
   Divider,
 } from "@mui/material";
 import "App.css";
+import { REST_API } from "redux/store";
 
 export default function CategoryStore() {
-  // const { category } = useParams<{ category?: string }>();
-  // const navigate = useNavigate();
+  const { category } = useParams<{ category?: string }>();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (category) {
+      // 백엔드의 API 주소와 카테고리를 파라미터로 사용합니다.
+      // 해당 주소와 요청 방식은 백엔드와 협의하여 결정해야 합니다.
+      axios({
+        url: `${REST_API}store/big-category/${Number(category)}`,
+        method: "GET",
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          // 에러 처리
+          // console.log(`${category}`);
+          // console.error(error);
+        });
+    }
+  }, [category]);
   const lists = [
     {
       storeId: 1,
@@ -79,6 +98,9 @@ export default function CategoryStore() {
           key={index}
           elevation={0}
           sx={{ display: "flex", marginBottom: "10px", width: "100%" }}
+          onClick={() => {
+            navigate(`/store/${list.storeId}`);
+          }}
         >
           <Grid xs={12} container>
             <Grid container xs={12}>
