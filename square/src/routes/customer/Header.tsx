@@ -74,7 +74,7 @@ export default function Header({ cateNum, setAni }: Props) {
             <Typography
               variant="h4"
               component="h4"
-              sx={{ fontWeight: 800, textAlign: "center" }}
+              sx={{ fontWeight: 700, textAlign: "center" }}
             >
               {pageType}
             </Typography>
