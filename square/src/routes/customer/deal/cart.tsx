@@ -181,6 +181,11 @@ useEffect(() => {
     0
   );
 
+  const selectedItems = cartData.flatMap((store: Store) => 
+  store.items.filter((item: Item) => item.isSelected)
+);
+
+
   const paymentButtonStyle = {
     display: "flex",
     justifyContent: "space-between",
@@ -193,6 +198,9 @@ useEffect(() => {
     borderRadius: "10px",
     margin: "0 auto",
   };
+
+
+
 
 
 
@@ -253,7 +261,7 @@ useEffect(() => {
         ))}
       </div>
 
-      <Link to="/pay">
+      <Link to={{ pathname: "/pay", state: { selectedItems } }}>
   <button style={paymentButtonStyle}>
     <div>{itemCount} 항목</div>
     <div>주문하기</div>
