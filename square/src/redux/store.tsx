@@ -1,4 +1,4 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Itype } from "modules/types";
 
 const user = createSlice({
@@ -10,6 +10,16 @@ const user = createSlice({
   },
   reducers: {},
 });
+
+const Sticky = createSlice({
+  name: "sticky",
+  initialState: 0,
+  reducers: {
+    setSticky: (state, action: PayloadAction<number>) => action.payload,
+  },
+});
+
+export const { setSticky } = Sticky.actions;
 
 const types = createSlice({
   name: "types",
@@ -115,6 +125,7 @@ export const store = configureStore({
     user: user.reducer,
     types: types.reducer,
     cart: cartSlice.reducer,
+    sticky: Sticky.reducer,
   },
 });
 
