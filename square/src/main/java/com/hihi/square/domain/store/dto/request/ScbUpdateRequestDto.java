@@ -7,5 +7,4 @@ import java.time.LocalDateTime;
 @Data
 public class ScbUpdateRequestDto {
     private String name;
-    private LocalDateTime createdAt;
 }

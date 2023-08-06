@@ -21,5 +21,6 @@ public class StoreInfoResponseDto {
 	@Enumerated(EnumType.STRING)
 	private BankType bank;
 	private String account;
+	private String backgroundImgUrl;
 	
 }

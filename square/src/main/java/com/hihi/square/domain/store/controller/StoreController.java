@@ -155,7 +155,7 @@ public class StoreController {
 		StoreCategoryBig storeCategoryBig = categoryService.findById(request.getScbId()).get();
 
 		// 등록된 카테고리가 3개 이상이라면 등록 불가
-		if(storeCategoryService.findByStore(store).size() > 3) {
+		if(storeCategoryService.findByStore(store).size() >= 3) {
 			response.setStatusCode(400);
 			response.setMessage("MAXIMUM_COUNT");
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
