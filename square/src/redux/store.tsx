@@ -11,11 +11,27 @@ const user = createSlice({
   reducers: {},
 });
 
-const Sticky = createSlice({
+export const REST_API = "http://i9b208.p.ssafy.io:8811/";
+
+type Sticky = {
+  pageType: "main" | "store";
+  value: number;
+};
+
+const sticky = createSlice({
   name: "sticky",
-  initialState: 0,
+  initialState: {
+    main: 0,
+    store: 0,
+  },
   reducers: {
-    setSticky: (state, action: PayloadAction<number>) => action.payload,
+    setSticky: (state, action: PayloadAction<Sticky>) => {
+      const { pageType, value } = action.payload;
+
+      if (Object.prototype.hasOwnProperty.call(state, pageType)) {
+        state[pageType] = value;
+      }
+    },
   },
 });
 
@@ -27,7 +43,7 @@ const page = createSlice({
   },
 });
 
-export const { setSticky } = Sticky.actions;
+export const { setSticky } = sticky.actions;
 export const { setPage } = page.actions;
 
 const types = createSlice({
@@ -134,7 +150,7 @@ export const store = configureStore({
     user: user.reducer,
     types: types.reducer,
     cart: cartSlice.reducer,
-    sticky: Sticky.reducer,
+    sticky: sticky.reducer,
     page: page.reducer,
   },
 });

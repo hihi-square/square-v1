@@ -29,9 +29,9 @@ export default function Category() {
         document.getElementById("stickyCategory")?.offsetHeight || 0;
 
       if (window.scrollY >= offsetTop + offsetHeight - 100) {
-        dispatch(setSticky(1));
+        dispatch(setSticky({ pageType: "main", value: 1 }));
       } else {
-        dispatch(setSticky(2));
+        dispatch(setSticky({ pageType: "main", value: 2 }));
       }
     };
 

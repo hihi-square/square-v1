@@ -15,20 +15,18 @@ function MainPage() {
   }, [dispatch]);
 
   return (
-    <>
-      <Grid container xs={12} direction="column">
-        <Header cateNum={0} setAni={null} />
-        <Grid container xs={12} justifyContent="center">
-          <Category />
-        </Grid>
-        <Grid container xs={12} justifyContent="center">
-          <Feed />
-        </Grid>
-        <Grid container xs={12} justifyContent="center">
-          <Footer />
-        </Grid>
+    <Grid container xs={12} direction="column">
+      <Header cateNum={0} setAni={null} />
+      <Grid container xs={12} justifyContent="center">
+        <Category />
       </Grid>
-    </>
+      <Grid container xs={12} justifyContent="center">
+        <Feed />
+      </Grid>
+      <Grid container xs={12} justifyContent="center">
+        <Footer />
+      </Grid>
+    </Grid>
   );
 }
 
