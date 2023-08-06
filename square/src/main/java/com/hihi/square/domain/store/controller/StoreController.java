@@ -13,6 +13,7 @@ import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ import com.hihi.square.domain.store.service.BusinessInformationService;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
 import com.hihi.square.domain.store.service.StoreService;
+import com.hihi.square.domain.user.service.EmdAddressService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +62,7 @@ public class StoreController {
 	private final CategoryService categoryService;
 	private final MenuCategoryService menuCategoryService;
 	private final MenuService menuService;
+	private final EmdAddressService emdAddressService;
 	// 사업자 등록번호 중복확인
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
@@ -75,7 +78,8 @@ public class StoreController {
 	// 가게 회원가입
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
-		Store store = request.toEntityStore();
+		EmdAddress emdAddress = emdAddressService.findByAdmCode(request.getAdmCode());
+		Store store = request.toEntityStore(emdAddress);
 		BusinessInformation businessInformation = request.toEntityBusinessInformation();
 		CommonResponseDto response = CommonResponseDto.builder()
 				.statusCode(409)
@@ -130,10 +134,11 @@ public class StoreController {
 	}
 
 	// 사용자가 가게 카테고리 선택시 가게 리스트 보여주는 api
-	@GetMapping("/big-category/{id}")
-	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id) {
-		List<StoreListResponseDto> stores = storeService.findByCategoryId(id);
-		return new ResponseEntity<>(stores, HttpStatus.OK);
+	@GetMapping("/big-category/{id}/{emdId}/{depth}")
+	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id, @PathVariable Integer emdId, @PathVariable Integer depth) {
+		List<StoreListResponseDto> storeListResponseDtos = storeService.findByCategoryIdAndSelectedEmd(id, emdId, depth);
+		// List<StoreListResponseDto> stores = storeService.findByCategoryId(id);
+		return new ResponseEntity<>(storeListResponseDtos, HttpStatus.OK);
 	}
 
 	// 판매자가 큰 카테고리에 자신의 가게를 등록하는 api 최대 3개

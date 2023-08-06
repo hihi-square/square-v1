@@ -5,6 +5,8 @@ import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.StoreCategoryRepository;
 import com.hihi.square.domain.store.repository.StoreRepository;
+import com.hihi.square.domain.user.entity.EmdAddress;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +47,7 @@ public class StoreCategoryService {
                 .build();
         storeCategoryRepository.save(storeCategorySelected);
     }
+
 
     // 가게 카테고리 삭제
 

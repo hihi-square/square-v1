@@ -22,6 +22,7 @@ import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.repository.EmdAddressRepository;
+import com.hihi.square.domain.user.service.EmdAddressService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +38,7 @@ public class StoreService {
 	private final StoreCategoryService storeCategoryService;
 	private final CategoryService categoryService;
 	private final MenuRepository menuRepository;
+	private final EmdAddressService emdAddressService;
 
 	@Transactional
 	public void save(Store store, BusinessInformation businessInformation) {
@@ -88,5 +90,35 @@ public class StoreService {
 		}
 		return stores;
 
+	}
+
+	public List<StoreListResponseDto> findByCategoryIdAndSelectedEmd(Integer id, Integer emdId, Integer depth) {
+		StoreCategoryBig storeCategoryBig = categoryService.findById(id).get();
+		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
+		List<Store> storeCategorySelectedList = storeRepository.findByStoreCategoryBigAndEmdList(storeCategoryBig, emdAddressList);
+		System.out.println(emdAddressList.size());
+		System.out.println(storeCategorySelectedList.size());
+		List<StoreListResponseDto> stores = new ArrayList<>();
+		for(Store s : storeCategorySelectedList) {
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User) s);
+			String menuName = "";
+			int size = menuList.size() < 3 ? menuList.size() : 3;
+			for(int i=0; i<size; i++) {
+				if(i == size-1) {
+					menuName += menuList.get(i).getName();
+				} else {
+					menuName += menuList.get(i).getName() + ", ";
+				}
+			}
+			StoreListResponseDto res = StoreListResponseDto.builder()
+				.storeId(s.getUsrId())
+				.storeName(s.getStoreName())
+				.content(s.getContent())
+				.storeAddress(s.getAddress())
+				.mainMenu(menuName)
+				.build();
+			stores.add(res);
+		}
+		return stores;
 	}
 }
