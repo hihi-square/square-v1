@@ -16,7 +16,7 @@ function StoreMenu({ storeId }: { storeId?: string }) {
       price: number;
     }[];
   };
-
+  const REST_API: string = "http://i9b208.p.ssafy.io:8811";
   const [menus, setMenus] = useState<CategoryMenu[]>([]);
   const [menuQuantities, setMenuQuantities] = useState<{ [menuId: number]: number }>({});
 
@@ -43,7 +43,7 @@ function StoreMenu({ storeId }: { storeId?: string }) {
 
   useEffect(() => {
     axios({
-      url: `http://43.201.255.188:8811/store/menu/${storeId}`,
+      url: `${REST_API}/store/menu/${storeId}`,
       method: "GET",
       params: {}
     })

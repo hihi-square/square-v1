@@ -6,10 +6,12 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-
+import { useDispatch } from 'react-redux';
+import { cartActions } from '../../../redux/store';
 
 
 function Cart() {
+  const dispatch = useDispatch();
 
   type Item = {
     productThumbnail: string;
@@ -36,10 +38,11 @@ type Store = {
   const [cartData, setCartData] = useState<any[]>([]);
 
 
-  const itemCount = cartData.reduce(
-    (acc: number, store: Store) => acc + store.items.length,
+  const selectedItemCount = cartData.reduce(
+    (acc: number, store: Store) => acc + store.items.filter(item => item.isSelected).length,
     0
-  );
+);
+
 
 
 function getCartFromLocalStorage() {
@@ -125,15 +128,17 @@ function getCartFromLocalStorage() {
 useEffect(() => {
     async function fetchData() {
       
-        const cartItems = getCartFromLocalStorage();
+      const cartItems = getCartFromLocalStorage();
 
-        const data = await fetchDataFromBackend(cartItems);
+      
+      const data = await fetchDataFromBackend(cartItems);
+
         
         data.forEach((store: Store) => store.items.forEach((item: Item) => (item.isSelected = true)));
         
 
         setCartData(data);
-        console.log("카트 데이터는 ", cartData)
+
     }
   
     fetchData();
@@ -149,13 +154,35 @@ useEffect(() => {
     }
   };
   const handleCheckboxChange = (storeIndex: number, itemIndex: number, isChecked: boolean) => {
-    const newCartData = [...cartData];
-    const item = newCartData[storeIndex].items[itemIndex];
 
+    const newCartData = JSON.parse(JSON.stringify(cartData));
+
+    const item = newCartData[storeIndex].items[itemIndex];
+    
     item.isSelected = isChecked;
 
     setCartData(newCartData);
-  };
+
+};
+
+const selectedStores = cartData.map(store => {
+  const selectedItemsFromStore = store.items.filter((item: Item) => item.isSelected);
+
+  if (selectedItemsFromStore.length > 0) {
+    return {
+      ...store,
+      items: selectedItemsFromStore
+    };
+  }
+  return null;
+}).filter(Boolean);
+
+const handleOrderClick = () => {
+  dispatch(cartActions.setSelectedItems(selectedStores));
+  navigate("/pay");
+  console.log(selectedStores)
+};
+
   
   const handleQuantityChange = (storeIndex: number, itemIndex: number, action: "add" | "subtract") => {
     const newCartData = [...cartData];
@@ -184,6 +211,9 @@ useEffect(() => {
   const selectedItems = cartData.flatMap((store: Store) => 
   store.items.filter((item: Item) => item.isSelected)
 );
+
+console.log(selectedItems);
+
 
 
   const paymentButtonStyle = {
@@ -261,12 +291,12 @@ useEffect(() => {
         ))}
       </div>
 
-      <Link to={{ pathname: "/pay", state: { selectedItems } }}>
-  <button style={paymentButtonStyle}>
-    <div>{itemCount} 항목</div>
+      <Link to="/pay">
+      <button onClick={handleOrderClick} style={paymentButtonStyle}>
+    <div>{selectedItemCount} 항목</div>
     <div>주문하기</div>
     <div>{totalSelectedPrice}원</div>
-  </button>
+</button>
 </Link>
     </>
   );

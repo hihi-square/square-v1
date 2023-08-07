@@ -15,12 +15,14 @@ type Store = {
 };
 
 function StoreInfo({ storeId }: StoreInfoProps) {
+  const REST_API: string = "http://i9b208.p.ssafy.io:8811";
+  
   const [store, setStore] = useState<Store | null>(null);
 
   useEffect(() => {
 
     axios({
-      url: `http://43.201.255.188:8811/store/header/${storeId}`,
+      url: `${REST_API}/store/header/${storeId}`,
       method: "GET",
       params: {
    

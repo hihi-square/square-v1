@@ -4,6 +4,7 @@ import axios from 'axios';
 import "App.css";
 
 function Category() {
+  const REST_API: string = "http://i9b208.p.ssafy.io:8811";
   const { category } = useParams();
   const navigate = useNavigate();
 
@@ -25,7 +26,7 @@ function Category() {
 
   useEffect(() => {
     axios({
-      url: `http://43.201.255.188:8811/scb`,
+      url: `${REST_API}/scb`,
       method: "GET",
     })
       .then(response => {

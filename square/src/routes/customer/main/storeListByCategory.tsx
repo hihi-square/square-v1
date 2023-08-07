@@ -6,6 +6,7 @@ import "../../../App.css";
 import HeaderModule from '../HeaderModule';
 
 export default function StoreListByCategory() {
+  const REST_API: string = "http://i9b208.p.ssafy.io:8811";
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ export default function StoreListByCategory() {
   useEffect(() => {
     if (category) {
       axios({
-        url: `http://43.201.255.188:8811/store/big-category/${category}`,
+        url: `${REST_API}/store/big-category/${category}`,
         method: "GET",
         params: {
      
