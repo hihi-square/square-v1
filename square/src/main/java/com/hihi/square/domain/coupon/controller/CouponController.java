@@ -1,11 +1,9 @@
 package com.hihi.square.domain.coupon.controller;
 
-import java.nio.channels.ReadPendingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.hql.internal.ast.tree.ResolvableNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
-import com.hihi.square.domain.coupon.dto.response.EmdStoreCouponDto;
-import com.hihi.square.domain.coupon.dto.response.EmdStoreCouponResponseDto;
+import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
+import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleResponseDto;
 import com.hihi.square.domain.coupon.dto.response.StoreAvailableCouponCountResponseDto;
 import com.hihi.square.domain.coupon.dto.response.StoreCouponDto;
 import com.hihi.square.domain.coupon.dto.response.StoreCouponResponseDto;
@@ -27,12 +25,10 @@ import com.hihi.square.domain.coupon.dto.response.StoreUserCouponResponseDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.service.CouponService;
 import com.hihi.square.domain.coupon.service.IssueCouponService;
-import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.domain.user.repository.EmdAddressRepository;
 import com.hihi.square.domain.user.service.EmdAddressService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
@@ -150,7 +146,7 @@ public class CouponController {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_EMD").build(), HttpStatus.BAD_REQUEST);
 		}
 		EmdAddress emdAddress = emdAddressOptional.get();
-		List<EmdStoreCouponDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddress);
-		return new ResponseEntity(EmdStoreCouponResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
+		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddress);
+		return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
 	}
 }

@@ -1,4 +1,4 @@
-package com.hihi.square.domain.coupon.dto.response;
+package com.hihi.square.domain.store.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class EmdStoreCouponDto {
+public class EmdStoreCouponSaleDto {
 	private Integer storeId;
 	private String storeName;
 	private String content;

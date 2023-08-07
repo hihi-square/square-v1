@@ -1,5 +1,6 @@
 package com.hihi.square.domain.store.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,11 +8,14 @@ import java.util.Optional;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
+import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
+import com.hihi.square.domain.store.dto.response.StoreCategorySelectedDto;
 import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.BusinessInformationRepository;
+import com.hihi.square.domain.store.repository.StoreCategoryRepository;
 import com.hihi.square.domain.user.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,6 +43,7 @@ public class StoreService {
 	private final CategoryService categoryService;
 	private final MenuRepository menuRepository;
 	private final EmdAddressService emdAddressService;
+	private final StoreCategoryRepository storeCategoryRepository;
 
 	@Transactional
 	public void save(Store store, BusinessInformation businessInformation) {
@@ -124,5 +129,47 @@ public class StoreService {
 			stores.add(res);
 		}
 		return stores;
+	}
+	public List<EmdStoreCouponSaleDto> storeToEmdStoreCouponSaleDto(List<Store> stores) {
+		List<EmdStoreCouponSaleDto> result = new ArrayList<>();
+		for(Store store : stores ){
+			List<StoreCategorySelectedDto> categories = new ArrayList<>();
+			List<StoreCategorySelected> selected = storeCategoryRepository.findByStore(store);
+			for(StoreCategorySelected s:selected){
+				categories.add(
+					StoreCategorySelectedDto.builder()
+						.categoryId(s.getStoreCategoryBig().getScbId())
+						.categoryName(s.getStoreCategoryBig().getName())
+						.build()
+				);
+			}
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User) store);
+
+			// 인기메뉴가 3개 이상이면 3개만 가져오도록 함
+			int size = menuList.size() >= 3 ? 3 : menuList.size();
+
+			String menuName = "";
+			for(int i=0; i<size; i++) {
+				if(i == size-1) {
+					menuName += menuList.get(i).getName();
+				} else {
+					menuName += menuList.get(i).getName() + ", ";
+				}
+			}
+			result.add(
+				EmdStoreCouponSaleDto.builder()
+					.storeId(store.getUsrId())
+					.storeName(store.getStoreName())
+					.content(store.getContent())
+					.storeAddress(store.getAddress())
+					.thumbnail(store.getProfileThumb())
+					.latitude(store.getLatitude())
+					.longitude(store.getLongitude())
+					.categories(categories)
+					.mainMenu(menuName)
+					.build()
+			);
+		}
+		return result;
 	}
 }

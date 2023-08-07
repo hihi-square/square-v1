@@ -1,4 +1,4 @@
-package com.hihi.square.domain.coupon.dto.response;
+package com.hihi.square.domain.store.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmdStoreCouponResponseDto {
+public class EmdStoreCouponSaleResponseDto {
 
 	private Integer statusCode;
-	List<EmdStoreCouponDto> stores = new ArrayList<>();
+	List<EmdStoreCouponSaleDto> stores = new ArrayList<>();
 }

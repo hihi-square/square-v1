@@ -3,6 +3,7 @@ package com.hihi.square.domain.sale.entity;
 import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.board.entity.Status;
 import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,11 +34,11 @@ public class Sale extends BaseTime {
 	@Column(name = "real_finished_at")
 	private LocalDateTime realFinishedAt;
 	private Integer price;
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private Status status;
 	@ManyToOne
 	@JoinColumn(name = "usr_id")
-	private User user;
+	private Store store;
 	@OneToMany(mappedBy = "sale")
 	private List<SaleMenu> menus = new ArrayList<>();
 

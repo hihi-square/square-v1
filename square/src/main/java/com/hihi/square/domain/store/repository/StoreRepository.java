@@ -22,4 +22,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 
 	@Query("select s from Store s, Coupon c where s = c.store and s.emdAddress in (:emdAddress) and :now between c.startAt and c.expiredAt group by s")
 	List<Store> findByEmdAddressAndHaveAvailableCoupon(EmdAddress emdAddress, LocalDateTime now);
+
+	@Query("select s from Store s, Sale sale where s = sale.store and s.emdAddress in (:emdAddress) and :now between sale.startedAt and sale.realFinishedAt group by s")
+	List<Store> findByEmdAddressAndHaveProgressSale(EmdAddress emdAddress, LocalDateTime now);
 }

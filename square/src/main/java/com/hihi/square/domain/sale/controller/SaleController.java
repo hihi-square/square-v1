@@ -11,8 +11,12 @@ import com.hihi.square.domain.sale.dto.response.StoreSaleDetailResponseDto;
 import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.service.SaleService;
+import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
+import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleResponseDto;
 import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.service.EmdAddressService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +37,7 @@ public class SaleController {
     private final UserService userService;
     private final SaleService saleService;
     private final MenuService menuService;
+    private final EmdAddressService emdAddressService;
 
     // 세일 등록
     @PostMapping("/sale")
@@ -49,7 +54,7 @@ public class SaleController {
                 return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("CONTAIN_NO_AUTHORIZED_MENU").build(), HttpStatus.BAD_REQUEST);
             }
         }
-        saleService.createSale(request, user);
+        saleService.createSale(request, (Store) user);
         return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS_CREATE").build(), HttpStatus.CREATED);
     }
 
@@ -63,7 +68,7 @@ public class SaleController {
             return new ResponseEntity<>(CommonResponseDto.builder().message("BAD_SALE_ID").statusCode(400).build(), HttpStatus.BAD_REQUEST);
         }
         Sale sale = optionalSale.get();
-        if (user.getUsrId() != sale.getUser().getUsrId()){
+        if (user.getUsrId() != sale.getStore().getUsrId()){
             return new ResponseEntity<>(CommonResponseDto.builder().message("NO_AUTHORIZE").statusCode(400).build(), HttpStatus.BAD_REQUEST);
         }
         saleService.finishSale(sale);
@@ -78,7 +83,7 @@ public class SaleController {
         if (!(user instanceof Store)){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
         }
-        List<StoreSaleDto> result = saleService.getStoreAllSale(user);
+        List<StoreSaleDto> result = saleService.getStoreAllSale((Store)user);
         if (result.isEmpty()){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("NO_SALE").build(), HttpStatus.OK);
         } else {
@@ -97,7 +102,7 @@ public class SaleController {
         if (!(user instanceof Store)){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED").build(), HttpStatus.BAD_REQUEST);
         }
-        List<StoreSaleDto> result = saleService.getStoreInProgressSales(user);
+        List<StoreSaleDto> result = saleService.getStoreInProgressSales((Store) user);
         if (result.isEmpty()){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("NO_SALE").build(), HttpStatus.OK);
         } else {
@@ -121,7 +126,7 @@ public class SaleController {
         }
         Sale sale = optionalSale.get();
         // 로그인한 회원의 세일인지 확인
-        if (user.getUsrId() != sale.getUser().getUsrId()){
+        if (user.getUsrId() != sale.getStore().getUsrId()){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED_TO_DELETE").build(), HttpStatus.BAD_REQUEST);
         }
         saleService.deleteSale(sale);
@@ -144,7 +149,7 @@ public class SaleController {
         }
         Sale sale = optionalSale.get();
         // 로그인한 회원의 세일인지 확인
-        if (user.getUsrId() != sale.getUser().getUsrId()){
+        if (user.getUsrId() != sale.getStore().getUsrId()){
             return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NO_AUTHORIZED_TO_UPDATE").build(), HttpStatus.BAD_REQUEST);
         }
         // 선택한 메뉴가 모두 해당 가게의 메뉴인지 확인
@@ -167,5 +172,19 @@ public class SaleController {
         Sale sale = optionalSale.get();
         StoreSaleDetailDto result = saleService.getSaleDetail(sale);
         return new ResponseEntity<>(StoreSaleDetailResponseDto.builder().sale(result).message("SUCCESS").statusCode(200).build(), HttpStatus.OK);
+    }
+
+    // 읍면동 + 현재 진행중인 세일이 있는 가게 리스트
+    @GetMapping("/sale/emd/{id}")
+    public ResponseEntity<?> getEmdSaleList(@PathVariable("id") Integer emdId) {
+        Optional<EmdAddress> emdAddressOptional = emdAddressService.findById(emdId);
+        if (emdAddressOptional.isEmpty()){
+            return new ResponseEntity<>(CommonResponseDto.builder().message("INVALID_EMD_ID").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+        }
+        EmdAddress emdAddress = emdAddressOptional.get();
+        List<EmdStoreCouponSaleDto> result = saleService.findByEmdAddressWithProgressSale(emdAddress);
+        return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
+
+
     }
 }
