@@ -13,5 +13,5 @@ public class StoreListResponseDto {
     private String content;
     private String storeAddress;
     private String mainMenu;
-//    private String thumbnail;
+    private String logo;
 }
