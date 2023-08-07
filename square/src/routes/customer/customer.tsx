@@ -35,12 +35,12 @@ export default function Customer() {
         <Route path="/board" element={<Board />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/mypage" element={<MyPage />}/>
-          <Route path="/myarea" element={<MyArea />} />
-          <Route path="/myinfo" element={<MyInfo />} />
-          <Route path="/myorderhistory" element={<MyOrderHistory />} />
-          <Route path="/myregular" element={<MyRegular />} />
-          <Route path="/myreview" element={<MyReview />} />
-          <Route path="/myboard" element={<MyBoard />} />
+        <Route path="/myarea" element={<MyArea />} />
+        <Route path="/myinfo" element={<MyInfo />} />
+        <Route path="/myorderhistory" element={<MyOrderHistory />} />
+        <Route path="/myregular" element={<MyRegular />} />
+        <Route path="/myreview" element={<MyReview />} />
+        <Route path="/myboard" element={<MyBoard />} />
        
         <Route path="/search/:searchword" element={<SearchResult />} />
         <Route path="/cart" element={<Cart />}/>
