@@ -1,6 +1,7 @@
 package com.hihi.square.domain.coupon.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,9 @@ public class IssueCouponService {
 			.isUsed(false)
 			.build();
 		issueCouponRepository.save(issueCoupon);
+	}
+
+	public List<IssueCoupon> findByCustomer(Customer customer) {
+		return issueCouponRepository.findByCustomer(customer);
 	}
 }

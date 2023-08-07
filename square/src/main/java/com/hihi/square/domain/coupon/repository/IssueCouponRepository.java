@@ -1,5 +1,6 @@
 package com.hihi.square.domain.coupon.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface IssueCouponRepository extends JpaRepository<IssueCoupon, Intege
 	Integer countByCoupon(Coupon coupon);
 
 	Integer countByCouponAndIsUsed(Coupon coupon, boolean isUsed);
+
+	List<IssueCoupon> findByCustomer(Customer customer);
 }
