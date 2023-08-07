@@ -7,8 +7,6 @@ import Store from "./routes/customer/store/storePage";
 import CustomerSignUp from "routes/customer/signup/CustomerSignup";
 import CustomerLogin from "routes/customer/login/CustomerLogin";
 
-
-
 const theme = createTheme({
   typography: {
     fontFamily: "Pretendard, sans-serif", // 원하는 폰트를 지정합니다.

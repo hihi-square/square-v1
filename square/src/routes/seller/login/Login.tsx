@@ -50,7 +50,7 @@ export default function Login() {
     // eslint-disable-next-line no-console
     console.log(`${id}/${pw}`);
     axios({
-      url: "http://43.201.255.188:8811/user/login", 
+      url: "http://43.201.255.188:8811/user/login",  // http://i9b208.p.ssafy.io:8811
       method: "POST",
       data: {
         uid: id,

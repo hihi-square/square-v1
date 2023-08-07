@@ -51,12 +51,12 @@ export default function Login() {
     // eslint-disable-next-line no-console
     console.log(`${id}/${pw}`);
     axios({
-      url: "http://43.201.255.188:8811/user/login",
+      url: "http://i9b208.p.ssafy.io:8811/user/login",
       method: "POST",
       data: {
         uid: id,
         password: pw,
-        authenticate: "UA02",
+        authenticate: "UA01",
       },
     })
       .then((response) => {
@@ -64,7 +64,7 @@ export default function Login() {
         // console.log(response.data.accessToken)
         localStorage.setItem('accessToken', response.data.accessToken)
         localStorage.setItem('refreshToken', response.data.refreshToken)
-
+        console.log('앗싸')
 
         navigate("/");
       })
