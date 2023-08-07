@@ -3,11 +3,14 @@ package com.hihi.square.domain.store.dto.response;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import com.hihi.square.domain.image.entity.Image;
 import com.hihi.square.domain.store.entity.BankType;
 import com.hihi.square.domain.user.entity.EmdAddress;
 
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -21,6 +24,6 @@ public class StoreInfoResponseDto {
 	@Enumerated(EnumType.STRING)
 	private BankType bank;
 	private String account;
-	private String backgroundImgUrl;
+	private List<Image> backgroundImgUrl;
 	
 }

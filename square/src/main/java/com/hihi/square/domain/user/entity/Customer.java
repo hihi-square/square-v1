@@ -33,6 +33,8 @@ public class Customer extends User{
 	@Enumerated(EnumType.STRING)
 	private UserSocialLoginType social;
 
+	private Long point;
+
 	@OneToMany(mappedBy = "customer")
 	// @Builder.Default
 	private List<CustomerAddress> customerAddressList = new ArrayList<>();

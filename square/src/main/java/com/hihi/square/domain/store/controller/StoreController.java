@@ -2,6 +2,8 @@ package com.hihi.square.domain.store.controller;
 
 import javax.validation.Valid;
 
+import com.hihi.square.domain.image.entity.Image;
+import com.hihi.square.domain.image.service.ImageService;
 import com.hihi.square.domain.menu.dto.response.MenuCategoryDto;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.menu.service.MenuService;
@@ -51,6 +53,7 @@ public class StoreController {
 	private final MenuCategoryService menuCategoryService;
 	private final MenuService menuService;
 	private final EmdAddressService emdAddressService;
+	private final ImageService imageService;
 	// 사업자 등록번호 중복확인
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
@@ -176,11 +179,16 @@ public class StoreController {
 	@GetMapping("/header/{id}")
 	public ResponseEntity<?> getStoreHeaderInfo(@PathVariable Integer id) {
 		Store store = storeService.findByUsrId(id).get();
+
+		// 이미지 파일 받아오기
+		List<Image> images = imageService.getImageResponseList("STORE", store.getUsrId());
+
 		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
 				.address(store.getAddress())
 				.content(store.getContent())
+				.backgroundImgUrl(images)
 				.build();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}

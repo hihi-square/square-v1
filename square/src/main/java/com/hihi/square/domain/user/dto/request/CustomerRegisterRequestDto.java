@@ -50,7 +50,9 @@ public class CustomerRegisterRequestDto {
 			.lastLogin(LocalDateTime.now())
 			.status(UserStatusType.valueOf(UserStatusType.ST01.name()))
 			.social(UserSocialLoginType.valueOf(UserSocialLoginType.US01.name()))
+			.point(0L)
 			.build();
+
 		return customer;
 	}
 }
