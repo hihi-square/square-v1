@@ -5,8 +5,11 @@ import com.hihi.square.domain.order.service.OrderDetailService;
 import com.hihi.square.domain.order.service.OrderService;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.review.dto.request.ReviewWriteRequestDto;
+import com.hihi.square.domain.review.dto.response.StoreReviewListDto;
+import com.hihi.square.domain.review.dto.response.StoreReviewListResponseDto;
 import com.hihi.square.domain.review.entity.Review;
 import com.hihi.square.domain.review.service.ReviewService;
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
@@ -18,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -118,6 +122,32 @@ public class ReviewController {
         }
         reviewService.deleteReview(review);
         return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+    }
+
+    // 가게 리뷰 리스트
+    @GetMapping("/{id}")
+    public ResponseEntity getStoreReviews(@PathVariable("id") Integer storeId) {
+        Optional<User> optionalUser = userService.findByUsrId(storeId);
+        // 존재하지 않는 아이디
+        if (optionalUser.isEmpty()) {
+            return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE_ID").build(), HttpStatus.BAD_REQUEST);
+        }
+        // 구매자 회원인 경우
+        if (optionalUser.get() instanceof Customer) {
+            return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("ONLY_VIEW_STORE_ID").build(), HttpStatus.BAD_REQUEST);
+        }
+        Store store = (Store) optionalUser.get();
+        List<StoreReviewListDto> reviewList = reviewService.findByStore(store);
+        Integer[] reviewRatingCount = reviewService.getCountRatingList(store);
+        Float averageRating = reviewService.getAverageRating(store);
+        return new ResponseEntity(StoreReviewListResponseDto.builder()
+                .statusCode(200)
+                .averageRating(averageRating)
+                .reviews(reviewList)
+                .reviewRateCount(reviewRatingCount)
+                .build(),
+                HttpStatus.OK
+        );
     }
 
 }
