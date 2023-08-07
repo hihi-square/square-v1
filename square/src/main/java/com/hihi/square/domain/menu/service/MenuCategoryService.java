@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.menu.entity.MenuStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,6 +72,7 @@ public class MenuCategoryService {
 	@Transactional(readOnly = true)
 	public List<MenuCategoryDto> getAllMenuByCategory(User user) {
 
+		System.out.println("user : " + user);
 		List<MenuCategoryDto> response = new ArrayList<>();
 		System.out.println("user : " + user + " " + response);
 		List<MenuCategory> menuCategories = menuCategoryRepository.findByUserOrderBySequence(user);
@@ -83,16 +85,17 @@ public class MenuCategoryService {
 					.menuId(menu.getMenuId())
 					.menuName(menu.getName())
 					.description(menu.getDescription())
-					.status(menu.getStatus().ordinal())
+					.status(menu.getStatus())
 					.popularity(menu.isPopularity())
 					.price(menu.getPrice())
-					.menuSequence(menu.getSequence())
+					.signature(menu.isSignature())
+					.menuThumbnail(menu.getThumbnail())
+					.menuImage(menu.getImage())
 					.build();
 				menus.add(menuItemResponseDto);
 			}
 			MenuCategoryDto menuCategoryDto = MenuCategoryDto.builder()
 				.categoryId(menuCategory.getId())
-				.categorySequence(menuCategory.getSequence())
 				.categoryName(menuCategory.getName())
 				.menuItems(menus)
 				.build();

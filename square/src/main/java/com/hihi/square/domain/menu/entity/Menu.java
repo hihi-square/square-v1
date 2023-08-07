@@ -1,14 +1,6 @@
 package com.hihi.square.domain.menu.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -50,7 +42,7 @@ public class Menu extends BaseTime {
 	private boolean signature;
 	// @ColumnDefault("false")
 	private boolean popularity;
-	// @Enumerated(EnumType.ORDINAL)
+	 @Enumerated(EnumType.STRING)
 	@Column(name = "status")
 	private MenuStatus status;
 	private String description;

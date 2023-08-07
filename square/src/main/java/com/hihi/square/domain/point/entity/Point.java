@@ -31,5 +31,5 @@ public class Point extends BaseTime {
 	private Customer customer;
 
 	private Long amount;
-	private Integer type;
+	private Integer type;  // 1 : 적립 , 0 : 차감
 }

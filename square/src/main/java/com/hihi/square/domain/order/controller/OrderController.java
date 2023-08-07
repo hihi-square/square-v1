@@ -1,11 +1,12 @@
 package com.hihi.square.domain.order.controller;
 
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
-import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.service.OrderService;
+import com.hihi.square.domain.point.dto.request.PointRegisterReqeustDto;
+import com.hihi.square.domain.point.entity.Point;
+import com.hihi.square.domain.point.service.PointService;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.repository.CustomerRepository;
-import com.hihi.square.domain.user.service.CustomerService;
 import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class OrderController {
 
     private final CustomerRepository customerRepository;
     private final OrderService orderService;
+    private final PointService pointService;
 
     // 주문 아이디 조회 id : 주문 아이디
 //    @GetMapping("/{id}")
@@ -36,7 +38,8 @@ public class OrderController {
         // 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
 
 
-        orderService.saveOrder(customer, request);
+        Integer ordId = orderService.saveOrder(customer, request);
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

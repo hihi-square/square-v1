@@ -28,7 +28,7 @@ public class OrderService {
     private final OrderMenuRespository orderMenuRespository;
     private final StoreRepository storeRepository;
 
-    public void saveOrder(Customer customer, OrderRequestDto request) {
+    public Integer saveOrder(Customer customer, OrderRequestDto request) {
 
         // Order 저장하기
         Long finalPrice = request.getTotalPrice();
@@ -56,6 +56,8 @@ public class OrderService {
             saveOrderDetail(order, orderDetailRequest);
         }
 
+        // point 적립을 위해 주문 PK 필요해서 넘겨주는 작업
+        return order.getOrdId();
     }
 
     public void saveOrderDetail(Order order, OrderDetailRequestDto request) {
