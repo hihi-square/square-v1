@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -67,7 +68,7 @@ public class UserService {
 				.usrId(user.getUsrId())
 				.userNickname(user.getNickname())
 				.build();
-		userRepository.updateRefreshToken(refreshToken, user.getUid());
+		userRepository.updateRefreshToken(refreshToken, LocalDateTime.now(), user.getUid());
 		return successLogin;
 
 	}

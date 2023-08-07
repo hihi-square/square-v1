@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -20,8 +21,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Modifying(clearAutomatically = true) // 쿼리 실행 이후 영속성 컨텍스트를 초기화시켜준다.
     @Transactional
-    @Query("update User u set u.refreshToken = :refreshToken where u.uid = :uid")
-    int updateRefreshToken(@Param("refreshToken") String refreshToken, @Param("uid")String uid);
+    @Query("update User u set u.refreshToken = :refreshToken, u.lastLogin = :now where u.uid = :uid")
+    int updateRefreshToken(@Param("refreshToken") String refreshToken, LocalDateTime now,  @Param("uid")String uid);
 
     Optional<User> findByEmailAndPhone(String email, String phone);
 

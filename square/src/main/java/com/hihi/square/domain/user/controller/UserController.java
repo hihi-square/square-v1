@@ -168,5 +168,14 @@ public class UserController {
 			HttpStatus.OK);
 
 	}
+
+	// 마이페이지
+	// 포인트 추가 시 생성
+//	@GetMapping("/mypage")
+//	public ResponseEntity getMypageDefaultData(Authentication authentication) {
+//		String uid = authentication.getName();
+//		User user = userService.findByUid(uid).get();
+//
+//	}
 	
 }
