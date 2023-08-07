@@ -1,13 +1,22 @@
 package com.hihi.square.domain.order.service;
 
+import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.order.dto.request.OrderDetailRequestDto;
 import com.hihi.square.domain.order.dto.request.OrderMenuRequestDto;
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
+import com.hihi.square.domain.order.dto.response.OrderDetailResponseDto;
+import com.hihi.square.domain.order.dto.response.OrderMenuResponseDto;
+import com.hihi.square.domain.order.dto.response.OrderResponseDto;
 import com.hihi.square.domain.order.entity.*;
 import com.hihi.square.domain.order.repository.OrderDetailRepository;
 import com.hihi.square.domain.order.repository.OrderMenuRespository;
 import com.hihi.square.domain.order.repository.OrderRepository;
+import com.hihi.square.domain.sale.entity.Associate;
+import com.hihi.square.domain.sale.entity.Sale;
+import com.hihi.square.domain.sale.repository.AssociateRepository;
+import com.hihi.square.domain.sale.repository.SaleMenuRepository;
+import com.hihi.square.domain.sale.repository.SaleRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
@@ -16,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,8 +35,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
-    private final OrderMenuRespository orderMenuRespository;
+    private final OrderMenuRespository orderMenuRepository;
     private final StoreRepository storeRepository;
+    private final MenuRepository menuRepository;
+    private final AssociateRepository associateRepository;
+    private final SaleRepository saleRepository;
 
     public Integer saveOrder(Customer customer, OrderRequestDto request) {
 
@@ -101,7 +114,7 @@ public class OrderService {
                 .type(type)
                 .build();
 
-        orderMenuRespository.save(orderMenu);
+        orderMenuRepository.save(orderMenu);
     }
 
     public Order findById(Integer ordId) {
@@ -110,5 +123,67 @@ public class OrderService {
 
     public List<OrderDetail> findOrderDetailByOrder(Order order) {
         return orderDetailRepository.findByOrder(order);
+    }
+
+    public OrderResponseDto findOrderById(Integer id) {
+        Order order = orderRepository.findById(id).get();
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder(order);
+        List<OrderDetailResponseDto> stores = new ArrayList<>();
+
+        for(OrderDetail store : orderDetailList) {
+            List<OrderMenuResponseDto> menuList = findMenuByOrderDetail(store);
+            OrderDetailResponseDto storeDto = OrderDetailResponseDto.builder()
+                    .stoId(store.getStore().getUsrId())
+                    .storeAddress(store.getStore().getAddress())
+                    .storePhone(store.getStore().getPhone())
+                    .menuList(menuList)
+                    .totalPrice(store.getTotalPrice())
+                    .build();
+            stores.add(storeDto);
+        }
+        OrderResponseDto response = OrderResponseDto.builder()
+                .ordId(id)
+                .stores(stores)
+                .totalPrice(order.getTotalPrice())
+                .usedPoint(order.getUsedPoint())
+                .finalPrice(order.getFinalPrice())
+                .build();
+
+        return response;
+    }
+
+    private List<OrderMenuResponseDto> findMenuByOrderDetail(OrderDetail store) {
+        List<OrderMenu> orderMenuList = orderMenuRepository.findByOrderDetail(store);
+        List<OrderMenuResponseDto> menuList = new ArrayList<>();
+        for(OrderMenu orderMenu : orderMenuList) {
+            String name = "";
+            String type = "";
+            if(orderMenu.getType().equals("ME01")){
+                Menu menu = menuRepository.findById(orderMenu.getProductId().longValue()).get();
+                name = menu.getName();
+                type = "ME01";
+            }
+            else if(orderMenu.getType().equals("ME02")){
+                Sale sale = saleRepository.findById(orderMenu.getProductId()).get();
+                name = sale.getName();
+                type = "ME02";
+            }
+            // "ME03"
+            // 아직 associate 가 없어서 발생하는 에러
+//            else {
+//                Associate associate = associateRepository.findById(orderMenu.getProductId()).get();
+//                name = associate.getName();
+//                type = "ME03";
+//            }
+            OrderMenuResponseDto response = OrderMenuResponseDto.builder()
+                    .productId(orderMenu.getProductId())
+                    .type(type)
+                    .menuName(name)
+                    .quantity(orderMenu.getQuantity())
+                    .price(orderMenu.getPrice())
+                    .build();
+            menuList.add(response);
+        }
+        return menuList;
     }
 }

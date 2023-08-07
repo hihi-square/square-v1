@@ -2,13 +2,12 @@ package com.hihi.square.domain.order.controller;
 
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
+import com.hihi.square.domain.order.dto.response.OrderIdResponseDto;
 import com.hihi.square.domain.order.dto.response.OrderResponseDto;
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.entity.OrderDetail;
 import com.hihi.square.domain.order.entity.OrderStatus;
 import com.hihi.square.domain.order.service.OrderService;
-import com.hihi.square.domain.point.dto.request.PointRegisterReqeustDto;
-import com.hihi.square.domain.point.entity.Point;
 import com.hihi.square.domain.point.service.PointService;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.repository.CustomerRepository;
@@ -36,11 +35,11 @@ public class OrderController {
     // 주문 등록
     @Transactional
     @PostMapping
-    public ResponseEntity<OrderResponseDto> registerOrder(@RequestBody OrderRequestDto request) {
+    public ResponseEntity<OrderIdResponseDto> registerOrder(@RequestBody OrderRequestDto request) {
         Customer customer = customerRepository.findById(request.getCusId()).get();
         // 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
         if(request.getUsedPoint() > customer.getPoint()) {
-            return new ResponseEntity<>(OrderResponseDto.builder().status(400).message("POINT_NOT_ENOUTH").build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(OrderIdResponseDto.builder().status(400).message("POINT_NOT_ENOUTH").build(), HttpStatus.BAD_REQUEST);
         }
 
         // 주문 등록
@@ -54,7 +53,7 @@ public class OrderController {
             customerRepository.save(customer);
         }
 
-        return new ResponseEntity<>(OrderResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(), HttpStatus.CREATED);
+        return new ResponseEntity<>(OrderIdResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(), HttpStatus.CREATED);
     }
 
     // 구매자 결제 성공 실패 여부
@@ -92,7 +91,17 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // 주문 조회
+    // 가게 마다 주문 체결 내역 전송
+    ///... 내일 갓펭소님과 지희공주랑 상의후 만들도록 하겟숨...ㅠㅠㅠㅠ 자고싶어 하지만 안되 오다희 정신차려.......
+
+    // 주문 상세 조회
+    @Transactional
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findOrderById(@PathVariable Integer id) {
+        OrderResponseDto response = orderService.findOrderById(id);
+        // 사용자 아이디가 일치하지 않을 시 메소드 추가
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 
 }

@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class PaymentRequestDto {
     private Integer ordId;
-    private Boolean PaymentSuccess;
+    private Boolean paymentSuccess;
 }
