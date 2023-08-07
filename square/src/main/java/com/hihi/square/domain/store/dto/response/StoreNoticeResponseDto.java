@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hihi.square.domain.image.dto.response.ImageResponseDto;
+import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +22,6 @@ public class StoreNoticeResponseDto {
 
 	private LocalDateTime modifiedAt;
 
-	private List<ImageResponseDto> images = new ArrayList<>();
+	private List<ImagesDetailResponseDto> images = new ArrayList<>();
 
 }

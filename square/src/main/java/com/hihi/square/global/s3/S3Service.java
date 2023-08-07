@@ -1,5 +1,6 @@
 package com.hihi.square.global.s3;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hihi.square.domain.image.dto.ImageFileThumbDto;
+import com.hihi.square.domain.image.dto.response.FileThumbResponseDto;
 import com.hihi.square.domain.image.dto.request.ImageRequestDto;
 
 import lombok.RequiredArgsConstructor;
@@ -18,30 +19,31 @@ import lombok.RequiredArgsConstructor;
 public class S3Service {
 	private final S3Uploader s3Uploader;
 
-	private String getUrl(String type, Integer id){
+	private String getUrl(String type){
 		String url = "";
+		String now = LocalDate.now().toString();
 		switch (type){
 			case "storeNotice":
-				url = "static/store/"+id+"/notice/images";
+				url = "static/store/"+now+"/notice/images";
 				break;
 			case "storeThumbnail":
-				url="static/store/"+id+"/thumbs";
+				url="static/store/"+now+"/thumbs";
 				break;
 			case "userProfile":
-				url="static/user/"+id+"/profile";
+				url="static/user/"+now+"/profile";
 				break;
 		}
 		return url;
 	}
 	@Transactional
-	public List<ImageFileThumbDto> uploadFiles(String type,Integer id, List<ImageRequestDto> files) {
-		String url = getUrl(type, id);
-		List<ImageFileThumbDto> result = new ArrayList<>();
+	public List<FileThumbResponseDto> uploadFiles(String type, List<ImageRequestDto> files) {
+		String url = getUrl(type);
+		List<FileThumbResponseDto> result = new ArrayList<>();
 		if(files != null && files.size()>0) {
 			for(int i=0;i<files.size();i++) {
 				String fileUrl = s3Uploader.uploadFileToS3(files.get(i).getFile(), url);
 				String thumbnailUrl = s3Uploader.uploadFileToS3(files.get(i).getThumbnail(),url+"/thumb");
-				result.add(ImageFileThumbDto.builder()
+				result.add(FileThumbResponseDto.builder()
 						.url(fileUrl)
 						.thumbnail(thumbnailUrl)
 						.build());
@@ -50,15 +52,25 @@ public class S3Service {
 		return result;
 	}
 	@Transactional
-	public ImageFileThumbDto uploadFile(String type,Integer id, ImageRequestDto file) {
-		String url = getUrl(type, id);
+	public FileThumbResponseDto uploadFile(String type, ImageRequestDto file) {
+		String url = getUrl(type);
 		if(file != null) {
 			String fileUrl = s3Uploader.uploadFileToS3(file.getFile(), url);
 			String thumbnailUrl = s3Uploader.uploadFileToS3(file.getThumbnail(),url+"/thumb");
-			return ImageFileThumbDto.builder()
+			return FileThumbResponseDto.builder()
 				.url(fileUrl)
 				.thumbnail(thumbnailUrl)
 				.build();
+		}
+		return null;
+	}
+
+	@Transactional
+	public String getFileUrl(String type, MultipartFile file) {
+		String url = getUrl(type);
+		if(file != null) {
+			String fileUrl = s3Uploader.uploadFileToS3(file, url);
+			return fileUrl;
 		}
 		return null;
 	}

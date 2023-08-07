@@ -1,7 +1,6 @@
 package com.hihi.square.domain.store.controller;
 
 
-import java.nio.channels.ReadPendingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,13 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hihi.square.domain.image.dto.request.ImageRequestDto;
-import com.hihi.square.domain.image.dto.response.ImageResponseDto;
+import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
 import com.hihi.square.domain.image.respository.ImageRepository;
 import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreNoticeWriteRequestDto;
@@ -92,8 +89,8 @@ public class StoreNoticeController {
 		Optional<Notice> optionalNotice = storeNoticeService.getNotice(snoId);
 		if (optionalNotice.isPresent()){
 			Notice notice = optionalNotice.get();
-			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", snoId);
-			List<ImageResponseDto> resultImages = new ArrayList<>();
+			List<Image> images = imageRepository.findAllByTypeAndConnectedId("SNO", snoId);
+			List<ImagesDetailResponseDto> resultImages = new ArrayList<>();
 			for(Image i : images) {
 				resultImages.add(i.toDto());
 			}

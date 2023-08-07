@@ -7,9 +7,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.hihi.square.domain.image.dto.ImageFileThumbDto;
+import com.hihi.square.domain.image.dto.response.FileThumbResponseDto;
 import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreNoticeWriteRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
@@ -17,7 +16,7 @@ import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreNoticeRepository;
 import com.hihi.square.domain.image.dto.request.ImageRequestDto;
-import com.hihi.square.domain.image.dto.response.ImageResponseDto;
+import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
 import com.hihi.square.domain.image.entity.Image;
 import com.hihi.square.domain.image.respository.ImageRepository;
 import com.hihi.square.global.s3.S3Service;
@@ -41,7 +40,7 @@ public class StoreNoticeService {
 			.store(store)
 			.build();
 		storeNoticeRepository.save(notice);
-		List<ImageFileThumbDto> images = s3Service.uploadFiles("storeNotice", store.getUsrId(),files);
+		List<FileThumbResponseDto> images = s3Service.uploadFiles("storeNotice", files);
 		for(int order=0;order<images.size();order++){
 			imageRepository.save(Image.builder()
 				.url(images.get(order).getUrl())
@@ -60,10 +59,11 @@ public class StoreNoticeService {
 
 		for(Notice notice : notices){
 			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
-			List<ImageResponseDto> imageResponseDtoList = new ArrayList<>();
+			List<ImagesDetailResponseDto> imageResponseDtoList = new ArrayList<>();
+
 			for(Image img : images){
 				imageResponseDtoList.add(
-					ImageResponseDto.builder()
+					ImagesDetailResponseDto.builder()
 						.imgId(img.getImgId())
 						.url(img.getUrl())
 						.order(img.getOrder())

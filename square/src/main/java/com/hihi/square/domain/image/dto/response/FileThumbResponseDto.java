@@ -1,11 +1,11 @@
-package com.hihi.square.domain.image.dto;
+package com.hihi.square.domain.image.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class ImageFileThumbDto {
+public class FileThumbResponseDto {
 	private String url;
 	private String thumbnail;
 }
