@@ -52,4 +52,7 @@ public class OrderDetail {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 
+	public void updateOrderStatus(OrderStatus status) {
+		this.status = status;
+	}
 }

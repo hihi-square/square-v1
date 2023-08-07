@@ -69,7 +69,7 @@ public class OrderService {
                 .totalPrice(request.getTotalPrice())
                 .createdAt(LocalDateTime.now())
                 // 이거는 default 값 설정하는 물어보자
-                .status(OrderStatus.COMPLETE)
+                .status(OrderStatus.REGISTERED)
                 .build();
 
         orderDetailRepository.save(orderDetail);
@@ -102,5 +102,13 @@ public class OrderService {
                 .build();
 
         orderMenuRespository.save(orderMenu);
+    }
+
+    public Order findById(Integer ordId) {
+        return orderRepository.findById(ordId).get();
+    }
+
+    public List<OrderDetail> findOrderDetailByOrder(Order order) {
+        return orderDetailRepository.findByOrder(order);
     }
 }

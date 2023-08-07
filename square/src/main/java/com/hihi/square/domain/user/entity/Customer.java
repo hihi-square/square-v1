@@ -36,6 +36,10 @@ public class Customer extends User{
 	private Long point;
 
 	@OneToMany(mappedBy = "customer")
-	// @Builder.Default
+	 @Builder.Default
 	private List<CustomerAddress> customerAddressList = new ArrayList<>();
+
+	public void updatePoint(long point) {
+		this.point = point;
+	}
 }

@@ -1,6 +1,11 @@
 package com.hihi.square.domain.order.controller;
 
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
+import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
+import com.hihi.square.domain.order.dto.response.OrderResponseDto;
+import com.hihi.square.domain.order.entity.Order;
+import com.hihi.square.domain.order.entity.OrderDetail;
+import com.hihi.square.domain.order.entity.OrderStatus;
 import com.hihi.square.domain.order.service.OrderService;
 import com.hihi.square.domain.point.dto.request.PointRegisterReqeustDto;
 import com.hihi.square.domain.point.entity.Point;
@@ -13,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -29,24 +36,61 @@ public class OrderController {
     // 주문 등록
     @Transactional
     @PostMapping
-    public ResponseEntity<CommonResponseDto> registerOrder(@RequestBody OrderRequestDto request) {
-        CommonResponseDto response = CommonResponseDto.builder()
-                .statusCode(201)
-                .message("CREATE_SUCCESS")
-                .build();
+    public ResponseEntity<OrderResponseDto> registerOrder(@RequestBody OrderRequestDto request) {
         Customer customer = customerRepository.findById(request.getCusId()).get();
         // 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
+        if(request.getUsedPoint() > customer.getPoint()) {
+            return new ResponseEntity<>(OrderResponseDto.builder().status(400).message("POINT_NOT_ENOUTH").build(), HttpStatus.BAD_REQUEST);
+        }
 
+        // 주문 등록
         Integer ordId = orderService.saveOrder(customer, request);
+        if(request.getUsedPoint() > 0) {
+            // 주문 등록되자마자 포인트 차감
+            pointService.save(ordId, customer, request.getUsedPoint(), 0);
+            // customer객체에 포인트 반영
+            customer.updatePoint(customer.getPoint() - request.getUsedPoint());
+            // db 수정
+            customerRepository.save(customer);
+        }
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(OrderResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(), HttpStatus.CREATED);
     }
 
-    // 주문 수정
-    // 프로세스 주문내역에서 상품목록을 수정하는게 아님 결제취소 요청을 보내고
-    // 프론트에서 결제가 취소되었음을 알려주면
-    // OrderDetail의 상태를 모두 CANCELED로 바꿔주고
-    // 사용자 포인트내역에서 사용된 usedPoint 원상복귀
+    // 구매자 결제 성공 실패 여부
+    // 주문 status 수정 및 포인트 차감 및 적립
+    @Transactional
+    @PatchMapping("/customer-pay")
+    public ResponseEntity<CommonResponseDto> updatePaymentStatus(@RequestBody PaymentRequestDto request) {
+        CommonResponseDto response = CommonResponseDto.builder()
+                .statusCode(200)
+                .message("UPDATE_SUCCESS")
+                .build();
+        Order order = orderService.findById(request.getOrdId());
+        Customer customer = order.getCustomer();
+
+        List< OrderDetail> stores = orderService.findOrderDetailByOrder(order);
+        // 결제 성공시
+        if(request.getPaymentSuccess()) {
+            for(OrderDetail store : stores) {
+                store.updateOrderStatus(OrderStatus.PAYMENT_COMPLETE);
+            }
+        }
+        else {
+            for(OrderDetail store : stores) {
+                store.updateOrderStatus(OrderStatus.PAYMENT_FAILED);
+            }
+            if(order.getUsedPoint() > 0) {
+                // 포인트 원상복귀
+                pointService.save(order.getOrdId(), customer, order.getUsedPoint(), 1);
+                // 객체 수정
+                customer.updatePoint(customer.getPoint() + order.getUsedPoint());
+                // db 저장
+                customerRepository.save(customer);
+            }
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     // 주문 조회
 
