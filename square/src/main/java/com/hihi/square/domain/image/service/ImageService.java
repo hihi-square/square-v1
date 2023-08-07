@@ -17,7 +17,7 @@ public class ImageService {
 	private final ImageRepository imageRepository;
 
 	public List<Image> getImageResponseList(String type, Integer connectedId){
-		return imageRepository.findAllByTypeAndConnectedId(type, connectedId);
+		return imageRepository.findAllByTypeAndConnectedIdOrderByOrder(type, connectedId);
 	}
 
 }

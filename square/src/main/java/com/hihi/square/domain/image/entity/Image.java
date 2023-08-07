@@ -29,6 +29,9 @@ public class Image {
 	@Column(name="orders")
 	private Integer order;
 	private String type;
+	// type : 'STORE' : 가게 헤더 이미지
+	// type : 'REVIEW' : 리뷰 이미지
+	
 	@Column(name="connected_id")
 	private Integer connectedId;
 	private String thumbnail;

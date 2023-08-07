@@ -92,7 +92,7 @@ public class StoreNoticeController {
 		Optional<Notice> optionalNotice = storeNoticeService.getNotice(snoId);
 		if (optionalNotice.isPresent()){
 			Notice notice = optionalNotice.get();
-			List<Image> images = imageRepository.findAllByTypeAndConnectedId("SNO", snoId);
+			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", snoId);
 			List<ImageResponseDto> resultImages = new ArrayList<>();
 			for(Image i : images) {
 				resultImages.add(i.toDto());

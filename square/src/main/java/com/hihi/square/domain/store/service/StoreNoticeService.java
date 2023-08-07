@@ -59,7 +59,7 @@ public class StoreNoticeService {
 		List<Notice> notices = storeNoticeRepository.findAllByStoreOrderByCreatedAt(store);
 
 		for(Notice notice : notices){
-			List<Image> images = imageRepository.findAllByTypeAndConnectedId("SNO", notice.getSnoId());
+			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
 			List<ImageResponseDto> imageResponseDtoList = new ArrayList<>();
 			for(Image img : images){
 				imageResponseDtoList.add(
