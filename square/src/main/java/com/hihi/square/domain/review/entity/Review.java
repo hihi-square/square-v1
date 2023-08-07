@@ -2,6 +2,7 @@ package com.hihi.square.domain.review.entity;
 
 import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.order.entity.OrderDetail;
+import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import lombok.AllArgsConstructor;
@@ -39,4 +40,9 @@ public class Review extends BaseTime {
 
 	@Enumerated(EnumType.STRING)
 	private ReviewStatus status;
+
+	public void updateReview(ReviewUpdateRequestDto request) {
+		this.rating = request.getRating();
+		this.content = request.getContent();
+	}
 }

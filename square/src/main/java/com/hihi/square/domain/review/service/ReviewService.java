@@ -1,6 +1,7 @@
 package com.hihi.square.domain.review.service;
 
 import com.hihi.square.domain.order.entity.OrderDetail;
+import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.review.dto.request.ReviewWriteRequestDto;
 import com.hihi.square.domain.review.entity.Review;
 import com.hihi.square.domain.review.entity.ReviewStatus;
@@ -33,5 +34,14 @@ public class ReviewService {
 
     public Optional<Review> findByOrderDetail(OrderDetail orderDetail) {
         return reviewRepository.findByOrderDetail(orderDetail);
+    }
+
+    public Optional<Review> findById(Integer reviewId) {
+        return reviewRepository.findById(reviewId);
+    }
+    @Transactional
+    public void updateReview(Review review, ReviewUpdateRequestDto request) {
+        review.updateReview(request);
+        reviewRepository.save(review);
     }
 }
