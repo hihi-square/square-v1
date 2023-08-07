@@ -18,9 +18,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Header from "./component/StoreHeader";
 import Footer from "../Footer";
-import StoreMenu from "./component/StoreMenu3";
+import StoreMenu from "./component/StoreMenu";
 import StoreFeed from "./component/storeFeed";
 import StoreReview from "./component/storeReview";
+import SelectMenu from "./component/SelectMenu";
 
 function StorePage() {
   type Store = {
@@ -31,7 +32,22 @@ function StorePage() {
     content: string;
   };
 
+  type Item = {
+    menuId: number;
+    menuName: string;
+    menuThumbnail: string;
+    menuImage: string;
+    description: string;
+    status: number;
+    popularity: boolean;
+    signature: boolean;
+    price: number;
+  };
+
   const { store } = useParams<{ store?: string }>();
+  const [state, setState] = useState<boolean>(false);
+  const [curItem, setCurItem] = useState<Item>();
+
   const [info, setInfo] = useState<Store>({
     name: "펭소네 구멍가게",
     image: ["/img/store/store1.png"],
@@ -61,14 +77,18 @@ function StorePage() {
 
   const renderTabContent = () => {
     switch (selectedTab) {
-      case "menu":
-        return <StoreMenu storeId={store} />;
       case "info":
         return <StoreFeed storeId={store} />;
       case "review":
         return <StoreReview storeId={store} />;
       default:
-        return <StoreMenu storeId={store} />;
+        return (
+          <StoreMenu
+            setState={setState}
+            setCurItem={setCurItem}
+            storeId={store}
+          />
+        );
     }
   };
 
@@ -127,10 +147,8 @@ function StorePage() {
           mt="5px"
           sx={{ display: "flex", justifyContent: "space-around" }}
         >
-          <Button>
-            <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
-              <FontAwesomeIcon icon={faHeart} style={{ color: "gray" }} />
-            </IconButton>
+          <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
+            <FontAwesomeIcon icon={faHeart} style={{ color: "gray" }} />
             <Typography
               variant="subtitle1"
               component="div"
@@ -139,17 +157,17 @@ function StorePage() {
                 textAlign: "center",
                 fontSize: "18px",
                 color: "gray",
-                padding: "0px 5px",
+                padding: "0px 10px",
               }}
             >
               단골
             </Typography>
-          </Button>
+          </IconButton>
+
           <Divider orientation="vertical" variant="middle" flexItem />
-          <Button>
-            <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
-              <FontAwesomeIcon icon={faPhone} style={{ color: "gray" }} />
-            </IconButton>
+
+          <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
+            <FontAwesomeIcon icon={faPhone} style={{ color: "gray" }} />
             <Typography
               variant="subtitle1"
               component="div"
@@ -158,17 +176,16 @@ function StorePage() {
                 textAlign: "center",
                 fontSize: "18px",
                 color: "gray",
-                padding: "0px 5px",
+                padding: "0px 10px",
               }}
             >
               전화
             </Typography>
-          </Button>
+          </IconButton>
+
           <Divider orientation="vertical" variant="middle" flexItem />
-          <Button>
-            <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
-              <FontAwesomeIcon icon={faLocationDot} style={{ color: "gray" }} />
-            </IconButton>
+          <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
+            <FontAwesomeIcon icon={faLocationDot} style={{ color: "gray" }} />
             <Typography
               variant="subtitle1"
               component="div"
@@ -177,12 +194,12 @@ function StorePage() {
                 textAlign: "center",
                 fontSize: "18px",
                 color: "gray",
-                padding: "0px 5px",
+                padding: "0px 10px",
               }}
             >
               지도
             </Typography>
-          </Button>
+          </IconButton>
         </Grid>
         <Grid
           xs={12}
@@ -257,6 +274,7 @@ function StorePage() {
       </Grid>
       <Grid container xs={12} justifyContent="center">
         <Footer />
+        <SelectMenu state={state} setState={setState} curItem={curItem} />
       </Grid>
     </Grid>
   );
