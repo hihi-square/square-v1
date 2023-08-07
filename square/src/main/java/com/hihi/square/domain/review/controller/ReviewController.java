@@ -5,6 +5,8 @@ import com.hihi.square.domain.order.service.OrderDetailService;
 import com.hihi.square.domain.order.service.OrderService;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.review.dto.request.ReviewWriteRequestDto;
+import com.hihi.square.domain.review.dto.response.CustomerReviewListDto;
+import com.hihi.square.domain.review.dto.response.CustomerReviewListResponseDto;
 import com.hihi.square.domain.review.dto.response.StoreReviewListDto;
 import com.hihi.square.domain.review.dto.response.StoreReviewListResponseDto;
 import com.hihi.square.domain.review.entity.Review;
@@ -148,6 +150,20 @@ public class ReviewController {
                 .build(),
                 HttpStatus.OK
         );
+    }
+
+    // 내 리뷰 리스트
+    @GetMapping
+    public ResponseEntity getMyReviews(Authentication authentication){
+        String uid = authentication.getName();
+        User user = userService.findByUid(uid).get();
+        // 구매자만 리뷰 생성 가능
+        if (!(user instanceof Customer)) {
+            return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("ONLY_CUSTOMER_WRITE_REVIEW").build(), HttpStatus.BAD_REQUEST);
+        }
+        Customer customer = (Customer) user;
+        List<CustomerReviewListDto> reviews = reviewService.getCustomerReviewList(customer);
+        return new ResponseEntity(CustomerReviewListResponseDto.builder().statusCode(200).reviews(reviews).build(), HttpStatus.OK);
     }
 
 }

@@ -3,6 +3,7 @@ package com.hihi.square.domain.review.service;
 import com.hihi.square.domain.order.entity.OrderDetail;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.review.dto.request.ReviewWriteRequestDto;
+import com.hihi.square.domain.review.dto.response.CustomerReviewListDto;
 import com.hihi.square.domain.review.dto.response.StoreReviewListDto;
 import com.hihi.square.domain.review.entity.Review;
 import com.hihi.square.domain.review.entity.ReviewStatus;
@@ -81,5 +82,24 @@ public class ReviewService {
 
     public Float getAverageRating(Store store) {
         return reviewRepository.getAverageRating(store);
+    }
+
+    public List<CustomerReviewListDto> getCustomerReviewList(Customer customer) {
+        List<Review> reviewList = reviewRepository.findByCustomerOrderByCreatedAtDesc(customer);
+        List<CustomerReviewListDto> result = new ArrayList<>();
+        for(Review review:reviewList) {
+            result.add(
+                    CustomerReviewListDto.builder()
+                            .reviewId(review.getId())
+                            .orderDetailId(review.getOrderDetail().getOdtId())
+                            .storeId(review.getStore().getUsrId())
+                            .storeName(review.getStore().getStoreName())
+                            .rating(review.getRating())
+                            .content(review.getContent())
+                            .createdAt(review.getCreatedAt())
+                            .build()
+            );
+        }
+        return result;
     }
 }
