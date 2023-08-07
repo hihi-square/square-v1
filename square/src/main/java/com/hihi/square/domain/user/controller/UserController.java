@@ -1,6 +1,5 @@
 package com.hihi.square.domain.user.controller;
 
-import com.hihi.square.domain.image.dto.request.ImageRequestDto;
 import com.hihi.square.domain.user.dto.request.*;
 import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
@@ -155,7 +154,7 @@ public class UserController {
 	public ResponseEntity setProfileImage(Authentication authentication, @RequestPart MultipartFile profile, @RequestPart MultipartFile thumb){
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
-		userService.updateUserProfile(user, ImageRequestDto.builder().file(profile).thumbnail(thumb).build());
+		userService.updateUserProfile(user, profile, thumb);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(),
 			HttpStatus.OK);
 	}

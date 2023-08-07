@@ -4,7 +4,6 @@ import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.board.entity.Status;
 import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
 import com.hihi.square.domain.store.entity.Store;
-import com.hihi.square.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +39,7 @@ public class Sale extends BaseTime {
 	@JoinColumn(name = "usr_id")
 	private Store store;
 	@OneToMany(mappedBy = "sale")
+	@Builder.Default
 	private List<SaleMenu> menus = new ArrayList<>();
 
 	public void finishSale() {

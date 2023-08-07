@@ -1,7 +1,5 @@
 package com.hihi.square.domain.user.service;
 
-import com.hihi.square.domain.image.dto.ImageFileThumbDto;
-import com.hihi.square.domain.image.dto.request.ImageRequestDto;
 import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
@@ -10,7 +8,6 @@ import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.repository.UserRepository;
 import com.hihi.square.global.jwt.JwtService;
 import com.hihi.square.global.s3.S3Service;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Optional;
-
-import javax.persistence.EntityManager;
 
 @Service
 @Slf4j
@@ -105,9 +99,10 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUserProfile(User user, ImageRequestDto image) {
-		ImageFileThumbDto result = s3Service.uploadFile("userProfile",user.getUsrId(),image);
-		user.updateUserProfile(result.getUrl(), result.getThumbnail());
+	public void updateUserProfile(User user, MultipartFile profile, MultipartFile thumb) {
+		String profileUrl = s3Service.getFileUrl("userProfile", profile, false);
+		String thumbUrl = s3Service.getFileUrl("userProfile", thumb, true);
+		user.updateUserProfile(profileUrl, thumbUrl);
 		userRepository.save(user);
 	}
 
