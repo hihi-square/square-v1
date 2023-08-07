@@ -101,7 +101,6 @@ public class IssueCouponController {
 			);
 		}
 		return new ResponseEntity(CustomerCouponListResponseDto.builder().coupons(result).statusCode(200).build(), HttpStatus.OK);
-
 	}
 
 }

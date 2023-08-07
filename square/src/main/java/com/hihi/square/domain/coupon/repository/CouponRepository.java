@@ -15,4 +15,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer> {
 	List<Coupon> findByAllAvailableStoreCoupon(Store store, LocalDateTime now);
 
 	List<Coupon> findAllByStore(Store store);
+
+	Integer countByStoreAndStartAtIsBeforeAndExpiredAtIsAfter(Store store, LocalDateTime now, LocalDateTime now1);
 }

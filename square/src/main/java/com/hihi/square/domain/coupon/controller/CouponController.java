@@ -1,9 +1,11 @@
 package com.hihi.square.domain.coupon.controller;
 
+import java.nio.channels.ReadPendingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.hql.internal.ast.tree.ResolvableNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.dto.response.StoreAvailableCouponCountResponseDto;
 import com.hihi.square.domain.coupon.dto.response.StoreCouponDto;
 import com.hihi.square.domain.coupon.dto.response.StoreCouponResponseDto;
 import com.hihi.square.domain.coupon.dto.response.StoreUserCouponListDto;
@@ -51,6 +54,18 @@ public class CouponController {
 		couponService.createCoupon((Store) user, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
 	}
+
+	// 해당 가게에 있는 사용 가능한 쿠폰 개수
+	@GetMapping("/count/{id}")
+	public ResponseEntity countAvailableCoupon(@PathVariable("id") Integer storeId){
+		Optional<User> optionalUser = userService.findByUsrId(storeId);
+		if (!optionalUser.isPresent() || !(optionalUser.get() instanceof Store)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE_USER").build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store = (Store) optionalUser.get();
+		return new ResponseEntity(StoreAvailableCouponCountResponseDto.builder().statusCode(200).count(couponService.countAvailableCoupon(store)).build(), HttpStatus.OK);
+	}
+
 
 	// 해당 가게에서 현재 발급하고 있는 쿠폰들
 	@GetMapping("/{id}")
@@ -119,4 +134,7 @@ public class CouponController {
 			StoreUserCouponResponseDto.builder().coupons(result).statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
 
 	}
+
+
+
 }

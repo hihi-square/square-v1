@@ -49,4 +49,8 @@ public class CouponService {
 	public Optional<Coupon> findById(Integer couponId) {
 		return couponRepository.findById(couponId);
 	}
+
+	public Integer countAvailableCoupon(Store store) {
+		return couponRepository.countByStoreAndStartAtIsBeforeAndExpiredAtIsAfter(store, LocalDateTime.now(), LocalDateTime.now());
+	}
 }
