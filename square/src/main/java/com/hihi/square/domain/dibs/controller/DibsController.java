@@ -18,6 +18,7 @@ import com.hihi.square.domain.dibs.dto.response.DibsResponseDto;
 import com.hihi.square.domain.dibs.dto.response.UserDibsResponseDto;
 import com.hihi.square.domain.dibs.entity.Dibs;
 import com.hihi.square.domain.dibs.service.DibsService;
+import com.hihi.square.domain.report.entity.Report;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
@@ -93,5 +94,21 @@ public class DibsController {
 		Customer customer = (Customer)userService.findByUid(uid).get();
 		List<DibsResponseDto> result = dibsService.getUserDibs(customer);
 		return new ResponseEntity(UserDibsResponseDto.builder().statusCode(200).message("COMPLETE").dibsList(result).build(), HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity isLikedStore(Authentication authentication, @PathVariable("id") Integer storeId) {
+		String uid = authentication.getName();
+		Optional<User> user = userService.findByUid(uid);
+		if (!user.isPresent() || !(user.get() instanceof Customer)){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_CUSTOMER").build(), HttpStatus.BAD_REQUEST);
+		}
+		Customer customer = (Customer) user.get();
+		user = userService.findByUsrId(storeId);
+		if (!user.isPresent() || !(user.get() instanceof Store)){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE").build(), HttpStatus.BAD_REQUEST);
+		}
+		Optional<Dibs> dibs = dibsService.getDib(customer, (Store) user.get());
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message(dibs.isPresent()?"EXISTS":"NOT_EXISTS").build(), HttpStatus.OK);
 	}
 }

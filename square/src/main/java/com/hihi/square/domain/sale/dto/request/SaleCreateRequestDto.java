@@ -2,6 +2,7 @@ package com.hihi.square.domain.sale.dto.request;
 
 import com.hihi.square.domain.board.entity.Status;
 import com.hihi.square.domain.sale.entity.Sale;
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.User;
 import lombok.Data;
 
@@ -21,8 +22,8 @@ public class SaleCreateRequestDto {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Sale toEntity(User user) {
-        Sale sale = Sale.builder().user(user).name(name).startedAt(startAt).finishedAt(finishedAt).realFinishedAt(finishedAt).price(price).status(status).build();
+    public Sale toEntity(Store store) {
+        Sale sale = Sale.builder().store(store).name(name).startedAt(startAt).finishedAt(finishedAt).realFinishedAt(finishedAt).price(price).status(status).build();
         return sale;
     }
 }

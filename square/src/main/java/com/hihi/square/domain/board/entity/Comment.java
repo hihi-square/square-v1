@@ -21,7 +21,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "post_comment")
-public class Review extends BaseTime {
+public class Comment extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "poc_id")

@@ -12,6 +12,14 @@ import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.entity.SaleMenu;
 import com.hihi.square.domain.sale.repository.SaleMenuRepository;
 import com.hihi.square.domain.sale.repository.SaleRepository;
+import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
+import com.hihi.square.domain.store.dto.response.StoreCategorySelectedDto;
+import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.entity.StoreCategorySelected;
+import com.hihi.square.domain.store.repository.StoreCategoryRepository;
+import com.hihi.square.domain.store.repository.StoreRepository;
+import com.hihi.square.domain.store.service.StoreService;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,10 +38,13 @@ public class SaleService {
     private final SaleRepository saleRepository;
     private final SaleMenuRepository saleMenuRepository;
     private final MenuRepository menuRepository;
+    private final StoreRepository storeRepository;
+    // private final StoreCategoryRepository storeCategoryRepository;
+    private final StoreService storeService;
 
     @Transactional
-    public void createSale(SaleCreateRequestDto request, User user) {
-        Sale sale = request.toEntity(user);
+    public void createSale(SaleCreateRequestDto request, Store store) {
+        Sale sale = request.toEntity(store);
         saleRepository.save(sale);
         for(SaleMenuFormDto menu : request.getMenus()){
             saleMenuRepository.save(SaleMenu.builder()
@@ -54,9 +65,9 @@ public class SaleService {
         saleRepository.save(sale);
     }
 
-    public List<StoreSaleDto> getStoreAllSale(User user) {
+    public List<StoreSaleDto> getStoreAllSale(Store store) {
         List<StoreSaleDto> result = new ArrayList<>();
-        List<Sale> saleList = saleRepository.findAllByUser(user);
+        List<Sale> saleList = saleRepository.findAllByStore(store);
         for(Sale sale : saleList){
             result.add(StoreSaleDto.builder()
                     .id(sale.getId())
@@ -72,9 +83,9 @@ public class SaleService {
         return result;
     }
 
-    public List<StoreSaleDto> getStoreInProgressSales(User user) {
+    public List<StoreSaleDto> getStoreInProgressSales(Store store) {
         List<StoreSaleDto> result = new ArrayList<>();
-        List<Sale> saleList = saleRepository.findAllInProgressSalesByUser(user, LocalDateTime.now());
+        List<Sale> saleList = saleRepository.findAllInProgressSalesByUser(store, LocalDateTime.now());
         for(Sale sale : saleList){
             result.add(StoreSaleDto.builder()
                     .id(sale.getId())
@@ -138,5 +149,17 @@ public class SaleService {
                 .status(sale.getStatus())
                 .menus(saleMenuDtos)
                 .build();
+    }
+
+	public List<EmdStoreCouponSaleDto> findByEmdAddressWithProgressSale(EmdAddress emdAddress) {
+        List<Store> stores = storeRepository.findByEmdAddressAndHaveProgressSale(emdAddress, LocalDateTime.now());
+        List<EmdStoreCouponSaleDto> result = storeService.storeToEmdStoreCouponSaleDto(stores);
+        return result;
+	}
+
+    public List<EmdStoreCouponSaleDto> findByEmdAddressWithProgressSaleAndAvailableCoupon(EmdAddress emdAddress) {
+        List<Store> stores = storeRepository.findByEmdAddressAndHaveProgressSaleAndAvailableCoupon(emdAddress, LocalDateTime.now());
+        List<EmdStoreCouponSaleDto> result = storeService.storeToEmdStoreCouponSaleDto(stores);
+        return result;
     }
 }
