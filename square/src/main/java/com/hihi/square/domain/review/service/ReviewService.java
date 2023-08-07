@@ -44,4 +44,9 @@ public class ReviewService {
         review.updateReview(request);
         reviewRepository.save(review);
     }
+
+    @Transactional
+    public void deleteReview(Review review) {
+        reviewRepository.delete(review);
+    }
 }
