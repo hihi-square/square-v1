@@ -94,6 +94,7 @@ public class StoreService {
 					.content(store.getContent())
 					.storeAddress(store.getAddress())
 					.mainMenu(menuName)
+					.logo(store.getLogo())
 					.build();
 			stores.add(res);
 		}
@@ -125,6 +126,7 @@ public class StoreService {
 				.content(s.getContent())
 				.storeAddress(s.getAddress())
 				.mainMenu(menuName)
+				.logo(s.getLogo())
 				.build();
 			stores.add(res);
 		}
