@@ -50,6 +50,9 @@ public class Store extends User {
 	@Builder.Default
 	private List<StoreBusinessDay> storeBusinessDayList = new ArrayList<>();
 
+	private Float latitude;
+	private Float longitude;
+
 	public void updateStoreInfo(StoreUpdateRequestDto request, EmdAddress emdAddress) {
 		this.emdAddress = emdAddress;
 		this.address = request.getAddress();

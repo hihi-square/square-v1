@@ -1,8 +1,10 @@
 package com.hihi.square.domain.store.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.user.entity.EmdAddress;
@@ -17,4 +19,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 
 	@Query("select s from Store s, StoreCategorySelected c where s = c.store and c.storeCategoryBig = :storeCategoryBig and s.emdAddress in (:emdAddressList)")
 	List<Store> findByStoreCategoryBigAndEmdList(StoreCategoryBig storeCategoryBig, List<EmdAddress> emdAddressList);
+
+	@Query("select s from Store s, Coupon c where s = c.store and s.emdAddress in (:emdAddress) and :now between c.startAt and c.expiredAt group by s")
+	List<Store> findByEmdAddressAndHaveAvailableCoupon(EmdAddress emdAddress, LocalDateTime now);
 }

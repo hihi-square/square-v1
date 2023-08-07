@@ -3,6 +3,8 @@ package com.hihi.square.domain.menu.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,7 +52,7 @@ public class Menu extends BaseTime {
 	private boolean signature;
 	// @ColumnDefault("false")
 	private boolean popularity;
-	// @Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
 	private MenuStatus status;
 	private String description;

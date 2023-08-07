@@ -3,6 +3,7 @@ package com.hihi.square.domain.user.service;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 
 import org.springframework.security.core.parameters.P;
@@ -56,5 +57,9 @@ public class EmdAddressService {
 
 	public EmdAddress findByAdmCode(Long admCode) {
 		return emdAddressRepository.findByAdmCode(admCode).get();
+	}
+
+	public Optional<EmdAddress> findById(Integer emdId) {
+		return emdAddressRepository.findById(emdId);
 	}
 }
