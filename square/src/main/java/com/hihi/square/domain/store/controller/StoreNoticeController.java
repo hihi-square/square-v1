@@ -179,4 +179,7 @@ public class StoreNoticeController {
 		storeNoticeService.updateNoticePublic(notice);
 		return new ResponseEntity(CommonResponseDto.builder().message("COMPLETE").statusCode(200).build(), HttpStatus.OK);
 	}
+
+	// 가게 공지 지역 + depth로 가져오기
+	// public ResponseEntity getStoreNoticesWithAddressAndDepth(Au)
 }

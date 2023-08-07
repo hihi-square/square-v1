@@ -23,6 +23,6 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategory, Long
 	void updateMenuCategoryList(@Param("categoryId") Long categoryId,
 		@Param("sequence") Integer sequence);
 
-	List<MenuCategory> findByUser(User user);
+	List<MenuCategory> findByUserOrderBySequence(User user);
 
 }

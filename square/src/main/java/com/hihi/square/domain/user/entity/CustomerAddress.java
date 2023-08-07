@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="customerAddress")
+@Table(name="customer_address")
 public class CustomerAddress {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="uca_id")
@@ -36,7 +38,11 @@ public class CustomerAddress {
 	private EmdAddress emdAddress;
 
 	private String address;
-	@Column(name="created_at")
+
+	@CreatedDate
+	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
+	private Float latitude;
+	private Float longitude;
 
 }

@@ -30,7 +30,7 @@ public class EmdAddress {
 	private String sidoName;
 
 	@Column(name="adm_code")
-	private String amdCode;
+	private Long admCode;
 	private String name;
 
 
@@ -40,5 +40,6 @@ public class EmdAddress {
 	@ManyToOne
 	@JoinColumn(name = "asi_id")
 	private SiggAddress siggAddress;
+
 
 }

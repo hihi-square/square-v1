@@ -16,13 +16,16 @@ import javax.persistence.Table;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "order_detail")
 @Getter
-@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "order_detail")
 public class OrderDetail {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,25 +37,19 @@ public class OrderDetail {
 	private Order order;
 
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "usr_id")
-	private Customer customer;
-
-	@ManyToOne
-	@JoinColumn(referencedColumnName = "usr_id")
+	@JoinColumn(name = "usr_id")
 	private Store store;
 
-	@Column(name = "total_price")
-	private Integer totalPrice;
+	@Column(name = "request_detail")
+	private String requestDetail;
 
-	private String requests;
+	@Column(name = "total_price")
+	private Long totalPrice;
 
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
-
-	@Column(name = "used_point")
-	private Integer usedPoint;
 
 }

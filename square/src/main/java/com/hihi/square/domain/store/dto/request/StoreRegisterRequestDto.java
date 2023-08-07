@@ -35,7 +35,7 @@ public class StoreRegisterRequestDto{
 	protected boolean marketingAgree;
 
 	@NotNull
-	private Integer aemId;
+	private Long admCode;
 	@NotEmpty
 	private String address;
 	@NotEmpty
@@ -50,7 +50,7 @@ public class StoreRegisterRequestDto{
 
 	private BusinessInformationRegisterRequestDto businessInformation;
 
-	public Store toEntityStore(){
+	public Store toEntityStore(EmdAddress emdAddress){
 		return Store.builder()
 			.uid(uid)
 			.password(password)
@@ -63,7 +63,7 @@ public class StoreRegisterRequestDto{
 			.modifiedAt(LocalDateTime.now())
 			.lastLogin(LocalDateTime.now())
 			.status(UserStatusType.valueOf(UserStatusType.ST02.name()))
-			.emdAddress(EmdAddress.builder().aemId(aemId).build())
+			.emdAddress(emdAddress)
 			.address(address)
 			.storeName(storeName)
 			.storePhone(storePhone)

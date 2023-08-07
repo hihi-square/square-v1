@@ -73,11 +73,12 @@ public class MenuCategoryService {
 
 		List<MenuCategoryDto> response = new ArrayList<>();
 		System.out.println("user : " + user + " " + response);
-		List<MenuCategory> menuCategories = menuCategoryRepository.findByUser(user);
+		List<MenuCategory> menuCategories = menuCategoryRepository.findByUserOrderBySequence(user);
 		for (MenuCategory menuCategory : menuCategories) {
 			List<MenuItemResponseDto> menus = new ArrayList<>();
-			List<Menu> menuList = menuRepository.findByMenuCategory(menuCategory);
-			for (Menu menu : menuList) {
+
+			List<Menu> menuList = menuRepository.findByMenuCategoryAndUserOrderBySequence(menuCategory, user);
+			for(Menu menu : menuList) {
 				MenuItemResponseDto menuItemResponseDto = MenuItemResponseDto.builder()
 					.menuId(menu.getMenuId())
 					.menuName(menu.getName())
@@ -85,6 +86,7 @@ public class MenuCategoryService {
 					.status(menu.getStatus().ordinal())
 					.popularity(menu.isPopularity())
 					.price(menu.getPrice())
+					.menuSequence(menu.getSequence())
 					.build();
 				menus.add(menuItemResponseDto);
 			}
