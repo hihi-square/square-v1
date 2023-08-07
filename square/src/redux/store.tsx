@@ -46,6 +46,30 @@ const page = createSlice({
 export const { setSticky } = sticky.actions;
 export const { setPage } = page.actions;
 
+export type Choice = {
+  storeId: number;
+  storeThumbnail: string;
+  storeName: string;
+};
+
+const choice = createSlice({
+  name: "choice",
+  initialState: {
+    storeId: 0,
+    storeThumbnail: "",
+    storeName: "",
+  },
+  reducers: {
+    setChoice: (state, action: PayloadAction<Choice>) => {
+      state.storeId = action.payload.storeId;
+      state.storeThumbnail = action.payload.storeThumbnail;
+      state.storeName = action.payload.storeName;
+    },
+  },
+});
+
+export const { setChoice } = choice.actions;
+
 const types = createSlice({
   name: "types",
   initialState: [
@@ -66,17 +90,22 @@ const types = createSlice({
 });
 
 export type CartItem = {
-  shopThumbnail: string;
-  shopName: string;
-  estimatedTime: string;
+  storeId: number;
+  storeThumbnail: string;
+  storeName: string;
   items: {
+    productId: number;
     productThumbnail: string;
     productName: string;
     price: number;
+    options: {
+      optionId: number;
+      optionName: string;
+    }[];
     quantity: number;
+    isChecked: boolean;
   }[];
 };
-
 
 export type Item = {
   productThumbnail: string;
@@ -95,26 +124,22 @@ export type Store = {
 export type CartState = Store[];
 
 const cartInitialState = {
-
-  selectedItems: []
+  selectedItems: [],
 };
-
-
-
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: cartInitialState,
-  
+
   reducers: {
     setSelectedItems: (state, action) => {
       // 선택된 항목을 업데이트
       state.selectedItems = action.payload;
-    }
+    },
   },
 });
 
-export const { actions: cartActions } = cartSlice; 
+export const { actions: cartActions } = cartSlice;
 
 export const store = configureStore({
   reducer: {
@@ -123,6 +148,7 @@ export const store = configureStore({
     cart: cartSlice.reducer,
     sticky: sticky.reducer,
     page: page.reducer,
+    choice: choice.reducer,
   },
 });
 

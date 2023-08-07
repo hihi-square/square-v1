@@ -9,6 +9,7 @@ function MyPage() {
   const navigate = useNavigate();
   const userId = useSelector((state: RootState) => state.user);
 
+  // eslint-disable-next-line no-console
   console.log(userId);
   const [user, setUser] = useState({
     profileImage: "",
@@ -54,7 +55,7 @@ function MyPage() {
           src={user.profileImage}
           sx={{ width: 300, height: 300, mb: 2 }}
         />
-        <Typography variant="subtitle1">{userId}</Typography>
+        <Typography variant="subtitle1">{userId.nickname}</Typography>
         <Typography variant="subtitle1">{`${user.range}`}</Typography>
         <Typography variant="subtitle1">{`${user.grade}`}</Typography>
         <Typography variant="subtitle1">{`잔여 포인트: ${user.points}`}</Typography>

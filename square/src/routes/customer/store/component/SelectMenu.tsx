@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { CartItem, Choice, RootState } from "redux/store";
 import {
   Box,
   Button,
@@ -30,6 +32,7 @@ interface Props {
 
 export default function SelectMenu({ state, curItem, setState }: Props) {
   const [quantity, setQuantity] = useState(1);
+  const choice: Choice = useSelector((s: RootState) => s.choice);
 
   const handleIncrease = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -40,6 +43,38 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
       setQuantity((prevQuantity) => prevQuantity - 1);
     }
   };
+
+  const handleAddCart = () => {
+    if (!curItem) {
+      return;
+    }
+
+    const cartItem: CartItem = {
+      storeId: choice.storeId,
+      storeThumbnail: choice.storeThumbnail,
+      storeName: choice.storeName,
+      items: [
+        {
+          productId: curItem.menuId,
+          productThumbnail: curItem.menuThumbnail,
+          productName: curItem.menuName,
+          price: curItem.price,
+          options: [], // 현재 데이터에서 options에 대한 정보가 없으므로 빈 배열로 초기화
+          quantity,
+          isChecked: true,
+        },
+      ],
+    };
+
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+
+    if (cart.storeId === cartItem.storeId) {
+      cartItem.items = [...cart.items, ...cartItem.items];
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cartItem));
+  };
+
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -172,22 +207,19 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
               </Typography>
             </Grid>
           </Grid>
-          <Button>장바구니에 담기</Button>
+          <Button onClick={handleAddCart}>장바구니에 담기</Button>
         </Paper>
       </Paper>
     );
 
   return (
-    <Box>
-      <Button onClick={toggleDrawer(true)}>ㅎㅇ</Button>
-      <SwipeableDrawer
-        anchor={"bottom"}
-        open={state}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-      >
-        {list(curItem)}
-      </SwipeableDrawer>
-    </Box>
+    <SwipeableDrawer
+      anchor={"bottom"}
+      open={state}
+      onClose={toggleDrawer(false)}
+      onOpen={toggleDrawer(true)}
+    >
+      {list(curItem)}
+    </SwipeableDrawer>
   );
 }

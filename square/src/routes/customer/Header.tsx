@@ -35,7 +35,7 @@ export default function Header({ cateNum, setAni }: Props) {
     setLocation(event.target.value);
   };
   const handleCartClick = () => {
-    // 장바구니 ㄱㄱ
+    navigate("/cart");
   };
 
   return (

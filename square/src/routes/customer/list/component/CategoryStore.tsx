@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Choice, setChoice, REST_API } from "redux/store";
 import {
   Unstable_Grid2 as Grid,
   Typography,
@@ -10,7 +12,6 @@ import {
   Divider,
 } from "@mui/material";
 import "App.css";
-import { REST_API } from "redux/store";
 
 export default function CategoryStore() {
   type BigList = {
@@ -25,6 +26,7 @@ export default function CategoryStore() {
   const [stores, setStores] = useState<BigList[]>([]);
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (category) {
@@ -49,6 +51,14 @@ export default function CategoryStore() {
           elevation={0}
           sx={{ display: "flex", marginBottom: "10px", width: "100%" }}
           onClick={() => {
+            const tmpStore: Choice = {
+              storeId: store.storeId,
+              storeThumbnail: store.logo,
+              storeName: store.storeName,
+            };
+
+            dispatch(setChoice(tmpStore));
+
             navigate(`/store/${store.storeId}`);
           }}
         >
