@@ -3,7 +3,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Typography, Box } from '@mui/material';
 
 
-function MyOrderHistory() { // 컴포넌트 이름이 대문자로 시작해야 합니다.
+function MyBoard() { // 컴포넌트 이름이 대문자로 시작해야 합니다.
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -14,9 +14,10 @@ function MyOrderHistory() { // 컴포넌트 이름이 대문자로 시작해야 
     <>
      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
       <ArrowBackIcon onClick={goBack} />
-      <Typography variant="h6" sx={{margin: 'auto'}}>내 주문내역</Typography>
+      <Typography variant="h6" sx={{margin: 'auto'}}>내가 쓴 글</Typography>
     </Box>
     </>
   );
 }
-export default MyOrderHistory;
+
+export default MyBoard

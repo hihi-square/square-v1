@@ -1,44 +1,119 @@
-import React from "react";
-import { Bootpay } from "@bootpay/client-js";
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { TextField, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export default function Pay() {
-  const handlePayment = async () => {
-    try {
-      const response = await Bootpay.requestPayment({
-        application_id: "64cf839d00be04001c6993d3",
-        price: 100,
-        order_name: "상품명",
-        order_id: "TEST_ORDER_ID",
-        user: {
-          id: "회원아이디",
-          username: "회원이름",
-          phone: "01000000000",
-          email: "test@test.com",
-        },
-        items: [
-          {
-            id: "item_id",
-            name: "테스트아이템",
-            qty: 1,
-            price: 100,
-          },
-        ],
-        extra: {
-          open_type: "iframe",
-          card_quota: "0,2,3",
-          escrow: false,
-        },
-      });
+export type Item = {
+  productThumbnail: string;
+  productName: string;
+  price: number;
+  quantity: number;
+  isSelected?: boolean;
+};
 
-      // 이후 응답을 처리하는 로직(필요시)
-      // eslint-disable-next-line no-console
-      console.log(response);
-    } catch (error) {}
+export type Store = {
+  shopThumbnail: string;
+  shopName: string;
+  estimatedTime: string;
+  items: Item[];
+};
+
+type RootState = {
+  cart: {
+    selectedItems: Store[];
+  };
+};
+
+function Pay() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const selectedItems = useSelector(
+    (state: RootState) => state.cart.selectedItems
+  );
+
+  const [phone, setPhone] = useState("");
+  const [request, setRequest] = useState("");
+  const [points, setPoints] = useState(0);
+  const totalPoints = 10000; // 이 부분은 실제로 DB에서 가져오게 될 부분입니다.
+
+  const totalAmount = selectedItems.reduce((acc, store) => {
+    const storeTotal = store.items.reduce(
+      (storeAcc, item) => storeAcc + item.price * item.quantity,
+      0
+    );
+
+    return acc + storeTotal;
+  }, 0);
+
+  const finalAmount = totalAmount - points;
+
+  const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newPoints = Number(e.target.value);
+
+    if (newPoints > totalPoints) {
+      newPoints = totalPoints;
+    }
+    if (newPoints > totalAmount) {
+      newPoints = totalAmount;
+    }
+    setPoints(newPoints);
+  };
+
+  const goBack = () => {
+    const previousState = location.state?.from;
+
+    if (previousState) {
+      navigate(previousState);
+    } else {
+      navigate(-1);
+    }
   };
 
   return (
     <>
-      <button onClick={handlePayment}>결제하기</button>
+      <ArrowBackIcon onClick={goBack} />
+
+      <TextField
+        label="전화번호"
+        variant="outlined"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+      />
+      <TextField
+        label="요청사항"
+        variant="outlined"
+        multiline
+        rows={4}
+        value={request}
+        onChange={(e) => setRequest(e.target.value)}
+      />
+      <TextField
+        label="포인트 사용량"
+        variant="outlined"
+        type="number"
+        value={points}
+        onChange={handlePointChange}
+      />
+      <Typography variant="body2">
+        보유 포인트: {totalPoints.toLocaleString()}원
+      </Typography>
+
+      <Typography variant="h6">
+        주문금액: {totalAmount.toLocaleString()}원
+      </Typography>
+      <Typography variant="h6">
+        포인트 차감: {points.toLocaleString()}원
+      </Typography>
+      <Typography variant="h6">-----------------</Typography>
+      <Typography variant="h6">
+        최종 결제금액: {finalAmount.toLocaleString()}원
+      </Typography>
+
+      <button>주문 완료</button>
     </>
   );
 }
+
+export default Pay;
