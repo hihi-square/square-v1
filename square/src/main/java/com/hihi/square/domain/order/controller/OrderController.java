@@ -37,7 +37,6 @@ public class OrderController {
         Customer customer = customerRepository.findById(request.getCusId()).get();
         // 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
 
-
         Integer ordId = orderService.saveOrder(customer, request);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);

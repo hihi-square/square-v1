@@ -3,6 +3,8 @@ package com.hihi.square.domain.menu.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hihi.square.domain.menu.dto.response.CartStoreResponseDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,4 +110,13 @@ public class MenuController {
 		// return ResponseEntity.ok(CommonResponseDto.success(new MenuResponseDto(menu)));
 		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
+
+	// 장바구니에서 물품 목록을 넘겨주면 ex) store/menuitem/items=1,2,3
+	// 가게 별로 정렬후에, response 객체로 정렬해서 넘겨주기
+	@GetMapping("/items={itemIds}")
+	public ResponseEntity<?> getMenuItemsById(@PathVariable List<Integer> itemIds) {
+		List<CartStoreResponseDto> cartInfo = menuService.getMenuItemsById(itemIds);
+		return new ResponseEntity<> (cartInfo, HttpStatus.OK);
+	}
+
 }

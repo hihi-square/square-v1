@@ -14,8 +14,8 @@ public class PointService {
     private final PointRepository pointRepository;
     private final OrderRepository orderRepository;
 
-    public void save(PointRegisterReqeustDto request) {
-        Order order = orderRepository.findById(request.getOrdId()).get();
-    }
+//    public void save(PointRegisterReqeustDto request) {
+//        Order order = orderRepository.findById(request.getOrdId()).get();
+//    }
 
 }
