@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "animate.css";
 import { Unstable_Grid2 as Grid } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ import Footer from "../Footer";
 
 export default function List() {
   const { category } = useParams<{ category?: string }>();
-  const [animation, setAnimation] = useState<boolean>(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,15 +22,11 @@ export default function List() {
       container
       xs={12}
       direction="column"
-      className={`animate__animated 
-      ${animation ? "animate__slideOutRight" : "animate__slideInRight"}`}
       sx={{
         backgroundColor: "white",
-        zIndex: "2",
-        "--animate-duration": "200ms",
       }}
     >
-      <Header cateNum={Number(category)} setAni={setAnimation} />
+      <Header cateNum={Number(category)} setAni={null} />
       <Grid container xs={12} justifyContent="center">
         <CategoryStore />
       </Grid>
