@@ -34,10 +34,12 @@ export default function Map() {
         level: 3,
       };
 
+      // eslint-disable-next-line no-console
+      console.log(`${map} / ${marker}`);
       setMap(new window.kakao.maps.Map(container, options));
       setMarker(new window.kakao.maps.Marker());
     });
-  }, []);
+  }, [map, marker]);
 
   const getCurrentPosBtn = () => {
     locUpdate(geolocation);
@@ -71,8 +73,6 @@ export default function Map() {
     <div>
       <div id="map" style={{ width: "500px", height: "400px" }}></div>
       <div onClick={getCurrentPosBtn}>현재 위치</div>
-      <div>{map}</div>
-      <div>{marker}</div>
     </div>
   );
 }
