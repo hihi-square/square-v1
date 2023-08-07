@@ -1,5 +1,7 @@
 package com.hihi.square.domain.review.service;
 
+import com.hihi.square.domain.image.entity.Image;
+import com.hihi.square.domain.image.respository.ImageRepository;
 import com.hihi.square.domain.order.entity.OrderDetail;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.review.dto.request.ReviewWriteRequestDto;
@@ -10,6 +12,7 @@ import com.hihi.square.domain.review.entity.ReviewStatus;
 import com.hihi.square.domain.review.repository.ReviewRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.global.s3.dto.FileThumbDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ import java.util.Optional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final ImageRepository imageRepository;
 
     @Transactional
     public void save(Customer customer, OrderDetail orderDetail, ReviewWriteRequestDto request) {
@@ -35,6 +39,19 @@ public class ReviewService {
                 .status(ReviewStatus.PUBLIC)
                 .build();
         reviewRepository.save(review);
+        List<FileThumbDto> images = request.getImages();
+        for(int i=0;i<images.size();i++){
+            FileThumbDto image = images.get(i);
+            imageRepository.save(
+                    Image.builder()
+                            .url(image.getUrl())
+                            .order(i)
+                            .type("REVIEW")
+                            .connectedId(review.getId())
+                            .thumbnail(image.getThumb())
+                            .build()
+            );
+        }
     }
 
     public Optional<Review> findByOrderDetail(OrderDetail orderDetail) {
@@ -52,13 +69,22 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(Review review) {
+        imageRepository.deleteByTypeAndConnectedId("REVIEW", review.getId());
         reviewRepository.delete(review);
+
     }
 
     public List<StoreReviewListDto> findByStore(Store store) {
         List<Review> reviews = reviewRepository.findByStoreOrderByCreatedAtDesc(store);
         List<StoreReviewListDto> result = new ArrayList<>();
         for(Review review : reviews) {
+            List<Image> imageList = imageRepository.findAllByTypeAndConnectedId("REVIEW", review.getId());
+            List<FileThumbDto> images = new ArrayList<>();
+            for(Image image : imageList) {
+                images.add(
+                        FileThumbDto.builder().url(image.getUrl()).thumb(image.getThumbnail()).build()
+                );
+            }
             result.add(StoreReviewListDto.builder()
                             .reviewId(review.getId())
                             .orderDetailId(review.getOrderDetail().getOdtId())
@@ -67,6 +93,7 @@ public class ReviewService {
                             .rating(review.getRating())
                             .content(review.getContent())
                             .createdAt(review.getCreatedAt())
+                            .images(images)
                     .build());
         }
         return result;
@@ -88,6 +115,13 @@ public class ReviewService {
         List<Review> reviewList = reviewRepository.findByCustomerOrderByCreatedAtDesc(customer);
         List<CustomerReviewListDto> result = new ArrayList<>();
         for(Review review:reviewList) {
+            List<Image> imageList = imageRepository.findAllByTypeAndConnectedId("REVIEW", review.getId());
+            List<FileThumbDto> images = new ArrayList<>();
+            for(Image image : imageList) {
+                images.add(
+                        FileThumbDto.builder().url(image.getUrl()).thumb(image.getThumbnail()).build()
+                );
+            }
             result.add(
                     CustomerReviewListDto.builder()
                             .reviewId(review.getId())
@@ -97,6 +131,7 @@ public class ReviewService {
                             .rating(review.getRating())
                             .content(review.getContent())
                             .createdAt(review.getCreatedAt())
+                            .images(images)
                             .build()
             );
         }
