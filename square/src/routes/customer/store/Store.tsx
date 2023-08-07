@@ -1,16 +1,31 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Unstable_Grid2 as Grid } from "@mui/material";
+import {
+  Unstable_Grid2 as Grid,
+  Typography,
+  Button,
+  IconButton,
+  Divider,
+  Paper,
+} from "@mui/material";
 import { useParams } from "react-router-dom"; // useParams를 import합니다.
 import { REST_API } from "redux/store";
-import Header from "./component/StoreHeader123";
-import StoreMenu from "./component/storeMenu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPhone,
+  faHeart,
+  faLocationDot,
+} from "@fortawesome/free-solid-svg-icons";
+import Header from "./component/StoreHeader";
+import Footer from "../Footer";
+import StoreMenu from "./component/StoreMenu3";
 import StoreFeed from "./component/storeFeed";
 import StoreReview from "./component/storeReview";
 
 function StorePage() {
   type Store = {
     name: string;
+    image: string[];
     address: string;
     phone: string;
     content: string;
@@ -19,12 +34,12 @@ function StorePage() {
   const { store } = useParams<{ store?: string }>();
   const [info, setInfo] = useState<Store>({
     name: "펭소네 구멍가게",
+    image: ["/img/store/store1.png"],
     address: "대전광역시 유성구 봉명동 펭소 1길",
     phone: "010-0000-0000",
     content: "안녕하세요 펭소입니다 저희 가게에 오신걸 환영합니다!",
   });
   const [selectedTab, setSelectedTab] = useState("menu");
-  const [animation, setAnimation] = useState<boolean>(false);
 
   useEffect(() => {
     // storeId를 사용해 메뉴 정보를 가져오는 API를 호출합니다.
@@ -35,13 +50,14 @@ function StorePage() {
       params: {},
     })
       .then((response) => {
+        // eslint-disable-next-line no-console
         console.log("받아온 데이터:", response.data);
         setInfo(response.data);
       })
       .catch((error) => {
         // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
       });
-  }, []); // storeId가 변경될 때마다 API 호출을 다시 합니다.
+  }, [store]); // storeId가 변경될 때마다 API 호출을 다시 합니다.
 
   const renderTabContent = () => {
     switch (selectedTab) {
@@ -61,25 +77,187 @@ function StorePage() {
       container
       xs={12}
       direction="column"
-      className={`animate__animated 
-      ${animation ? "animate__slideOutRight" : "animate__slideInRight"}`}
       sx={{
+        position: "relative",
         backgroundColor: "white",
         zIndex: "2",
-        "--animate-duration": "200ms",
       }}
     >
-      <Header setAni={setAnimation} name={info.name} />
-      <Grid xs={12}></Grid>
-      <Grid xs={12}>
-        <div className="button-container">
-          <button onClick={() => setSelectedTab("menu")}>메뉴</button>
-          <button onClick={() => setSelectedTab("info")}>정보</button>
-          <button onClick={() => setSelectedTab("review")}>리뷰</button>
-          {selectedTab}
-        </div>
+      <Header setAni={null} name={info.name} />
+      <Grid
+        container
+        xs={12}
+        sx={{ position: "absolute", top: 0, justifyContent: "center" }}
+      >
+        <Grid xs={12}>
+          <img
+            src={info.image[0]}
+            alt="가게배너"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </Grid>
+        <Grid container xs={10}>
+          <Grid xs={12} mt="10px">
+            <Typography
+              variant="h4"
+              component="h4"
+              sx={{
+                fontWeight: 700,
+                textAlign: "center",
+                whiteSpace: "pre-line",
+              }}
+            >
+              {info.name}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{
+                fontWeight: 500,
+                textAlign: "center",
+                whiteSpace: "pre-line",
+              }}
+            >
+              {info.address}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          xs={10}
+          mt="5px"
+          sx={{ display: "flex", justifyContent: "space-around" }}
+        >
+          <Button>
+            <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
+              <FontAwesomeIcon icon={faHeart} style={{ color: "gray" }} />
+            </IconButton>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{
+                fontWeight: 400,
+                textAlign: "center",
+                fontSize: "18px",
+                color: "gray",
+                padding: "0px 5px",
+              }}
+            >
+              단골
+            </Typography>
+          </Button>
+          <Divider orientation="vertical" variant="middle" flexItem />
+          <Button>
+            <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
+              <FontAwesomeIcon icon={faPhone} style={{ color: "gray" }} />
+            </IconButton>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{
+                fontWeight: 400,
+                textAlign: "center",
+                fontSize: "18px",
+                color: "gray",
+                padding: "0px 5px",
+              }}
+            >
+              전화
+            </Typography>
+          </Button>
+          <Divider orientation="vertical" variant="middle" flexItem />
+          <Button>
+            <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
+              <FontAwesomeIcon icon={faLocationDot} style={{ color: "gray" }} />
+            </IconButton>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{
+                fontWeight: 400,
+                textAlign: "center",
+                fontSize: "18px",
+                color: "gray",
+                padding: "0px 5px",
+              }}
+            >
+              지도
+            </Typography>
+          </Button>
+        </Grid>
+        <Grid
+          xs={12}
+          mt="10px"
+          sx={{ display: "flex", justifyContent: "center" }}
+        >
+          <Paper
+            elevation={1}
+            sx={{ width: "80%", minHeight: "200px" }}
+          ></Paper>
+        </Grid>
+        <Grid xs={12} mt="20px">
+          <Divider variant="middle"></Divider>
+        </Grid>
+        <Grid
+          xs={12}
+          sx={{
+            padding: "15px",
+            display: "flex",
+            justifyContent: "space-around",
+          }}
+        >
+          <Button onClick={() => setSelectedTab("menu")}>
+            <Typography
+              variant="h6"
+              component="h6"
+              sx={{
+                fontWeight: 500,
+                textAlign: "center",
+                fontSize: "20px",
+                color: "black",
+                padding: "0px 5px",
+              }}
+            >
+              피드
+            </Typography>
+          </Button>
+
+          <Button onClick={() => setSelectedTab("feed")}>
+            <Typography
+              variant="h6"
+              component="h6"
+              sx={{
+                fontWeight: 500,
+                textAlign: "center",
+                fontSize: "20px",
+                color: "black",
+                padding: "0px 5px",
+              }}
+            >
+              메뉴
+            </Typography>
+          </Button>
+
+          <Button onClick={() => setSelectedTab("review")}>
+            <Typography
+              variant="h6"
+              component="h6"
+              sx={{
+                fontWeight: 500,
+                textAlign: "center",
+                fontSize: "20px",
+                color: "black",
+                padding: "0px 5px",
+              }}
+            >
+              리뷰
+            </Typography>
+          </Button>
+        </Grid>
+        {renderTabContent()}
       </Grid>
-      <div>{renderTabContent()}</div>
+      <Grid container xs={12} justifyContent="center">
+        <Footer />
+      </Grid>
     </Grid>
   );
 }

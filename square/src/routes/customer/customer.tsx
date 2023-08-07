@@ -2,9 +2,9 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Unstable_Grid2 as Grid } from "@mui/material";
 import List from "./list/List";
-import StoreListByLocation from "./map/storeListByLocation";
+import StoreListByLocation from "./map/component/storeListByLocation";
 import Store from "./store/Store";
-import SearchMap from "./map/searchMap";
+import SearchMap from "./map/component/searchMap";
 import Board from "./main/board/boardMain";
 import Chat from "./chat/chat";
 import MyPage from "./my/myPage";
@@ -19,6 +19,7 @@ import MyRegular from "./my/myRegular";
 import MyReview from "./my/myReview";
 import Main from "./main/Main";
 import Login from "./login/Login";
+import Map from "./map/Map";
 
 export default function Customer() {
   return (
@@ -30,6 +31,7 @@ export default function Customer() {
 
         {/* 스토어 아이디 데이터 있기 전까진 일단 그냥 대표페이지로 가게하고 나중에 바인드 */}
         <Route path="/store/:store" element={<Store />} />
+        <Route path="/map" element={<Map />} />
         <Route path="/searchmap" element={<SearchMap />} />
         <Route path="/board" element={<Board />} />
         <Route path="/chat" element={<Chat />} />
