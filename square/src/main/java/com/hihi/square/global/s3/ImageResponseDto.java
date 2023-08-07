@@ -1,7 +1,7 @@
 package com.hihi.square.global.s3;
 
 
-import com.hihi.square.domain.image.dto.response.FileThumbResponseDto;
+import com.hihi.square.global.s3.dto.FileThumbResponseDto;
 import lombok.Builder;
 import lombok.Data;
 

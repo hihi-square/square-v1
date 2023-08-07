@@ -1,27 +1,24 @@
 package com.hihi.square.domain.store.service;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.hihi.square.domain.image.dto.response.FileThumbResponseDto;
+import com.hihi.square.domain.image.dto.request.ImageRequestDto;
+import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
+import com.hihi.square.domain.image.entity.Image;
+import com.hihi.square.domain.image.respository.ImageRepository;
 import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreNoticeWriteRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
 import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreNoticeRepository;
-import com.hihi.square.domain.image.dto.request.ImageRequestDto;
-import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
-import com.hihi.square.domain.image.entity.Image;
-import com.hihi.square.domain.image.respository.ImageRepository;
 import com.hihi.square.global.s3.S3Service;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,27 +28,48 @@ public class StoreNoticeService {
 	private final ImageRepository imageRepository;
 	private final S3Service s3Service;
 
+//	@Transactional
+//	public void write(Store store, StoreNoticeWriteRequestDto request, List<ImageRequestDto> files) {
+//		Notice notice = Notice.builder()
+//			.emdAddress(store.getEmdAddress())
+//			.content(request.getContent())
+//			.state(request.getState())
+//			.store(store)
+//			.build();
+//		storeNoticeRepository.save(notice);
+//		List<FileThumbResponseDto> images = s3Service.uploadFiles("storeNotice", files);
+//		for(int order=0;order<images.size();order++){
+//			imageRepository.save(Image.builder()
+//				.url(images.get(order).getUrl())
+//				.order(order+1)
+//				.type("SNO")
+//				.connectedId(notice.getSnoId())
+//				.thumbnail(images.get(order).getUrl())
+//				.build());
+//		}
+//
+//	}
 	@Transactional
-	public void write(Store store, StoreNoticeWriteRequestDto request, List<ImageRequestDto> files) {
+	public void write(Store store, StoreNoticeWriteRequestDto request) {
 		Notice notice = Notice.builder()
 			.emdAddress(store.getEmdAddress())
-			.content(request.getContent())
-			.state(request.getState())
-			.store(store)
-			.build();
+				.content(request.getContent())
+				.store(store)
+				.state(request.getState())
+				.build();
 		storeNoticeRepository.save(notice);
-		List<FileThumbResponseDto> images = s3Service.uploadFiles("storeNotice", files);
-		for(int order=0;order<images.size();order++){
+		for(ImageRequestDto image : request.getImages()){
 			imageRepository.save(Image.builder()
-				.url(images.get(order).getUrl())
-				.order(order+1)
+				.url(image.getUrl())
+				.order(image.getOrder())
 				.type("SNO")
 				.connectedId(notice.getSnoId())
-				.thumbnail(images.get(order).getUrl())
+				.thumbnail(image.getThumbnail())
 				.build());
-		}
 
+		}
 	}
+
 
 	public List<StoreNoticeResponseDto> getNoticeList(Store store) {
 		List<StoreNoticeResponseDto> result = new ArrayList<>();

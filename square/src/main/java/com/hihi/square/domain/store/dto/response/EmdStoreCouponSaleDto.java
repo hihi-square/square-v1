@@ -1,12 +1,10 @@
 package com.hihi.square.domain.store.dto.response;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hihi.square.domain.store.dto.response.StoreCategorySelectedDto;
-
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Data
@@ -20,5 +18,6 @@ public class EmdStoreCouponSaleDto {
 	private Float latitude;
 	private Float longitude;
 	// private Float rating; -> 추후 추가
+	@Builder.Default
 	private List<StoreCategorySelectedDto> categories = new ArrayList<>();
 }
