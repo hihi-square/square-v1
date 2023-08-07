@@ -1,20 +1,27 @@
 package com.hihi.square.domain.coupon.controller;
 
+import java.util.ArrayList;
 import java.util.Currency;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.bytebuddy.dynamic.scaffold.TypeWriter;
-
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.dto.response.StoreCouponDto;
+import com.hihi.square.domain.coupon.dto.response.StoreCouponListDto;
+import com.hihi.square.domain.coupon.entity.Coupon;
+import com.hihi.square.domain.coupon.repository.IssueCouponRepository;
 import com.hihi.square.domain.coupon.service.CouponService;
+import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
@@ -30,6 +37,7 @@ public class CouponController {
 
 	private final UserService userService;
 	private final CouponService couponService;
+	private final IssueCouponService issueCouponService;
 
 	// 가게 쿠폰 등록
 	@PostMapping
@@ -42,5 +50,39 @@ public class CouponController {
 		}
 		couponService.createCoupon((Store) user, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
+	}
+
+	// 해당 가게에서 현재 발급하고 있는 쿠폰들
+	@GetMapping("/{id}")
+	public ResponseEntity getStoreAvailableCoupon(Authentication authentication, @PathVariable("id") Integer storeId){
+		String uid = authentication.getName();
+		Optional<User> optionalCustomer = userService.findByUid(uid);
+		if (!optionalCustomer.isPresent() || !(optionalCustomer.get() instanceof Customer)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_CUSTOMER_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Customer customer = (Customer) optionalCustomer.get();
+		Optional<User> optionalStore = userService.findByUsrId(storeId);
+		if (!optionalStore.isPresent() || !(optionalStore.get() instanceof Store)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store = (Store) optionalStore.get();
+		List<Coupon> couponList = couponService.findAllAvailableCouponByStore(store);
+		List<StoreCouponDto> result = new ArrayList<>();
+		for(Coupon coupon : couponList){
+			result.add(StoreCouponDto.builder()
+				.id(coupon.getId())
+				.name(coupon.getName())
+				.content(coupon.getContent())
+				.startAt(coupon.getStartAt())
+				.expiredAt(coupon.getExpiredAt())
+				.discountType(coupon.getDiscountType())
+				.rate(coupon.getRate())
+				.minOrderPrice(coupon.getMinOrderPrice())
+				.maxDiscountPrice(coupon.getMaxDiscountPrice())
+				.alreadyIssued(issueCouponService.isAlreadyIssued(customer, coupon))
+				.build());
+		}
+		return new ResponseEntity(StoreCouponListDto.builder().coupons(result).statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+
 	}
 }

@@ -1,6 +1,7 @@
 package com.hihi.square.domain.coupon.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,5 +35,9 @@ public class CouponService {
 			.maxDiscountPrice(request.getMaxDiscountPrice())
 			.build();
 		couponRepository.save(coupon);
+	}
+
+	public List<Coupon> findAllAvailableCouponByStore(Store store) {
+		return couponRepository.findByAllAvailableStoreCoupon(store, LocalDateTime.now());
 	}
 }
