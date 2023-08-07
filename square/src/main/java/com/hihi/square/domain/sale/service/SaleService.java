@@ -157,4 +157,9 @@ public class SaleService {
         return result;
 	}
 
+    public List<EmdStoreCouponSaleDto> findByEmdAddressWithProgressSaleAndAvailableCoupon(EmdAddress emdAddress) {
+        List<Store> stores = storeRepository.findByEmdAddressAndHaveProgressSaleAndAvailableCoupon(emdAddress, LocalDateTime.now());
+        List<EmdStoreCouponSaleDto> result = storeService.storeToEmdStoreCouponSaleDto(stores);
+        return result;
+    }
 }

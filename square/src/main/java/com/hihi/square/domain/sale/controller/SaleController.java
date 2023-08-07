@@ -184,7 +184,17 @@ public class SaleController {
         EmdAddress emdAddress = emdAddressOptional.get();
         List<EmdStoreCouponSaleDto> result = saleService.findByEmdAddressWithProgressSale(emdAddress);
         return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
+    }
 
-
+    // 읍면동 + 현재 진행중인 세일 + 쿠폰이 있는 가게 리스트
+    @GetMapping("/sale/coupon/emd/{id}")
+    public ResponseEntity<?> getEmdSaleCouponList(@PathVariable("id") Integer emdId) {
+        Optional<EmdAddress> emdAddressOptional = emdAddressService.findById(emdId);
+        if (emdAddressOptional.isEmpty()){
+            return new ResponseEntity<>(CommonResponseDto.builder().message("INVALID_EMD_ID").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+        }
+        EmdAddress emdAddress = emdAddressOptional.get();
+        List<EmdStoreCouponSaleDto> result = saleService.findByEmdAddressWithProgressSaleAndAvailableCoupon(emdAddress);
+        return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
     }
 }
