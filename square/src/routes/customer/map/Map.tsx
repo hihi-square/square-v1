@@ -39,7 +39,8 @@ export default function Map() {
       setMap(new window.kakao.maps.Map(container, options));
       setMarker(new window.kakao.maps.Marker());
     });
-  }, [map, marker]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getCurrentPosBtn = () => {
     locUpdate(geolocation);
