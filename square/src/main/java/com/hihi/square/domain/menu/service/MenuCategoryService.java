@@ -44,8 +44,8 @@ public class MenuCategoryService {
 		for (MenuCategoryRequestDto request : requestList) {
 			Long categoryId = request.getId();
 			Integer sequence = request.getSequence();
-			log.info("categoryId : {}", categoryId);
-			log.info("sequence : {}", sequence);
+			// log.info("categoryId : {}", categoryId);
+			// log.info("sequence : {}", sequence);
 			menuCategoryRepository.updateMenuCategoryList(categoryId, sequence);
 		}
 	}
@@ -80,7 +80,7 @@ public class MenuCategoryService {
 			List<MenuItemResponseDto> menus = new ArrayList<>();
 
 			List<Menu> menuList = menuRepository.findByMenuCategoryAndUserOrderBySequence(menuCategory, user);
-			for(Menu menu : menuList) {
+			for (Menu menu : menuList) {
 				MenuItemResponseDto menuItemResponseDto = MenuItemResponseDto.builder()
 					.menuId(menu.getMenuId())
 					.menuName(menu.getName())

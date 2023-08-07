@@ -35,7 +35,8 @@ public class MenuRequestDto {
 	private String thumbnail;
 	private boolean signature;
 	private boolean popularity;
-	private MenuStatus status;
+	// private MenuStatus status;
+	private String status;
 	private String description;
 	private Integer salRecord;
 	private Integer sequence;
@@ -54,7 +55,7 @@ public class MenuRequestDto {
 			.thumbnail(thumbnail)
 			.signature(signature)
 			.popularity(popularity)
-			.status(status)
+			.status(MenuStatus.from(status))
 			.description(description)
 			.salRecord(salRecord)
 			.sequence(sequence)

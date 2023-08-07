@@ -22,8 +22,13 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 	@Modifying
 	@Query(value = "update menu set mec_id= :categoryId, status = :status, sequence = :sequence  where men_id = :menuId", nativeQuery = true)
 	void updateMenuList(@Param("menuId") Long menuId, @Param("categoryId") Long categoryId,
-		@Param("status") Integer status,
+		@Param("status") String status,
 		@Param("sequence") Integer sequence);
+
+	@Transactional
+	@Modifying
+	@Query(value = "update menu set status=:status where men_id=:menId", nativeQuery = true)
+	void updateStatus(@Param("menId") Long menId, @Param("status") String status);
 
 	List<Menu> findByUserAndPopularityIsTrue(User user);
 

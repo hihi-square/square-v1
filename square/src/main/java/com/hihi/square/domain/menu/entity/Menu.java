@@ -42,8 +42,8 @@ public class Menu extends BaseTime {
 	private boolean signature;
 	// @ColumnDefault("false")
 	private boolean popularity;
-	 @Enumerated(EnumType.STRING)
 	@Column(name = "status")
+	@Enumerated(EnumType.STRING)
 	private MenuStatus status;
 	private String description;
 	// @ColumnDefault("0")
@@ -51,7 +51,8 @@ public class Menu extends BaseTime {
 	private Integer salRecord;
 	private Integer sequence;
 
-	public void updateStatus() {
-		this.status = MenuStatus.OFF;
-	}
+	//메뉴 삭제 시, 상태 변경
+	// public void updateStatus() {
+	// 	this.status = MenuStatus.OFF;
+	// }
 }
