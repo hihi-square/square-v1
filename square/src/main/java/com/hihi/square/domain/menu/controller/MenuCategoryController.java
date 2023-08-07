@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hihi.square.domain.menu.dto.request.MenuCategoryRequestDto;
 import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuCategoryResponseDto;
-import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.user.service.UserService;
@@ -26,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/store/menuCategory")
+@RequestMapping("/store/menucategory")
 @RequiredArgsConstructor
 @Slf4j
 public class MenuCategoryController {
@@ -78,8 +77,8 @@ public class MenuCategoryController {
 	@PatchMapping("/list")
 	public ResponseEntity<CommonResponseDto<?>> updateMenuCategoryList(@RequestBody MenuCategoryRequestDto request) {
 		List<MenuCategoryRequestDto> requestDtos = request.getData();
-		log.info("requestDtos : {}", requestDtos);
-		List<Menu> menuList = new ArrayList<>();
+		// log.info("requestDtos : {}", requestDtos);
+		// List<Menu> menuList = new ArrayList<>();
 		menuCategoryService.updateMenuList(requestDtos);
 		return ResponseEntity.ok(CommonResponseDto.success(null));
 	}

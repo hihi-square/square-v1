@@ -8,13 +8,16 @@ import org.springframework.stereotype.Service;
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
+import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MenuService {
 
 	private final MenuRepository menuRepository;
@@ -39,14 +42,14 @@ public class MenuService {
 			Long menuId = menuRequestDto.getId();
 			Integer usrId = menuRequestDto.getUserId();
 			Long categoryId = menuRequestDto.getCategoryId();
-			Integer menuStatus = menuRequestDto.getStatus().ordinal();
+			String menuStatus = menuRequestDto.getStatus();
 			Integer sequence = menuRequestDto.getSequence();
 			menuRepository.updateMenuList(menuId, categoryId, menuStatus, sequence);
 		}
 	}
 
 	public void deleteMenu(Menu menu) {
-		menu.updateStatus();
+		menuRepository.updateStatus(menu.getMenuId(), MenuStatus.OFF.name());
 	}
 
 	public List<Menu> findAll() {

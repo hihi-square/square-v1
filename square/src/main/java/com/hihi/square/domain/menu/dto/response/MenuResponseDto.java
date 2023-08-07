@@ -18,7 +18,7 @@ public class MenuResponseDto {
 	private boolean signature;
 	private boolean popular;
 	private Integer price;
-	private Integer status;
+	private String status;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private Integer salRecord;
@@ -36,7 +36,7 @@ public class MenuResponseDto {
 		this.signature = menu.isSignature();
 		this.popular = menu.isPopularity();
 		this.price = menu.getPrice();
-		this.status = menu.getStatus().ordinal();
+		this.status = menu.getStatus().name();
 		this.createdAt = menu.getCreatedAt();
 		this.modifiedAt = menu.getModifiedAt();
 		this.salRecord = menu.getSalRecord();

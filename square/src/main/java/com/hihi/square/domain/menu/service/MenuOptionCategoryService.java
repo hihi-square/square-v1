@@ -1,0 +1,57 @@
+package com.hihi.square.domain.menu.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.hihi.square.domain.menu.dto.request.MenuOptionCategoryRequestDto;
+import com.hihi.square.domain.menu.entity.MenuOptionCategory;
+import com.hihi.square.domain.menu.repository.MenuOptionCategoryRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class MenuOptionCategoryService {
+	private final MenuOptionCategoryRepository optionCategoryRepository;
+
+	public void saveMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
+		optionCategoryRepository.save(menuOptionCategory);
+	}
+
+	public MenuOptionCategory updateMenuOptionCategory(MenuOptionCategoryRequestDto request) {
+		Optional<MenuOptionCategory> updateOptionCategory = optionCategoryRepository.findById(request.getId());
+		if (!updateOptionCategory.isPresent()) {
+			return null;
+		}
+		MenuOptionCategory saveMenuOptionCategory = request.toEntity();
+		return optionCategoryRepository.save(saveMenuOptionCategory);
+	}
+
+	public void updateMenuOptionCategoryList(List<MenuOptionCategoryRequestDto> requestList) {
+		for (MenuOptionCategoryRequestDto request : requestList) {
+			Long categoryId = request.getId();
+			Integer sequence = request.getSequence();
+			// log.info("categoryId : {}", categoryId);
+			// log.info("sequence : {}", sequence);
+			optionCategoryRepository.updateMenuOptionCategoryList(categoryId, sequence);
+		}
+	}
+
+	public void deleteMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
+		optionCategoryRepository.delete(menuOptionCategory);
+	}
+
+	public List<MenuOptionCategory> findAllById(Integer userId, Long menId) {
+		List<MenuOptionCategory> menuCategoryList = optionCategoryRepository.findAllById(userId, menId);
+		return menuCategoryList;
+	}
+
+	//mocId : 메뉴옵션카테고리ID
+	public MenuOptionCategory findById(Long mocId) {
+		MenuOptionCategory menuOptionCategory = optionCategoryRepository.findById(mocId).get();
+		return menuOptionCategory;
+	}
+
+}
