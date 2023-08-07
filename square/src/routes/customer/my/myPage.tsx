@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Avatar, Typography, Box, List, ListItem } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  Avatar,
+  Typography,
+  Box,
+  List,
+  ListItem,
+  IconButton,
+} from "@mui/material";
 import { RootState } from "../../../redux/store";
 
 function MyPage() {
@@ -33,6 +41,10 @@ function MyPage() {
     navigate(-1);
   };
 
+  const goToSettings = () => {
+    navigate("/myinfo");
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -55,7 +67,12 @@ function MyPage() {
           src={user.profileImage}
           sx={{ width: 300, height: 300, mb: 2 }}
         />
-        <Typography variant="subtitle1">{userId.nickname}</Typography>
+        <Typography variant="subtitle1">
+          {userId.nickname}
+          <IconButton size="small" onClick={goToSettings}>
+            <SettingsIcon fontSize="inherit" />
+          </IconButton>
+        </Typography>
         <Typography variant="subtitle1">{`${user.range}`}</Typography>
         <Typography variant="subtitle1">{`${user.grade}`}</Typography>
         <Typography variant="subtitle1">{`잔여 포인트: ${user.points}`}</Typography>
