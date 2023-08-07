@@ -44,6 +44,8 @@ public class Store extends User {
 	@Enumerated(EnumType.STRING)
 	private BankType bank;
 	private String account;
+	// 가게 로고 이미지
+	private String logo;
 
 	@OneToMany(mappedBy = "store")
 	// @JoinColumn
