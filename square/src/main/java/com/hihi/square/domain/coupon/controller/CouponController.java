@@ -24,7 +24,7 @@ import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/coupon")
+@RequestMapping("/coupon/store")
 @RequiredArgsConstructor
 public class CouponController {
 
@@ -42,7 +42,5 @@ public class CouponController {
 		}
 		couponService.createCoupon((Store) user, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
-
-
 	}
 }
