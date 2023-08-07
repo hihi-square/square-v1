@@ -40,4 +40,8 @@ public class CouponService {
 	public List<Coupon> findAllAvailableCouponByStore(Store store) {
 		return couponRepository.findByAllAvailableStoreCoupon(store, LocalDateTime.now());
 	}
+
+	public List<Coupon> findAllByStore(Store store) {
+		return couponRepository.findAllByStore(store);
+	}
 }

@@ -1,7 +1,6 @@
 package com.hihi.square.domain.coupon.controller;
 
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
 import com.hihi.square.domain.coupon.dto.response.StoreCouponDto;
-import com.hihi.square.domain.coupon.dto.response.StoreCouponListDto;
+import com.hihi.square.domain.coupon.dto.response.StoreCouponResponseDto;
+import com.hihi.square.domain.coupon.dto.response.StoreUserCouponListDto;
+import com.hihi.square.domain.coupon.dto.response.StoreUserCouponResponseDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
-import com.hihi.square.domain.coupon.repository.IssueCouponRepository;
 import com.hihi.square.domain.coupon.service.CouponService;
 import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.store.entity.Store;
@@ -82,7 +82,41 @@ public class CouponController {
 				.alreadyIssued(issueCouponService.isAlreadyIssued(customer, coupon))
 				.build());
 		}
-		return new ResponseEntity(StoreCouponListDto.builder().coupons(result).statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+		return new ResponseEntity(StoreCouponResponseDto.builder().coupons(result).statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+
+	}
+
+
+	// 가게 회원의 모든 쿠폰정보 불러오기
+	@GetMapping
+	public ResponseEntity<?> getStoreCouponAll(Authentication authentication){
+		String uid = authentication.getName();
+		Optional<User> optionalUser = userService.findByUid(uid);
+		if (!optionalUser.isPresent() || !(optionalUser.get() instanceof Store)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE_USER").build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store = (Store) optionalUser.get();
+		List<Coupon> couponList = couponService.findAllByStore(store);
+		List<StoreUserCouponListDto> result = new ArrayList<>();
+
+		for(Coupon coupon : couponList) {
+			result.add(StoreUserCouponListDto.builder()
+					.id(coupon.getId())
+					.name(coupon.getName())
+					.content(coupon.getContent())
+					.createdAt(coupon.getCreatedAt())
+					.startAt(coupon.getStartAt())
+					.expiredAt(coupon.getExpiredAt())
+					.discountType(coupon.getDiscountType())
+					.rate(coupon.getRate())
+					.minOrderPrice(coupon.getMinOrderPrice())
+					.maxDiscountPrice(coupon.getMaxDiscountPrice())
+					.issueNumber(issueCouponService.getIssueNumber(coupon))
+					.usedNumber(issueCouponService.getUsedNumber(coupon))
+				.build());
+		}
+		return new ResponseEntity<>(
+			StoreUserCouponResponseDto.builder().coupons(result).statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
 
 	}
 }

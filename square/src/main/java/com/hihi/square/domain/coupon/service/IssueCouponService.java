@@ -16,4 +16,13 @@ public class IssueCouponService {
 	public Boolean isAlreadyIssued(Customer customer, Coupon coupon) {
 		return issueCouponRepository.findByCustomerAndCoupon(customer, coupon).isPresent();
 	}
+
+	public Integer getIssueNumber(Coupon coupon) {
+		return issueCouponRepository.countByCoupon(coupon);
+	}
+
+	public Integer getUsedNumber(Coupon coupon) {
+		return issueCouponRepository.countByCouponAndIsUsed(coupon, true);
+	}
+
 }

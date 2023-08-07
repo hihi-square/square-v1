@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class StoreCouponListDto {
+@AllArgsConstructor
+public class StoreUserCouponResponseDto {
 	private String message;
 	private Integer statusCode;
-	private List<StoreCouponDto> coupons = new ArrayList<>();
+	private List<StoreUserCouponListDto> coupons = new ArrayList<>();
 }
