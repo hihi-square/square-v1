@@ -1,24 +1,15 @@
 package com.hihi.square.domain.review.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import com.hihi.square.domain.BaseTime;
-import com.hihi.square.domain.order.entity.Order;
+import com.hihi.square.domain.order.entity.OrderDetail;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -27,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name="review")
 public class Review extends BaseTime {
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="orr_id")
 	private Integer id;
 
@@ -35,9 +26,9 @@ public class Review extends BaseTime {
 	@ManyToOne
 	private Store store;
 
-	@JoinColumn(name = "ord_id")
+	@JoinColumn(name = "odt_id")
 	@ManyToOne
-	private Order order;
+	private OrderDetail orderDetail;
 
 	@JoinColumn(name = "usr_id")
 	@ManyToOne
