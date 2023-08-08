@@ -19,13 +19,14 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "post_dibs")
-public class PostDibs extends BaseTime {
+public class PostDibs {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="pod_id")
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "usr_id")
 	private User user;
 
 	@ManyToOne

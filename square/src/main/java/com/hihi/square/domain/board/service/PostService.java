@@ -1,19 +1,11 @@
 package com.hihi.square.domain.board.service;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -22,7 +14,6 @@ import com.hihi.square.domain.board.dto.request.PostUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.PostWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
 import com.hihi.square.domain.board.entity.Board;
-import com.hihi.square.domain.board.entity.Comment;
 import com.hihi.square.domain.board.entity.Post;
 import com.hihi.square.domain.board.entity.PostImage;
 import com.hihi.square.domain.board.entity.Status;
@@ -34,7 +25,6 @@ import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.s3.dto.FileThumbDto;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -45,7 +35,6 @@ public class PostService {
 	private final CommentRepository commentRepository;
 	private final PostDibsRepository postDibsRepository;
 	private final PostImageRepository postImageRepository;
-
 
 
 	@Transactional
@@ -64,7 +53,7 @@ public class PostService {
 					.title(post.getTitle())
 					.content(post.getContent())
 					.createdAt(post.getCreatedAt())
-					.thumbnail(post.getPostImageList().isEmpty() ? null : post.getPostImageList().get(0))
+					.thumbnail(post.getPostImageList().isEmpty() ? null : FileThumbDto.builder().url(post.getPostImageList().get(0).getUrl()).thumb(post.getPostImageList().get(0).getThumb()).build())
 					.userId(post.getUser().getUsrId())
 					.userNickname(post.getUser().getNickname())
 					.commentCount(commentRepository.countByPost(post))
@@ -114,7 +103,7 @@ public class PostService {
 	public void updatePost(Post post, PostUpdateRequestDto request) {
 		post.updatePost(request);
 		postRepository.save(post);
-		postImageRepository.deleteAllByPost(post);
+		postImageRepository.deleteByPost(post);
 		for(int i=0;i<request.getImages().size();i++) {
 			FileThumbDto image = request.getImages().get(i);
 			postImageRepository.save(
@@ -126,7 +115,11 @@ public class PostService {
 					.build()
 			);
 		}
+	}
 
-
+	@Transactional
+	public void deleteByPost(Post post) {
+		postRepository.delete(post);
+		postImageRepository.deleteByPost(post);
 	}
 }

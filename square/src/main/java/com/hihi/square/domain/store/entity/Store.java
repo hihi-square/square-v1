@@ -47,10 +47,10 @@ public class Store extends User {
 	// 가게 로고 이미지
 	private String logo;
 
-	@OneToMany(mappedBy = "store")
-	// @JoinColumn
-	@Builder.Default
-	private List<StoreBusinessDay> storeBusinessDayList = new ArrayList<>();
+	// @OneToMany(mappedBy = "store")
+	// // @JoinColumn
+	// @Builder.Default
+	// private List<StoreBusinessDay> storeBusinessDayList = new ArrayList<>();
 
 	private Float latitude;
 	private Float longitude;

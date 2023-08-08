@@ -9,6 +9,7 @@ import javax.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,10 +62,10 @@ public class BoardController {
 		if (optionalBoard.isEmpty()) {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_BOARD_ID").build(), HttpStatus.BAD_REQUEST);
 		}
-		Board  board = optionalBoard.get();
+		Board board = optionalBoard.get();
 		List<EmdAddress> emdList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
 		List<PostListDto> result = postService.findByEmdListAndBoardWithQuery(emdList, board, query, user);
-		return new ResponseEntity(PostListResponseDto.builder().statusCode(200).posts(result).build(), HttpStatus.OK);
+		return new ResponseEntity<>(PostListResponseDto.builder().statusCode(200).posts(result).build(), HttpStatus.OK);
 	}
 
 	// 게시판 글 작성
@@ -138,6 +139,21 @@ public class BoardController {
 		}
 		postService.updatePost(post, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("UPDATE_POST").build(), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity deletePost(Authentication authentication, @PathVariable("id") Integer postId) {
+		String uid = authentication.getName();
+		Optional<Post> optionalPost = postService.findById(postId);
+		if (optionalPost.isEmpty()) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_POST_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Post post = optionalPost.get();
+		if (!post.getUser().getUid().equals(uid)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_USER_POST").build(), HttpStatus.BAD_REQUEST);
+		}
+		postService.deleteByPost(post);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS_DELETE").build(), HttpStatus.OK);
 	}
 
 }

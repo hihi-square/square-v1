@@ -15,5 +15,6 @@ import lombok.NoArgsConstructor;
 public class PostListResponseDto {
 
 	private Integer statusCode;
+	@Builder.Default
 	private List<PostListDto> posts = new ArrayList<>();
 }
