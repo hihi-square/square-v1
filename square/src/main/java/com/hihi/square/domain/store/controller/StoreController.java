@@ -69,7 +69,7 @@ public class StoreController {
 	// 가게 회원가입
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
-		EmdAddress emdAddress = emdAddressService.findByAdmCode(request.getAdmCode());
+		EmdAddress emdAddress = emdAddressService.findByAdmCode(request.getBCode());
 		Store store = request.toEntityStore(emdAddress);
 		BusinessInformation businessInformation = request.toEntityBusinessInformation();
 		CommonResponseDto response = CommonResponseDto.builder()

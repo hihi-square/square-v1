@@ -35,7 +35,8 @@ public class StoreRegisterRequestDto{
 	protected boolean marketingAgree;
 
 	@NotNull
-	private Long admCode;
+	private Long bCode;
+
 	@NotEmpty
 	private String address;
 	@NotEmpty
