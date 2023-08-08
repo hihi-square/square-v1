@@ -13,12 +13,12 @@ import com.hihi.square.domain.menu.entity.MenuOptionCategory;
 public interface MenuOptionCategoryRepository extends JpaRepository<MenuOptionCategory, Long> {
 	@Transactional
 	@Modifying
-	@Query(value = "select * from menu_option_category where userId=:userId and men_id=:menId", nativeQuery = true)
-	List<MenuOptionCategory> findAllById(@Param("userId") Integer userId, @Param("menId") Long menId);
+	@Query(value = "select * from menu_option_category where men_id=:menId", nativeQuery = true)
+	List<MenuOptionCategory> findAllByMenuId(@Param("menId") Long menId);
 
 	@Transactional
 	@Modifying
-	@Query(value = "update menu_option_category set sequence = :sequence  where moc_id = :optionCategoryId", nativeQuery = true)
-	void updateMenuOptionCategoryList(@Param("optionCategoryId") Long optionCategoryId,
+	@Query(value = "update menu_option_category set sequence = :sequence  where moc_id = :mocId", nativeQuery = true)
+	void updateMenuOptionCategoryList(@Param("mocId") Long mocId,
 		@Param("sequence") Integer sequence);
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.menu.dto.request.MenuOptionRequestDto;
@@ -21,15 +22,17 @@ import com.hihi.square.domain.menu.entity.MenuOption;
 import com.hihi.square.domain.menu.service.MenuOptionService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/store/menuoption")
 @RequiredArgsConstructor
+@Slf4j
 public class MenuOptionController {
 	private final MenuOptionService menuOptionService;
 	// private final UserService userService;
 
-	@GetMapping
+	@GetMapping("/all")
 	public ResponseEntity<CommonResponseDto<?>> getAllOption(@RequestHeader Integer userId) {
 		// String uid = authentication.getName();
 		// User user = userService.findByUid(uid).get();
@@ -37,11 +40,29 @@ public class MenuOptionController {
 		// List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
 		List<MenuOption> menuOptionList = menuOptionService.findAllByUserId(userId);
 		List<MenuOptionResponseDto> responseList = new ArrayList<>();
+		log.info("optionList:{}", menuOptionList);
+		for (MenuOption menuOption : menuOptionList) {
+			responseList.add(new MenuOptionResponseDto(menuOption));
+		}
+		log.info("optionList : {}", menuOptionList);
+		return ResponseEntity.ok(CommonResponseDto.success(responseList));
+	}
+
+	@GetMapping
+	public ResponseEntity<CommonResponseDto<?>> getAllOptionById(@RequestHeader Integer userId,
+		@RequestParam("menu") Long menuId) {
+		// String uid = authentication.getName();
+		// User user = userService.findByUid(uid).get();
+		//
+		// List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
+		List<MenuOption> menuOptionList = menuOptionService.findAllById(userId, menuId);
+		log.info("optionList : {}", menuOptionList);
+		List<MenuOptionResponseDto> responseList = new ArrayList<>();
 
 		for (MenuOption menuOption : menuOptionList) {
 			responseList.add(new MenuOptionResponseDto(menuOption));
 		}
-
+		log.info("optionList : {}", menuOptionList);
 		return ResponseEntity.ok(CommonResponseDto.success(responseList));
 	}
 
@@ -71,9 +92,9 @@ public class MenuOptionController {
 	}
 
 	@PatchMapping("/list")
-	public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuOptionRequestDto request) {
+	public ResponseEntity<CommonResponseDto<?>> updateMenuOptionList(@RequestBody MenuOptionRequestDto request) {
 		List<MenuOptionRequestDto> menuOptionList = request.getData();
-		// List<Menu> menuList = new ArrayList<>();
+		log.info("optionList : {}", menuOptionList);
 		menuOptionService.updateMenuOptionList(menuOptionList);
 		return ResponseEntity.ok(CommonResponseDto.success(null));
 	}

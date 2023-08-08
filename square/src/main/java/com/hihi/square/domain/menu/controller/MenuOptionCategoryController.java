@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,13 +28,12 @@ public class MenuOptionCategoryController {
 	private final MenuOptionCategoryService menuOptionCategoryService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(@RequestHeader Integer userId,
-		@RequestHeader Long menId) {
+	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(@RequestHeader Long menId) {
 		// String uid = authentication.getName();
 		// User user = userService.findByUid(uid).get();
 		//
 		// List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
-		List<MenuOptionCategory> menuOptionList = menuOptionCategoryService.findAllById(userId, menId);
+		List<MenuOptionCategory> menuOptionList = menuOptionCategoryService.findAllByMenuId(menId);
 		List<MenuOptionCategoryResponseDto> responseList = new ArrayList<>();
 
 		for (MenuOptionCategory menuOptionCategory : menuOptionList) {
@@ -80,14 +78,14 @@ public class MenuOptionCategoryController {
 		return ResponseEntity.ok(CommonResponseDto.success(null));
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<CommonResponseDto<?>> deleteMenuOptionCategory(
-		@PathVariable Long id) {
-		MenuOptionCategory menuOptionCategory = menuOptionCategoryService.findById(id);
-		if (menuOptionCategory == null) {
-			return ResponseEntity.badRequest().build();
-		}
-		menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
-		return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
-	}
+	// @DeleteMapping("/{id}")
+	// public ResponseEntity<CommonResponseDto<?>> deleteMenuOptionCategory(
+	// 	@PathVariable Long id) {
+	// 	MenuOptionCategory menuOptionCategory = menuOptionCategoryService.findById(id);
+	// 	if (menuOptionCategory == null) {
+	// 		return ResponseEntity.badRequest().build();
+	// 	}
+	// 	menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
+	// 	return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
+	// }
 }
