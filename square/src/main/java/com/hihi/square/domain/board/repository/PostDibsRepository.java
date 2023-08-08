@@ -10,4 +10,6 @@ import com.hihi.square.domain.user.entity.User;
 
 public interface PostDibsRepository extends JpaRepository<PostDibs, Integer> {
 	Optional<PostDibs> findByUserAndPost(User user, Post post);
+
+	void deleteByUserAndPost(User user, Post post);
 }

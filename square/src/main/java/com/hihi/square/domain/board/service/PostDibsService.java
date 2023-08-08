@@ -37,4 +37,9 @@ public class PostDibsService {
 			.build();
 		postDibsRepository.save(postDibs);
 	}
+
+	@Transactional
+	public void cancelLikePost(User user, Post post) {
+		postDibsRepository.deleteByUserAndPost(user, post);
+	}
 }
