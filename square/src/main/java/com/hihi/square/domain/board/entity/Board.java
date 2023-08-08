@@ -19,6 +19,7 @@ public class Board extends BaseTime {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pob_id")
 	private Integer id;
+
 	private String name;
 	private Boolean anonymous;
 	@Column(name = "store_access")

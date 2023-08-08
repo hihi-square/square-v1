@@ -38,7 +38,7 @@ public class Post extends BaseTime {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "pob_id", referencedColumnName = "name")
+	@JoinColumn(name = "pob_id")
 	private Board board;
 
 	@ManyToOne

@@ -71,8 +71,9 @@ public class BoardController {
 		if (optionalEmdAddress.isEmpty()){
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_EMDADDRESS").build(), HttpStatus.BAD_REQUEST);
 		}
+		EmdAddress emdAddress = optionalEmdAddress.get();
 		if ((user instanceof Customer && board.getUserWrite()) || (user instanceof Store && board.getStoreWrite())) {
-			postService.writePost(user, board, request);
+			postService.writePost(user, board, emdAddress, request);
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE_BOARD").build(), HttpStatus.BAD_REQUEST);
