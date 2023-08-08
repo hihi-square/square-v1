@@ -47,6 +47,9 @@ public class StoreRegisterRequestDto{
 	@NotEmpty
 	private String account;
 
+	private Float latitude;
+	private Float longitude;
+
 
 	private BusinessInformationRegisterRequestDto businessInformation;
 
@@ -70,6 +73,8 @@ public class StoreRegisterRequestDto{
 			.content(content)
 			.bank(bank)
 			.account(account)
+			.latitude(latitude)
+			.longitude(longitude)
 			.build();
 	}
 	public BusinessInformation toEntityBusinessInformation(){
