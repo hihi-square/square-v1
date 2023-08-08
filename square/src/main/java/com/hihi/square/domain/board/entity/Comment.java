@@ -32,8 +32,12 @@ public class Comment extends BaseTime {
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "re_user_id")
-	private User reUser;    //대댓글
+	@JoinColumn(name = "re_poc_id")
+	private Comment reComment;    //대댓글
+
+	@ManyToOne
+	@JoinColumn(name="pos_id")
+	private Post post;
 
 	private String comment;
 	private Integer depth;

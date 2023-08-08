@@ -1,5 +1,6 @@
 package com.hihi.square.domain.order.entity;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -17,7 +18,16 @@ import com.hihi.square.domain.store.entity.Store;
 
 import com.hihi.square.domain.user.entity.Customer;
 import lombok.*;
+=======
+import com.hihi.square.domain.user.entity.Customer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+>>>>>>> c871699de687cb26884b28bf30c9906395df0a87
 import lombok.experimental.SuperBuilder;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter

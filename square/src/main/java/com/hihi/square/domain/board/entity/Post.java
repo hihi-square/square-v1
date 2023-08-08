@@ -1,6 +1,8 @@
 package com.hihi.square.domain.board.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,16 +13,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "post")
 public class Post extends BaseTime {
 	@Id
@@ -53,4 +62,15 @@ public class Post extends BaseTime {
 
 	@Column(name = "modieified_at")
 	private LocalDateTime modifiedAt;
+
+	@OneToMany(mappedBy = "post")
+	@Builder.Default
+	private List<PostImage> postImageList = new ArrayList<>();
+
+	@OneToMany(mappedBy = "post")
+	@Builder.Default
+	private List<Comment> commentList = new ArrayList<>();
+
+	private Float latitude;
+	private Float longitude;
 }

@@ -12,7 +12,7 @@ public class MenuOptionResponseDto {
 	private Integer userId;
 	private String name;
 	private String content;
-	private int price;
+	private Integer price;
 	private String status;
 
 	public MenuOptionResponseDto(MenuOption menuOption) {
@@ -21,8 +21,8 @@ public class MenuOptionResponseDto {
 		this.menuId = menuOption.getMenu().getMenuId();
 		this.userId = menuOption.getUser().getUsrId();
 		this.name = menuOption.getName();
-		this.content = menuOption.getName();
+		this.content = menuOption.getContent();
 		this.price = menuOption.getPrice();
-		this.status = menuOption.getStatus().toString();
+		this.status = menuOption.getStatus().name();
 	}
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.hihi.square.domain.image.dto.response.ImageResponseDto;
 import com.hihi.square.domain.image.entity.Image;
 import com.hihi.square.domain.image.respository.ImageRepository;
 

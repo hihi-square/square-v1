@@ -1,5 +1,6 @@
 package com.hihi.square.domain.order.service;
 
+
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -137,5 +139,9 @@ public class OrderService {
 
     public void save(Order order) {
         orderRepository.save(order);
+    }
+
+    public Optional<Order> findByOrderId(Integer orderId) {
+        return orderRepository.findById(orderId);
     }
 }

@@ -48,21 +48,13 @@ public class Menu extends BaseTime {
 	private Integer price;
 	private String image;
 	private String thumbnail;
-	// @ColumnDefault("false")
 	private boolean signature;
-	// @ColumnDefault("false")
 	private boolean popularity;
 	@Column(name = "status")
 	@Enumerated(EnumType.STRING)
 	private MenuStatus status;
 	private String description;
-	// @ColumnDefault("0")
 	@Column(name = "sal_record")
 	private Integer salRecord;
 	private Integer sequence;
-
-	//메뉴 삭제 시, 상태 변경
-	// public void updateStatus() {
-	// 	this.status = MenuStatus.OFF;
-	// }
 }

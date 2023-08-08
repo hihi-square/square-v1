@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.image.dto.response.ImageResponseDto;
+import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +36,7 @@ public class Image {
 	private Integer connectedId;
 	private String thumbnail;
 
-	public ImageResponseDto toDto(){
-		return ImageResponseDto.builder().imgId(imgId).url(url).order(order).type(type).connectedId(connectedId).thumbnail(thumbnail).build();
+	public ImagesDetailResponseDto toDto(){
+		return ImagesDetailResponseDto.builder().imgId(imgId).url(url).order(order).type(type).connectedId(connectedId).thumbnail(thumbnail).build();
 	}
 }
