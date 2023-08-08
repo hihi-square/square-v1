@@ -92,7 +92,7 @@ public class BoardController {
 	}
 
 	// 글 수정을 위한 get
-	@GetMapping("/{id}")
+	@GetMapping("/update/{id}")
 	public ResponseEntity getUpdatePost(Authentication authentication, @PathVariable("id") Integer postId) {
 		String uid = authentication.getName();
 		Optional<Post> optionalPost = postService.findById(postId);
@@ -126,6 +126,7 @@ public class BoardController {
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
+	// 게시글 수정
 	@PatchMapping
 	public ResponseEntity patchUpdatePost(Authentication authentication, @RequestBody PostUpdateRequestDto request) {
 		String uid = authentication.getName();
@@ -141,6 +142,7 @@ public class BoardController {
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("UPDATE_POST").build(), HttpStatus.OK);
 	}
 
+	// 게시글 삭제
 	@DeleteMapping("/{id}")
 	public ResponseEntity deletePost(Authentication authentication, @PathVariable("id") Integer postId) {
 		String uid = authentication.getName();
@@ -155,5 +157,7 @@ public class BoardController {
 		postService.deleteByPost(post);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS_DELETE").build(), HttpStatus.OK);
 	}
+	
+	
 
 }
