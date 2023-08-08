@@ -62,6 +62,4 @@ public class EmdAddressService {
 	public Optional<EmdAddress> findById(Integer emdId) {
 		return emdAddressRepository.findById(emdId);
 	}
-
-
 }
