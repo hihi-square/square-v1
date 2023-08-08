@@ -4,13 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
+import com.hihi.square.domain.board.dto.request.CommentWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.CommentListDto;
 import com.hihi.square.domain.board.dto.response.ReCommentListDto;
 import com.hihi.square.domain.board.entity.Comment;
 import com.hihi.square.domain.board.entity.Post;
+import com.hihi.square.domain.board.entity.Status;
 import com.hihi.square.domain.board.repository.CommentRepository;
+import com.hihi.square.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,5 +53,19 @@ public class CommentService {
 			);
 		}
 		return result;
+	}
+
+	@Transactional
+	public void writeComment(User user, Post post, CommentWriteRequestDto request) {
+		Comment comment = Comment.builder()
+			.user(user)
+			.post(post)
+			.comment(request.getComment())
+			.depth(1)
+			.state(Status.S01)
+			.createdAt(LocalDateTime.now())
+			.modifiedAt(LocalDateTime.now())
+			.build();
+		commentRepository.save(comment);
 	}
 }
