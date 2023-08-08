@@ -11,6 +11,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+import { REST_API } from "redux/store";
 
 export default function Login() {
   const [id, setId] = useState<string>("");
@@ -87,7 +88,7 @@ export default function Login() {
 
     if (!notAllow)
       axios({
-        url: "http://43.201.255.188:8811/user/login",
+        url: `${REST_API}user/login`,
         method: "POST",
         data: {
           uid: id,

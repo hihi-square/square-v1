@@ -19,8 +19,8 @@ import {
 import Header from "./component/StoreHeader";
 import Footer from "../Footer";
 import StoreMenu from "./component/StoreMenu";
-import StoreFeed from "./component/storeFeed";
-import StoreReview from "./component/storeReview";
+import StoreFeed from "./component/StoreFeed";
+import StoreReview from "./component/StoreReview";
 import SelectMenu from "./component/SelectMenu";
 
 function StorePage() {

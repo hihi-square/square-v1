@@ -7,16 +7,17 @@ import Store from "./store/Store";
 import SearchMap from "./map/component/searchMap";
 import Board from "./main/board/boardMain";
 import Chat from "./chat/chat";
-import MyPage from "./my/myPage";
-import SearchResult from "./main/searchResult";
-import Cart from "./deal/cart";
-import Pay from "./deal/pay";
+import MyPage from "./my/MyPage";
+import SearchResult from "./main/SearchResult";
+import Cart from "./deal/Cart";
+import Pay from "./deal/Pay";
 import OrderList from "./deal/orderList";
-import MyArea from "./my/myArea";
-import MyInfo from "./my/myInfo";
-import MyOrderHistory from "./my/myOrderHistory";
-import MyRegular from "./my/myRegular";
-import MyReview from "./my/myReview";
+import MyArea from "./my/MyArea";
+import MyInfo from "./my/MyInfo";
+import MyOrderHistory from "./my/MyOrderHistory";
+import MyRegular from "./my/MyRegular";
+import MyReview from "./my/MyReview";
+import MyBoard from "./my/MyBoard";
 import Main from "./main/Main";
 import Login from "./login/Login";
 import Map from "./map/Map";
@@ -29,20 +30,20 @@ export default function Customer() {
         <Route path="/list/:category" element={<List />} />
         <Route path="/lList/location" element={<StoreListByLocation />} />
 
-        {/* 스토어 아이디 데이터 있기 전까진 일단 그냥 대표페이지로 가게하고 나중에 바인드 */}
         <Route path="/store/:store" element={<Store />} />
         <Route path="/map" element={<Map />} />
         <Route path="/searchmap" element={<SearchMap />} />
         <Route path="/board" element={<Board />} />
         <Route path="/chat" element={<Chat />} />
 
-        <Route path="/mypage" element={<MyPage />}>
-          <Route path="myarea" element={<MyArea />} />
-          <Route path="myinfo" element={<MyInfo />} />
-          <Route path="myorderhistory" element={<MyOrderHistory />} />
-          <Route path="myregular" element={<MyRegular />} />
-          <Route path="myreview" element={<MyReview />} />
-        </Route>
+        <Route path="/mypage" element={<MyPage />}/>
+        <Route path="/myarea" element={<MyArea />} />
+        <Route path="/myinfo" element={<MyInfo />} />
+        <Route path="/myorderhistory" element={<MyOrderHistory />} />
+        <Route path="/myregular" element={<MyRegular />} />
+        <Route path="/myreview" element={<MyReview />} />
+        <Route path="/myboard" element={<MyBoard />} />
+       
         <Route path="/search/:searchword" element={<SearchResult />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/pay" element={<Pay />} />
