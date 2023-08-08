@@ -1,6 +1,8 @@
 package com.hihi.square.domain.store.controller;
 
 
+import com.amazonaws.Response;
+import com.hihi.square.domain.board.entity.Comment;
 import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
 import com.hihi.square.domain.image.entity.Image;
 import com.hihi.square.domain.image.respository.ImageRepository;
@@ -11,7 +13,9 @@ import com.hihi.square.domain.store.dto.response.StoreNoticesResponseDto;
 import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.service.StoreNoticeService;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.service.EmdAddressService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 import com.hihi.square.global.s3.S3Service;
@@ -34,7 +38,7 @@ public class StoreNoticeController {
 	private final UserService userService;
 	private final StoreNoticeService storeNoticeService;
 	private final ImageRepository imageRepository;
-	private final S3Service s3Service;
+	private final EmdAddressService emdAddressService;
 
 	//가게 공지 작성
 	@PostMapping
@@ -182,5 +186,15 @@ public class StoreNoticeController {
 	}
 
 	// 가게 공지 지역 + depth로 가져오기
-	// public ResponseEntity getStoreNoticesWithAddressAndDepth(Au)
+	@GetMapping("/emd/{emdId}/{depth}")
+	public ResponseEntity getStoreNoticesWithAddressAndDepth(@PathVariable("emdId") Integer emdId, @PathVariable("depth") Integer depth){
+		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
+		StoreNoticesResponseDto result =  StoreNoticesResponseDto.builder()
+			.notices(storeNoticeService.getNoticeByEmdList(emdAddressList))
+			.statusCode(200)
+			.message("SUCCESS")
+			.build();
+		return new ResponseEntity(result, HttpStatus.OK);
+
+	}
 }
