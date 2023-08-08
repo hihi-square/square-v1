@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.board.dto.request.CommentUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.CommentWriteRequestDto;
+import com.hihi.square.domain.board.dto.request.RecommentWriteRequestDto;
 import com.hihi.square.domain.board.entity.Comment;
 import com.hihi.square.domain.board.entity.Post;
 import com.hihi.square.domain.board.service.CommentService;
@@ -62,5 +63,19 @@ public class CommentController {
 		}
 		commentService.updateComment(comment, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+	}
+
+	// 대댓글 작성
+	@PostMapping("/recomment")
+	public ResponseEntity writeRecomment(Authentication authentication, @RequestBody RecommentWriteRequestDto request) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Comment> optionalComment = commentService.findById(request.getCommentId());
+		if (optionalComment.isEmpty()) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_COMMENT_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Comment comment = optionalComment.get();
+		commentService.writeRecomment(user, comment, request);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS_CREATE").build(), HttpStatus.CREATED);
 	}
 }

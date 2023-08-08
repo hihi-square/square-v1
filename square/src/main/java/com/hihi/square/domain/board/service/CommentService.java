@@ -5,6 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +21,7 @@ import net.bytebuddy.asm.Advice;
 
 import com.hihi.square.domain.board.dto.request.CommentUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.CommentWriteRequestDto;
+import com.hihi.square.domain.board.dto.request.RecommentWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.CommentListDto;
 import com.hihi.square.domain.board.dto.response.ReCommentListDto;
 import com.hihi.square.domain.board.entity.Comment;
@@ -81,5 +90,19 @@ public class CommentService {
 	public void updateComment(Comment comment, CommentUpdateRequestDto request) {
 		comment.updateComment(request);
 		commentRepository.save(comment);
+	}
+	@Transactional
+	public void writeRecomment(User user, Comment comment, RecommentWriteRequestDto request) {
+		Comment recomment = Comment.builder()
+			.user(user)
+			.reComment(comment)
+			.post(comment.getPost())
+			.depth(2)
+			.state(Status.S01)
+			.createdAt(LocalDateTime.now())
+			.modifiedAt(LocalDateTime.now())
+			.comment(request.getComment())
+			.build();
+		commentRepository.save(recomment);
 	}
 }
