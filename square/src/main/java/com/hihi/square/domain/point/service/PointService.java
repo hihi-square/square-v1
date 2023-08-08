@@ -2,7 +2,6 @@ package com.hihi.square.domain.point.service;
 
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.repository.OrderRepository;
-import com.hihi.square.domain.point.dto.request.PointRegisterReqeustDto;
 import com.hihi.square.domain.point.entity.Point;
 import com.hihi.square.domain.point.repository.PointRepository;
 import com.hihi.square.domain.user.entity.Customer;

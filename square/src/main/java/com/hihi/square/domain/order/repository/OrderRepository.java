@@ -4,9 +4,5 @@ import com.hihi.square.domain.order.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    // 주문 등록
-    // 주문 삭제
-    // 주문 수정
-    // 주문 조회
-
+    // 주문 조회 가게 별로
 }

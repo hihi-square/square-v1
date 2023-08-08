@@ -5,7 +5,6 @@ import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderIdResponseDto;
 import com.hihi.square.domain.order.dto.response.OrderResponseDto;
 import com.hihi.square.domain.order.entity.Order;
-import com.hihi.square.domain.order.entity.OrderDetail;
 import com.hihi.square.domain.order.entity.OrderStatus;
 import com.hihi.square.domain.order.service.OrderService;
 import com.hihi.square.domain.point.service.PointService;
@@ -18,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/order")
@@ -68,17 +67,14 @@ public class OrderController {
         Order order = orderService.findById(request.getOrdId());
         Customer customer = order.getCustomer();
 
-        List< OrderDetail> stores = orderService.findOrderDetailByOrder(order);
         // 결제 성공시
         if(request.getPaymentSuccess()) {
-            for(OrderDetail store : stores) {
-                store.updateOrderStatus(OrderStatus.PAYMENT_COMPLETE);
-            }
+            order.updateOrderStatus(OrderStatus.PAYMENT_COMPLETE);
+            order.updatePaymentMethod(request.getPaymentMethod());
+
         }
         else {
-            for(OrderDetail store : stores) {
-                store.updateOrderStatus(OrderStatus.PAYMENT_FAILED);
-            }
+            order.updateOrderStatus(OrderStatus.PAYMENT_FAILED);
             if(order.getUsedPoint() > 0) {
                 // 포인트 원상복귀
                 pointService.save(order.getOrdId(), customer, order.getUsedPoint(), 1);
@@ -88,11 +84,10 @@ public class OrderController {
                 customerRepository.save(customer);
             }
         }
+        orderService.save(order);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    // 가게 마다 주문 체결 내역 전송
-    ///... 내일 갓펭소님과 지희공주랑 상의후 만들도록 하겟숨...ㅠㅠㅠㅠ 자고싶어 하지만 안되 오다희 정신차려.......
 
     // 주문 상세 조회
     @Transactional

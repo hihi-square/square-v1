@@ -2,13 +2,10 @@ package com.hihi.square.domain.point.entity;
 
 import javax.persistence.*;
 
-import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.domain.user.entity.User;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
