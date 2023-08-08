@@ -1,5 +1,6 @@
 package com.hihi.square.domain.board.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +20,14 @@ import com.amazonaws.Response;
 import com.hihi.square.domain.board.dto.request.PostWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
 import com.hihi.square.domain.board.dto.response.PostListResponseDto;
+import com.hihi.square.domain.board.dto.response.PostUpdateResponseDto;
 import com.hihi.square.domain.board.entity.Board;
+import com.hihi.square.domain.board.entity.Post;
+import com.hihi.square.domain.board.entity.PostImage;
 import com.hihi.square.domain.board.service.BoardService;
+import com.hihi.square.domain.board.service.PostImageService;
 import com.hihi.square.domain.board.service.PostService;
+import com.hihi.square.domain.image.service.ImageService;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
@@ -29,6 +35,7 @@ import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.EmdAddressService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
+import com.hihi.square.global.s3.dto.FileThumbDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,6 +48,7 @@ public class BoardController {
 	private final EmdAddressService emdAddressService;
 	private final BoardService boardService;
 	private final PostService postService;
+	private final PostImageService postImageService;
 
 	// 읍면동과 depth에 따른 포스트 가져오기
 	@GetMapping("/{boardId}/{emdId}/{depth}")
@@ -78,6 +86,41 @@ public class BoardController {
 		} else {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE_BOARD").build(), HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	// 글 수정을 위한 get
+	@GetMapping("/{id}")
+	public ResponseEntity getUpdatePost(Authentication authentication, @PathVariable("id") Integer postId) {
+		String uid = authentication.getName();
+		Optional<Post> optionalPost = postService.findById(postId);
+		if (optionalPost.isEmpty()) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_POST_ID").build(),
+				HttpStatus.BAD_REQUEST);
+		}
+		Post post = optionalPost.get();
+		if (!post.getUser().getUid().equals(uid)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_MY_POST").build(),
+				HttpStatus.BAD_REQUEST);
+		}
+		List<PostImage> imageList = postImageService.findByPost(post);
+		List<FileThumbDto> images = new ArrayList<>();
+		for(PostImage image : imageList) {
+			images.add(
+				FileThumbDto.builder()
+					.url(image.getUrl())
+					.thumb(image.getThumb())
+					.build()
+			);
+		}
+		PostUpdateResponseDto response = PostUpdateResponseDto.builder()
+			.postId(post.getId())
+			.title(post.getTitle())
+			.content(post.getContent())
+			.images(images)
+			.createdAt(post.getCreatedAt())
+			.statusCode(200)
+			.build();
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 }

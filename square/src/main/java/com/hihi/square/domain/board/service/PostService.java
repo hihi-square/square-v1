@@ -3,6 +3,7 @@ package com.hihi.square.domain.board.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -102,5 +103,9 @@ public class PostService {
 					.build()
 			);
 		}
+	}
+
+	public Optional<Post> findById(Integer postId) {
+		return postRepository.findById(postId);
 	}
 }
