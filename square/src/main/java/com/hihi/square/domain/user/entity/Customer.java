@@ -1,21 +1,14 @@
 package com.hihi.square.domain.user.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @SuperBuilder
@@ -35,11 +28,12 @@ public class Customer extends User{
 
 	private Long point;
 
-//	@OneToMany(mappedBy = "customer")
-//	 @Builder.Default
-//	private List<CustomerAddress> customerAddressList = new ArrayList<>();
-
 	public void updatePoint(long point) {
 		this.point = point;
 	}
+
+	@OneToMany(mappedBy = "customer")
+	@Builder.Default
+	private List<CustomerAddress> customerAddressList = new ArrayList<>();
+
 }

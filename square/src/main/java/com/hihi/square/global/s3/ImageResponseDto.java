@@ -1,7 +1,7 @@
 package com.hihi.square.global.s3;
 
 
-import com.hihi.square.domain.image.dto.ImageFileThumbDto;
+import com.hihi.square.global.s3.dto.FileThumbResponseDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,5 +12,5 @@ import java.util.List;
 public class ImageResponseDto {
     private String message;
     private Integer statusCode;
-    private List<ImageFileThumbDto> images;
+    private List<FileThumbResponseDto> images;
 }

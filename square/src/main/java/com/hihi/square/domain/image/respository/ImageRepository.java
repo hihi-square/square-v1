@@ -11,4 +11,5 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
 
 	void deleteByTypeAndConnectedId(String type, Integer connectedId);
 
+	List<Image> findAllByTypeAndConnectedId(String sno, Integer snoId);
 }

@@ -18,5 +18,6 @@ public class StoreSaleDetailDto {
     private LocalDateTime realFinishedAt;
     private Integer price;
     private Status status;
+    @Builder.Default
     private List<SaleMenuDto> menus = new ArrayList<>();
 }
