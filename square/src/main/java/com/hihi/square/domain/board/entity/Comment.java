@@ -63,4 +63,8 @@ public class Comment extends BaseTime {
 		this.comment = request.getComment();
 		this.modifiedAt = LocalDateTime.now();
 	}
+
+	public void delete() {
+		this.state = Status.S02;
+	}
 }

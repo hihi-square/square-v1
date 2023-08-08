@@ -18,6 +18,7 @@ public class CommentListDto {
 	private LocalDateTime modifiedAt;
 	private Integer userId;
 	private String userNickname;
+	private Boolean isDeleted;
 	private List<ReCommentListDto> recommentList = new ArrayList<>();
 
 }

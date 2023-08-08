@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,5 +79,21 @@ public class CommentController {
 		Comment comment = optionalComment.get();
 		commentService.writeRecomment(user, comment, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS_CREATE").build(), HttpStatus.CREATED);
+	}
+
+	// 댓글 삭제
+	@DeleteMapping("/{id}")
+	public ResponseEntity deleteComment(Authentication authentication, @PathVariable("id") Integer commentId) {
+		String uid = authentication.getName();
+		Optional<Comment> optionalComment = commentService.findById(commentId);
+		if (optionalComment.isEmpty()) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_COMMENT_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Comment comment = optionalComment.get();
+		if (!comment.getUser().getUid().equals(uid)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_USER_COMMENT").build(), HttpStatus.BAD_REQUEST);
+		}
+		commentService.deleteByComment(comment);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
 	}
 }

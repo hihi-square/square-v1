@@ -62,7 +62,7 @@ public class PostService {
 					.thumbnail(post.getPostImageList().isEmpty() ? null : FileThumbDto.builder().url(post.getPostImageList().get(0).getUrl()).thumb(post.getPostImageList().get(0).getThumb()).build())
 					.userId(post.getUser().getUsrId())
 					.userNickname(post.getUser().getNickname())
-					.commentCount(commentRepository.countByPost(post))
+					.commentCount(commentRepository.countByPostAndStateEquals(post, Status.S01))
 					.isLike(postDibsRepository.findByUserAndPost(user, post).isPresent())
 					.userProfile(post.getUser().getProfile())
 					.latitude(post.getLatitude())

@@ -61,6 +61,7 @@ public class CommentService {
 					.modifiedAt(comment.getModifiedAt())
 					.userId(comment.getUser().getUsrId())
 					.userNickname(comment.getUser().getNickname())
+					.isDeleted(comment.getState().equals(Status.S02))
 					.recommentList(recomments)
 					.build()
 			);
@@ -104,5 +105,20 @@ public class CommentService {
 			.comment(request.getComment())
 			.build();
 		commentRepository.save(recomment);
+	}
+
+	@Transactional
+	public void deleteByComment(Comment comment) {
+		if (comment.getDepth() == 1) {
+			List<Comment> recommentList = commentRepository.findReCommentByComment(comment);
+			if (recommentList.isEmpty()) commentRepository.delete(comment); // 대댓글이 없는 경우 바로 삭제
+			else {
+				comment.delete(); // 대댓글이 있는 경우 삭제처리만 함
+				commentRepository.save(comment);
+			}
+		} else {
+			commentRepository.delete(comment);
+		}
+
 	}
 }
