@@ -1,6 +1,15 @@
 package com.hihi.square.domain.board.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -18,5 +27,14 @@ public class PostDibsService {
 
 	public Optional<PostDibs> findByUserAndPost(User user, Post post) {
 		return postDibsRepository.findByUserAndPost(user, post);
+	}
+	@Transactional
+	public void likePost(User user, Post post) {
+		PostDibs postDibs = PostDibs.builder()
+			.user(user)
+			.post(post)
+			.createdAt(LocalDateTime.now())
+			.build();
+		postDibsRepository.save(postDibs);
 	}
 }
