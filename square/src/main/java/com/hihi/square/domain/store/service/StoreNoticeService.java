@@ -12,6 +12,8 @@ import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreNoticeRepository;
 import com.hihi.square.global.s3.S3Service;
+import com.hihi.square.global.s3.dto.FileThumbDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,27 +30,6 @@ public class StoreNoticeService {
 	private final ImageRepository imageRepository;
 	private final S3Service s3Service;
 
-//	@Transactional
-//	public void write(Store store, StoreNoticeWriteRequestDto request, List<ImageRequestDto> files) {
-//		Notice notice = Notice.builder()
-//			.emdAddress(store.getEmdAddress())
-//			.content(request.getContent())
-//			.state(request.getState())
-//			.store(store)
-//			.build();
-//		storeNoticeRepository.save(notice);
-//		List<FileThumbResponseDto> images = s3Service.uploadFiles("storeNotice", files);
-//		for(int order=0;order<images.size();order++){
-//			imageRepository.save(Image.builder()
-//				.url(images.get(order).getUrl())
-//				.order(order+1)
-//				.type("SNO")
-//				.connectedId(notice.getSnoId())
-//				.thumbnail(images.get(order).getUrl())
-//				.build());
-//		}
-//
-//	}
 	@Transactional
 	public void write(Store store, StoreNoticeWriteRequestDto request) {
 		Notice notice = Notice.builder()
@@ -73,7 +54,7 @@ public class StoreNoticeService {
 
 	public List<StoreNoticeResponseDto> getNoticeList(Store store) {
 		List<StoreNoticeResponseDto> result = new ArrayList<>();
-		List<Notice> notices = storeNoticeRepository.findAllByStoreOrderByCreatedAt(store);
+		List<Notice> notices = storeNoticeRepository.findAllByStoreOrderByCreatedAtDesc(store);
 
 		for(Notice notice : notices){
 			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
@@ -116,14 +97,16 @@ public class StoreNoticeService {
 		notice.updateState(request.getState());
 		storeNoticeRepository.save(notice);
 		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
-		for(ImageRequestDto image : request.getImages()){
+		for(int i=0;i<request.getImages().size();i++){
+			FileThumbDto image = request.getImages().get(i);
 			imageRepository.save(Image.builder()
-				// .url(image.getUrl())
-				.order(1)
+				.url(image.getUrl())
+				.order(i+1)
 				.type("SNO")
 				.connectedId(notice.getSnoId())
-				// .thumbnail(image.getThumbnail())
+				.thumbnail(image.getThumb())
 				.build());
+
 		}
 	}
 
@@ -143,5 +126,39 @@ public class StoreNoticeService {
 	public void updateNoticePublic(Notice notice) {
 		notice.updateState("ST01");
 		storeNoticeRepository.save(notice);
+	}
+
+	public List<StoreNoticeResponseDto> getNoticeListPublic(Store store) {
+		List<StoreNoticeResponseDto> result = new ArrayList<>();
+		List<Notice> notices = storeNoticeRepository.findAllByStoreAndPublicOrderByCreatedAtDesc(store);
+
+		for(Notice notice : notices){
+			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
+			List<ImagesDetailResponseDto> imageResponseDtoList = new ArrayList<>();
+
+			for(Image img : images){
+				imageResponseDtoList.add(
+					ImagesDetailResponseDto.builder()
+						.imgId(img.getImgId())
+						.url(img.getUrl())
+						.order(img.getOrder())
+						.type(img.getType())
+						.connectedId(img.getConnectedId())
+						.thumbnail(img.getThumbnail())
+						.build()
+				);
+			}
+			result.add(StoreNoticeResponseDto.builder()
+				.snoId(notice.getSnoId())
+				.content(notice.getContent())
+				.createdAt(notice.getCreatedAt())
+				.modifiedAt(notice.getModifiedAt())
+				.state(notice.getState())
+				.images(
+					imageResponseDtoList
+				).build());
+		}
+
+		return result;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
@@ -11,7 +12,11 @@ import com.hihi.square.domain.user.entity.User;
 
 public interface StoreNoticeRepository extends JpaRepository<Notice, Integer> {
 
-	List<Notice> findAllByStoreOrderByCreatedAt(Store store);
 
 	Optional<Notice> findBySnoId(Integer snoId);
+
+	List<Notice> findAllByStoreOrderByCreatedAtDesc(Store store);
+
+	@Query("select n from Notice n where n.store = :store and n.state = 'PUBLIC' order by n.createdAt desc")
+	List<Notice> findAllByStoreAndPublicOrderByCreatedAtDesc(Store store);
 }
