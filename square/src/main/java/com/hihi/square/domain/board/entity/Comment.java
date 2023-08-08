@@ -28,7 +28,7 @@ public class Comment extends BaseTime {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "usr_id")
 	private User user;
 
 	@ManyToOne
@@ -43,7 +43,7 @@ public class Comment extends BaseTime {
 	private Integer depth;
 
 	@Enumerated(EnumType.STRING)
-	private Status status;
+	private Status state;
 
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;

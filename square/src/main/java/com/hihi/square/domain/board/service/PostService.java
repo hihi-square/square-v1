@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.hihi.square.domain.board.dto.request.PostUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.PostWriteRequestDto;
+import com.hihi.square.domain.board.dto.response.CommentListDto;
+import com.hihi.square.domain.board.dto.response.PostDetailResponseDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
 import com.hihi.square.domain.board.entity.Board;
 import com.hihi.square.domain.board.entity.Post;
+import com.hihi.square.domain.board.entity.PostDibs;
 import com.hihi.square.domain.board.entity.PostImage;
 import com.hihi.square.domain.board.entity.Status;
 import com.hihi.square.domain.board.repository.CommentRepository;
@@ -35,6 +38,9 @@ public class PostService {
 	private final CommentRepository commentRepository;
 	private final PostDibsRepository postDibsRepository;
 	private final PostImageRepository postImageRepository;
+	private final PostDibsService postDibsService;
+	private final CommentService commentService;
+	private final PostImageService postImageService;
 
 
 	@Transactional
@@ -121,5 +127,44 @@ public class PostService {
 	public void deleteByPost(Post post) {
 		postRepository.delete(post);
 		postImageRepository.deleteByPost(post);
+	}
+
+	@Transactional
+	public PostDetailResponseDto getPostDetail(User user, Post post) {
+		post.upViewCnt();
+		postRepository.save(post);
+		List<PostImage> postImages = postImageService.findByPost(post);
+		Optional<PostDibs> optionalPostDibs = postDibsService.findByUserAndPost(user, post);
+		List<CommentListDto> commentList = commentService.findPostDetailComment(post);
+
+		List<FileThumbDto> images = new ArrayList<>();
+		for(PostImage image : postImages) {
+			images.add(
+				FileThumbDto.builder()
+					.url(image.getUrl())
+					.thumb(image.getThumb())
+					.build()
+			);
+		}
+
+		PostDetailResponseDto response = PostDetailResponseDto.builder()
+			.postId(post.getId())
+			.boardId(post.getBoard().getId())
+			.boardName(post.getBoard().getName())
+			.userId(post.getUser().getUsrId())
+			.userNickname(post.getUser().getNickname())
+			.emdId(post.getEmdAddress().getAemId())
+			.viewCnt(post.getViewCnt())
+			.title(post.getTitle())
+			.content(post.getContent())
+			.createdAt(post.getCreatedAt())
+			.modifiedAt(post.getModifiedAt())
+			.latitude(post.getLatitude())
+			.longitude(post.getLongitude())
+			.images(images)
+			.isLikePost(optionalPostDibs.isPresent())
+			.comments(commentList)
+			.build();
+		return response;
 	}
 }

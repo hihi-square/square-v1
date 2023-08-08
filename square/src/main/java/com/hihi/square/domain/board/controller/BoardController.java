@@ -1,5 +1,6 @@
 package com.hihi.square.domain.board.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,13 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.amazonaws.Response;
 import com.hihi.square.domain.board.dto.request.PostUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.PostWriteRequestDto;
+import com.hihi.square.domain.board.dto.response.CommentListDto;
+import com.hihi.square.domain.board.dto.response.PostDetailResponseDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
 import com.hihi.square.domain.board.dto.response.PostListResponseDto;
 import com.hihi.square.domain.board.dto.response.PostUpdateResponseDto;
 import com.hihi.square.domain.board.entity.Board;
 import com.hihi.square.domain.board.entity.Post;
+import com.hihi.square.domain.board.entity.PostDibs;
 import com.hihi.square.domain.board.entity.PostImage;
 import com.hihi.square.domain.board.service.BoardService;
+import com.hihi.square.domain.board.service.CommentService;
+import com.hihi.square.domain.board.service.PostDibsService;
 import com.hihi.square.domain.board.service.PostImageService;
 import com.hihi.square.domain.board.service.PostService;
 import com.hihi.square.domain.image.service.ImageService;
@@ -158,6 +164,18 @@ public class BoardController {
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS_DELETE").build(), HttpStatus.OK);
 	}
 	
-	
+	// 게시글 상세
+	@GetMapping("/{id}")
+	public ResponseEntity getPostDetail(Authentication authentication, @PathVariable("id") Integer postId){
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		Optional<Post> optionalPost = postService.findById(postId);
+		if (optionalPost.isEmpty()){
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_POST_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Post post = optionalPost.get();
+		PostDetailResponseDto response = postService.getPostDetail(user, post);
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
 
 }

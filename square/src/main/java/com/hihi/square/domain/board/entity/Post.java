@@ -80,4 +80,8 @@ public class Post extends BaseTime {
 		this.content = request.getContent();
 		this.modifiedAt = LocalDateTime.now();
 	}
+
+	public void upViewCnt() {
+		this.viewCnt += 1;
+	}
 }
