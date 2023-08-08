@@ -3,11 +3,15 @@ package com.hihi.square.domain.board.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import net.bytebuddy.asm.Advice;
+
+import com.hihi.square.domain.board.dto.request.CommentUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.CommentWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.CommentListDto;
 import com.hihi.square.domain.board.dto.response.ReCommentListDto;
@@ -66,6 +70,16 @@ public class CommentService {
 			.createdAt(LocalDateTime.now())
 			.modifiedAt(LocalDateTime.now())
 			.build();
+		commentRepository.save(comment);
+	}
+
+	public Optional<Comment> findById(Integer commentId) {
+		return commentRepository.findById(commentId);
+	}
+
+	@Transactional
+	public void updateComment(Comment comment, CommentUpdateRequestDto request) {
+		comment.updateComment(request);
 		commentRepository.save(comment);
 	}
 }

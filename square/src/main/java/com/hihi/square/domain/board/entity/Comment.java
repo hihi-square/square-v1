@@ -15,6 +15,7 @@ import javax.persistence.NamedStoredProcedureQueries;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.BaseTime;
+import com.hihi.square.domain.board.dto.request.CommentUpdateRequestDto;
 import com.hihi.square.domain.user.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -57,4 +58,9 @@ public class Comment extends BaseTime {
 
 	@Column(name = "modified_at")
 	private LocalDateTime modifiedAt;
+
+	public void updateComment(CommentUpdateRequestDto request) {
+		this.comment = request.getComment();
+		this.modifiedAt = LocalDateTime.now();
+	}
 }
