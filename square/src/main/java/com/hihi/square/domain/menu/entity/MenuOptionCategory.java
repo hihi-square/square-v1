@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Builder
 @AllArgsConstructor
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "menu_option_category")
+@ToString
 public class MenuOptionCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

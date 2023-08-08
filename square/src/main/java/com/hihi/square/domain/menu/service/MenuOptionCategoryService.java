@@ -43,8 +43,8 @@ public class MenuOptionCategoryService {
 		optionCategoryRepository.delete(menuOptionCategory);
 	}
 
-	public List<MenuOptionCategory> findAllById(Integer userId, Long menId) {
-		List<MenuOptionCategory> menuCategoryList = optionCategoryRepository.findAllById(userId, menId);
+	public List<MenuOptionCategory> findAllByMenuId(Long menId) {
+		List<MenuOptionCategory> menuCategoryList = optionCategoryRepository.findAllByMenuId(menId);
 		return menuCategoryList;
 	}
 

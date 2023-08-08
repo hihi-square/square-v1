@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.BaseTime;
@@ -35,11 +36,11 @@ public class MenuOption extends BaseTime {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "moc_id", referencedColumnName = "name")
+	@JoinColumn(name = "moc_id")
 	private MenuOptionCategory optionCategory;
 
 	@ManyToOne
-	@JoinColumn(name = "men_id", referencedColumnName = "name")
+	@JoinColumn(name = "men_id")
 	private Menu menu;
 
 	@ManyToOne
@@ -50,13 +51,18 @@ public class MenuOption extends BaseTime {
 	private String name;
 	private String content;
 	@Column(nullable = false)
-	private int price;
+	private Integer price;
 	@Enumerated(EnumType.STRING)
 	private MenuStatus status;
 	private Integer sequence;
 
-	//메뉴옵션 삭제 시, 상태 변경
-	public void updateStatus() {
-		this.status = MenuStatus.OFF;
+	@PrePersist
+	public void setDefaultValues() {
+		if (this.price == null)
+			this.price = 0;
+		if (this.status == null)
+			this.status = MenuStatus.OFF;
+		if (this.sequence == null)
+			this.sequence = 0;
 	}
 }
