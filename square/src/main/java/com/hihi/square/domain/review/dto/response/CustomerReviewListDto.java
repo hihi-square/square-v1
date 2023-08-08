@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerReviewListDto {
     private Integer reviewId;
-    private Integer orderDetailId;
+    private Integer orderId;
     private Integer storeId;
     private String storeName;
     private Integer rating;

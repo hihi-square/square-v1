@@ -64,7 +64,7 @@ public class OrderController {
                 .statusCode(200)
                 .message("UPDATE_SUCCESS")
                 .build();
-        Order order = orderService.findById(request.getOrdId());
+        Order order = orderService.findById(request.getOrdId()).get();
         Customer customer = order.getCustomer();
 
         // 결제 성공시

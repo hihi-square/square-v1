@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewWriteRequestDto {
-    private Integer orderDetailId;
+    private Integer orderId;
     private Integer rating;
     private String content;
     @Builder.Default

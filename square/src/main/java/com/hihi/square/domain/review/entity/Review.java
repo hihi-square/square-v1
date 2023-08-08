@@ -1,7 +1,7 @@
 package com.hihi.square.domain.review.entity;
 
 import com.hihi.square.domain.BaseTime;
-import com.hihi.square.domain.order.entity.OrderDetail;
+import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
@@ -27,9 +27,9 @@ public class Review extends BaseTime {
 	@ManyToOne
 	private Store store;
 
-	@JoinColumn(name = "odt_id")
+	@JoinColumn(name = "ord_id")
 	@ManyToOne
-	private OrderDetail orderDetail;
+	private Order order;
 
 	@JoinColumn(name = "usr_id")
 	@ManyToOne

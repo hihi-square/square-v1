@@ -1,6 +1,6 @@
 package com.hihi.square.domain.review.repository;
 
-import com.hihi.square.domain.order.entity.OrderDetail;
+import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.review.entity.Review;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
-    Optional<Review> findByOrderDetail(OrderDetail orderDetail);
+    Optional<Review> findByOrder(Order order);
 
     List<Review> findByStoreOrderByCreatedAtDesc(Store store);
 

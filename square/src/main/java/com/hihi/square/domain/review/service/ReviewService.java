@@ -2,7 +2,7 @@ package com.hihi.square.domain.review.service;
 
 import com.hihi.square.domain.image.entity.Image;
 import com.hihi.square.domain.image.respository.ImageRepository;
-import com.hihi.square.domain.order.entity.OrderDetail;
+import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.review.dto.request.ReviewWriteRequestDto;
 import com.hihi.square.domain.review.dto.response.CustomerReviewListDto;
@@ -29,10 +29,10 @@ public class ReviewService {
     private final ImageRepository imageRepository;
 
     @Transactional
-    public void save(Customer customer, OrderDetail orderDetail, ReviewWriteRequestDto request) {
+    public void save(Customer customer, Order order, ReviewWriteRequestDto request) {
         Review review = Review.builder()
-                .store(orderDetail.getStore())
-                .orderDetail(orderDetail)
+                .store(order.getStore())
+                .order(order)
                 .customer(customer)
                 .rating(request.getRating())
                 .content(request.getContent())
@@ -54,8 +54,8 @@ public class ReviewService {
         }
     }
 
-    public Optional<Review> findByOrderDetail(OrderDetail orderDetail) {
-        return reviewRepository.findByOrderDetail(orderDetail);
+    public Optional<Review> findByOrder(Order order) {
+        return reviewRepository.findByOrder(order);
     }
 
     public Optional<Review> findById(Integer reviewId) {
@@ -87,7 +87,7 @@ public class ReviewService {
             }
             result.add(StoreReviewListDto.builder()
                             .reviewId(review.getId())
-                            .orderDetailId(review.getOrderDetail().getOdtId())
+                            .orderId(review.getOrder().getOrdId())
                             .userId(review.getCustomer().getUsrId())
                             .userNickname(review.getCustomer().getNickname())
                             .rating(review.getRating())
@@ -125,7 +125,7 @@ public class ReviewService {
             result.add(
                     CustomerReviewListDto.builder()
                             .reviewId(review.getId())
-                            .orderDetailId(review.getOrderDetail().getOdtId())
+                            .orderId(review.getOrder().getOrdId())
                             .storeId(review.getStore().getUsrId())
                             .storeName(review.getStore().getStoreName())
                             .rating(review.getRating())

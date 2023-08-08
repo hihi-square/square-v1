@@ -89,8 +89,8 @@ public class OrderService {
         orderMenuRepository.save(orderMenu);
     }
 
-    public Order findById(Integer ordId) {
-        return orderRepository.findById(ordId).get();
+    public Optional<Order> findById(Integer ordId) {
+        return orderRepository.findById(ordId);
     }
 
     public OrderResponseDto findOrderById(Integer id) {

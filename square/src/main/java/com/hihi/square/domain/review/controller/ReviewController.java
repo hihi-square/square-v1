@@ -1,7 +1,6 @@
 package com.hihi.square.domain.review.controller;
 
-import com.hihi.square.domain.order.entity.OrderDetail;
-import com.hihi.square.domain.order.service.OrderDetailService;
+import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.service.OrderService;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.review.dto.request.ReviewWriteRequestDto;
@@ -34,7 +33,6 @@ public class ReviewController {
     private final UserService userService;
     private final OrderService orderService;
     private final ReviewService reviewService;
-    private final OrderDetailService orderDetailService;
 
     // 리뷰 작성
     @PostMapping
@@ -46,24 +44,24 @@ public class ReviewController {
             return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("ONLY_CUSTOMER_WRITE_REVIEW").build(), HttpStatus.BAD_REQUEST);
         }
 
-        Optional<OrderDetail> optionalOrderDetail = orderDetailService.findById(request.getOrderDetailId());
+        Optional<Order> optionalOrder = orderService.findById(request.getOrderId());
         // 유효한 주문번호인지 확인
-        if (optionalOrderDetail.isEmpty()){
+        if (optionalOrder.isEmpty()){
             return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_ORDER_ID").build(), HttpStatus.BAD_REQUEST);
         }
 
-        OrderDetail orderDetail = optionalOrderDetail.get();
+        Order order = optionalOrder.get();
         // 내 주문만 리뷰 작성 가능
-        if (!orderDetail.getOrder().getCustomer().getUid().equals(uid)){
+        if (!order.getCustomer().getUid().equals(uid)){
             return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_USER_ORDER").build(), HttpStatus.BAD_REQUEST);
         }
 
         // 주문하고 5일 이전에만 리뷰 생성 가능
-        if (orderDetail.getCreatedAt().isBefore(LocalDateTime.now().minusDays(5L))) {
+        if (order.getCreatedAt().isBefore(LocalDateTime.now().minusDays(5L))) {
             return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("CAN_WRITE_BEFORE_5DAYS").build(), HttpStatus.BAD_REQUEST);
         }
         // 리뷰가 이미 작성되었는지 확인
-        if (reviewService.findByOrderDetail(orderDetail).isPresent()) {
+        if (reviewService.findByOrder(order).isPresent()) {
             return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("ALREADY_WRITE_REVIEW").build(), HttpStatus.BAD_REQUEST);
         }
         // 리뷰는 1 ~ 5만 가능
@@ -71,7 +69,7 @@ public class ReviewController {
             return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("RATING_IS_1TO5").build(), HttpStatus.BAD_REQUEST);
         }
 
-        reviewService.save((Customer) user, orderDetail, request);
+        reviewService.save((Customer) user, order, request);
         return new ResponseEntity(CommonResponseDto.builder().message("SUCCESS").statusCode(201).build(), HttpStatus.CREATED);
 
     }
