@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.BaseTime;
+import com.hihi.square.domain.board.dto.request.PostUpdateRequestDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 
@@ -73,4 +74,10 @@ public class Post extends BaseTime {
 
 	private Float latitude;
 	private Float longitude;
+
+	public void updatePost(PostUpdateRequestDto request) {
+		this.title = request.getTitle();
+		this.content = request.getContent();
+		this.modifiedAt = LocalDateTime.now();
+	}
 }

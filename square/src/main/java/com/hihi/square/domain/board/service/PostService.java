@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.hihi.square.domain.board.dto.request.PostUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.PostWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
 import com.hihi.square.domain.board.entity.Board;
@@ -107,5 +108,25 @@ public class PostService {
 
 	public Optional<Post> findById(Integer postId) {
 		return postRepository.findById(postId);
+	}
+
+	@Transactional
+	public void updatePost(Post post, PostUpdateRequestDto request) {
+		post.updatePost(request);
+		postRepository.save(post);
+		postImageRepository.deleteAllByPost(post);
+		for(int i=0;i<request.getImages().size();i++) {
+			FileThumbDto image = request.getImages().get(i);
+			postImageRepository.save(
+				PostImage.builder()
+					.post(post)
+					.order(i+1)
+					.url(image.getUrl())
+					.thumb(image.getThumb())
+					.build()
+			);
+		}
+
+
 	}
 }

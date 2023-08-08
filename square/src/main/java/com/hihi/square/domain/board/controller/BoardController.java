@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.amazonaws.Response;
+import com.hihi.square.domain.board.dto.request.PostUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.PostWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
 import com.hihi.square.domain.board.dto.response.PostListResponseDto;
@@ -121,6 +123,21 @@ public class BoardController {
 			.statusCode(200)
 			.build();
 		return new ResponseEntity(response, HttpStatus.OK);
+	}
+
+	@PatchMapping
+	public ResponseEntity patchUpdatePost(Authentication authentication, @RequestBody PostUpdateRequestDto request) {
+		String uid = authentication.getName();
+		Optional<Post> optionalPost = postService.findById(request.getPostId());
+		if (optionalPost.isEmpty()) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_POST_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Post post = optionalPost.get();
+		if (!post.getUser().getUid().equals(uid)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_USER_POST").build(), HttpStatus.BAD_REQUEST);
+		}
+		postService.updatePost(post, request);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("UPDATE_POST").build(), HttpStatus.OK);
 	}
 
 }

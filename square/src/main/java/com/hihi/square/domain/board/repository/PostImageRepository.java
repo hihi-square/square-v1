@@ -11,4 +11,6 @@ import com.hihi.square.domain.board.entity.PostImage;
 
 public interface PostImageRepository extends JpaRepository<PostImage, Integer> {
 	List<PostImage> findByPost(Post post);
+
+	void deleteAllByPost(Post post);
 }
