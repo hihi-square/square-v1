@@ -167,4 +167,29 @@ public class PostService {
 			.build();
 		return response;
 	}
+
+	@Transactional
+	public List<PostListDto> findByUser(User user) {
+		List<PostListDto> result = new ArrayList<>();
+		List<Post> posts = postRepository.findByUser(user);
+		for (Post post : posts) {
+			result.add(
+				PostListDto.builder()
+					.postId(post.getId())
+					.title(post.getTitle())
+					.content(post.getContent())
+					.createdAt(post.getCreatedAt())
+					.thumbnail(post.getPostImageList().isEmpty() ? null : FileThumbDto.builder().url(post.getPostImageList().get(0).getUrl()).thumb(post.getPostImageList().get(0).getThumb()).build())
+					.userId(post.getUser().getUsrId())
+					.userNickname(post.getUser().getNickname())
+					.commentCount(commentRepository.countByPostAndStateEquals(post, Status.S01))
+					.isLike(postDibsRepository.findByUserAndPost(user, post).isPresent())
+					.userProfile(post.getUser().getProfile())
+					.latitude(post.getLatitude())
+					.longitude(post.getLongitude())
+					.build()
+			);
+		}
+		return result;
+	}
 }

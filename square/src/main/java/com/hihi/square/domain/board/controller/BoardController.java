@@ -178,4 +178,14 @@ public class BoardController {
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
+	// 내 게시글 목록
+	@GetMapping
+	public ResponseEntity getMyPosts(Authentication authentication) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		List<PostListDto> result = postService.findByUser(user);
+		return new ResponseEntity(PostListResponseDto.builder().statusCode(200).posts(result).build(), HttpStatus.OK);
+	}
+
+
 }
