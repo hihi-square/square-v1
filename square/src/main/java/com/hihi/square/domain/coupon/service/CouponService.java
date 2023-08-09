@@ -54,8 +54,8 @@ public class CouponService {
 		couponRepository.save(coupon);
 	}
 
-	public List<Coupon> findAllAvailableCouponByStore(Store store) {
-		return couponRepository.findByAllAvailableStoreCoupon(store, LocalDateTime.now());
+	public List<Coupon> findAllAvailableCouponByFromStore(Store store) {
+		return couponRepository.findByAllAvailableFromStoreCoupon(store, LocalDateTime.now());
 	}
 
 	public List<Coupon> findAllByStore(Store store) {
@@ -76,4 +76,5 @@ public class CouponService {
 		List<EmdStoreCouponSaleDto> result = storeService.storeToEmdStoreCouponSaleDto(stores);
 		return result;
 	}
+
 }

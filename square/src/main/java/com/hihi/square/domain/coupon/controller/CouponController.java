@@ -1,5 +1,6 @@
 package com.hihi.square.domain.coupon.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.entity.DiscountType;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleResponseDto;
 import com.hihi.square.domain.coupon.dto.response.StoreAvailableCouponCountResponseDto;
@@ -90,12 +92,17 @@ public class CouponController {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE_ID").build(), HttpStatus.BAD_REQUEST);
 		}
 		Store store = (Store) optionalStore.get();
-		List<Coupon> couponList = couponService.findAllAvailableCouponByStore(store);
+		List<Coupon> couponList = couponService.findAllAvailableCouponByFromStore(store);
 		List<StoreCouponDto> result = new ArrayList<>();
+
 		for(Coupon coupon : couponList){
 			result.add(StoreCouponDto.builder()
 				.id(coupon.getId())
 				.name(coupon.getName())
+				.toStoreId(coupon.getToStore().getUsrId())
+				.toStoreName(coupon.getToStore().getStoreName())
+				.isSelf(coupon.getToStore().getUsrId() == coupon.getFromStore().getUsrId())
+				.issueCondition(coupon.getIssueCondition())
 				.content(coupon.getContent())
 				.startAt(coupon.getStartAt())
 				.expiredAt(coupon.getExpiredAt())
