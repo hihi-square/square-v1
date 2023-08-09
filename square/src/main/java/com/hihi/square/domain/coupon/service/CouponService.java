@@ -71,8 +71,8 @@ public class CouponService {
 	}
 	private List<StoreCategorySelectedDto> categories = new ArrayList<>();
 
-	public List<EmdStoreCouponSaleDto> findByEmdAddressWithAvailableCoupon(EmdAddress emdAddress) {
-		List<Store> stores = storeRepository.findByEmdAddressAndHaveAvailableCoupon(emdAddress, LocalDateTime.now());
+	public List<EmdStoreCouponSaleDto> findByEmdAddressWithAvailableCoupon(List<EmdAddress> emdAddressList) {
+		List<Store> stores = storeRepository.findByEmdAddressAndHaveAvailableCoupon(emdAddressList, LocalDateTime.now());
 		List<EmdStoreCouponSaleDto> result = storeService.storeToEmdStoreCouponSaleDto(stores);
 		return result;
 	}

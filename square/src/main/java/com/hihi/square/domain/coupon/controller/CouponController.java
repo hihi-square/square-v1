@@ -159,15 +159,15 @@ public class CouponController {
 
 	}
 
-	// 한 지역에 대해서 현재 발급 가능한 쿠폰이 있는 가게 리스트
-	@GetMapping("/emd/{id}")
-	public ResponseEntity getStoreListAvailableCoupon(@PathVariable("id") Integer emdId) {
+	// 읍면동 지역 + depth 에 대해서 현재 발급 가능한 쿠폰이 있는 가게 리스트
+	@GetMapping("/emd/{emdId}/{depth}")
+	public ResponseEntity getStoreListAvailableCoupon(@PathVariable("emdId") Integer emdId, @PathVariable("depth")Integer depth) {
 		Optional<EmdAddress> emdAddressOptional = emdAddressService.findById(emdId);
 		if (emdAddressOptional.isEmpty()){
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_EMD").build(), HttpStatus.BAD_REQUEST);
 		}
-		EmdAddress emdAddress = emdAddressOptional.get();
-		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddress);
+		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
+		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddressList);
 		return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
 	}
 }
