@@ -32,7 +32,9 @@ export default function MapLayer() {
   const getPosSuccess = (pos: any) => {
     // 현재 위치(위도, 경도) 가져온다.
     // eslint-disable-next-line no-console
-    console.log(pos.coords.latitude);
+    console.log(`${position.center.lat},${position.center.lng}`);
+    // eslint-disable-next-line no-console
+    console.log(`${pos.coords.latitude},${pos.coords.longitude}`);
 
     setPosition({
       center: { lat: pos.coords.latitude, lng: pos.coords.longitude },
