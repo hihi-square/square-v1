@@ -55,7 +55,7 @@ public class StoreService {
 
 	@Transactional
 	public void updateStoreInfo(Store store, StoreUpdateRequestDto request) {
-		EmdAddress emdAddress = emdAddressRepository.findById(request.getAemId()).get();
+		EmdAddress emdAddress = emdAddressRepository.findByAdmCode(request.getBcode()).get();
 		store.updateStoreInfo(request, emdAddress);
 		storeRepository.save(store);
 	}

@@ -54,6 +54,9 @@ public class Store extends User {
 
 	private Float latitude;
 	private Float longitude;
+	private String hashtags;
+	@Column(name="is_opened")
+	private Boolean isOpened;
 
 	public void updateStoreInfo(StoreUpdateRequestDto request, EmdAddress emdAddress) {
 		this.emdAddress = emdAddress;
@@ -63,6 +66,6 @@ public class Store extends User {
 		this.content = request.getContent();
 		this.bank = request.getBank();
 		this.account = request.getAccount();
-
+		this.hashtags = request.getHashtags();
 	}
 }
