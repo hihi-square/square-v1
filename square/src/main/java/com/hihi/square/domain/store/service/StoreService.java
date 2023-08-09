@@ -1,17 +1,17 @@
 package com.hihi.square.domain.store.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
+import com.hihi.square.domain.review.service.ReviewService;
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.store.dto.response.StoreCategorySelectedDto;
-import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
+import com.hihi.square.domain.store.dto.response.StoreSearchListDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.BusinessInformationRepository;
@@ -44,6 +44,7 @@ public class StoreService {
 	private final MenuRepository menuRepository;
 	private final EmdAddressService emdAddressService;
 	private final StoreCategoryRepository storeCategoryRepository;
+	private final ReviewService reviewService;
 
 	@Transactional
 	public void save(Store store, BusinessInformation businessInformation) {
@@ -106,8 +107,6 @@ public class StoreService {
 		StoreCategoryBig storeCategoryBig = categoryService.findById(id).get();
 		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
 		List<Store> storeCategorySelectedList = storeRepository.findByStoreCategoryBigAndEmdList(storeCategoryBig, emdAddressList);
-		System.out.println(emdAddressList.size());
-		System.out.println(storeCategorySelectedList.size());
 		List<StoreListResponseDto> stores = new ArrayList<>();
 		for(Store s : storeCategorySelectedList) {
 			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User) s);
@@ -179,5 +178,41 @@ public class StoreService {
 	public void setStoreOpenClose(Store store, boolean isOpen) {
 		store.updateOpen(isOpen);
 		storeRepository.save(store);
+	}
+
+	public List<StoreSearchListDto> findByEmdAddressAndQuery(EmdAddress emdAddress, Integer depth, String query) {
+		List<StoreSearchListDto> result = new ArrayList<>();
+		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdAddress.getAemId(), depth);
+		List<Store> stores = storeRepository.findByEmdAddressAndQuery(emdAddressList, query);
+		for (Store store : stores) {
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+			String menuName = "";
+			int size = menuList.size() < 3 ? menuList.size() : 3;
+			for (int i = 0; i < size; i++) {
+				if (i == size - 1) {
+					menuName += menuList.get(i).getName();
+				} else {
+					menuName += menuList.get(i).getName() + ", ";
+				}
+			}
+			result.add(
+				StoreSearchListDto.builder()
+					.storeId(store.getUsrId())
+					.storeName(store.getStoreName())
+					.content(store.getContent())
+					.storeAddress(store.getAddress())
+					.mainMenu(menuName)
+					.logo(store.getLogo())
+					.latitude(store.getLatitude())
+					.longitude(store.getLongitude())
+					.rating(
+						reviewService.getAverageRating(store)
+					)
+					.isOpened(store.getIsOpened())
+					.hasCoupon(false) // 일단 false로 두기
+					.build()
+			);
+		}
+		return result;
 	}
 }

@@ -28,4 +28,7 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 
 	@Query("select store from Store store where store.emdAddress in (:emdAddress) and 0 < (select count(*) from Coupon c where store = c.store and :now between c.startAt and c.expiredAt) and 0 < (select count(*) from Sale sale where store = sale.store and :now between sale.startedAt and sale.realFinishedAt)")
 	List<Store> findByEmdAddressAndHaveProgressSaleAndAvailableCoupon(EmdAddress emdAddress, LocalDateTime now);
+
+	@Query("select s from Store s where s.emdAddress in (:emdAddressList) and (s.storeName like concat('%', :query , '%') or (s.hashtags like concat('%', :query, '%')))")
+	List<Store> findByEmdAddressAndQuery(List<EmdAddress> emdAddressList, String query);
 }

@@ -108,7 +108,8 @@ public class ReviewService {
     }
 
     public Float getAverageRating(Store store) {
-        return reviewRepository.getAverageRating(store);
+        Float result = reviewRepository.getAverageRating(store);
+        return result == null ? 0 : result;
     }
 
     public List<CustomerReviewListDto> getCustomerReviewList(Customer customer) {

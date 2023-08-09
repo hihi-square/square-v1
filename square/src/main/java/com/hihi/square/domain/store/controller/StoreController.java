@@ -10,6 +10,8 @@ import com.hihi.square.domain.menu.service.MenuService;
 import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
+import com.hihi.square.domain.store.dto.response.StoreSearchListDto;
+import com.hihi.square.domain.store.dto.response.StoreSearchResponseDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
@@ -137,7 +139,6 @@ public class StoreController {
 	@GetMapping("/big-category/{id}/{emdId}/{depth}")
 	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id, @PathVariable Integer emdId, @PathVariable Integer depth) {
 		List<StoreListResponseDto> storeListResponseDtos = storeService.findByCategoryIdAndSelectedEmd(id, emdId, depth);
-		// List<StoreListResponseDto> stores = storeService.findByCategoryId(id);
 		return new ResponseEntity<>(storeListResponseDtos, HttpStatus.OK);
 	}
 
@@ -218,4 +219,15 @@ public class StoreController {
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS_SET_STORE_OPEN").build(), HttpStatus.OK);
 	}
 
+	// 가게 이름 + 해시태그 검색
+	@GetMapping("/search/{emdId}/{depth}/{query}")
+	public ResponseEntity searchByQuery(@PathVariable("emdId") Integer emdId, @PathVariable("depth")Integer depth, @PathVariable("query")String query) {
+		Optional<EmdAddress> optionalEmdAddress = emdAddressService.findById(emdId);
+		if (optionalEmdAddress.isEmpty()){
+			return new ResponseEntity(CommonResponseDto.builder().message("INVALID_EMD_ID").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		EmdAddress emdAddress = optionalEmdAddress.get();
+		List<StoreSearchListDto> stores = storeService.findByEmdAddressAndQuery(emdAddress, depth, query);
+		return new ResponseEntity(StoreSearchResponseDto.builder().stores(stores).statusCode(200).build(), HttpStatus.OK);
+	}
 }
