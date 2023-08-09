@@ -1,6 +1,7 @@
 package com.hihi.square.domain.user.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,8 @@ public class EmdAddressService {
 	@Transactional
 	public List<EmdAddress> getEmdAddressWithDepth(Integer firstEmdAddress, Integer depth) {
 		List<EmdAddress> result = new ArrayList<>();
-		if (firstEmdAddress <1230 || firstEmdAddress > 1406) {
+		if (firstEmdAddress <1230 || firstEmdAddress > 1406 || depth == 1) {
+			result.add(emdAddressRepository.findById(firstEmdAddress).get());
 			return result;
 		}
 		List<Integer> resultId = new ArrayList<>();
@@ -49,6 +51,7 @@ public class EmdAddressService {
 				}
 			}
 		}
+		System.out.println(resultId);
 		for(Integer id : resultId){
 			result.add(emdAddressRepository.findById(id).get());
 		}

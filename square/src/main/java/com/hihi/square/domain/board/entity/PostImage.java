@@ -28,7 +28,8 @@ public class PostImage {
 	@JoinColumn(name = "pos_id")
 	@ManyToOne
 	private Post post;
-
+	@Column(name="orders")
+	private Integer order;
 	private String url;
 	private String thumb;
 }

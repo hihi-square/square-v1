@@ -13,6 +13,10 @@ import java.util.List;
 public class StoreNoticeResponseDto {
 	private Integer snoId;
 
+	private String storeName;
+	private Integer storeId;
+	private String storeLogo;
+
 	private String content;
 
 	private String state;

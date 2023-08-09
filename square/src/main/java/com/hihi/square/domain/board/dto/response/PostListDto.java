@@ -3,6 +3,7 @@ package com.hihi.square.domain.board.dto.response;
 import java.time.LocalDateTime;
 
 import com.hihi.square.domain.board.entity.PostImage;
+import com.hihi.square.global.s3.dto.FileThumbDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class PostListDto {
 	private String title;
 	private String content;
 	private LocalDateTime createdAt;
-	private PostImage thumbnail; // 첫번째 사진
+	private FileThumbDto thumbnail; // 첫번째 사진
 	private Integer commentCount;
 	private Boolean isLike;
 	private Integer userId;
