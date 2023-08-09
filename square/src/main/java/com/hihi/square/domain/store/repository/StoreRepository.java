@@ -20,13 +20,13 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 	@Query("select s from Store s, StoreCategorySelected c where s = c.store and c.storeCategoryBig = :storeCategoryBig and s.emdAddress in (:emdAddressList)")
 	List<Store> findByStoreCategoryBigAndEmdList(StoreCategoryBig storeCategoryBig, List<EmdAddress> emdAddressList);
 
-	@Query("select s from Store s, Coupon c where s = c.store and s.emdAddress in (:emdAddress) and :now between c.startAt and c.expiredAt group by s")
-	List<Store> findByEmdAddressAndHaveAvailableCoupon(EmdAddress emdAddress, LocalDateTime now);
+	@Query("select s from Store s, Coupon c where s = c.fromStore and s.emdAddress in (:emdAddress) and :now between c.startAt and c.expiredAt group by s")
+	List<Store> findByEmdAddressAndHaveAvailableCoupon(List<EmdAddress> emdAddress, LocalDateTime now);
 
 	@Query("select s from Store s, Sale sale where s = sale.store and s.emdAddress in (:emdAddress) and :now between sale.startedAt and sale.realFinishedAt group by s")
 	List<Store> findByEmdAddressAndHaveProgressSale(EmdAddress emdAddress, LocalDateTime now);
 
-	@Query("select store from Store store where store.emdAddress in (:emdAddress) and 0 < (select count(*) from Coupon c where store = c.store and :now between c.startAt and c.expiredAt) and 0 < (select count(*) from Sale sale where store = sale.store and :now between sale.startedAt and sale.realFinishedAt)")
+	@Query("select store from Store store where store.emdAddress in (:emdAddress) and 0 < (select count(*) from Coupon c where store = c.fromStore and :now between c.startAt and c.expiredAt) and 0 < (select count(*) from Sale sale where store = sale.store and :now between sale.startedAt and sale.realFinishedAt)")
 	List<Store> findByEmdAddressAndHaveProgressSaleAndAvailableCoupon(EmdAddress emdAddress, LocalDateTime now);
 
 	@Query("select s from Store s where s.emdAddress in (:emdAddressList) and (s.storeName like concat('%', :query , '%') or (s.hashtags like concat('%', :query, '%')))")

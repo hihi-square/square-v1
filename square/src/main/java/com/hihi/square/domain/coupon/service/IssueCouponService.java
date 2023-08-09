@@ -18,7 +18,7 @@ public class IssueCouponService {
 	private final IssueCouponRepository issueCouponRepository;
 
 	public Boolean isAlreadyIssued(Customer customer, Coupon coupon) {
-		return issueCouponRepository.findByCustomerAndCoupon(customer, coupon).isPresent();
+		return issueCouponRepository.findByCustomerAndCoupon(customer, coupon, LocalDateTime.now()).isPresent();
 	}
 
 	public Integer getIssueNumber(Coupon coupon) {

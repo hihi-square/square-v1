@@ -166,6 +166,7 @@ public class StoreService {
 					.thumbnail(store.getProfileThumb())
 					.latitude(store.getLatitude())
 					.longitude(store.getLongitude())
+					.rating(reviewService.getAverageRating(store))
 					.categories(categories)
 					.mainMenu(menuName)
 					.build()

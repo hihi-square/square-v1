@@ -1,5 +1,6 @@
 package com.hihi.square.domain.coupon.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.entity.DiscountType;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleResponseDto;
 import com.hihi.square.domain.coupon.dto.response.StoreAvailableCouponCountResponseDto;
@@ -26,6 +28,7 @@ import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.service.CouponService;
 import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.service.StoreService;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
@@ -44,6 +47,7 @@ public class CouponController {
 	private final CouponService couponService;
 	private final IssueCouponService issueCouponService;
 	private final EmdAddressService emdAddressService;
+	private final StoreService storeService;
 
 	// 가게 쿠폰 등록
 	@PostMapping
@@ -54,7 +58,11 @@ public class CouponController {
 		if (!(user instanceof Store)) {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE").build(), HttpStatus.BAD_REQUEST);
 		}
-		couponService.createCoupon((Store) user, request);
+		Optional<User> optionalStore = userService.findByUsrId(request.getIssueStoreId());
+		if (optionalStore.isEmpty() || optionalStore.get() instanceof Customer) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_ISSUE_STORE_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		couponService.createCoupon((Store) user, (Store) optionalStore.get(), request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
 	}
 
@@ -84,12 +92,17 @@ public class CouponController {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE_ID").build(), HttpStatus.BAD_REQUEST);
 		}
 		Store store = (Store) optionalStore.get();
-		List<Coupon> couponList = couponService.findAllAvailableCouponByStore(store);
+		List<Coupon> couponList = couponService.findAllAvailableCouponByFromStore(store);
 		List<StoreCouponDto> result = new ArrayList<>();
+
 		for(Coupon coupon : couponList){
 			result.add(StoreCouponDto.builder()
 				.id(coupon.getId())
 				.name(coupon.getName())
+				.toStoreId(coupon.getToStore().getUsrId())
+				.toStoreName(coupon.getToStore().getStoreName())
+				.isSelf(coupon.getToStore().getUsrId() == coupon.getFromStore().getUsrId())
+				.issueCondition(coupon.getIssueCondition())
 				.content(coupon.getContent())
 				.startAt(coupon.getStartAt())
 				.expiredAt(coupon.getExpiredAt())
@@ -122,6 +135,12 @@ public class CouponController {
 					.id(coupon.getId())
 					.name(coupon.getName())
 					.content(coupon.getContent())
+					.toStoreId(coupon.getToStore().getUsrId())
+					.toStoreName(coupon.getToStore().getStoreName())
+					.fromStoreId(coupon.getFromStore().getUsrId())
+					.fromStoreName(coupon.getFromStore().getStoreName())
+					.isSelf(coupon.getToStore().getUsrId() == coupon.getFromStore().getUsrId())
+					.isOnlyIssue(!coupon.getToStore().getUid().equals(uid))
 					.createdAt(coupon.getCreatedAt())
 					.startAt(coupon.getStartAt())
 					.expiredAt(coupon.getExpiredAt())
@@ -129,8 +148,10 @@ public class CouponController {
 					.rate(coupon.getRate())
 					.minOrderPrice(coupon.getMinOrderPrice())
 					.maxDiscountPrice(coupon.getMaxDiscountPrice())
+					.issueCondition(coupon.getIssueCondition())
 					.issueNumber(issueCouponService.getIssueNumber(coupon))
 					.usedNumber(issueCouponService.getUsedNumber(coupon))
+					.status(coupon.getStatus())
 				.build());
 		}
 		return new ResponseEntity<>(
@@ -138,15 +159,15 @@ public class CouponController {
 
 	}
 
-	// 한 지역에 대해서 현재 발급 가능한 쿠폰이 있는 가게 리스트
-	@GetMapping("/emd/{id}")
-	public ResponseEntity getStoreListAvailableCoupon(@PathVariable("id") Integer emdId) {
+	// 읍면동 지역 + depth 에 대해서 현재 발급 가능한 쿠폰이 있는 가게 리스트
+	@GetMapping("/emd/{emdId}/{depth}")
+	public ResponseEntity getStoreListAvailableCoupon(@PathVariable("emdId") Integer emdId, @PathVariable("depth")Integer depth) {
 		Optional<EmdAddress> emdAddressOptional = emdAddressService.findById(emdId);
 		if (emdAddressOptional.isEmpty()){
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_EMD").build(), HttpStatus.BAD_REQUEST);
 		}
-		EmdAddress emdAddress = emdAddressOptional.get();
-		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddress);
+		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
+		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddressList);
 		return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
 	}
 }
