@@ -5,7 +5,6 @@ import { Unstable_Grid2 as Grid, Fab } from "@mui/material";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons";
-import useGeolocation from "react-hook-geolocation";
 
 declare global {
   interface Window {
@@ -16,25 +15,14 @@ declare global {
 export default function MapLayer() {
   const [mapHeight, setMapHeight] = useState<number>(0);
   const [position, setPosition] = useState({
-    center: { lat: 36.45724059472532, lng: 127.43317071389092 },
+    center: { lat: 36.23724059472532, lng: 128.43317071389092 },
     isPanto: true,
   });
-
-  const geolocation = useGeolocation(
-    {
-      enableHighAccuracy: true,
-      maximumAge: 30000,
-      timeout: 27000,
-    },
-    undefined,
-    false
-  );
 
   useEffect(() => {
     const height = window.innerHeight - 140;
 
     setMapHeight(height);
-    getCurrentPos();
   }, []);
 
   const handleMapCreation = (map: Window["kakao"]["maps"]["Map"]) => {
@@ -44,7 +32,7 @@ export default function MapLayer() {
   const getPosSuccess = (pos: any) => {
     // 현재 위치(위도, 경도) 가져온다.
     // eslint-disable-next-line no-console
-    console.log(geolocation);
+    console.log(pos.coords.latitude);
 
     setPosition({
       center: { lat: pos.coords.latitude, lng: pos.coords.longitude },
