@@ -2,7 +2,7 @@
 FROM nginx
 
 # work dir 고정
-WORKDIR /square
+WORKDIR ./square
 
 # work dir 에 build 폴더 생성 /app/build
 RUN mkdir ./build
