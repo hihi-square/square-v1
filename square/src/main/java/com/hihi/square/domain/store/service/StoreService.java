@@ -174,4 +174,10 @@ public class StoreService {
 		}
 		return result;
 	}
+
+	@Transactional
+	public void setStoreOpenClose(Store store, boolean isOpen) {
+		store.updateOpen(isOpen);
+		storeRepository.save(store);
+	}
 }

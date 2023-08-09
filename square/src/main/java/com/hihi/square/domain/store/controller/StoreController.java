@@ -13,6 +13,7 @@ import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,7 @@ import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/store")
@@ -129,7 +131,6 @@ public class StoreController {
 	@GetMapping("/big-category/{id}")
 	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id) {
 		List<StoreListResponseDto> stores = storeService.findByCategoryId(id);
-
 		return new ResponseEntity<>(stores, HttpStatus.OK);
 	}
 	// 사용자 선택 가게 카테고리 + 읍면동 주소 + depth
@@ -199,6 +200,22 @@ public class StoreController {
 		User user = userService.findByUsrId(usrId).get();
 		List<MenuCategoryDto> response = menuCategoryService.getAllMenuByCategory(user);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	// 가게 영업 시작/종료 처리
+	@PostMapping("/open/{num}")
+	public ResponseEntity setStoreOpenClose(Authentication authentication, @PathVariable("num") Integer num){
+		String uid = authentication.getName();
+		Optional<User> optionalUser = userService.findByUid(uid);
+		if (optionalUser.isEmpty()){
+			return new ResponseEntity(CommonResponseDto.builder().message("INVALID_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		if (optionalUser.get() instanceof Customer) {
+			return new ResponseEntity(CommonResponseDto.builder().message("NOT_STORE_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store = (Store) optionalUser.get();
+		storeService.setStoreOpenClose(store, num == 1 ? true : false);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS_SET_STORE_OPEN").build(), HttpStatus.OK);
 	}
 
 }

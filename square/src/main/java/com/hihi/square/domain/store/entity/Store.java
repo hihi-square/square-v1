@@ -68,4 +68,8 @@ public class Store extends User {
 		this.account = request.getAccount();
 		this.hashtags = request.getHashtags();
 	}
+
+	public void updateOpen(boolean isOpened) {
+		this.isOpened = isOpened;
+	}
 }
