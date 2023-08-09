@@ -128,6 +128,12 @@ public class CouponController {
 					.id(coupon.getId())
 					.name(coupon.getName())
 					.content(coupon.getContent())
+					.toStoreId(coupon.getToStore().getUsrId())
+					.toStoreName(coupon.getToStore().getStoreName())
+					.fromStoreId(coupon.getFromStore().getUsrId())
+					.fromStoreName(coupon.getFromStore().getStoreName())
+					.isSelf(coupon.getToStore().getUsrId() == coupon.getFromStore().getUsrId())
+					.isOnlyIssue(!coupon.getToStore().getUid().equals(uid))
 					.createdAt(coupon.getCreatedAt())
 					.startAt(coupon.getStartAt())
 					.expiredAt(coupon.getExpiredAt())
@@ -135,8 +141,10 @@ public class CouponController {
 					.rate(coupon.getRate())
 					.minOrderPrice(coupon.getMinOrderPrice())
 					.maxDiscountPrice(coupon.getMaxDiscountPrice())
+					.issueCondition(coupon.getIssueCondition())
 					.issueNumber(issueCouponService.getIssueNumber(coupon))
 					.usedNumber(issueCouponService.getUsedNumber(coupon))
+					.status(coupon.getStatus())
 				.build());
 		}
 		return new ResponseEntity<>(

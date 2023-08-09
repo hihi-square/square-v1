@@ -59,7 +59,7 @@ public class CouponService {
 	}
 
 	public List<Coupon> findAllByStore(Store store) {
-		return couponRepository.findAllByFromStore(store);
+		return couponRepository.findAllByToStoreOrFromStore(store, store);
 	}
 
 	public Optional<Coupon> findById(Integer couponId) {

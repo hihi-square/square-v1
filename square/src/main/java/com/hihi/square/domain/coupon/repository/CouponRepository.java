@@ -14,7 +14,9 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer> {
 	@Query("select c from Coupon c where c.toStore = :store and :now between c.startAt and c.expiredAt")
 	List<Coupon> findByAllAvailableStoreCoupon(Store store, LocalDateTime now);
 
-	List<Coupon> findAllByFromStore(Store store);
+	// List<Coupon> findAllByFromStore(Store store);
 
 	Integer countByFromStoreAndStartAtIsBeforeAndExpiredAtIsAfter(Store store, LocalDateTime now, LocalDateTime now1);
+
+	List<Coupon> findAllByToStoreOrFromStore(Store store, Store store1);
 }
