@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.dto.response.IssueRequestCouponDto;
 import com.hihi.square.domain.coupon.entity.CouponStatus;
+import com.hihi.square.domain.coupon.entity.DiscountType;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.repository.CouponRepository;
@@ -77,4 +79,30 @@ public class CouponService {
 		return result;
 	}
 
+
+
+	public List<IssueRequestCouponDto> findIssueRequestCouponByStore(Store store) {
+		List<Coupon> couponList = couponRepository.findIssueRequestCouponByStore(store, LocalDateTime.now());
+		List<IssueRequestCouponDto> result = new ArrayList<>();
+		for(Coupon coupon : couponList) {
+			result.add(
+				IssueRequestCouponDto.builder()
+					.id(coupon.getId())
+					.name(coupon.getName())
+					.content(coupon.getContent())
+					.toStoreId(coupon.getToStore().getUsrId())
+					.toStoreName(coupon.getToStore().getStoreName())
+					.createdAt(coupon.getCreatedAt())
+					.startAt(coupon.getStartAt())
+					.expiredAt(coupon.getExpiredAt())
+					.discountType(coupon.getDiscountType())
+					.rate(coupon.getRate())
+					.minOrderPrice(coupon.getMinOrderPrice())
+					.maxDiscountPrice(coupon.getMaxDiscountPrice())
+					.issueCondition(coupon.getIssueCondition())
+					.build()
+			);
+		}
+		return result;
+	}
 }

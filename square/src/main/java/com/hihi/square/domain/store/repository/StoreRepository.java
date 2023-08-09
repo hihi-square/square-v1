@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
@@ -31,4 +32,5 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 
 	@Query("select s from Store s where s.emdAddress in (:emdAddressList) and (s.storeName like concat('%', :query , '%') or (s.hashtags like concat('%', :query, '%')))")
 	List<Store> findByEmdAddressAndQuery(List<EmdAddress> emdAddressList, String query);
+
 }

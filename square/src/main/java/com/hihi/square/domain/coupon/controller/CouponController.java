@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.dto.response.IssueRequestCouponDto;
+import com.hihi.square.domain.coupon.dto.response.IssueRequestCouponResponseDto;
 import com.hihi.square.domain.coupon.entity.DiscountType;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleResponseDto;
@@ -64,6 +66,15 @@ public class CouponController {
 		}
 		couponService.createCoupon((Store) user, (Store) optionalStore.get(), request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
+	}
+
+	// 가게에서 발급 요청 받은 쿠폰 리스트
+	@GetMapping("/issue")
+	public ResponseEntity issueRequestCouponList(Authentication authentication) {
+		String uid = authentication.getName();
+		Store store = storeService.findByUid(uid).get();
+		List<IssueRequestCouponDto> coupons = couponService.findIssueRequestCouponByStore(store);
+		return new ResponseEntity(IssueRequestCouponResponseDto.builder().coupons(coupons).statusCode(200).build(), HttpStatus.OK);
 	}
 
 	// 해당 가게에 있는 사용 가능한 쿠폰 개수
@@ -170,4 +181,6 @@ public class CouponController {
 		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddressList);
 		return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
 	}
+
+
 }

@@ -20,4 +20,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer> {
 
 	List<Coupon> findAllByToStoreOrFromStore(Store store, Store store1);
 
+	@Query("select c from Coupon c where c.fromStore = :store and c.status = 'PENDING' and c.expiredAt > :now")
+	List<Coupon> findIssueRequestCouponByStore(Store store, LocalDateTime now);
 }
