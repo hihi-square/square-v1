@@ -144,4 +144,12 @@ public class OrderService {
     public Optional<Order> findByOrderId(Integer orderId) {
         return orderRepository.findById(orderId);
     }
+
+    public List<Optional<Order>> findByCustomer(Customer customer) {
+        return orderRepository.findByCustomer(customer);
+    }
+
+    public List<Optional<Order>> findByStore(Store store) {
+        return orderRepository.findByStore(store);
+    }
 }
