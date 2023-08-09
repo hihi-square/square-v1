@@ -26,7 +26,6 @@ export default function CustomerSignUp() {
 
   const [message, setMessage] = useState("");
 
-
   // const history = useHistory ();
 
   const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {

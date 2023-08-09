@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import DaumPostcodeEmbed from "react-daum-postcode";
+import { Address } from "react-daum-postcode/lib/loadPostcode";
 
 export default function SignUp() {
   const [name, setName] = useState<string>("");
@@ -23,6 +25,19 @@ export default function SignUp() {
   const [phoneNumberValid, setPhoneNumberValid] = useState(false);
 
   const [marketing, setMarketing] = useState<boolean>(false);
+  
+  const [bcode, setBcode] = useState<string>("")
+  const [address, setAddress] = useState<string>("")
+  const [storeName, setStoreName] = useState<string>("")
+  const [storePhone, setStorePhone] = useState<string>("")
+  const [storePhoneValid, setStorePhoneValid] = useState(false);
+
+  const [content, setContent] = useState<string>("")
+  const [bank, setBank] = useState<string>("")
+  const [account, setAccount] = useState<string>("")
+  const [latitude, setLatitude] = useState<string>("")
+  const [longtitude, setLongtitude] = useState<string>("")
+  const [businessInformation, setBusinessInformation] = useState<string>("") // 하위 key-value 쌍을 어떻게 정의?
 
   const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -73,10 +88,39 @@ export default function SignUp() {
 
   const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value);
-    // 전화번호 유효성 검사 (여기서는 숫자 10자리로 가정)
-    const regex = /^\d{10}$/;
+    // 전화번호 유효성 검사 (여기서는 숫자 11자리로 가정)
+    const regex = /^\d{11}$/;
     setPhoneNumberValid(regex.test(e.target.value));
     updateNotAllow();
+  };
+
+  const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress(e.target.value)
+    updateNotAllow();
+  };
+
+  const handleStoreName  = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStoreName(e.target.value)
+  };
+
+  const handleStorePhone  = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStorePhone(e.target.value);
+    // 전화번호 유효성 검사 (여기서는 숫자 10자리로 가정)
+    const regex = /^\d{10}$/;
+    setStorePhoneValid(regex.test(e.target.value));
+    updateNotAllow();
+  };
+
+  const handleContent  = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value)
+  };
+
+  const handleBank  = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBank(e.target.value)
+  };
+
+  const handleAccount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBank(e.target.value)
   };
 
   const handleMarketing = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,10 +141,26 @@ export default function SignUp() {
       nickname: nickname,
       phoneNumber: phoneNumber,
       marketing: marketing,
+      bcode: bcode,
+      address: address,
+      storeName: storeName,
+      storePhone: storePhone,
+      content: content,
+      bank: bank,
+      latitude: latitude,
+      longtitude: longtitude,
+      businessInofrmation: {
+        companyRegistrationNumber: companyRegistrationNumber,
+        ceoName: ceoName,
+        openingDate: openingDate,
+        corporateRegistration: corporateRegistration,
+        businessName: businessName,
+        businessFile: businessFile,
+      }
     };
 
     axios
-      .post("http://your-api-url.com/signup", body)
+      .post("http://i9b208.p.ssafy.io:8811/store", body)
       .then((response) => {
         if (response.data.success) {
           console.log("성공???");
@@ -115,6 +175,12 @@ export default function SignUp() {
         alert("회원가입에 실패했습니다.");
       });
   };
+
+  const onDataHandler = (address: Address) => {
+    console.log(address)
+    setBcode(address.bcode)
+  };
+
 
   return (
     <div className="page">
@@ -209,6 +275,7 @@ export default function SignUp() {
             onChange={handleNickname}
           />
         </div>
+
         <div className="errorMessageWrap">
           {!nicknameValid && nickname.length > 0 && (
             <div>닉네임은 최소 3글자 이상 입력해주세요.</div>
@@ -222,15 +289,102 @@ export default function SignUp() {
           <input
             className="input"
             type="text"
-            placeholder="전화번호를 입력하세요 (숫자 10자리)"
+            placeholder="전화번호를 입력하세요 (숫자 11자리)"
             value={phoneNumber}
             onChange={handlePhoneNumber}
           />
         </div>
         <div className="errorMessageWrap">
           {!phoneNumberValid && phoneNumber.length > 0 && (
+            <div>올바른 전화번호 형식이 아닙니다. (숫자 11자리)</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          가게 이름
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="가게 이름을 입력하세요."
+            value={storeName}
+            onChange={handleStoreName}
+          />
+        </div>
+        
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          가게전화번호
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="가게 전화번호를 입력하세요 (숫자 10자리)"
+            value={storePhone}
+            onChange={handleStorePhone}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!storePhoneValid && storePhone.length > 0 && (
             <div>올바른 전화번호 형식이 아닙니다. (숫자 10자리)</div>
           )}
+        </div>
+
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          content
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="내용을 입력하세요."
+            value={content}
+            onChange={handleContent}
+          />
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          bank
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="가게 이름을 입력하세요."
+            value={bank}
+            onChange={handleBank}
+          />
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          Account
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="계좌를 입력하세요."
+            value={account}
+            onChange={handleAccount}
+          />
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+        주소 입력란
+        <DaumPostcodeEmbed
+        onComplete={onDataHandler}
+        />
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="주소를 입력하세요"
+            value={address}
+            onChange={handleAddress}
+          />
         </div>
 
         <div style={{ marginTop: '26px' }}>
@@ -255,3 +409,4 @@ export default function SignUp() {
     </div>
   );
 }
+
