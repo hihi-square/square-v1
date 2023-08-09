@@ -25,10 +25,10 @@ export default function Customer() {
   return (
     <Grid
       container
-      xs={11}
+      xs={12}
       md={8}
       justifyContent="center"
-      sx={{ maxWidth: "600px", backgroundColor: "#FAFAFA" }}
+      sx={{ maxWidth: "600px", backgroundColor: "white" }}
     >
       <Routes>
         <Route path="/main" element={<Main />} />

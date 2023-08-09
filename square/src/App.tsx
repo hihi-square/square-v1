@@ -35,9 +35,14 @@ const theme = createTheme({
 
 function App() {
   return (
-    <Grid container className="App">
+    <Grid container className="App" sx={{ width: "100%", height: "100vh" }}>
       <ThemeProvider theme={theme}>
-        <Grid container justifyContent="center" xs sx={{ height: "100vh" }}>
+        <Grid
+          container
+          justifyContent="center"
+          xs={12}
+          sx={{ width: "100%", height: "100vh" }}
+        >
           <Routes>
             <Route path="/*" element={<Customer />} />
             <Route path="/seller/*" element={<Seller />} />

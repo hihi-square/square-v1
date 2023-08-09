@@ -19,12 +19,11 @@ export default function Footer({ now }: Props) {
   const navigate = useNavigate();
 
   return (
-    <Box
+    <Grid
       sx={{
         backgroundColor: "white",
         position: "fixed",
         bottom: 0,
-        left: 0,
         width: "100%",
         maxWidth: "600px",
       }}
@@ -161,6 +160,6 @@ export default function Footer({ now }: Props) {
           </Button>
         </Grid>
       </Grid>
-    </Box>
+    </Grid>
   );
 }

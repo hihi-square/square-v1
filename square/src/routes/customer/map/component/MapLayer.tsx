@@ -1,58 +1,86 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-// import useGeoLocation from "react-hook-geolocation";
-import geojson from "geojson/Daejeon.json";
-import { Unstable_Grid2 as Grid } from "@mui/material";
-import { Map, MapMarker, Polygon } from "react-kakao-maps-sdk";
+import { Unstable_Grid2 as Grid, Fab } from "@mui/material";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons";
+import useGeolocation from "react-hook-geolocation";
 
-type CoordList = {
-  name: string;
-  code: string;
-  path: {
-    lat: number;
-    lng: number;
-  }[];
-}[];
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
 
 export default function MapLayer() {
-  const [polygon, setPolygon] = useState<CoordList>();
+  const [mapHeight, setMapHeight] = useState<number>(0);
+  const [position, setPosition] = useState({
+    center: { lat: 36.45724059472532, lng: 127.43317071389092 },
+    isPanto: true,
+  });
+
+  const geolocation = useGeolocation(
+    {
+      enableHighAccuracy: true,
+      maximumAge: 30000,
+      timeout: 27000,
+    },
+    undefined,
+    false
+  );
 
   useEffect(() => {
-    const PolygonData = geojson.features.map((item) => ({
-      name: item.properties.EMD_KOR_NM,
-      code: item.properties.EMD_CD,
-      path: item.geometry.coordinates[0].map((pos) => ({
-        lat: pos[1],
-        lng: pos[0],
-      })),
-    }));
+    const height = window.innerHeight - 140;
 
-    setPolygon(PolygonData);
+    setMapHeight(height);
+    getCurrentPos();
   }, []);
+
+  const handleMapCreation = (map: Window["kakao"]["maps"]["Map"]) => {
+    map.relayout();
+  };
+
+  const getPosSuccess = (pos: any) => {
+    // 현재 위치(위도, 경도) 가져온다.
+    // eslint-disable-next-line no-console
+    console.log(geolocation);
+
+    setPosition({
+      center: { lat: pos.coords.latitude, lng: pos.coords.longitude },
+      isPanto: true,
+    });
+  };
+
+  const getCurrentPos = () => {
+    navigator.geolocation.getCurrentPosition(getPosSuccess);
+  };
 
   return (
     <Grid container xs={12}>
       <Map
-        center={{ lat: 33.5563, lng: 126.79581 }}
-        style={{ width: "100%", height: "800px" }}
+        center={position.center}
+        isPanto={position.isPanto}
+        style={{ width: "100%", height: `${mapHeight}px` }}
         level={3}
+        onCreate={handleMapCreation}
       >
-        {polygon &&
-          polygon.map((location, index) => (
-            <Polygon
-              path={location.path}
-              strokeWeight={0.5}
-              strokeColor={"black"}
-              strokeOpacity={0.8}
-              strokeStyle={"solid"}
-              fillColor={"#A2FF99"}
-              fillOpacity={0.3}
-            />
-          ))}
         <MapMarker position={{ lat: 33.55635, lng: 126.795841 }}>
           <div style={{ color: "#000" }}>Hello World!</div>
         </MapMarker>
       </Map>
+
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{ bottom: 80, left: "80%", fontSize: "20px" }}
+        onClick={getCurrentPos}
+      >
+        <FontAwesomeIcon
+          icon={faLocationCrosshairs}
+          style={{ color: "white" }}
+        />
+      </Fab>
     </Grid>
   );
 }

@@ -45,7 +45,7 @@ export default function Header({ cateNum, setAni }: Props) {
           container
           xs={12}
           alignItems="center"
-          sx={{ position: "fixed", top: 0, left: 0, height: "60px" }}
+          sx={{ position: "relative", top: 0, left: 0, height: "60px" }}
         >
           <Grid xs={2}>
             <Button
@@ -83,9 +83,9 @@ export default function Header({ cateNum, setAni }: Props) {
             backgroundColor: "white",
             position: "fixed",
             top: 0,
-            left: 0,
             height: "60px",
             width: "100%",
+            maxWidth: "600px",
             zIndex: 3,
           }}
         >

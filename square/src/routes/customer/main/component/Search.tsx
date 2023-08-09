@@ -75,7 +75,7 @@ export default function Search() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: "white",
+        padding: "10px 0px",
       }}
     >
       <Paper
