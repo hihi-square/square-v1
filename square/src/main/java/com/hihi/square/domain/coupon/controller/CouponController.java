@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hihi.square.domain.coupon.dto.request.CouponAcceptDto;
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
 import com.hihi.square.domain.coupon.dto.response.IssueRequestCouponDto;
 import com.hihi.square.domain.coupon.dto.response.IssueRequestCouponResponseDto;
@@ -180,6 +182,23 @@ public class CouponController {
 		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
 		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddressList);
 		return new ResponseEntity(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
+	}
+
+	// 가게에서 발급요청 받은 쿠폰 승인
+	@PatchMapping("/issue")
+	public ResponseEntity accpetCoupon(Authentication authentication, @RequestBody CouponAcceptDto request){
+		String uid = authentication.getName();
+		Optional<Coupon> optionalCoupon = couponService.findById(request.getCouponId());
+		if (optionalCoupon.isEmpty()) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_COUPON_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		Coupon coupon = optionalCoupon.get();
+		if (!coupon.getFromStore().getUid().equals(uid)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_USER_COUPON").build(), HttpStatus.BAD_REQUEST);
+		}
+		couponService.acceptRequestCoupon(coupon, request.getStatus());
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+
 	}
 
 

@@ -105,4 +105,10 @@ public class CouponService {
 		}
 		return result;
 	}
+
+	@Transactional
+	public void acceptRequestCoupon(Coupon coupon, CouponStatus status) {
+		coupon.acceptRequestCoupon(status);
+		couponRepository.save(coupon);
+	}
 }

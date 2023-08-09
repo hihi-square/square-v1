@@ -64,4 +64,8 @@ public class Coupon {
 
 	@Enumerated(EnumType.STRING)
 	private CouponStatus status; // 발급대기, 발급, 발급 수락 x
+
+	public void acceptRequestCoupon(CouponStatus status) {
+		this.status = status;
+	}
 }
