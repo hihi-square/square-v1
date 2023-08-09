@@ -14,9 +14,10 @@ import {
   faMessage,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from 'react-router-dom';  // 이 부분을 수정
 
 export default function Footer() {
-  // const [value, setValue] = React.useState(0);
+  const navigate = useNavigate();  // 이 부분을 수정
 
   return (
     <Paper
@@ -85,7 +86,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              navigate('/board');  // 이 부분을 수정
             }}
           >
             <Box component="div">
@@ -137,7 +138,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              navigate('/mypage');  // 이 부분을 수정
             }}
           >
             <Box component="div">

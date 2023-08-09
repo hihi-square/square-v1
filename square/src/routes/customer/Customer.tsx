@@ -5,7 +5,8 @@ import List from "./list/List";
 import StoreListByLocation from "./map/component/storeListByLocation";
 import Store from "./store/Store";
 import SearchMap from "./map/component/searchMap";
-import Board from "./main/board/boardMain";
+import Board from "./main/board/Board";
+import BoardForm from "./main/board/BoardForm";
 import Chat from "./chat/chat";
 import MyPage from "./my/MyPage";
 import SearchResult from "./main/SearchResult";
@@ -34,6 +35,11 @@ export default function Customer() {
         <Route path="/map" element={<Map />} />
         <Route path="/searchmap" element={<SearchMap />} />
         <Route path="/board" element={<Board />} />
+        <Route path="/board/:selectedBoard/:boardId" element={<BoardForm />} />
+
+
+
+
         <Route path="/chat" element={<Chat />} />
 
         <Route path="/mypage" element={<MyPage />}/>
