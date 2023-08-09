@@ -19,6 +19,7 @@ public class CommentListDto {
 	private Integer userId;
 	private String userNickname;
 	private Boolean isDeleted;
+	@Builder.Default
 	private List<ReCommentListDto> recommentList = new ArrayList<>();
 
 }

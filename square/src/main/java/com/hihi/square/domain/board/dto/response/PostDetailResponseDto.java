@@ -44,8 +44,10 @@ public class PostDetailResponseDto {
 	private LocalDateTime modifiedAt;
 	private Float latitude;
 	private Float longitude;
+	@Builder.Default
 	private List<FileThumbDto> images = new ArrayList<>();
 	private Boolean isLikePost;
+	@Builder.Default
 	private List<CommentListDto> comments = new ArrayList<>();
 
 
