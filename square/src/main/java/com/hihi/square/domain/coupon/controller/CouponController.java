@@ -26,6 +26,7 @@ import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.service.CouponService;
 import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.service.StoreService;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
@@ -44,6 +45,7 @@ public class CouponController {
 	private final CouponService couponService;
 	private final IssueCouponService issueCouponService;
 	private final EmdAddressService emdAddressService;
+	private final StoreService storeService;
 
 	// 가게 쿠폰 등록
 	@PostMapping
@@ -54,7 +56,11 @@ public class CouponController {
 		if (!(user instanceof Store)) {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE").build(), HttpStatus.BAD_REQUEST);
 		}
-		couponService.createCoupon((Store) user, request);
+		Optional<User> optionalStore = userService.findByUsrId(request.getIssueStoreId());
+		if (optionalStore.isEmpty() || optionalStore.get() instanceof Customer) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_ISSUE_STORE_ID").build(), HttpStatus.BAD_REQUEST);
+		}
+		couponService.createCoupon((Store) user, (Store) optionalStore.get(), request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
 	}
 

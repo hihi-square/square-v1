@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.entity.CouponStatus;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.repository.CouponRepository;
@@ -34,9 +35,10 @@ public class CouponService {
 	private final StoreService storeService;
 
 	@Transactional
-	public void createCoupon(Store store, StoreCouponRegistDto request) {
+	public void createCoupon(Store toStore, Store fromStore,  StoreCouponRegistDto request) {
 		Coupon coupon = Coupon.builder()
-			.store(store)
+			.toStore(toStore)
+			.fromStore(fromStore)
 			.name(request.getName())
 			.content(request.getContent())
 			.createdAt(LocalDateTime.now())
@@ -46,6 +48,8 @@ public class CouponService {
 			.rate(request.getRate())
 			.minOrderPrice(request.getMinOrderPrice())
 			.maxDiscountPrice(request.getMaxDiscountPrice())
+			.status(toStore.getUsrId() == fromStore.getUsrId() ? CouponStatus.ISSUE : CouponStatus.PENDING)
+			.issueCondition(request.getIssueCondition())
 			.build();
 		couponRepository.save(coupon);
 	}
@@ -55,7 +59,7 @@ public class CouponService {
 	}
 
 	public List<Coupon> findAllByStore(Store store) {
-		return couponRepository.findAllByStore(store);
+		return couponRepository.findAllByFromStore(store);
 	}
 
 	public Optional<Coupon> findById(Integer couponId) {
@@ -63,7 +67,7 @@ public class CouponService {
 	}
 
 	public Integer countAvailableCoupon(Store store) {
-		return couponRepository.countByStoreAndStartAtIsBeforeAndExpiredAtIsAfter(store, LocalDateTime.now(), LocalDateTime.now());
+		return couponRepository.countByFromStoreAndStartAtIsBeforeAndExpiredAtIsAfter(store, LocalDateTime.now(), LocalDateTime.now());
 	}
 	private List<StoreCategorySelectedDto> categories = new ArrayList<>();
 

@@ -11,10 +11,12 @@ public class StoreCouponRegistDto {
 
 	private String name;
 	private String content;
+	private Integer issueStoreId;
 	private LocalDateTime startAt;
 	private LocalDateTime expiredAt;
 	private DiscountType discountType;
 	private Float rate;
 	private Integer minOrderPrice;
 	private Integer maxDiscountPrice;
+	private Integer issueCondition;
 }
