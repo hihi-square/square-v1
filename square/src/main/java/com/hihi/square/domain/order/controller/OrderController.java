@@ -43,14 +43,6 @@ public class OrderController {
 
         // 주문 등록
         Integer ordId = orderService.saveOrder(customer, request);
-        if(request.getUsedPoint() > 0) {
-            // 주문 등록되자마자 포인트 차감
-            pointService.save(ordId, customer, request.getUsedPoint(), 0);
-            // customer객체에 포인트 반영
-            customer.updatePoint(customer.getPoint() - request.getUsedPoint());
-            // db 수정
-            customerRepository.save(customer);
-        }
 
         return new ResponseEntity<>(OrderIdResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(), HttpStatus.CREATED);
     }
@@ -72,17 +64,18 @@ public class OrderController {
             order.updateOrderStatus(OrderStatus.PAYMENT_COMPLETE);
             order.updatePaymentMethod(request.getPaymentMethod());
 
+            if(order.getUsedPoint() > 0) {
+                // 주문 등록되자마자 포인트 차감
+                pointService.save(order.getOrdId(), customer, order.getUsedPoint(), 0);
+                // customer객체에 포인트 반영
+                customer.updatePoint(customer.getPoint() - order.getUsedPoint());
+                // db 수정
+                customerRepository.save(customer);
+            }
+
         }
         else {
             order.updateOrderStatus(OrderStatus.PAYMENT_FAILED);
-            if(order.getUsedPoint() > 0) {
-                // 포인트 원상복귀
-                pointService.save(order.getOrdId(), customer, order.getUsedPoint(), 1);
-                // 객체 수정
-                customer.updatePoint(customer.getPoint() + order.getUsedPoint());
-                // db 저장
-                customerRepository.save(customer);
-            }
         }
         orderService.save(order);
 
