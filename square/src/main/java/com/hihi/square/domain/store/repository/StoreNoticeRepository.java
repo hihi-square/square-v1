@@ -23,4 +23,7 @@ public interface StoreNoticeRepository extends JpaRepository<Notice, Integer> {
 
 	@Query("select n from Notice n where n.state = 'PUBLIC' and n.emdAddress in  (:emdAddressList) order by n.createdAt desc")
 	List<Notice> findAllByEmdListOrderByCreatedAtDesc(List<EmdAddress> emdAddressList);
+
+	@Query("select n from Notice n where n.store in (select s from Store s, Dibs d where s = d.store and d.customer = :user) and n.state = 'PUBLIC' order by n.createdAt desc")
+	List<Notice> findByUserDibs(User user);
 }

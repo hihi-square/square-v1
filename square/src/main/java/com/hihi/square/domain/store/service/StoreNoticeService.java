@@ -12,6 +12,7 @@ import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreNoticeRepository;
 import com.hihi.square.domain.user.entity.EmdAddress;
+import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.s3.S3Service;
 import com.hihi.square.global.s3.dto.FileThumbDto;
 
@@ -74,8 +75,12 @@ public class StoreNoticeService {
 						.build()
 				);
 			}
+
 			result.add(StoreNoticeResponseDto.builder()
 					.snoId(notice.getSnoId())
+					.storeName(notice.getStore().getStoreName())
+					.storeId(notice.getStore().getUsrId())
+					.storeLogo(notice.getStore().getLogo())
 					.content(notice.getContent())
 					.createdAt(notice.getCreatedAt())
 					.modifiedAt(notice.getModifiedAt())
@@ -152,6 +157,9 @@ public class StoreNoticeService {
 			}
 			result.add(StoreNoticeResponseDto.builder()
 				.snoId(notice.getSnoId())
+				.storeName(notice.getStore().getStoreName())
+				.storeId(notice.getStore().getUsrId())
+				.storeLogo(notice.getStore().getLogo())
 				.content(notice.getContent())
 				.createdAt(notice.getCreatedAt())
 				.modifiedAt(notice.getModifiedAt())
@@ -186,6 +194,47 @@ public class StoreNoticeService {
 			}
 			result.add(StoreNoticeResponseDto.builder()
 				.snoId(notice.getSnoId())
+				.storeName(notice.getStore().getStoreName())
+				.storeId(notice.getStore().getUsrId())
+				.storeLogo(notice.getStore().getLogo())
+				.content(notice.getContent())
+				.createdAt(notice.getCreatedAt())
+				.modifiedAt(notice.getModifiedAt())
+				.state(notice.getState())
+				.images(
+					imageResponseDtoList
+				).build());
+		}
+
+		return result;
+	}
+
+	@Transactional
+	public List<StoreNoticeResponseDto> getUserDibsStoreNotice(User user) {
+		List<StoreNoticeResponseDto> result = new ArrayList<>();
+		List<Notice> notices = storeNoticeRepository.findByUserDibs(user);
+
+		for(Notice notice : notices){
+			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
+			List<ImagesDetailResponseDto> imageResponseDtoList = new ArrayList<>();
+
+			for(Image img : images){
+				imageResponseDtoList.add(
+					ImagesDetailResponseDto.builder()
+						.imgId(img.getImgId())
+						.url(img.getUrl())
+						.order(img.getOrder())
+						.type(img.getType())
+						.connectedId(img.getConnectedId())
+						.thumbnail(img.getThumbnail())
+						.build()
+				);
+			}
+			result.add(StoreNoticeResponseDto.builder()
+				.snoId(notice.getSnoId())
+				.storeName(notice.getStore().getStoreName())
+				.storeId(notice.getStore().getUsrId())
+				.storeLogo(notice.getStore().getLogo())
 				.content(notice.getContent())
 				.createdAt(notice.getCreatedAt())
 				.modifiedAt(notice.getModifiedAt())

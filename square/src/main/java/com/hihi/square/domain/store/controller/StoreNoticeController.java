@@ -197,4 +197,17 @@ public class StoreNoticeController {
 		return new ResponseEntity(result, HttpStatus.OK);
 
 	}
+
+	// 내가 찜한 가게 공지 가져오기
+	@GetMapping("/dibs")
+	public ResponseEntity getMyDibsStoreNotice(Authentication authentication) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		StoreNoticesResponseDto response =  StoreNoticesResponseDto.builder()
+			.notices(storeNoticeService.getUserDibsStoreNotice(user))
+			.statusCode(200)
+			.message("SUCCESS")
+			.build();
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
 }
