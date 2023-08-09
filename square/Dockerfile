@@ -7,7 +7,7 @@ RUN npm install
 COPY . ./
 RUN npm run build
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm", "run", "build"]
 
 # # Stage 2 - the production environment wow1232
 # FROM nginx:1.19.0-alpine
