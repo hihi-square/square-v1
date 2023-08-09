@@ -1,11 +1,7 @@
 import * as React from "react";
-import {
-  Paper,
-  Unstable_Grid2 as Grid,
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Unstable_Grid2 as Grid, Box, Button, Typography } from "@mui/material";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -15,13 +11,23 @@ import {
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function Footer() {
-  // const [value, setValue] = React.useState(0);
+type Props = {
+  now: number;
+};
+
+export default function Footer({ now }: Props) {
+  const navigate = useNavigate();
 
   return (
-    <Paper
-      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-      elevation={3}
+    <Box
+      sx={{
+        backgroundColor: "white",
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        maxWidth: "600px",
+      }}
     >
       <Grid container xs={12}>
         <Grid xs>
@@ -33,7 +39,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 1) navigate("/main");
             }}
           >
             <Box component="div">
@@ -59,7 +65,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 2) navigate("/map");
             }}
           >
             <Box component="div">
@@ -85,7 +91,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 3) navigate("/board");
             }}
           >
             <Box component="div">
@@ -111,7 +117,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 4) navigate("/orderlist");
             }}
           >
             <Box component="div">
@@ -123,7 +129,7 @@ export default function Footer() {
                 component="div"
                 sx={{ fontWeight: 500, textAlign: "center" }}
               >
-                메시지
+                주문
               </Typography>
             </Box>
           </Button>
@@ -137,7 +143,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 5) navigate("/my");
             }}
           >
             <Box component="div">
@@ -155,6 +161,6 @@ export default function Footer() {
           </Button>
         </Grid>
       </Grid>
-    </Paper>
+    </Box>
   );
 }

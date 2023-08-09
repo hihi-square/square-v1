@@ -9,7 +9,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useParams } from "react-router-dom"; // useParams를 import합니다.
-import { REST_API } from "redux/store";
+import { REST_API } from "redux/redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPhone,
@@ -273,7 +273,7 @@ function StorePage() {
         {renderTabContent()}
       </Grid>
       <Grid container xs={12} justifyContent="center">
-        <Footer />
+        <Footer now={6} />
         <SelectMenu state={state} setState={setState} curItem={curItem} />
       </Grid>
     </Grid>

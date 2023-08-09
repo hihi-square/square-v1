@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { Choice, setChoice, REST_API } from "redux/store";
+import { Choice, setChoice, REST_API } from "redux/redux";
 import {
   Unstable_Grid2 as Grid,
   Typography,
@@ -37,9 +37,7 @@ export default function CategoryStore() {
         .then((response) => {
           setStores(response.data);
         })
-        .catch((error) => {
-          navigate("/error");
-        });
+        .catch((error) => {});
     }
   }, [category, navigate]);
 

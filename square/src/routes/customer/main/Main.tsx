@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Unstable_Grid2 as Grid } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setPage } from "redux/store";
-import Category from "./component/Category";
-import Feed from "./component/Feed";
+import { setPage } from "redux/redux";
+
+import Search from "./component/Search";
 import Header from "../Header";
 import Footer from "../Footer";
 
@@ -17,15 +17,12 @@ function MainPage() {
   return (
     <Grid container xs={12} direction="column">
       <Header cateNum={0} setAni={null} />
+      <Grid sx={{ height: "70px" }}></Grid>
       <Grid container xs={12} justifyContent="center">
-        <Category />
+        <Search />
       </Grid>
-      <Grid container xs={12} justifyContent="center">
-        <Feed />
-      </Grid>
-      <Grid container xs={12} justifyContent="center">
-        <Footer />
-      </Grid>
+      <Grid sx={{ height: "70px" }}></Grid>
+      <Footer now={1} />
     </Grid>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { CartItem, Choice, RootState } from "redux/store";
+import { CartItem, Choice, RootState } from "redux/redux";
 import {
   Box,
   Button,

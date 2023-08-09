@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "animate.css";
 import { Unstable_Grid2 as Grid } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setPage } from "redux/store";
+import { setPage } from "redux/redux";
 import { useParams } from "react-router-dom";
 import CategoryStore from "./component/CategoryStore";
 import Header from "../Header";
@@ -31,7 +31,7 @@ export default function List() {
         <CategoryStore />
       </Grid>
       <Grid container xs={12} justifyContent="center">
-        <Footer />
+        <Footer now={6} />
       </Grid>
     </Grid>
   );

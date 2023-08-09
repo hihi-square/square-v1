@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 // import axios from 'axios';
 import { Box, Button, Checkbox } from "@mui/material";
 
-import { CartItem } from "redux/store";
+import { CartItem } from "redux/redux";
 
 function Cart() {
   const location = useLocation();
@@ -17,7 +17,7 @@ function Cart() {
 
   const handleOrderClick = () => {
     localStorage.setItem("cart", JSON.stringify(cartItem));
-    navigate("/pay");
+    navigate("/pay", { state: cartItem });
   };
 
   const handleQuantityChange = (index: number, action: "add" | "subtract") => {
@@ -116,25 +116,21 @@ function Cart() {
               ))}
             </div>
             <p>가게 총 가격: 원</p>
-            <Link to="/pay">
-              <button onClick={handleOrderClick} style={paymentButtonStyle}>
-                <div>
-                  {cartItem.items.filter((item) => item.isChecked).length} 항목
-                </div>
-                <div>주문하기</div>
-                <div>
-                  {" "}
-                  {cartItem.items.reduce(
-                    (total: number, item: any) =>
-                      item.isChecked
-                        ? total + item.price * item.quantity
-                        : total,
-                    0
-                  )}
-                  원
-                </div>
-              </button>
-            </Link>
+            <button onClick={handleOrderClick} style={paymentButtonStyle}>
+              <div>
+                {cartItem.items.filter((item) => item.isChecked).length} 항목
+              </div>
+              <div>주문하기</div>
+              <div>
+                {" "}
+                {cartItem.items.reduce(
+                  (total: number, item: any) =>
+                    item.isChecked ? total + item.price * item.quantity : total,
+                  0
+                )}
+                원
+              </div>
+            </button>
           </div>
         </>
       ) : (

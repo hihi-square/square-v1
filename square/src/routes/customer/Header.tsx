@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "redux/store";
+import { RootState } from "redux/redux";
 import "App.css";
 import "animate.css";
 import {
@@ -39,21 +39,14 @@ export default function Header({ cateNum, setAni }: Props) {
   };
 
   return (
-    <Grid
-      xs={12}
-      container
-      component="header"
-      justifyContent="space-between"
-      alignItems="center"
-      sx={{
-        top: 0,
-        position: ["sticky", "-webkit-sticky"],
-        backgroundColor: "white",
-        zIndex: 5,
-      }}
-    >
+    <>
       {pageType !== "메인" ? (
-        <Grid container xs={12} alignItems="center" sx={{ height: "60px" }}>
+        <Grid
+          container
+          xs={12}
+          alignItems="center"
+          sx={{ position: "fixed", top: 0, left: 0, height: "60px" }}
+        >
           <Grid xs={2}>
             <Button
               onClick={() => {
@@ -82,7 +75,20 @@ export default function Header({ cateNum, setAni }: Props) {
           <Grid xs={2}></Grid>
         </Grid>
       ) : (
-        <Grid container xs={12} alignItems="center" sx={{ height: "60px" }}>
+        <Grid
+          container
+          xs={12}
+          alignItems="center"
+          sx={{
+            backgroundColor: "white",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            height: "60px",
+            width: "100%",
+            zIndex: 3,
+          }}
+        >
           <Grid xs>
             <Button sx={{ paddingLeft: "0px" }}>
               <Select
@@ -227,6 +233,6 @@ export default function Header({ cateNum, setAni }: Props) {
           <Divider variant="middle"></Divider>
         </Grid>
       )}
-    </Grid>
+    </>
   );
 }

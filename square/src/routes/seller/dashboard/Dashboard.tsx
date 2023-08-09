@@ -14,8 +14,10 @@ export default function Seller() {
 
   return (
     <>
-      <Appbar />
-      <Grid container>
+      <Grid xs={12}>
+        <Appbar />
+      </Grid>
+      <Grid xs={12} container>
         <Grid xs={2} className="full-size sidebar">
           <Box className="button" sx={{ marginTop: "3%" }}>
             <Typography

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { REST_API } from "redux/store";
+import { REST_API } from "redux/redux";
 import axios from "axios"; // axios를 import합니다.
 import { Unstable_Grid2 as Grid, Typography, Box, Button } from "@mui/material";
 

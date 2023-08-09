@@ -11,7 +11,7 @@ import {
   ListItem,
   IconButton,
 } from "@mui/material";
-import { RootState } from "../../../redux/store";
+import { RootState } from "../../../redux/redux";
 
 function MyPage() {
   const navigate = useNavigate();

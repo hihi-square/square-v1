@@ -4,11 +4,11 @@ import { Unstable_Grid2 as Grid } from "@mui/material";
 import List from "./list/List";
 import StoreListByLocation from "./map/component/storeListByLocation";
 import Store from "./store/Store";
-import SearchMap from "./map/component/searchMap";
+import SearchMap from "./map/component/MapLayer";
 import Board from "./main/board/boardMain";
 import Chat from "./chat/chat";
 import MyPage from "./my/myPage";
-import SearchResult from "./main/searchResult";
+import SearchResult from "./list/searchResult";
 import Cart from "./deal/cart";
 import Pay from "./deal/pay";
 import OrderList from "./deal/orderList";
@@ -23,7 +23,13 @@ import Map from "./map/Map";
 
 export default function Customer() {
   return (
-    <Grid container xs={12} md={8} justifyContent="center">
+    <Grid
+      container
+      xs={11}
+      md={8}
+      justifyContent="center"
+      sx={{ maxWidth: "600px", backgroundColor: "#FAFAFA" }}
+    >
       <Routes>
         <Route path="/main" element={<Main />} />
         <Route path="/list/:category" element={<List />} />

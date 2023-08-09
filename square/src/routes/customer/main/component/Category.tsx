@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setSticky } from "redux/store";
+import { setSticky } from "redux/redux";
 import {
   Unstable_Grid2 as Grid,
   // Typography,
@@ -25,10 +25,8 @@ export default function Category() {
     const checkSticky = () => {
       const offsetTop =
         document.getElementById("stickyCategory")?.offsetTop || 0;
-      const offsetHeight =
-        document.getElementById("stickyCategory")?.offsetHeight || 0;
 
-      if (window.scrollY >= offsetTop + offsetHeight - 100) {
+      if (window.scrollY >= offsetTop + 50) {
         dispatch(setSticky({ pageType: "main", value: 1 }));
       } else {
         dispatch(setSticky({ pageType: "main", value: 2 }));
