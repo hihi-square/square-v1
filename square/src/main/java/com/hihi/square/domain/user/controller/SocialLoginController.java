@@ -47,6 +47,9 @@ public class SocialLoginController {
 			return new ResponseEntity<String>("codeError",HttpStatus.BAD_REQUEST);
 		}
 		String accessToken = socialLoginService.kakaoGetToken(code);
+		if (accessToken.isEmpty()){
+			return new ResponseEntity<>("ACCESS_TOKEN_INVALID", HttpStatus.BAD_REQUEST);
+		}
 		Customer customer = socialLoginService.kakaoGetUserInfo(accessToken);
 		// 사용자 검증
 		Optional<User> optionalUser = userService.findByUid(customer.getUid());
