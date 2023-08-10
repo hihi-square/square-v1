@@ -26,9 +26,9 @@ public class EmdAddressController {
 	public ResponseEntity getDepthEmdAddress(@PathVariable("admCode") Long admCode, @PathVariable("depth") Integer depth){
 		EmdAddress emdAddress = emdAddressService.findByAdmCode(admCode);
 		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdAddress.getAemId(), depth);
-		List<Long> result = new ArrayList<>();
+		List<String> result = new ArrayList<>();
 		for(EmdAddress e : emdAddressList){
-			result.add(e.getAdmCode());
+			result.add(e.getAdmCode().toString());
 		}
 		return new ResponseEntity(result, HttpStatus.OK);
 	}
