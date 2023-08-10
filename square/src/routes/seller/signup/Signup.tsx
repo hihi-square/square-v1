@@ -34,10 +34,16 @@ export default function SignUp() {
 
   const [content, setContent] = useState<string>("")
   const [bank, setBank] = useState<string>("")
+  const [accountValid, setAccountValid] = useState(false)
   const [account, setAccount] = useState<string>("")
+
   const [latitude, setLatitude] = useState<string>("")
   const [longtitude, setLongtitude] = useState<string>("")
   const [businessInformation, setBusinessInformation] = useState<string>("") // 하위 key-value 쌍을 어떻게 정의?
+
+  const [saveAddress, setSaveAddress] = useState<string>("")
+
+  const geocoder = new kakao.maps.services.Geocoder();
 
   const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -120,18 +126,39 @@ export default function SignUp() {
   };
 
   const handleAccount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBank(e.target.value)
+    setAccount(e.target.value)
+    const regex = /^\d{10,14}$/;
+    setAccountValid(regex.test(e.target.value));
+    updateNotAllow();
   };
 
   const handleMarketing = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMarketing(e.target.checked);
     updateNotAllow();
   };
-
+  
   const updateNotAllow = () => {
-    setNotAllow(!idValid || !pwValid || !nameValid || !emailValid || !nicknameValid || !phoneNumberValid);
+    setNotAllow(!idValid || !pwValid || !nameValid || !emailValid || !nicknameValid || !phoneNumberValid || !accountValid);
   };
 
+  const { kakao } = window;
+
+  const onDataHandler = (address: Address) => {
+    console.log(address);
+    setBcode(address.bcode);
+    setSaveAddress(address.address);
+  
+    const geocoder = new kakao.maps.services.Geocoder();
+    // index 에 무언가 추가를 해야 kakao 에 빨간줄 안뜸.
+    const callback = function(result: any, status: any) {
+      if (status === kakao.maps.services.Status.OK) {
+        console.log(result);
+      }
+    };
+    
+    geocoder.addressSearch('해남군 송지면', callback);    
+  };
+  
   const handleSignup = () => {
     const body = {
       uid: id,
@@ -149,7 +176,7 @@ export default function SignUp() {
       bank: bank,
       latitude: latitude,
       longtitude: longtitude,
-      businessInofrmation: {
+      businessInformation: {
         companyRegistrationNumber: companyRegistrationNumber,
         ceoName: ceoName,
         openingDate: openingDate,
@@ -175,12 +202,6 @@ export default function SignUp() {
         alert("회원가입에 실패했습니다.");
       });
   };
-
-  const onDataHandler = (address: Address) => {
-    console.log(address)
-    setBcode(address.bcode)
-  };
-
 
   return (
     <div className="page">
@@ -331,7 +352,6 @@ export default function SignUp() {
           )}
         </div>
 
-
         <div style={{ marginTop: '26px' }} className="inputTitle">
           content
         </div>
@@ -371,6 +391,12 @@ export default function SignUp() {
           />
         </div>
 
+        <div className="errorMessageWrap">
+          {!accountValid && account.length > 0 && (
+            <div>올바른 계좌번호 형식이 아닙니다.</div>
+          )}
+        </div>
+
         <div style={{ marginTop: '26px' }} className="inputTitle">
         주소 입력란
         <DaumPostcodeEmbed
@@ -379,14 +405,14 @@ export default function SignUp() {
         </div>
         <div className="inputWrap">
           <input
-            className="input"
+            className="input" readOnly
             type="text"
             placeholder="주소를 입력하세요"
-            value={address}
-            onChange={handleAddress}
+            value={saveAddress}
+            // onChange={handleAddress}
           />
         </div>
-
+            
         <div style={{ marginTop: '26px' }}>
           <input
             type="checkbox"
