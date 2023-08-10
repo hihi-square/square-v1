@@ -7,16 +7,16 @@ import Store from "./store/Store";
 import SearchMap from "./map/component/searchMap";
 import Board from "./main/board/boardMain";
 import Chat from "./chat/chat";
-import MyPage from "./my/myPage";
+import MyPage from "./my/MyPage";
 import SearchResult from "./main/searchResult";
 import Cart from "./deal/cart";
 import Pay from "./deal/pay";
 import OrderList from "./deal/orderList";
-import MyArea from "./my/myArea";
-import MyInfo from "./my/myInfo";
-import MyOrderHistory from "./my/myOrderHistory";
-import MyRegular from "./my/myRegular";
-import MyReview from "./my/myReview";
+import MyArea from "./my/MyArea";
+import MyInfo from "./my/MyInfo";
+import MyOrderHistory from "./my/MyOrderHistory";
+import MyRegular from "./my/MyRegular";
+import MyReview from "./my/MyReview";
 import Main from "./main/Main";
 import Login from "./login/Login";
 import Map from "./map/Map";
@@ -37,11 +37,11 @@ export default function Customer() {
         <Route path="/chat" element={<Chat />} />
 
         <Route path="/mypage" element={<MyPage />}>
-          <Route path="myarea" element={<MyArea />} />
-          <Route path="myinfo" element={<MyInfo />} />
-          <Route path="myorderhistory" element={<MyOrderHistory />} />
-          <Route path="myregular" element={<MyRegular />} />
-          <Route path="myreview" element={<MyReview />} />
+          <Route path="/myarea" element={<MyArea />} />
+          <Route path="/myinfo" element={<MyInfo />} />
+          <Route path="/myorderhistory" element={<MyOrderHistory />} />
+          <Route path="/myregular" element={<MyRegular />} />
+          <Route path="/myreview" element={<MyReview />} />
         </Route>
         <Route path="/search/:searchword" element={<SearchResult />} />
         <Route path="/cart" element={<Cart />} />

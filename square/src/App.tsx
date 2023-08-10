@@ -4,7 +4,7 @@ import { Unstable_Grid2 as Grid } from "@mui/material";
 import { green, grey } from "@mui/material/colors";
 import "./App.css";
 import Seller from "./routes/seller/Seller";
-import Customer from "./routes/customer/Customer1";
+import Customer from "./routes/customer/Customer";
 import Error from "./routes/error/Error";
 
 // import CustomerSignUp from "routes/customer/signup/CustomerSignup";
