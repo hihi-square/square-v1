@@ -46,7 +46,7 @@ public class EmdAddressService {
 				if (visited[i] == 0){ // 아직 방문 안함
 					visited[i] = visited[now] + 1;
 					resultId.add(i);
-					if (visited[i] <= depth)
+					if (visited[i] < depth)
 						queue.add(i);
 				}
 			}
