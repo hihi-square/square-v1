@@ -11,6 +11,8 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+import { REST_API } from "redux/store";
+
 
 export default function Login() {
   const [id, setId] = useState<string>("");
@@ -87,7 +89,7 @@ export default function Login() {
 
     if (!notAllow)
       axios({
-        url: "http://43.201.255.188:8811/user/login",
+        url: `${REST_API}user/login`,
         method: "POST",
         data: {
           uid: id,
@@ -104,9 +106,32 @@ export default function Login() {
           navigate("/main");
         })
         .catch((error) => {
+          console.log(error);
           setFailed(true);
         });
   };
+
+  const signUpButton = () => {
+   
+      navigate(`/signup`);
+    
+  };
+  const kakaoLogin = (): void => {
+    // 카카오 OAuth2.0 인증 페이지로 리다이렉트
+    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=409915cf48a47370a92cea926084d5a1&redirect_uri=http://localhost:3000/login/KakaoRedirect&response_type=code";
+  };
+
+  const NaverLogin = (): void => {
+
+    window.location.href = "https://nid.naver.com/oauth2.0/authorize?client_id=C4jdFBfefASIcQgC9GDg&response_type=code&redirect_uri=http://localhost:3000/login/NaverRedirect&state=test";
+  };
+
+  const GoogleLogin = (): void => {
+
+    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=409915cf48a47370a92cea926084d5a1&redirect_uri=http://localhost:3000/login/KakaoRedirect&response_type=code";
+  };
+  
+
 
   return (
     <>
@@ -216,7 +241,7 @@ export default function Login() {
               sx={{ marginTop: "30px" }}
             >
               <Grid xs={3}>
-                <Button>
+                <Button  onClick={NaverLogin}>
                   <img
                     src="/img/icon/naver.png"
                     alt="네이버 로그인"
@@ -225,16 +250,17 @@ export default function Login() {
                 </Button>
               </Grid>
               <Grid xs={3}>
-                <Button>
-                  <img
-                    src="/img/icon/kakao.png"
-                    alt="카카오 로그인"
-                    style={{ width: "60px", height: "60px" }}
-                  />
-                </Button>
+              <Button onClick={kakaoLogin}>
+  <img
+    src="/img/icon/kakao.png"
+    alt="카카오 로그인"
+    style={{ width: "60px", height: "60px" }}
+  />
+</Button>
+
               </Grid>
               <Grid xs={3}>
-                <Button>
+                <Button  onClick={GoogleLogin}>
                   <img
                     src="/img/icon/google.png"
                     alt="구글 로그인"
@@ -249,7 +275,8 @@ export default function Login() {
               <Divider sx={{ margin: "10px" }}></Divider>
             </Grid>
             <Grid container xs={6} justifyContent="start">
-              <Button color="secondary"> 회원가입 </Button>
+            <Button color="secondary" onClick={signUpButton}> 회원가입 </Button>
+
             </Grid>
             <Grid container xs={6} justifyContent="end">
               <Button color="secondary"> 아이디/비밀번호 찾기 </Button>

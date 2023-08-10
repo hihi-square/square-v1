@@ -102,7 +102,7 @@ export default function Header({ cateNum, setAni }: Props) {
                   },
                 }}
               >
-                <MenuItem value={"loc1"}>덕암동</MenuItem>
+                <MenuItem value={"loc1"}>덕명동</MenuItem>
                 <MenuItem value={"loc2"}>구암동</MenuItem>
                 <MenuItem value={"loc3"}>봉명동</MenuItem>
                 <Divider></Divider>
