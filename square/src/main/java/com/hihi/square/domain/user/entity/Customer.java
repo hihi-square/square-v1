@@ -28,6 +28,7 @@ public class Customer extends User{
 
 	private Long point;
 
+
 	public void updatePoint(long point) {
 		this.point = point;
 	}
