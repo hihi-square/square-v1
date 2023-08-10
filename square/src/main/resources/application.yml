@@ -67,4 +67,4 @@ cloud:
 social:
   kakao:
     rest-api: 409915cf48a47370a92cea926084d5a1
-    redirect-uri: https://localhost:3000/login/KakaoRedirect
+    redirect-uri: http://localhost:3000/login/KakaoRedirect
