@@ -69,6 +69,11 @@ public class OrderController {
 
         // 결제 성공시
         if(request.getPaymentSuccess()) {
+
+            if(order.getStatus().equals(OrderStatus.PAYMENT_COMPLETE)) {
+                return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("ALREADY_PAYMENT_COMPLETED").build(), HttpStatus.BAD_REQUEST);
+            }
+
             order.updateOrderStatus(OrderStatus.PAYMENT_COMPLETE);
             order.updatePaymentMethod(request.getPaymentMethod());
 
