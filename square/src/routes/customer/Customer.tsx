@@ -22,6 +22,10 @@ import MyBoard from "./my/MyBoard";
 import Main from "./main/Main";
 import Login from "./login/Login";
 import Map from "./map/Map";
+import CustomerSignUp from "./login/CustomerSignup";
+import KakaoRedirect from "./login/KakaoRedirect";
+import NaverRedirect from "./login/NaverRedirect";
+import GoogleRedirect from "./login/GoogleRedirect";
 
 export default function Customer() {
   return (
@@ -56,6 +60,12 @@ export default function Customer() {
 
         <Route path="/orderlist" element={<OrderList />} />
         <Route path="*" element={<Login />} />
+        <Route path="/signup" element={<CustomerSignUp />} />
+        <Route path="/login/KakaoRedirect" element={<KakaoRedirect />} />
+        <Route path="/login/GoogleRedirect" element={<GoogleRedirect />} />
+        <Route path="/login/NaverRedirect" element={<NaverRedirect />}/> 
+
+  
       </Routes>
     </Grid>
   );

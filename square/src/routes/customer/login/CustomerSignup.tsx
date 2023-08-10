@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import { REST_API } from "redux/store";
 
 export default function CustomerSignUp() {
   const [username, setName] = useState("");
@@ -39,7 +40,7 @@ export default function CustomerSignUp() {
   const handleCheckId = () => {
     // 서버에 아이디 중복 확인 요청 보내기
     console.log('아이디는',id)
-    axios.get(`http://43.201.255.188:8811/user/id/${id}`)
+    axios.get(`${REST_API}user/id/${id}`)
       .then((response) => {
         // 서버 응답 처리
         setIsIdDuplicated(response.data.duplicated);
@@ -73,7 +74,7 @@ export default function CustomerSignUp() {
     }
 
     axios
-      .post("http://43.201.255.188:8811/user", body)
+      .post(`${REST_API}user`, body)
       .then((response) => {
         // 서버 응답 처리
         if (response.data.success) {
