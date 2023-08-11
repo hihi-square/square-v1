@@ -23,18 +23,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="customer_address")
+@Table(name = "customer_address")
 public class CustomerAddress {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="uca_id")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "uca_id")
 	private Integer ucaId;
 
 	@ManyToOne
-	@JoinColumn(name="usr_id")
+	@JoinColumn(name = "usr_id")
 	private Customer customer;
 
 	@ManyToOne
-	@JoinColumn(name="aem_id")
+	@JoinColumn(name = "aem_id")
 	private EmdAddress emdAddress;
 
 	private String address;
@@ -42,7 +43,7 @@ public class CustomerAddress {
 	@CreatedDate
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
-	private Float latitude;
-	private Float longitude;
+	private Double latitude;
+	private Double longitude;
 
 }
