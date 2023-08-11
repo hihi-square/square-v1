@@ -3,6 +3,12 @@ import axios from "axios";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { Address } from "react-daum-postcode/lib/loadPostcode";
 
+declare global {
+  interface Window {
+    kakao: any; // 또는 kakao의 실제 타입을 지정
+  }
+}
+
 export default function SignUp() {
   const [name, setName] = useState<string>("");
   const [nameValid, setNameValid] = useState(false);
@@ -39,11 +45,24 @@ export default function SignUp() {
 
   const [latitude, setLatitude] = useState<string>("")
   const [longtitude, setLongtitude] = useState<string>("")
-  const [businessInformation, setBusinessInformation] = useState<string>("") // 하위 key-value 쌍을 어떻게 정의?
-
+  
   const [saveAddress, setSaveAddress] = useState<string>("")
 
-  const geocoder = new kakao.maps.services.Geocoder();
+  // const [businessInformation, setBusinessInformation] = useState<string>("") // 하위 key-value 쌍을 어떻게 정의?
+
+  const [companyRegistrationNumber, setCompanyRegistrationNumber] = useState<string>("")
+  const [companyRegistrationNumberValid, setCompanyRegistrationNumberValid] = useState(false)
+  const [ceoName, setCeoName] = useState<string>("")
+  const [openingDate, setOpeningDate] = useState<string>("")
+  const [openingDateValid, setOpeningDateValid] = useState(false)
+
+  const [corporateRegistrationNumber, setCorporateRegistrationNumber] = useState<string>("")
+  const [corporateRegistrationNumberValid, setCorporateRegistrationNumberValid] = useState(false)
+
+  const [businessName, setBusinessName] = useState<string>("")
+  const [businessFile, setBusinessFile] = useState<string>("")
+
+  // const geocoder = new kakao.maps.services.Geocoder();
 
   const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -132,6 +151,44 @@ export default function SignUp() {
     updateNotAllow();
   };
 
+  const handleCompanyRegistrationNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCompanyRegistrationNumber(e.target.value);
+    // 사업자등록번호 유효성 검사 (여기서는 숫자 11자리로 가정)
+    const regex = /^\d{11}$/;
+    setCompanyRegistrationNumberValid(regex.test(e.target.value));
+    updateNotAllow();
+  };
+
+  const handleCeoName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCeoName(e.target.value);
+    updateNotAllow();
+  };
+
+  const handleOpeningDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOpeningDate(e.target.value);
+    // 오픈 날짜 유효성 검사 (여기서는 숫자 8자리로 가정)
+    const regex = /^\d{8}$/;
+    setOpeningDateValid(regex.test(e.target.value));
+    updateNotAllow();
+  };
+
+  const handleCorporateRegistrationNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCorporateRegistrationNumber(e.target.value)
+    // 법인등록번호 유효성검사
+    const regex = /^\d{11}$/;
+    setCorporateRegistrationNumberValid(regex.test(e.target.value));
+    updateNotAllow();
+  };
+
+  const handleBusinessName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBusinessName(e.target.value);
+    updateNotAllow();
+  };
+  const handleBusinessFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBusinessFile(e.target.value);
+    updateNotAllow();
+  };
+
   const handleMarketing = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMarketing(e.target.checked);
     updateNotAllow();
@@ -144,21 +201,25 @@ export default function SignUp() {
   const { kakao } = window;
 
   const onDataHandler = (address: Address) => {
-    console.log(address);
+    console.log(address.address);
     setBcode(address.bcode);
     setSaveAddress(address.address);
   
-    const geocoder = new kakao.maps.services.Geocoder();
-    // index 에 무언가 추가를 해야 kakao 에 빨간줄 안뜸.
-    const callback = function(result: any, status: any) {
-      if (status === kakao.maps.services.Status.OK) {
-        console.log(result);
+    axios.get(`https://dapi.kakao.com/v2/local/search/address.json?query=${address.address}`, {
+      headers: {
+        Authorization: "KakaoAK 409915cf48a47370a92cea926084d5a1" // git에 올리지 말 것! api키는 항상 다른데 보관 gitignore가 되는 곳에
       }
-    };
-    
-    geocoder.addressSearch('해남군 송지면', callback);    
+    })
+      .then(response => (
+        // console.log(response.data.documents[0].y)
+        setLongtitude(response.data.documents[0].x)
+        // setLatitude(response.data.documents[0].y)
+      ))
+      .catch(error => (
+        console.log(error)
+      ))
   };
-  
+
   const handleSignup = () => {
     const body = {
       uid: id,
@@ -180,7 +241,7 @@ export default function SignUp() {
         companyRegistrationNumber: companyRegistrationNumber,
         ceoName: ceoName,
         openingDate: openingDate,
-        corporateRegistration: corporateRegistration,
+        corporateRegistrationNumber: corporateRegistrationNumber,
         businessName: businessName,
         businessFile: businessFile,
       }
@@ -322,6 +383,10 @@ export default function SignUp() {
         </div>
 
         <div style={{ marginTop: '26px' }} className="inputTitle">
+          사업자정보
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
           가게 이름
         </div>
         <div className="inputWrap">
@@ -413,6 +478,99 @@ export default function SignUp() {
           />
         </div>
             
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          사업자등록번호
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="사업자등록번호를 입력하세요 (숫자 10자리)"
+            value={companyRegistrationNumber}
+            onChange={handleCompanyRegistrationNumber}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!companyRegistrationNumberValid && companyRegistrationNumber.length > 0 && (
+            <div>올바른 사업자등록번호 형식이 아닙니다. (숫자 10자리)</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          대표자 성명
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="대표자 성명을 입력하세요."
+            value={ceoName}
+            onChange={handleCeoName}
+          />
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          오픈날짜
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="오픈날짜를 입력하세요 (숫자 8자리)"
+            value={openingDate}
+            onChange={handleOpeningDate}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!openingDateValid && openingDate.length > 0 && (
+            <div>올바른 오픈날짜 형식이 아닙니다. (숫자 8자리)</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          법인등록번호
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="법인등록번호를 입력하세요 (숫자 10자리)"
+            value={corporateRegistrationNumber}
+            onChange={handleCorporateRegistrationNumber}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!corporateRegistrationNumberValid && corporateRegistrationNumber.length > 0 && (
+            <div>올바른 법인등록번호 형식이 아닙니다. (숫자 10자리)</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          사업명
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="사업명을 입력하세요."
+            value={businessName}
+            onChange={handleBusinessName}
+          />
+        </div>
+
+        <div style={{ marginTop: '26px' }} className="inputTitle">
+          비즈니스 파일
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="대표자 성명을 입력하세요."
+            value={businessFile}
+            onChange={handleBusinessFile}
+          />
+        </div>
+
         <div style={{ marginTop: '26px' }}>
           <input
             type="checkbox"
