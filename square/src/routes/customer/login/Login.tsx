@@ -86,7 +86,7 @@ export default function Login() {
   const onClickConfirmButton = (): void => {
     checkId(id);
     checkPw(pw);
-
+  
     if (!notAllow)
       axios({
         url: `${REST_API}user/login`,
@@ -100,9 +100,11 @@ export default function Login() {
         .then((response) => {
           // console.log(response.data.refreshToken)
           // console.log(response.data.accessToken)
-          localStorage.setItem("accessToken", response.data.accessToken);
-          localStorage.setItem("refreshToken", response.data.refreshToken);
-
+          
+          // localStorage 대신 sessionStorage 사용
+          sessionStorage.setItem("accessToken", response.data.accessToken);
+          sessionStorage.setItem("refreshToken", response.data.refreshToken);
+  
           navigate("/main");
         })
         .catch((error) => {
@@ -110,7 +112,7 @@ export default function Login() {
           setFailed(true);
         });
   };
-
+  
   const signUpButton = () => {
    
       navigate(`/signup`);

@@ -21,7 +21,7 @@ function KakaoRedirect() {
           if (REFRESH_TOKEN) {
             sessionStorage.setItem('refreshToken', REFRESH_TOKEN);
           }
-          navigate('/');
+          navigate('/main');
         })
         .catch((error) => {
           console.error('카카오 로그인 에러:', error);

@@ -14,7 +14,7 @@ function GoogleRedirect() {
           console.log(response.data);
           const ACCESS_TOKEN = response.headers.authorization;
           const REFRESH_TOKEN = response.headers["refresh-token"];
-
+          
           if (ACCESS_TOKEN) {
             sessionStorage.setItem('accessToken', ACCESS_TOKEN);
           }
@@ -22,7 +22,7 @@ function GoogleRedirect() {
             sessionStorage.setItem('refreshToken', REFRESH_TOKEN);
           }
 
-          navigate('/');
+          navigate('/main');
         })
         .catch((error) => {
           console.error('구글 로그인 에러:', error);
