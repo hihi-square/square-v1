@@ -28,7 +28,7 @@ function GoogleRedirect() {
           console.error('구글 로그인 에러:', error);
         });
     }
-  }, [code, navigate]); // code와 navigate에 의존성을 추가합니다.
+  }, [code, navigate]); 
 
   return (
     <div>
