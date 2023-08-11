@@ -51,18 +51,40 @@ public class SocialLoginController {
 			return new ResponseEntity<>("ACCESS_TOKEN_INVALID", HttpStatus.BAD_REQUEST);
 		}
 		Customer customer = socialLoginService.kakaoGetUserInfo(accessToken);
+		return getSocialUserLogin(customer, UserSocialLoginType.KAKAO);
+	}
+
+	@Transactional
+	@GetMapping("/naver")
+	public ResponseEntity<?> naverLogin(@RequestParam(required = false) String code){
+		// 만약 사용자가 로그인 취소를 눌렀다면
+		if (code == null) {
+			return new ResponseEntity<String>("codeError",HttpStatus.BAD_REQUEST);
+		}
+		String accessToken = socialLoginService.naverGetToken(code);
+		if (accessToken.isEmpty()){
+			return new ResponseEntity<>("ACCESS_TOKEN_INVALID", HttpStatus.BAD_REQUEST);
+		}
+		Customer customer = socialLoginService.naverGetUserInfo(accessToken);
+		return getSocialUserLogin(customer, UserSocialLoginType.NAVER);
+	}
+
+	public ResponseEntity getSocialUserLogin(Customer customer, UserSocialLoginType social) {
 		// 사용자 검증
 		Optional<User> optionalUser = userService.findByUid(customer.getUid());
-		// 만약 처음 로그인한거면ype=code
+		User dbUser;
+		// 만약 처음 로그인한거면
 		if(optionalUser.isEmpty()) {
 			userService.saveSocialUser(customer);
+			dbUser = customer;
 		} else {
 			User option = optionalUser.get();
-			if (option instanceof Store || !((Customer) option).getSocial().equals(UserSocialLoginType.KAKAO)) {
+			if (option instanceof Store || !((Customer) option).getSocial().equals(social)) {
 				return new ResponseEntity<String>("OTHER_LOGIN_METHOD", HttpStatus.BAD_REQUEST);
 			}
+			dbUser = (Customer) option;
 		}
-		User dbUser = userService.findByUid(customer.getUid()).get();
+
 		String token = jwtService.createAccessToken(dbUser.getUid());
 		String refreshToken = jwtService.createRefreshToken(dbUser.getUid());
 		// 로그인
@@ -75,8 +97,10 @@ public class SocialLoginController {
 			.usrId(dbUser.getUsrId())
 			.userNickname(dbUser.getNickname())
 			.build();
-		customer.updateRefreshToken(refreshToken);
-		userService.saveSocialUser(customer);
+
+		dbUser.updateRefreshToken(refreshToken);
+		userService.saveSocialUser(dbUser);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
 }
