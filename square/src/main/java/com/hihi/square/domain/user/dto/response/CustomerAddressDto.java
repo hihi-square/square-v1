@@ -1,7 +1,6 @@
 package com.hihi.square.domain.user.dto.response;
 
 import java.time.LocalDateTime;
-import com.hihi.square.domain.user.entity.EmdAddress;
 
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +18,6 @@ public class CustomerAddressDto {
 	private String address;
 
 	private LocalDateTime createdAt;
-	private Float latitude;
-	private Float longitude;
+	private Double latitude;
+	private Double longitude;
 }
