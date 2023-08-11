@@ -11,24 +11,13 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.Pattern;
-
 import org.json.simple.parser.ParseException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.entity.UserRankType;
 import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.entity.UserStatusType;
@@ -157,7 +146,6 @@ public class SocialLoginService {
 
 			String uid = "K"+obj.get("id").toString();
 			String name = profile.get("nickname").toString();
-			String nickname = profile.get("nickname").toString();
 			String email = kakao_account.get("email").toString();
 
 			return Customer.builder()
@@ -313,7 +301,7 @@ public class SocialLoginService {
 	}
 
 	public String googleGetToken(String code) {
-		String host = "https://kauth.kakao.com/oauth/token";
+		String host = "https://oauth2.googleapis.com/token";
 		URL url;
 		String token = "";
 		try {
@@ -331,8 +319,9 @@ public class SocialLoginService {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
 			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
-			sb.append("&client_id=" + KAKAO_REST_API);
-			sb.append("&redirect_uri=" + KAKAO_REDIRECT_URI);
+			sb.append("&client_id=" + GOOGLE_CLIENT_ID);
+			sb.append("&client_secret="+GOOGLE_CLIENT_SECRET);
+			sb.append("&redirect_uri=" + GOOGLE_REDIRECT_URI);
 			sb.append("&code=" + code);
 			bw.write(sb.toString());
 			bw.flush();

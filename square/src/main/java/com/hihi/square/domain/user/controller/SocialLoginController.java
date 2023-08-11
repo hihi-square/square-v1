@@ -72,12 +72,12 @@ public class SocialLoginController {
 
 	@Transactional
 	@GetMapping("/google")
-	public ResponseEntity<?> googleLogin(@RequestParam(required=false, name = "access-token") String accessToken) {
+	public ResponseEntity<?> googleLogin(@RequestParam(required=false, name = "code") String code) {
 		// 만약 사용자가 로그인 취소를 눌렀다면
-		if (accessToken == null) {
+		if (code == null) {
 			return new ResponseEntity<String>("codeError",HttpStatus.BAD_REQUEST);
 		}
-		// String accessToken = socialLoginService.googleGetToken(code);
+		String accessToken = socialLoginService.googleGetToken(code);
 		if (accessToken.isEmpty()){
 			return new ResponseEntity<>("ACCESS_TOKEN_INVALID", HttpStatus.BAD_REQUEST);
 		}
