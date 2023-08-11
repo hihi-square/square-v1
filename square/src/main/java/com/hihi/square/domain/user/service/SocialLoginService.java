@@ -156,7 +156,7 @@ public class SocialLoginService {
 
 			return Customer.builder()
 				.uid(uid)
-				.nickname(nickname)
+				.nickname(uid)
 				.name(name)
 				.email(email)
 				.createdAt(LocalDateTime.now())
@@ -275,13 +275,12 @@ public class SocialLoginService {
 				uid = uid.substring(0, 29);
 			}
 			String name = profile.get("name").toString();
-			String nickname = profile.get("nickname").toString();
 			String email = profile.get("email").toString();
 			String phone = profile.get("mobile").toString().replace("-", "");
 
 			return Customer.builder()
 				.uid(uid)
-				.nickname(nickname)
+				.nickname(uid)
 				.name(name)
 				.email(email)
 				.createdAt(LocalDateTime.now())
