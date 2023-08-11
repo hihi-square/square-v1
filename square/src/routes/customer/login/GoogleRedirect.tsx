@@ -1,28 +1,42 @@
+import axios from "axios";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-
-function KakaoRedirect() {
-  const location = useLocation();
+// import axios from 'axios';
+function GoogleRedirect() {
+  const code = new URL(window.location.href).searchParams.get("code");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // URL에서 인증 코드나 토큰을 추출합니다.
-    // const urlParams = new URLSearchParams(location.search);
-    // const code = urlParams.get('code');
-    // TODO: 인증 코드로 토큰을 교환하거나 필요한 작업 수행
+  useEffect(() => { 
+    if (code) {
+      axios.get(`http://i9b208.p.ssafy.io:8811/api/v1/user/google?code=${code}`)
+        .then((response) => {
+          console.log(response.data);
+          const ACCESS_TOKEN = response.headers.authorization;
+          const REFRESH_TOKEN = response.headers["refresh-token"];
 
-    // 작업이 완료된 후 다른 페이지로 리다이렉트하거나 메인 페이지로 돌아갈 수 있습니다.
-    // navigate('/main'); // 예: 메인 페이지로 돌아갑니다.
-  }, [location, navigate]);
+          if (ACCESS_TOKEN) {
+            sessionStorage.setItem('accessToken', ACCESS_TOKEN);
+          }
+          if (REFRESH_TOKEN) {
+            sessionStorage.setItem('refreshToken', REFRESH_TOKEN);
+          }
+
+          navigate('/');
+        })
+        .catch((error) => {
+          console.error('구글 로그인 에러:', error);
+        });
+    }
+  }, [code, navigate]); // code와 navigate에 의존성을 추가합니다.
 
   return (
     <div>
-      카카오 로그인 처리 중...
+      {code}
     </div>
   );
 }
 
   
-  export default KakaoRedirect;
+  export default GoogleRedirect;
   

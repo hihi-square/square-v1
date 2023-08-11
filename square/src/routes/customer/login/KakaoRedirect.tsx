@@ -1,35 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function KakaoRedirect() {
-  const location = useLocation();
+  const code = new URL(window.location.href).searchParams.get("code");
   const navigate = useNavigate();
-  const [code, setCode] = useState<string | null>(null); 
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const authCode = urlParams.get('code'); 
-
-    if (authCode) {
-      setCode(authCode); 
-    }
-  }, [location]);
 
   useEffect(() => { 
     if (code) {
       axios.get(`http://i9b208.p.ssafy.io:8811/api/v1/user/kakao?code=${code}`)
         .then((response) => {
           console.log(response.data);
-          const jwtToken = response.data.jwtToken;
 
-          if (jwtToken) {
-            sessionStorage.setItem('jwtToken', jwtToken);
+          const ACCESS_TOKEN = response.headers.authorization;
+          const REFRESH_TOKEN = response.headers["refresh-token"];
+
+          if (ACCESS_TOKEN) {
+            sessionStorage.setItem('accessToken', ACCESS_TOKEN);
+          }
+          if (REFRESH_TOKEN) {
+            sessionStorage.setItem('refreshToken', REFRESH_TOKEN);
           }
           navigate('/');
         })
         .catch((error) => {
-          console.error('Error sending the authorization code to the backend:', error);
+          console.error('카카오 로그인 에러:', error);
         });
     }
   }, [code, navigate]); // code와 navigate에 의존성을 추가합니다.

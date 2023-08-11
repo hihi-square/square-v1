@@ -6,28 +6,31 @@ function NaverRedirect() {
   const code = new URL(window.location.href).searchParams.get("code");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function NaverLogin() {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API}/api/member/login/naver?code=${code}&state=${process.env.NAVER_STATE}`
-        );
+  useEffect(() => { 
+    if (code) {
+      axios.get(`http://i9b208.p.ssafy.io:8811/api/v1/user/naver?code=${code}`)
+        .then((response) => {
+          console.log(response.data);
 
-        // ESLint 경고를 무시하기 위한 주석 추가
-        // eslint-disable-next-line dot-notation
-        const ACCESS_TOKEN = res.headers["authorization"];
-        const REFRESH_TOKEN = res.headers["refresh-token"];
+          const ACCESS_TOKEN = response.headers.authorization;
+          const REFRESH_TOKEN = response.headers["refresh-token"];
 
-        sessionStorage.setItem("accessToken", ACCESS_TOKEN);
-        sessionStorage.setItem("refreshToken", REFRESH_TOKEN);
+          if (ACCESS_TOKEN) {
+            sessionStorage.setItem('accessToken', ACCESS_TOKEN);
+          }
+          if (REFRESH_TOKEN) {
+            sessionStorage.setItem('refreshToken', REFRESH_TOKEN);
+          }
 
-        navigate("/", { replace: true });
-      } catch (error) {
-        console.error("네이버 로그인 에러:", error);
-      }
+          navigate('/');
+        })
+        .catch((error) => {
+          console.error('네이버 로그인 에러:', error);
+        });
     }
-    NaverLogin();
-  }, [code, navigate]);
+  }, [code, navigate]); // code와 navigate에 의존성을 추가합니다.
+
+
 
   return <div>{code}</div>;
 }

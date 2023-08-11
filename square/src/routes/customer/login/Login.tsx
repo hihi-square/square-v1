@@ -128,7 +128,7 @@ export default function Login() {
 
   const GoogleLogin = (): void => {
 
-    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=409915cf48a47370a92cea926084d5a1&redirect_uri=http://localhost:3000/login/KakaoRedirect&response_type=code";
+    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=737783992238-n4bpttnif5c1a4a3r5j1747n7t8di5fu.apps.googleusercontent.com&redirect_uri=http://localhost:3000/login/GoogleRedirect&response_type=code&scope=openid email profile`;
   };
   
 
