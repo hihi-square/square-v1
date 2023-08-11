@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 
+import com.hihi.square.domain.coupon.service.CouponService;
 import com.hihi.square.domain.store.entity.Store;
 
 import lombok.AllArgsConstructor;
@@ -34,8 +35,12 @@ public class Coupon {
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "usr_id")
-	private Store store;
+	@JoinColumn(name = "from_usr_id")
+	private Store fromStore; // 여기서 사면
+
+	@ManyToOne
+	@JoinColumn(name = "to_usr_id")
+	private Store toStore; //  여기서 쓰는 쿠폰 줌
 
 	private String name;
 	private String content;
@@ -54,4 +59,13 @@ public class Coupon {
 	@Column(name="max_discount_price")
 	private Integer maxDiscountPrice; // 최대 할인금액
 
+	@Column(name="issue_condition")
+	private Integer issueCondition; // 이 가격 이상 사면 쿠폰 발급
+
+	@Enumerated(EnumType.STRING)
+	private CouponStatus status; // 발급대기, 발급, 발급 수락 x
+
+	public void acceptRequestCoupon(CouponStatus status) {
+		this.status = status;
+	}
 }

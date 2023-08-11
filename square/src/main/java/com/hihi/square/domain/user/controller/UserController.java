@@ -93,7 +93,7 @@ public class UserController {
 		}
 		// 접근 권한이 없음 || // 로그인 방법 상이
 		if(!request.getAuthenticate().toString().equals(user.getDecriminatorValue()) || ((user instanceof Customer) && !((Customer)user).getSocial().equals(
-			UserSocialLoginType.US01))) {
+			UserSocialLoginType.DEFAULT))) {
 			fResponse.setMessage("NOT_AUTHENTICATED");
 			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
 		}

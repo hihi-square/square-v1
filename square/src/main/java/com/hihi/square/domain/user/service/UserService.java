@@ -3,6 +3,7 @@ package com.hihi.square.domain.user.service;
 import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.repository.UserRepository;
@@ -49,6 +50,11 @@ public class UserService {
 	@Transactional
 	public void save(User user){
 		user.passwordEncode(passwordEncoder);
+		userRepository.save(user);
+	}
+
+	@Transactional
+	public void saveSocialUser(User user) {
 		userRepository.save(user);
 	}
 

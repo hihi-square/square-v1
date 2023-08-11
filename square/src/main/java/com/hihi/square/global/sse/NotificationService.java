@@ -74,6 +74,7 @@ public class NotificationService {
 			.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
 	}
 
+	// @TransactionalEventListener
 	public void send(User receiver, NotificationType notificationType, String content, String url) {
 		Notification notification = notificationRepository.save(
 			createNotification(receiver, notificationType, content, url));
@@ -96,6 +97,7 @@ public class NotificationService {
 			.notificationType(notificationType)
 			.content(content)
 			.url(url)
+			// .order(Order.builder().ordId(orderResponseDto.getOrdId()).build())
 			.isRead(false)
 			.build();
 	}

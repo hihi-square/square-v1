@@ -11,10 +11,15 @@ import com.hihi.square.domain.store.entity.Store;
 
 public interface CouponRepository extends JpaRepository<Coupon, Integer> {
 
-	@Query("select c from Coupon c where c.store = :store and :now between c.startAt and c.expiredAt")
-	List<Coupon> findByAllAvailableStoreCoupon(Store store, LocalDateTime now);
+	@Query("select c from Coupon c where c.fromStore = :store and :now between c.startAt and c.expiredAt and c.status = 'ISSUE'")
+	List<Coupon> findByAllAvailableFromStoreCoupon(Store store, LocalDateTime now);
 
-	List<Coupon> findAllByStore(Store store);
+	// List<Coupon> findAllByFromStore(Store store);
 
-	Integer countByStoreAndStartAtIsBeforeAndExpiredAtIsAfter(Store store, LocalDateTime now, LocalDateTime now1);
+	Integer countByFromStoreAndStartAtIsBeforeAndExpiredAtIsAfter(Store store, LocalDateTime now, LocalDateTime now1);
+
+	List<Coupon> findAllByToStoreOrFromStore(Store store, Store store1);
+
+	@Query("select c from Coupon c where c.fromStore = :store and c.status = 'PENDING' and c.expiredAt > :now")
+	List<Coupon> findIssueRequestCouponByStore(Store store, LocalDateTime now);
 }
