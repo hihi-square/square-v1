@@ -1,0 +1,4 @@
+.mapContainer > :first-child {
+  display: "flex";
+  justify-content: "center";
+}

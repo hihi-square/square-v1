@@ -1,5 +1,3 @@
-
-
 # Dockerfile
 # Stage 1 - the build process13123
 FROM node:18 as build-deps

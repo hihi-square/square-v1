@@ -11,13 +11,23 @@ export default function Map() {
   useEffect(() => {}, [dispatch]);
 
   return (
-    <Grid container xs={12} direction="column" alignItems="center">
+    <Grid
+      container
+      className="gd"
+      xs={12}
+      sx={{
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <Header cateNum={0} setAni={null} />
-      <Grid sx={{ height: "70px" }}></Grid>
-      <Grid container xs={11} justifyContent="center">
+      <Grid sx={{ height: "65px" }}></Grid>
+      <Grid container xs={12} justifyContent="center">
         <MapLayer />
       </Grid>
-      <Grid sx={{ height: "70px" }}></Grid>
+      <Grid sx={{ height: "65px" }}></Grid>
       <Footer now={2} />
     </Grid>
   );

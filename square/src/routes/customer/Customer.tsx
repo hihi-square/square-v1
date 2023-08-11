@@ -28,7 +28,7 @@ export default function Customer() {
       xs={12}
       md={8}
       justifyContent="center"
-      sx={{ maxWidth: "600px", backgroundColor: "white" }}
+      sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
     >
       <Routes>
         <Route path="/main" element={<Main />} />
