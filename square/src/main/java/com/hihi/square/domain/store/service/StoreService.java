@@ -216,4 +216,40 @@ public class StoreService {
 		}
 		return result;
 	}
+
+	public List<StoreSearchListDto> findByEmdAddress(EmdAddress emdAddress, Integer depth) {
+		List<StoreSearchListDto> result = new ArrayList<>();
+		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdAddress.getAemId(), depth);
+		List<Store> stores = storeRepository.findByEmdAddress(emdAddressList);
+		for (Store store : stores) {
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+			String menuName = "";
+			int size = menuList.size() < 3 ? menuList.size() : 3;
+			for (int i = 0; i < size; i++) {
+				if (i == size - 1) {
+					menuName += menuList.get(i).getName();
+				} else {
+					menuName += menuList.get(i).getName() + ", ";
+				}
+			}
+			result.add(
+				StoreSearchListDto.builder()
+					.storeId(store.getUsrId())
+					.storeName(store.getStoreName())
+					.content(store.getContent())
+					.storeAddress(store.getAddress())
+					.mainMenu(menuName)
+					.logo(store.getLogo())
+					.latitude(store.getLatitude())
+					.longitude(store.getLongitude())
+					.rating(
+						reviewService.getAverageRating(store)
+					)
+					.isOpened(store.getIsOpened())
+					.hasCoupon(false) // 일단 false로 두기
+					.build()
+			);
+		}
+		return result;
+	}
 }

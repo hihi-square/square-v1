@@ -33,4 +33,6 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
 	@Query("select s from Store s where s.emdAddress in (:emdAddressList) and (s.storeName like concat('%', :query , '%') or (s.hashtags like concat('%', :query, '%')))")
 	List<Store> findByEmdAddressAndQuery(List<EmdAddress> emdAddressList, String query);
 
+	@Query("select s from Store s where s.emdAddress in (:emdAddressList)")
+	List<Store> findByEmdAddress(List<EmdAddress> emdAddressList);
 }

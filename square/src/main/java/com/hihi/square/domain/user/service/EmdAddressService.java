@@ -58,8 +58,8 @@ public class EmdAddressService {
 		return result;
 	}
 
-	public EmdAddress findByAdmCode(Long admCode) {
-		return emdAddressRepository.findByAdmCode(admCode).get();
+	public Optional<EmdAddress> findByAdmCode(Long admCode) {
+		return emdAddressRepository.findByAdmCode(admCode);
 	}
 
 	public Optional<EmdAddress> findById(Integer emdId) {
