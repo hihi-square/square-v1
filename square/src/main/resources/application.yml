@@ -76,5 +76,7 @@ social:
     client-secret: 8xQtnJy7L1
     redirect-uri: http://localhost:3000/login/NaverRedirect
     state: test
-
-
+  google:
+    client-id: 167666714068-su36v2r5mu1j6spjan4cda8q42hbdhf3.apps.googleusercontent.com
+    client-secret: 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
+    redirect-uri: http://localhost:3000/login/GoogleRedirect

@@ -23,6 +23,7 @@ import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.service.SocialLoginService;
 import com.hihi.square.domain.user.service.UserService;
+import com.hihi.square.global.common.CommonResponseDto;
 import com.hihi.square.global.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,21 @@ public class SocialLoginController {
 		return getSocialUserLogin(customer, UserSocialLoginType.NAVER);
 	}
 
+	@Transactional
+	@GetMapping("/google")
+	public ResponseEntity<?> googleLogin(@RequestParam(required=false, name = "access-token") String accessToken) {
+		// 만약 사용자가 로그인 취소를 눌렀다면
+		if (accessToken == null) {
+			return new ResponseEntity<String>("codeError",HttpStatus.BAD_REQUEST);
+		}
+		// String accessToken = socialLoginService.googleGetToken(code);
+		if (accessToken.isEmpty()){
+			return new ResponseEntity<>("ACCESS_TOKEN_INVALID", HttpStatus.BAD_REQUEST);
+		}
+		Customer customer = socialLoginService.googleGetUserInfo(accessToken);
+		return getSocialUserLogin(customer, UserSocialLoginType.GOOGLE);
+	}
+
 	public ResponseEntity getSocialUserLogin(Customer customer, UserSocialLoginType social) {
 		// 사용자 검증
 		Optional<User> optionalUser = userService.findByUid(customer.getUid());
@@ -80,7 +96,7 @@ public class SocialLoginController {
 		} else {
 			User option = optionalUser.get();
 			if (option instanceof Store || !((Customer) option).getSocial().equals(social)) {
-				return new ResponseEntity<String>("OTHER_LOGIN_METHOD", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(CommonResponseDto.builder().message("OTHER_LOGIN_METHOD").statusCode(400).build(), HttpStatus.BAD_REQUEST);
 			}
 			dbUser = (Customer) option;
 		}
@@ -102,5 +118,6 @@ public class SocialLoginController {
 		userService.saveSocialUser(dbUser);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
 
 }

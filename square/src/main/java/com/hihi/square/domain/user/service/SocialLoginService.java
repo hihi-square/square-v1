@@ -58,8 +58,14 @@ public class SocialLoginService {
 	@Value("${social.naver.redirect-uri}")
 	private String NAVER_REDIRECT_URI;
 
+	@Value("${social.google.client-id}")
+	private String GOOGLE_CLIENT_ID;
 
+	@Value("${social.google.client-secret}")
+	private String GOOGLE_CLIENT_SECRET;
 
+	@Value("${social.google.redirect-uri}")
+	private String GOOGLE_REDIRECT_URI;
 
 
 	public String kakaoGetToken(String code) {
@@ -292,6 +298,125 @@ public class SocialLoginService {
 				.social(UserSocialLoginType.NAVER)
 				.point(0L)
 				.phone(phone)
+				.build();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String googleGetToken(String code) {
+		String host = "https://kauth.kakao.com/oauth/token";
+		URL url;
+		String token = "";
+		try {
+			url = new URL(host);
+
+			HttpURLConnection urlConnection;
+
+			urlConnection = (HttpURLConnection)url.openConnection();
+
+			urlConnection.setRequestMethod("POST");
+			urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+			urlConnection.setDoOutput(true); // 데이터 기록 알려주는 거
+
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+			StringBuilder sb = new StringBuilder();
+			sb.append("grant_type=authorization_code");
+			sb.append("&client_id=" + KAKAO_REST_API);
+			sb.append("&redirect_uri=" + KAKAO_REDIRECT_URI);
+			sb.append("&code=" + code);
+			bw.write(sb.toString());
+			bw.flush();
+
+			int responseCode = urlConnection.getResponseCode();
+			if (responseCode == 200) {
+				BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+				String line = "";
+				String result = "";
+				while ((line = br.readLine()) != null) {
+					result += line;
+				}
+
+				// json parse
+				JSONParser parser = new JSONParser();
+				JSONObject obj = (JSONObject)parser.parse(result);
+
+				String accessToken = obj.get("access_token").toString();
+
+				token = accessToken;
+				br.close();
+			}
+			bw.close();
+		}catch (ProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return token;
+	}
+
+	public Customer googleGetUserInfo(String accessToken) {
+		String host = "https://www.googleapis.com/userinfo/v2/me";
+		URL url;
+		try {
+			url = new URL(host);
+
+			HttpURLConnection urlConnection;
+
+			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+			urlConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+			urlConnection.setRequestMethod("GET");
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+			String line = "";
+			String res = "";
+			while ((line = br.readLine()) != null) {
+				res += line;
+			}
+
+			JSONParser parser = new JSONParser();
+			JSONObject profile = (JSONObject) parser.parse(res);
+
+			String uid = "G"+profile.get("id").toString();
+			if (uid.length()>=30) {
+				uid = uid.substring(0, 29);
+			}
+			String name = profile.get("name").toString();
+			String email = profile.get("email").toString();
+			String picture = profile.get("picture").toString();
+
+			return Customer.builder()
+				.uid(uid)
+				.nickname(uid)
+				.name(name)
+				.email(email)
+				.createdAt(LocalDateTime.now())
+				.modifiedAt(LocalDateTime.now())
+				.lastLogin(LocalDateTime.now())
+				.status(UserStatusType.ST01)
+				.marketingAgree(false)
+				.rank(UserRankType.UR01)
+				.social(UserSocialLoginType.GOOGLE)
+				.point(0L)
+				.profile(picture)
 				.build();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
