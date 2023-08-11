@@ -19,10 +19,5 @@ public enum MenuStatus {
 		}
 		return null;
 	}
-
-	// @JsonValue
-	// public String getValue() {
-	// 	return value;
-	// }
 }
 

@@ -3,7 +3,6 @@ package com.hihi.square.domain.menu.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hihi.square.domain.menu.dto.response.CartStoreResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
+import com.hihi.square.domain.menu.dto.response.CartStoreResponseDto;
 import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuResponseDto;
 import com.hihi.square.domain.menu.entity.Menu;
@@ -116,7 +116,7 @@ public class MenuController {
 	@GetMapping("/items={itemIds}")
 	public ResponseEntity<?> getMenuItemsById(@PathVariable List<Integer> itemIds) {
 		List<CartStoreResponseDto> cartInfo = menuService.getMenuItemsById(itemIds);
-		return new ResponseEntity<> (cartInfo, HttpStatus.OK);
+		return new ResponseEntity<>(cartInfo, HttpStatus.OK);
 	}
 
 }
