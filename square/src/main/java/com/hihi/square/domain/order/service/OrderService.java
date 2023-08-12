@@ -214,9 +214,11 @@ public class OrderService {
         }
 
         // 포인트 적립
-        Long point = order.getFinalPrice() / 100 * earningRate;  // rank 에 따라 상이한 적립금액
-        pointService.save(order.getOrdId(), customer, point, 1);
-        customer.updatePoint(customer.getPoint() + point);
+        if(earningRate != 0) {
+            Long point = order.getFinalPrice() / 100 * earningRate;  // rank 에 따라 상이한 적립금액
+            pointService.save(order.getOrdId(), customer, point, 1);
+            customer.updatePoint(customer.getPoint() + point);
+        }
 
         // 상태 변경
         order.updateOrderStatus(OrderStatus.PICKUP_COMPLETE);
