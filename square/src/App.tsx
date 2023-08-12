@@ -6,6 +6,7 @@ import "./App.css";
 import Seller from "./routes/seller/Seller";
 import Customer from "./routes/customer/Customer";
 import Error from "./routes/error/Error";
+import File from "./routes/test/File";
 
 // import CustomerSignUp from "routes/customer/signup/CustomerSignup";
 // import CustomerLogin from "routes/customer/login/CustomerLogin";
@@ -47,6 +48,7 @@ function App() {
             <Route path="/*" element={<Customer />} />
             <Route path="/seller/*" element={<Seller />} />
             <Route path="/error/*" element={<Error />} />
+            <Route path="/test/file" element={<File />} />
           </Routes>
         </Grid>
       </ThemeProvider>

@@ -1,56 +1,59 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
+import { REST_API } from "redux/redux";
 import { Iproduct } from "modules/types";
-import Grid from "@mui/material/Unstable_Grid2";
+import {
+  Unstable_Grid2 as Grid,
+  Box,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  FormHelperText,
+  Input,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Input from "@mui/material/Input";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { FormHelperText } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import FormControl from "@mui/material/FormControl";
-import InputAdornment from "@mui/material/InputAdornment";
 import ImagePreview from "./ImagePreview";
+import Options from "./Options";
 
 interface Props {
   open: boolean;
-  close: (close: boolean) => void;
-
-  length: number;
-  create: (product: Iproduct, length: number) => void;
-  isCreateModal: boolean;
-  handleCreateModal: () => void;
+  onClose: () => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  create: (product: Iproduct) => void;
   currProduct: Iproduct;
   handleCurrProduct: (key: string, value: string | boolean | number) => void;
 }
 
 export default function ProductForm({
   open,
-  close,
-  length,
+  onClose,
+  setOpen,
   create,
-  isCreateModal,
-  handleCreateModal,
   currProduct,
   handleCurrProduct,
 }: Props) {
+  const [fileName, setFileName] = useState<string | undefined>("");
+
+  // 체크박스에 대한 이벤트입니다.
   const handleCheckChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleCurrProduct(event.target.name, event.target.checked);
   };
 
+  // 체크박스가 아닌 기본적인 textbox의 이벤트입니다.
   const handleProductChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = event.target;
     let value: string | number = event.target.value;
 
-    if (name === "price" || name === "category_id" || name === "type_id") {
+    if (name === "price" || name === "category_id") {
       value = Number(value);
     }
 
@@ -60,17 +63,17 @@ export default function ProductForm({
   const [errors, setErrors] = useState({
     name: "",
     image: "",
-    category: "",
     price: "",
-    description: "",
   });
 
+  // currProduct가 바뀔때마다 이를 읽어서 에러를 띄워줍니다.
   useEffect(() => {
     if (!currProduct.name) {
       setErrors((err) => ({ ...err, name: "상품명을 입력하세요." }));
     } else {
       setErrors((err) => ({ ...err, name: "" }));
     }
+
     if (!currProduct.image) {
       setErrors((err) => ({
         ...err,
@@ -79,6 +82,7 @@ export default function ProductForm({
     } else {
       setErrors((err) => ({ ...err, image: "" }));
     }
+
     if (!currProduct.price) {
       setErrors((err) => ({
         ...err,
@@ -87,24 +91,55 @@ export default function ProductForm({
     } else {
       setErrors((err) => ({ ...err, price: "" }));
     }
-    if (!currProduct.description) {
-      setErrors((err) => ({ ...err, description: "상세 설명을 입력하세요." }));
-    } else {
-      setErrors((err) => ({ ...err, description: "" }));
-    }
-  }, [
-    currProduct.name,
-    currProduct.image,
-    currProduct.price,
-    currProduct.description,
-  ]);
+  }, [currProduct]);
 
   const isFormValid = () =>
     !Object.values(errors).some((error) => error !== "");
 
+  // dataURL을 Blob으로 바꿉니다.
+  const dataURLToBlob = (dataURL: string) => {
+    const byteString = atob(dataURL.split(",")[1]);
+    const mimeString = dataURL.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
+  };
+
+  // 이미지를 업로드합니다.
+
+  const postImage = () => {
+    const formData = new FormData();
+
+    if (currProduct.image && currProduct.thumbnail) {
+      const imageBlob = dataURLToBlob(currProduct.image);
+      const thumbBlob = dataURLToBlob(currProduct.thumbnail);
+
+      formData.append("image", imageBlob, fileName);
+      formData.append("thumb", thumbBlob, `th${fileName}`);
+
+      axios
+        .post(`${REST_API}api/file/thumb/test`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((resp) => {
+          handleCurrProduct("image", resp.data.file.url);
+          handleCurrProduct("thumbnail", resp.data.file.thumb);
+          create(currProduct);
+        })
+        .catch(() => {});
+    }
+  };
+
   return (
     <>
-      <Dialog open={open} onClose={close}>
+      <Dialog open={open} onClose={onClose}>
         <Box width="600px">
           <Box
             sx={{
@@ -127,8 +162,7 @@ export default function ProductForm({
             </DialogTitle>
           </Box>
           <DialogContent>
-            <Button onClick={() => handleCreateModal()}>수정</Button>
-            <Grid container spacing={2}>
+            <Grid container xs={12} spacing={2}>
               <Grid
                 xs={12}
                 sx={{
@@ -141,7 +175,10 @@ export default function ProductForm({
                 <ImagePreview
                   error={Boolean(errors.image)}
                   helperText={errors.image}
-                  onChange={handleProductChange}
+                  handleCurrProduct={handleCurrProduct}
+                  fileName={fileName}
+                  setFileName={setFileName}
+                  thumbnail={currProduct.thumbnail}
                 />
               </Grid>
               <Grid xs={12}>
@@ -155,7 +192,6 @@ export default function ProductForm({
                   onChange={handleProductChange}
                   error={Boolean(errors.name)}
                   helperText={errors.name}
-                  disabled={!isCreateModal}
                 />
               </Grid>
               <Grid xs={6}>
@@ -167,7 +203,6 @@ export default function ProductForm({
                     value={currProduct.price}
                     onChange={handleProductChange}
                     error={Boolean(errors.price)}
-                    disabled={!isCreateModal}
                     startAdornment={
                       <InputAdornment position="start">￦</InputAdornment>
                     }
@@ -187,7 +222,6 @@ export default function ProductForm({
                         name="represent"
                         value={currProduct.signature}
                         onChange={handleCheckChange}
-                        disabled={!isCreateModal}
                       />
                     }
                     label="대표"
@@ -202,7 +236,6 @@ export default function ProductForm({
                         name="popular"
                         value={currProduct.popular}
                         onChange={handleCheckChange}
-                        disabled={!isCreateModal}
                       />
                     }
                     label="인기"
@@ -219,20 +252,22 @@ export default function ProductForm({
                   rows={4}
                   value={currProduct.description}
                   onChange={handleProductChange}
-                  error={Boolean(errors.description)}
-                  helperText={errors.description}
-                  disabled={!isCreateModal}
                 />
+              </Grid>
+              <Grid xs={12}>
+                <DialogContentText>추가 옵션</DialogContentText>
+                <Options></Options>
               </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => close(false)}>닫기</Button>
+            <Button onClick={() => setOpen(false)}>닫기</Button>
             <Button
-              disabled={!isFormValid() || !isCreateModal}
+              disabled={!isFormValid()}
               onClick={() => {
-                create(currProduct, length);
-                close(false);
+                setFileName("");
+                postImage();
+                setOpen(false);
               }}
             >
               등록

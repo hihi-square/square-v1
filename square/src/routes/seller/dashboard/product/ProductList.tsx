@@ -1,576 +1,295 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-console */
 // =======================================IMPORT 구문========================================== //
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
-// import { useSelector } from "react-redux";
-// import { RootState } from "redux/store";
+import { useNavigate } from "react-router-dom";
 
 import {
   Unstable_Grid2 as Grid,
-  Paper,
   Button,
   Typography,
-  List,
-  ListSubheader,
+  TextField,
 } from "@mui/material";
 import { Iproduct, Icategory } from "modules/types";
-
-import ReadyItems from "./components/ReadyItems";
+import { REST_API } from "redux/redux";
 import ProductForm from "./ProductForm";
+
+import DragDrop from "./components/DragDrop";
+
 import "../../Seller.css";
 // ============================================================================================ //
 export default function ProductList() {
   // 초기값 설정
-  const REST_API: string = "http://i9b208.p.ssafy.io:8811";
-  const user = Number(localStorage.getItem("userInfo"));
-  const initProduct: Iproduct = useMemo(
-    () => ({
-      id: 0,
-      userId: user,
-      image: "",
-      thumbnail: "",
-      categoryId: 1,
-      categoryName: "",
-      name: "",
-      signature: false,
-      popular: false,
-      price: 0,
-      status: 0,
-      createdAt: "",
-      modifiedAt: "",
-      salRecord: 0,
-      description: "",
-      sequence: 1,
-    }),
-    [user]
-  );
+  const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+  const userInfo = localStorage.getItem("userInfo");
+  const user = userInfo ? JSON.parse(userInfo).userId : "";
 
-  // 제품 목록
-  const [products, setProducts] = useState<Iproduct[]>([]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    axios({
-      url: `${REST_API}/store/menuitem`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        const arr: Iproduct[] = res.data.data;
-        // const newArr = arr.filter((product: Iproduct) => product.status !== 2);
-
-        setProducts(arr);
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.log(error);
-      });
-  }, [user]);
-
-  // 카테고리 목록
-  const [categorys, setCategorys] = useState<Icategory[]>([]);
-
-  useEffect(() => {
-    axios({
-      url: `${REST_API}/store/menuCategory`,
-      method: "GET",
-      headers: {
-        userId: user,
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        const arr: Icategory[] = res.data.data;
-
-        setCategorys(arr);
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.log(error);
-      });
-  }, [user]);
-
-  // 메뉴와 비메뉴
-  const [menu, setMenu] = useState<Iproduct[]>([]);
-  const [ready, setReady] = useState<Iproduct[]>([]);
-
-  useEffect(() => {
-    if (products && categorys) {
-      let menuArr: Iproduct[] = [...products];
-      const readyArr: Iproduct[] = [];
-      const idxMap: Map<number, number> = new Map();
-
-      console.log(menuArr);
-
-      readyArr.push(...menuArr.filter((menuItem) => menuItem.status === 0));
-      menuArr = menuArr.filter((readyItem) => readyItem.status === 1);
-
-      for (const category of categorys) {
-        idxMap.set(category.id, category.sequence);
-        menuArr.push({
-          ...initProduct,
-          id: category.id,
-          name: category.name,
-          categoryId: category.id,
-          sequence: 0,
-          status: 4,
-        });
-      }
-
-      menuArr.sort((a: Iproduct, b: Iproduct) => {
-        const first: number = idxMap.get(a.categoryId) || 0;
-        const second: number = idxMap.get(b.categoryId) || 0;
-
-        if (first === second) {
-          if (a.status === 4 && b.status !== 4) {
-            return -1;
-          } else if (a.status !== 4 && b.status === 4) {
-            return 1;
-          } else if (a.sequence === b.sequence) {
-            return b.id - a.id;
-          } else {
-            return a.sequence - b.sequence;
-          }
-        } else {
-          return first - second;
-        }
-      });
-
-      readyArr.sort((a: Iproduct, b: Iproduct) => {
-        if (a.sequence === b.sequence) {
-          return b.id - a.id;
-        } else {
-          return a.sequence - b.sequence;
-        }
-      });
-
-      setMenu(menuArr);
-      setReady(readyArr);
-    }
-  }, [categorys, products, initProduct, user]);
-
+  const initProduct: Iproduct = {
+    id: 0,
+    userId: user,
+    image: "",
+    thumbnail: "",
+    categoryId: 1,
+    categoryName: "",
+    name: "",
+    signature: false,
+    popular: false,
+    price: 0,
+    status: "STOP",
+    createdAt: "",
+    modifiedAt: "",
+    salRecord: 0,
+    description: "",
+    sequence: 1,
+  };
+  const realProduct = useRef({ ...initProduct });
   const [open, setOpen] = useState<boolean>(false); // 모달 표시 여부
-  const [create, setCreate] = useState<boolean>(false); // 모달 타입(등록 / 수정)
-  // const [modalId, setModalId] = useState<number[]>([0, 0]); // 모달 상품 번호
-  const [createItem, setCreateItem] = useState<boolean>(false); // 아이템 업로드
-  const [currProduct, setCurrProduct] = useState<Iproduct>(initProduct);
+  const [reload, setReload] = useState<boolean>(true); // 아이템 업로드
+  const [currProduct, setCurrProduct] = useState<Iproduct>(initProduct); // 최초 상품 설정
+  const [products, setProducts] = useState<Iproduct[]>([]); // 상품목록
+  const [categorys, setCategorys] = useState<Icategory[]>([]); // 카테고리목록
+  const [click, setClick] = useState<number>(-1); // 클릭상품
+  const [newCategory, setNewCategory] = useState<string>(""); // 클릭카테고리
 
-  const resequence = (
-    list: Iproduct[] | undefined,
-    startIndex: number,
-    endIndex: number
-  ): Iproduct[] => {
-    if (list) {
-      const result = Array.from(list);
-      const [removed] = result.splice(startIndex, 1);
-
-      result.splice(endIndex, 0, removed);
-
-      // eslint-disable-next-line no-console
-      console.log(result);
-      return result;
-    } else {
-      return [];
-    }
-  };
-
-  const moving = (
-    from: Iproduct[] | undefined,
-    to: Iproduct[] | undefined,
-    startIndex: number,
-    endIndex: number,
-    moveType: number
-  ): void => {
-    if (from && to) {
-      const first = Array.from(from);
-      const second = Array.from(to);
-      const [removed] = first.splice(startIndex, 1);
-
-      second.splice(endIndex, 0, removed);
-
-      if (moveType === 1) {
-        if (second[0].status === 4) {
-          setReady(first);
-          setMenu(second);
-        }
-      } else {
-        setReady(second);
-        setMenu(first);
-      }
-    }
-  };
-
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination } = result;
-
-    // dropped outside the list
-    if (!destination) {
-      return;
-    }
-
-    if (source.droppableId === "a") {
-      if (destination.droppableId === source.droppableId) {
-        // 드래그가 끝나면 순서를 재배치
-        const resequenceedReady = resequence(
-          ready,
-          source.index,
-          destination.index
-        );
-
-        setReady(resequenceedReady);
-      } else {
-        moving(ready, menu, source.index, destination.index, 1);
-      }
-    } else if (source.droppableId === "b") {
-      if (destination.droppableId === source.droppableId) {
-        const resequenceedMenu = resequence(
-          menu,
-          source.index,
-          destination.index
-        );
-
-        if (resequenceedMenu[0].status === 4) setMenu(resequenceedMenu);
-      } else if (menu && menu[source.index].status !== 4) {
-        moving(menu, ready, source.index, destination.index, 2);
-      }
-    }
-  };
-
-  const handleCurrProduct = (key: string, value: string | boolean | number) => {
-    setCurrProduct((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const updatesequence = () => {
-    let catesequence = 1;
-    let itemsequence = 1;
-    let cateCode = 0;
-
-    const newProducts = [];
-    const newCategorys = [];
-
-    // eslint-disable-next-line no-console
-    console.log("메뉴");
-    // eslint-disable-next-line no-console
-    console.log(menu);
-
-    for (const readyItem of ready) {
-      newProducts.push({ ...readyItem, status: 0, sequence: itemsequence });
-      itemsequence++;
-    }
-    itemsequence = 1;
-    for (const menuItem of menu) {
-      console.log(menuItem);
-      if (menuItem.status !== 4) {
-        newProducts.push({
-          userId: user,
-          id: menuItem.id,
-          categoryId: cateCode,
-          status: 1,
-          sequence: itemsequence,
-        });
-        itemsequence++;
-      } else {
-        cateCode = menuItem.id;
-        newCategorys.push({
-          id: cateCode,
-          userId: user,
-          sequence: catesequence,
-        });
-        itemsequence = 1;
-        catesequence++;
-      }
-    }
-
-    console.log("ㅎㅇ");
-    console.log(newProducts);
-
-    axios({
-      url: `${REST_API}/store/menuitem/list`,
-      method: "PATCH",
-      data: {
-        data: newProducts,
-      },
-    })
-      .then((res) => {
-        axios({
-          url: `${REST_API}/store/menuitem`,
-          method: "GET",
-          headers: {
-            userId: user,
-          },
-        })
-          .then((resp) => {
-            console.log(resp);
-            const arr: Iproduct[] = resp.data.data;
-            const newArr = arr.filter(
-              (product: Iproduct) => product.status !== 2
-            );
-
-            setProducts(newArr);
-          })
-          .catch((error) => {
-            // eslint-disable-next-line no-console
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.log(`${error}ㅎㅇ`);
-      });
-
-    axios({
-      url: `${REST_API}/store/menuCategory/list`,
-      method: "PATCH",
-      data: {
-        data: newCategorys,
-      },
-    })
-      .then((res) => {
-        axios({
-          url: `${REST_API}/store/menuCategory`,
-          method: "GET",
-          headers: {
-            userId: user,
-          },
-        })
-          .then((resp) => {
-            console.log(resp);
-            const arr: Icategory[] = res.data.data;
-
-            setCategorys(arr);
-          })
-          .catch((error) => {
-            // eslint-disable-next-line no-console
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.log(error);
-      });
-  };
-  const handleCreate = () => {
-    setCreate((prev) => !prev);
-  };
-
-  const createProduct = (product: Iproduct, length: number) => {
-    console.log(product);
-    if (product.id === 0) {
+  // 첫 실행 때 데이터를 상품과 카테고리 목록을 가져옵니다.
+  useEffect(() => {
+    if (reload) {
       axios({
-        url: `${REST_API}/store/menuitem`,
-        method: "POST",
-        data: {
-          ...product,
+        url: `${REST_API}store/menuitem`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => {
           axios({
-            url: `${REST_API}/store/menuitem`,
+            url: `${REST_API}store/menucategory`,
             method: "GET",
             headers: {
-              userId: user,
+              Authorization: `Bearer ${token}`,
             },
           })
-            .then((resp) => {
-              console.log(resp);
-              const arr: Iproduct[] = resp.data.data;
-              const newArr = arr.filter(
-                (productz: Iproduct) => productz.status !== 2
-              );
+            .then((res2) => {
+              const arr: Icategory[] = res2.data.data;
 
-              setProducts(newArr);
+              setCategorys(arr);
             })
-            .catch((error) => {
-              // eslint-disable-next-line no-console
-              console.log(error);
+            .catch(() => {
+              navigate("/error");
             });
+
+          const arr: Iproduct[] = res.data.data;
+
+          setProducts(arr);
         })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.log(`${error}`);
+        .catch(() => {
+          navigate("/error");
         });
-    } else {
-      setProducts((prev) => {
-        const index = prev.findIndex((p) => p.id === product.id);
 
-        if (index !== -1) {
-          const newProducts = [...prev];
-
-          newProducts[index] = product;
-          return newProducts;
-        }
-
-        return prev;
-      });
+      setReload(false);
     }
-    setCreateItem(true);
+  }, [reload]);
+
+  // 현재 다루는 상품에서 해당하는 키값을 바꿉니다.
+  const handleCurrProduct = (key: string, value: string | boolean | number) => {
+    realProduct.current = { ...realProduct.current, [key]: value };
+
+    console.log(realProduct);
+    setCurrProduct((prev) => ({ ...prev, [key]: value }));
   };
 
-  useEffect(() => {
-    if (createItem) localStorage.setItem("products", JSON.stringify(products));
-    setCreateItem(false);
-  }, [createItem, products]);
+  // 상품을 만듭니다.
+  const createProduct = (product: Iproduct) => {
+    if (realProduct.current.id === 0) {
+      axios({
+        url: `${REST_API}store/menuitem`,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          ...realProduct.current,
+        },
+      })
+        .then(() => {
+          // 상품 데이터를 보내고 응답이 왔다면 다시 렌더링합니다.
+          console.log("생성");
+          setCurrProduct({ ...initProduct });
+          realProduct.current = { ...initProduct };
+          setReload(true);
+        })
+        .catch((error) => {
+          navigate("/error");
+        });
+    } else {
+      axios({
+        url: `${REST_API}store/menuitem/${realProduct.current.id}`,
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          ...realProduct.current,
+        },
+      })
+        .then(() => {
+          // 상품 데이터를 보내고 응답이 왔다면 다시 렌더링합니다.
+          console.log("수정");
+          setCurrProduct({ ...initProduct });
+          realProduct.current = { ...initProduct };
+          setReload(true);
+        })
+        .catch((error) => {
+          navigate("/error");
+        });
+    }
+  };
 
-  // useEffect(() => {
-  //   if (modalId[1] !== 0) setOpen(true);
-  // }, [modalId]);
+  const deleteProduct = () => {
+    axios({
+      url: `${REST_API}store/menuitem/${realProduct.current.id}`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(() => {
+        // 상품 데이터를 보내고 응답이 왔다면 다시 렌더링합니다.
+        console.log("삭제");
+        setCurrProduct({ ...initProduct });
+        realProduct.current = { ...initProduct };
+        setReload(true);
+      })
+      .catch((error) => {
+        navigate("/error");
+      });
+  };
+
+  const close = () => {
+    setCurrProduct({ ...initProduct });
+    realProduct.current = { ...initProduct };
+  };
+
+  // 카테고리를 추가합니다.
+  const handleCategory: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (event) => {
+    const now = event.target.value;
+
+    setNewCategory(now);
+  };
+
+  const uploadCategory = () => {
+    const length = categorys.length;
+    const newCate = {
+      name: newCategory,
+      sequence: length + 1,
+    };
+
+    axios({
+      url: `${REST_API}store/menucategory`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        ...newCate,
+      },
+    })
+      .then(() => {
+        // 상품 데이터를 보내고 응답이 왔다면 다시 렌더링합니다.
+        console.log("등록");
+        setCurrProduct({ ...initProduct });
+        realProduct.current = { ...initProduct };
+        setReload(true);
+      })
+      .catch((error) => {
+        navigate("/error");
+      });
+  };
 
   return (
     <Grid xs={12} sx={{ paddingBottom: "10px" }}>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Typography
-          variant="h4"
-          component="div"
-          sx={{ flexGrow: 1, textAlign: "left", fontWeight: 800 }}
+      <Typography
+        variant="h4"
+        component="div"
+        sx={{ flexGrow: 1, textAlign: "left", fontWeight: 800 }}
+      >
+        상품 관리
+      </Typography>
+      <Typography
+        component="div"
+        sx={{ flexGrow: 1, textAlign: "left", fontWeight: 500 }}
+      >
+        가게에 등록할 상품을 관리합니다.
+      </Typography>
+      <DragDrop
+        realProduct={realProduct}
+        setCurrProduct={setCurrProduct}
+        products={products}
+        categorys={categorys}
+        setReload={setReload}
+        click={click}
+        setClick={setClick}
+      ></DragDrop>
+      {click === -1 ? (
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => {
+            realProduct.current = { ...initProduct };
+            setCurrProduct({ ...initProduct });
+            setOpen(true);
+          }}
         >
-          상품 관리
-        </Typography>
-        <Typography
-          component="div"
-          sx={{ flexGrow: 1, textAlign: "left", fontWeight: 500 }}
-        >
-          가게에 등록할 상품을 관리합니다.
-        </Typography>
-        <Grid xs={12} container>
-          <Grid xs={6} sx={{ height: "80%", paddingBottom: "10px" }}>
-            <Paper elevation={1} className="full-compo" sx={{ margin: "10px" }}>
-              <Droppable droppableId="a">
-                {(provided) => (
-                  <List
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    sx={{
-                      width: "100%",
-                      maxWidth: 500,
-                      maxHeight: 600,
-                      bgcolor: "white",
-                      overflow: "auto",
-                    }}
-                  >
-                    {ready?.map((product, index) => (
-                      <Draggable
-                        key={product.id}
-                        draggableId={`a${product.id}`}
-                        index={index}
-                      >
-                        {(dragProvided) => (
-                          <ReadyItems
-                            product={product}
-                            dragProvided={dragProvided}
-                          />
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </List>
-                )}
-              </Droppable>
-
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => {
-                  setCreate(true);
-                  setCurrProduct({ ...initProduct });
-                  setOpen(true);
-                }}
-              >
-                상품등록
-              </Button>
-              <ProductForm
-                open={open}
-                close={setOpen}
-                length={products.length}
-                create={createProduct}
-                isCreateModal={create}
-                handleCreateModal={handleCreate}
-                currProduct={
-                  currProduct === undefined ? initProduct : currProduct
-                }
-                handleCurrProduct={handleCurrProduct}
-              />
-            </Paper>
-          </Grid>
-          <Grid xs={6} sx={{ height: "80%", paddingBottom: "10px" }}>
-            <Paper elevation={1} className="full-compo" sx={{ margin: "10px" }}>
-              <Droppable droppableId="b">
-                {(provided) => (
-                  <List
-                    aria-labelledby="nested-list-subheader"
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    sx={{
-                      width: "100%",
-                      maxWidth: 500,
-                      maxHeight: 600,
-                      bgcolor: "white",
-                      overflow: "auto",
-                    }}
-                  >
-                    {menu?.map((product, index) =>
-                      product.status === 4 ? (
-                        <Draggable
-                          key={`b${index}`}
-                          draggableId={`b${index}`}
-                          index={index}
-                        >
-                          {(dragProvided) => (
-                            <ListSubheader
-                              component="div"
-                              id="nested-list-subheader"
-                              ref={dragProvided.innerRef}
-                              {...dragProvided.draggableProps}
-                              {...dragProvided.dragHandleProps}
-                              sx={{
-                                backgroundColor: "lightgray",
-                              }}
-                            >
-                              {product.name}
-                            </ListSubheader>
-                          )}
-                        </Draggable>
-                      ) : (
-                        <Draggable
-                          key={`c${product.id}`}
-                          draggableId={`c${product.id}`}
-                          index={index}
-                        >
-                          {(dragProvided) => (
-                            <ReadyItems
-                              product={product}
-                              dragProvided={dragProvided}
-                            />
-                          )}
-                        </Draggable>
-                      )
-                    )}
-                    {provided.placeholder}
-                  </List>
-                )}
-              </Droppable>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => {
-                  updatesequence();
-                }}
-              >
-                메뉴변경
-              </Button>
-            </Paper>
-          </Grid>
+          상품등록
+        </Button>
+      ) : (
+        <Grid>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            상품수정
+          </Button>
+          <Button variant="contained" color="success" onClick={deleteProduct}>
+            상품삭제
+          </Button>
         </Grid>
-      </DragDropContext>
+      )}
+      {}
+      <Grid>
+        <TextField
+          id="name"
+          name="name"
+          value={newCategory}
+          fullWidth
+          variant="outlined"
+          onChange={handleCategory}
+        />
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => {
+            uploadCategory();
+          }}
+        >
+          카테고리추가
+        </Button>
+      </Grid>
+      <ProductForm
+        open={open}
+        onClose={close}
+        setOpen={setOpen}
+        create={createProduct}
+        currProduct={currProduct}
+        handleCurrProduct={handleCurrProduct}
+      />
     </Grid>
   );
 }

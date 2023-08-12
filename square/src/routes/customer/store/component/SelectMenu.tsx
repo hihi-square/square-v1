@@ -18,7 +18,7 @@ type Item = {
   menuThumbnail: string;
   menuImage: string;
   description: string;
-  status: number;
+  status: string;
   popularity: boolean;
   signature: boolean;
   price: number;
