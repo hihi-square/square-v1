@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class MenuOptionResponseDto {
 	private Long id;
-	private Long moId;    //menuOptionCategory id
+	private Long mocId;    //menuOptionCategory id
 	private Long menuId;
 	private Integer userId;
 	private String name;
@@ -17,7 +17,7 @@ public class MenuOptionResponseDto {
 
 	public MenuOptionResponseDto(MenuOption menuOption) {
 		this.id = menuOption.getId();
-		this.moId = menuOption.getOptionCategory().getId();
+		this.mocId = menuOption.getOptionCategory().getId();
 		this.menuId = menuOption.getMenu().getMenuId();
 		this.userId = menuOption.getUser().getUsrId();
 		this.name = menuOption.getName();

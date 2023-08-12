@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.menu.dto.request.MenuOptionCategoryRequestDto;
@@ -31,12 +32,12 @@ public class MenuOptionCategoryController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(Authentication authentication) {
+	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(Authentication authentication,
+		@RequestParam("menu") Long menuId) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
-		List<MenuOptionCategory> menuOptionCategoryList = menuOptionCategoryService.findAllByUserId(user.getUsrId());
-		// List<MenuOptionCategory> menuOptionList = menuOptionCategoryService.findAllByMenuId(menId);
+		List<MenuOptionCategory> menuOptionCategoryList = menuOptionCategoryService.findAllByMenuId(menuId);
 		List<MenuOptionCategoryResponseDto> responseList = new ArrayList<>();
 
 		for (MenuOptionCategory menuOptionCategory : menuOptionCategoryList) {
