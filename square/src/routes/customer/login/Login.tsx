@@ -11,6 +11,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+import { REST_API } from "redux/redux";
 
 export default function Login() {
   const [id, setId] = useState<string>("");
@@ -87,7 +88,7 @@ export default function Login() {
 
     if (!notAllow)
       axios({
-        url: "http://43.201.255.188:8811/user/login",
+        url: `${REST_API}user/login`,
         method: "POST",
         data: {
           uid: id,
@@ -104,6 +105,8 @@ export default function Login() {
           navigate("/main");
         })
         .catch((error) => {
+          console.log(error);
+          console.log("gd");
           setFailed(true);
         });
   };
@@ -252,7 +255,10 @@ export default function Login() {
               <Button color="secondary"> 회원가입 </Button>
             </Grid>
             <Grid container xs={6} justifyContent="end">
-              <Button color="secondary"> 아이디/비밀번호 찾기 </Button>
+              <Button color="secondary">
+                {" "}
+                아이디/비밀번dfdfdfdfdf호 찾기{" "}
+              </Button>
             </Grid>
           </Grid>
         </Grid>
