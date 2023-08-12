@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
-import { REST_API } from "redux/store";
+import { REST_API } from "redux/redux";
 
 export default function CustomerSignUp() {
   const [username, setName] = useState("");
