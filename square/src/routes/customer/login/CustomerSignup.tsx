@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
+import { REST_API } from "redux/store";
 
 export default function CustomerSignUp() {
   const [username, setName] = useState("");
@@ -17,11 +18,11 @@ export default function CustomerSignUp() {
   const [nicknameValid, setNicknameValid] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
   const [phoneValid, setPhoneValid] = useState(false);
-  
+
   const [idValid, setIdValid] = useState(false);
   const [isIdDuplicated, setIsIdDuplicated] = useState(false);
   const [pwValid, setPwValid] = useState(false);
-  const [checkPwValid, setCheckPwValid] = useState(false)
+  const [checkPwValid, setCheckPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
 
   const [message, setMessage] = useState("");
@@ -71,19 +72,20 @@ export default function CustomerSignUp() {
 
   const handleCheckId = () => {
     // 서버에 아이디 중복 확인 요청 보내기
-    console.log('아이디는',id)
-    axios.get(`http://i9b208.p.ssafy.io:8811/user/id/${id}`) // 경로 바뀜
+    console.log("아이디는", id);
+    axios
+      .get(`${REST_API}user/id/${id}`)
       .then((response) => {
         // 서버 응답 처리
-        if (response.data.message === 'VALID'){
-          console.log(response.data)
+        if (response.data.message === "VALID") {
+          console.log(response.data);
           setIsIdDuplicated(false);
           setMessage("사용 가능한 아이디 입니다.");
-        } else{
+        } else {
           setIsIdDuplicated(true);
           // setMessage("사용 불가능한 아이디 입니다.");
         }
-        console.log('성공햇당')
+        console.log("성공햇당");
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -127,7 +129,14 @@ export default function CustomerSignUp() {
   };
 
   const updateNotAllow = () => {
-    setNotAllow(!idValid || !pwValid || !nameValid || !emailValid || !nicknameValid || !phoneValid);
+    setNotAllow(
+      !idValid ||
+        !pwValid ||
+        !nameValid ||
+        !emailValid ||
+        !nicknameValid ||
+        !phoneValid
+    );
   };
 
   const handleMarketing = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,21 +147,20 @@ export default function CustomerSignUp() {
   const navigate = useNavigate();
 
   const handleSignUp = () => {
-
     const body = {
       uid: id,
       password: pw,
-      nickname: nickname,
+      nickname,
       name: username,
-      phone: phone,
-      email: email,
+      phone,
+      email,
       marketingAgree: marketing,
-    }
+    };
 
     axios
-      .post("http://i9b208.p.ssafy.io:8811/user", body)
+      .post(`${REST_API}user`, body)
       .then((response) => {
-        console.log(response.status)
+        console.log(response.status);
         // 서버 응답 처리
         if (response.status === 201) {
           // eslint-disable-next-line no-alert
@@ -286,32 +294,27 @@ export default function CustomerSignUp() {
       </div>
 
       <div style={{ marginTop: "26px" }} className="inputTitle">
-          핸드폰번호
-        </div>
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="number"
-            placeholder="01012345678"
-            value={phone}
-            onChange={handlePhone}
-          />
-        </div>
-        <div className="errorMessageWrap">
-          {!pwValid && pw.length > 0 && (
-            <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
-          )}
-        </div>
+        핸드폰번호
+      </div>
+      <div className="inputWrap">
+        <input
+          className="input"
+          type="number"
+          placeholder="01012345678"
+          value={phone}
+          onChange={handlePhone}
+        />
+      </div>
+      <div className="errorMessageWrap">
+        {!pwValid && pw.length > 0 && (
+          <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
+        )}
+      </div>
 
-        <div style={{ marginTop: '26px' }}>
-          <input
-            type="checkbox"
-            checked={marketing}
-            onChange={handleMarketing}
-          />
-          마케팅 동의
-        </div>
-
+      <div style={{ marginTop: "26px" }}>
+        <input type="checkbox" checked={marketing} onChange={handleMarketing} />
+        마케팅 동의
+      </div>
 
       <div>
         <button

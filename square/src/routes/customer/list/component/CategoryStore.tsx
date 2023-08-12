@@ -27,12 +27,18 @@ export default function CategoryStore() {
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = sessionStorage.getItem('accessToken') || '';
+
+  console.log(token)
 
   useEffect(() => {
     if (category) {
       axios({
         url: `${REST_API}store/big-category/${Number(category)}`,
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
         .then((response) => {
           setStores(response.data);

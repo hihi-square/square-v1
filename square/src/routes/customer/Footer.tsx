@@ -1,7 +1,11 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import { Unstable_Grid2 as Grid, Box, Button, Typography } from "@mui/material";
-
+import {
+  Paper,
+  Unstable_Grid2 as Grid,
+  Box,
+  Button,
+  Typography,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -10,23 +14,16 @@ import {
   faMessage,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom"; // 이 부분을 수정
+import { styled } from "@mui/system";
 
-type Props = {
-  now: number;
-};
-
-export default function Footer({ now }: Props) {
-  const navigate = useNavigate();
+export default function Footer() {
+  // const [value, setValue] = React.useState(0);
 
   return (
-    <Grid
-      sx={{
-        backgroundColor: "white",
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
-        maxWidth: "600px",
-      }}
+    <Paper
+      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      elevation={3}
     >
       <Grid container xs={12}>
         <Grid xs>
@@ -38,7 +35,7 @@ export default function Footer({ now }: Props) {
               flexDirection: "column",
             }}
             onClick={() => {
-              if (now !== 1) navigate("/main");
+              // setValue(0);
             }}
           >
             <Box component="div">
@@ -90,7 +87,7 @@ export default function Footer({ now }: Props) {
               flexDirection: "column",
             }}
             onClick={() => {
-              if (now !== 3) navigate("/board");
+              // setValue(0);
             }}
           >
             <Box component="div">
@@ -142,7 +139,7 @@ export default function Footer({ now }: Props) {
               flexDirection: "column",
             }}
             onClick={() => {
-              if (now !== 5) navigate("/my");
+              // setValue(0);
             }}
           >
             <Box component="div">
@@ -160,6 +157,6 @@ export default function Footer({ now }: Props) {
           </Button>
         </Grid>
       </Grid>
-    </Grid>
+    </Paper>
   );
 }

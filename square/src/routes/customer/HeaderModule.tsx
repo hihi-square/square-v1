@@ -21,6 +21,7 @@ const HeaderModule: React.FC = () => {
         });
       });
 
+      console.log(totalItemCount)
       setCartItemCount(totalItemCount);
     };
 
