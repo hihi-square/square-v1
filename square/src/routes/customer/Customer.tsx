@@ -10,10 +10,9 @@ import Chat from "./chat/chat";
 import MyPage from "./my/MyPage";
 import Cart from "./deal/Cart";
 import Pay from "./deal/Pay";
-import OrderList from "./deal/OrderList";
+import Order from "./order/Order";
 import MyArea from "./my/MyArea";
 import MyInfo from "./my/MyInfo";
-import MyOrderHistory from "./my/MyOrderHistory";
 import MyRegular from "./my/MyRegular";
 import MyReview from "./my/MyReview";
 import MyBoard from "./my/MyBoard";
@@ -46,18 +45,18 @@ export default function Customer() {
 
         <Route path="/chat" element={<Chat />} />
 
+        <Route path="/order" element={<Order />} />
+
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/myarea" element={<MyArea />} />
         <Route path="/myinfo" element={<MyInfo />} />
-        <Route path="/myorderhistory" element={<MyOrderHistory />} />
+
         <Route path="/myregular" element={<MyRegular />} />
         <Route path="/myreview" element={<MyReview />} />
         <Route path="/myboard" element={<MyBoard />} />
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/pay" element={<Pay />} />
-
-        <Route path="/orderlist" element={<OrderList />} />
         <Route path="*" element={<Login />} />
         <Route path="/signup" element={<CustomerSignUp />} />
         <Route path="/login/KakaoRedirect" element={<KakaoRedirect />} />

@@ -117,7 +117,7 @@ export default function Footer({ now }: FooterProps) {
               flexDirection: "column",
             }}
             onClick={() => {
-              if (now !== 4) navigate("/orderlist");
+              if (now !== 4) navigate("/order");
             }}
           >
             <Box component="div">

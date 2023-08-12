@@ -83,7 +83,7 @@ export default function Seller() {
             </Typography>
           </Box>
         </Grid>
-        <Grid xs={10} className="full-size component-page">
+        <Grid xs={10} container className="full-size component-page">
           <Routes>
             <Route path="/" element={<Main />} />
 

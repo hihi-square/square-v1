@@ -1,17 +1,11 @@
 import { useState } from "react";
 import { Box, Typography, Grid, Collapse, IconButton } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useNavigate } from "react-router-dom";
 
 export default function Order() {
-  const navigate = useNavigate();
   const [openProductIndex, setOpenProductIndex] = useState<number | null>(null);
   const [openPaymentIndex, setOpenPaymentIndex] = useState<number | null>(null);
-
-  const goBack = () => {
-    navigate(-1);
-  };
 
   const dummyData = [
     {
@@ -64,12 +58,6 @@ export default function Order() {
 
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <ArrowBackIcon onClick={goBack} />
-        <Typography variant="h6" sx={{ margin: "auto" }}>
-          내 주문내역
-        </Typography>
-      </Box>
       <Grid container spacing={3}>
         {dummyData.map((order, index) => (
           <Grid item xs={12} key={index}>
