@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -106,6 +107,36 @@ public class OrderController {
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	//STEP 03
+	// 가게 주문 수락시 프로세스 -> return도 가게로 들어가는거임
+	@Transactional
+	@PatchMapping("/store-acceptance/{ordId}")
+	public ResponseEntity<CommonResponseDto> updateOrderSuccess(@PathVariable Integer ordId) {
+		CommonResponseDto response = CommonResponseDto.builder()
+				.statusCode(200)
+				.message("UPDATE_SUCCESS")
+				.build();
+		Order order = orderService.findByOrderId(ordId).get();
+		orderService.updateOrderAccepted(order);
+		
+		// 소비자로 알림 전송 : 주문 수락됨
+		eventPublisher.publishEvent(new OrderEvent(order, "주문이 수락되었습니다."));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	// 가게 주문 거절시 프로세스
+	@Transactional
+	@PatchMapping("/store-denied/{ordId}")
+	public ResponseEntity<?> updateOrderDenied(@PathVariable Integer ordId) {
+		Order order = orderService.findByOrderId(ordId).get();
+		RefundInfoResponseDto response = orderService.updateOrderDenied(order);
+		
+		// 소비자로 알림 전송 : 주문 거절됨 환불 진행
+		eventPublisher.publishEvent(new OrderEvent(order, "주문이 거절되었습니다."));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 
 	// 주문 상세 조회
 	@Transactional(readOnly = true)
