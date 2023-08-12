@@ -17,11 +17,12 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import Header from "./component/StoreHeader";
-import Footer from "../Footer";
+// import Footer from "../Footer";
 import StoreMenu from "./component/StoreMenu";
 import StoreFeed from "./component/StoreFeed";
 import StoreReview from "./component/StoreReview";
 import SelectMenu from "./component/SelectMenu";
+import Footer from "../Footer";
 
 function StorePage() {
   type Store = {
@@ -77,7 +78,7 @@ function StorePage() {
 
   const renderTabContent = () => {
     switch (selectedTab) {
-      case "info":
+      case "feed":
         return <StoreFeed storeId={store} />;
       case "review":
         return <StoreReview storeId={store} />;
@@ -222,61 +223,90 @@ function StorePage() {
             justifyContent: "space-around",
           }}
         >
-          <Button onClick={() => setSelectedTab("menu")}>
-            <Typography
-              variant="h6"
-              component="h6"
-              sx={{
-                fontWeight: 500,
-                textAlign: "center",
-                fontSize: "20px",
-                color: "black",
-                padding: "0px 5px",
-              }}
-            >
-              피드
-            </Typography>
-          </Button>
+         <Button 
+  onClick={() => setSelectedTab("menu")}
+  sx={{
+      boxShadow: selectedTab === "menu" ? '3px 3px 5px rgba(0,0,0,0.3)' : 'none',
+      backgroundColor: selectedTab === "menu" ? '#f0f0f0' : 'transparent',
+      "&:hover": {
+          backgroundColor: selectedTab === "menu" ? '#e0e0e0' : 'transparent',
+      }
+  }}
+>
+  <Typography
+    variant="h6"
+    component="h6"
+    sx={{
+      fontWeight: 500,
+      textAlign: "center",
+      fontSize: "20px",
+      color: "black",
+      padding: "0px 5px",
+    }}
+  >
+    메뉴
+  </Typography>
+</Button>
 
-          <Button onClick={() => setSelectedTab("feed")}>
-            <Typography
-              variant="h6"
-              component="h6"
-              sx={{
-                fontWeight: 500,
-                textAlign: "center",
-                fontSize: "20px",
-                color: "black",
-                padding: "0px 5px",
-              }}
-            >
-              메뉴
-            </Typography>
-          </Button>
+<Button 
+  onClick={() => setSelectedTab("feed")}
+  sx={{
+      boxShadow: selectedTab === "feed" ? '3px 3px 5px rgba(0,0,0,0.3)' : 'none',
+      backgroundColor: selectedTab === "feed" ? '#f0f0f0' : 'transparent',
+      "&:hover": {
+          backgroundColor: selectedTab === "feed" ? '#e0e0e0' : 'transparent',
+      }
+  }}
+>
+  <Typography
+    variant="h6"
+    component="h6"
+    sx={{
+      fontWeight: 500,
+      textAlign: "center",
+      fontSize: "20px",
+      color: "black",
+      padding: "0px 5px",
+    }}
+  >
+    피드
+  </Typography>
+</Button>
 
-          <Button onClick={() => setSelectedTab("review")}>
-            <Typography
-              variant="h6"
-              component="h6"
-              sx={{
-                fontWeight: 500,
-                textAlign: "center",
-                fontSize: "20px",
-                color: "black",
-                padding: "0px 5px",
-              }}
-            >
-              리뷰
-            </Typography>
-          </Button>
+<Button 
+  onClick={() => setSelectedTab("review")}
+  sx={{
+      boxShadow: selectedTab === "review" ? '3px 3px 5px rgba(0,0,0,0.3)' : 'none',
+      backgroundColor: selectedTab === "review" ? '#f0f0f0' : 'transparent',
+      "&:hover": {
+          backgroundColor: selectedTab === "review" ? '#e0e0e0' : 'transparent',
+      }
+  }}
+>
+  <Typography
+    variant="h6"
+    component="h6"
+    sx={{
+      fontWeight: 500,
+      textAlign: "center",
+      fontSize: "20px",
+      color: "black",
+      padding: "0px 5px",
+    }}
+  >
+    리뷰
+  </Typography>
+</Button>
         </Grid>
         {renderTabContent()}
       </Grid>
       <Grid container xs={12} justifyContent="center">
-        <Footer />
+        {/* <Footer /> */}
         <SelectMenu state={state} setState={setState} curItem={curItem} />
       </Grid>
+      <Footer/>
     </Grid>
+   
   );
 }
 

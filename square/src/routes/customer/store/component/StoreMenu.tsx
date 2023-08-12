@@ -34,6 +34,7 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
     setState(true);
     setCurItem(item);
   };
+  const token = sessionStorage.getItem('accessToken') || '';
 
   useEffect(() => {
     // storeId를 사용해 메뉴 정보를 가져오는 API를 호출합니다.
@@ -41,6 +42,10 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
     axios({
       url: `${REST_API}store/menu/${storeId}`,
       method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+
       params: {},
     })
       .then((response) => {

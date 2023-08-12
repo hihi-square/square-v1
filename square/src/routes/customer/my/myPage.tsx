@@ -12,6 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { RootState } from "../../../redux/store";
+import Footer from "../Footer";
 
 function MyPage() {
   const navigate = useNavigate();
@@ -95,6 +96,8 @@ function MyPage() {
           <Typography variant="body1">내 커뮤니티 글 보기</Typography>
         </ListItem>
       </List>
+
+      <Footer></Footer>
     </>
   );
 }
