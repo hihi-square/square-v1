@@ -4,12 +4,10 @@ import { Unstable_Grid2 as Grid } from "@mui/material";
 import List from "./list/List";
 import StoreListByLocation from "./map/component/storeListByLocation";
 import Store from "./store/Store";
-import SearchMap from "./map/component/searchMap";
 import Board from "./main/board/Board";
 import BoardForm from "./main/board/BoardForm";
 import Chat from "./chat/chat";
 import MyPage from "./my/MyPage";
-import SearchResult from "./main/SearchResult";
 import Cart from "./deal/Cart";
 import Pay from "./deal/Pay";
 import OrderList from "./deal/orderList";
@@ -43,7 +41,6 @@ export default function Customer() {
 
         <Route path="/store/:store" element={<Store />} />
         <Route path="/map" element={<Map />} />
-        <Route path="/searchmap" element={<SearchMap />} />
         <Route path="/board" element={<Board />} />
         <Route path="/board/:selectedBoard/:boardId" element={<BoardForm />} />
 
@@ -57,7 +54,6 @@ export default function Customer() {
         <Route path="/myreview" element={<MyReview />} />
         <Route path="/myboard" element={<MyBoard />} />
 
-        <Route path="/search/:searchword" element={<SearchResult />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/pay" element={<Pay />} />
 
