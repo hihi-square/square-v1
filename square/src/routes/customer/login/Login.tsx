@@ -93,7 +93,7 @@ export default function Login() {
         data: {
           uid: id,
           password: pw,
-          authenticate: "UA01",
+          authenticate: "UA02",
         },
       })
         .then((response) => {
