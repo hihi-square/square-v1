@@ -11,12 +11,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-<<<<<<< HEAD
 import { REST_API } from "redux/redux";
-=======
-import { REST_API } from "redux/store";
-
->>>>>>> origin/f_jegyeong
 
 export default function Login() {
   const [id, setId] = useState<string>("");
@@ -90,7 +85,7 @@ export default function Login() {
   const onClickConfirmButton = (): void => {
     checkId(id);
     checkPw(pw);
-  
+
     if (!notAllow)
       axios({
         url: `${REST_API}user/login`,
@@ -104,44 +99,36 @@ export default function Login() {
         .then((response) => {
           // console.log(response.data.refreshToken)
           // console.log(response.data.accessToken)
-          
+
           // localStorage 대신 sessionStorage 사용
           sessionStorage.setItem("accessToken", response.data.accessToken);
           sessionStorage.setItem("refreshToken", response.data.refreshToken);
-  
+
           navigate("/main");
         })
         .catch((error) => {
           console.log(error);
-<<<<<<< HEAD
-          console.log("gd");
-=======
->>>>>>> origin/f_jegyeong
           setFailed(true);
         });
   };
-  
+
   const signUpButton = () => {
-   
-      navigate(`/signup`);
-    
+    navigate(`/signup`);
   };
   const kakaoLogin = (): void => {
     // 카카오 OAuth2.0 인증 페이지로 리다이렉트
-    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=409915cf48a47370a92cea926084d5a1&redirect_uri=https://i9b208.p.ssafy.io/login/KakaoRedirect&response_type=code";
+    window.location.href =
+      "https://kauth.kakao.com/oauth/authorize?client_id=409915cf48a47370a92cea926084d5a1&redirect_uri=https://i9b208.p.ssafy.io/login/KakaoRedirect&response_type=code";
   };
 
   const NaverLogin = (): void => {
-
-    window.location.href = "https://nid.naver.com/oauth2.0/authorize?client_id=C4jdFBfefASIcQgC9GDg&response_type=code&redirect_uri=https://i9b208.p.ssafy.io/login/NaverRedirect&state=test";
+    window.location.href =
+      "https://nid.naver.com/oauth2.0/authorize?client_id=C4jdFBfefASIcQgC9GDg&response_type=code&redirect_uri=https://i9b208.p.ssafy.io/login/NaverRedirect&state=test";
   };
 
   const GoogleLogin = (): void => {
-
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=167666714068-su36v2r5mu1j6spjan4cda8q42hbdhf3.apps.googleusercontent.com&redirect_uri=https://i9b208.p.ssafy.io/GoogleRedirect&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile email`;
   };
-  
-
 
   return (
     <>
@@ -251,7 +238,7 @@ export default function Login() {
               sx={{ marginTop: "30px" }}
             >
               <Grid xs={3}>
-                <Button  onClick={NaverLogin}>
+                <Button onClick={NaverLogin}>
                   <img
                     src="/img/icon/naver.png"
                     alt="네이버 로그인"
@@ -260,17 +247,16 @@ export default function Login() {
                 </Button>
               </Grid>
               <Grid xs={3}>
-              <Button onClick={kakaoLogin}>
-  <img
-    src="/img/icon/kakao.png"
-    alt="카카오 로그인"
-    style={{ width: "60px", height: "60px" }}
-  />
-</Button>
-
+                <Button onClick={kakaoLogin}>
+                  <img
+                    src="/img/icon/kakao.png"
+                    alt="카카오 로그인"
+                    style={{ width: "60px", height: "60px" }}
+                  />
+                </Button>
               </Grid>
               <Grid xs={3}>
-                <Button  onClick={GoogleLogin}>
+                <Button onClick={GoogleLogin}>
                   <img
                     src="/img/icon/google.png"
                     alt="구글 로그인"
@@ -285,8 +271,10 @@ export default function Login() {
               <Divider sx={{ margin: "10px" }}></Divider>
             </Grid>
             <Grid container xs={6} justifyContent="start">
-            <Button color="secondary" onClick={signUpButton}> 회원가입 </Button>
-
+              <Button color="secondary" onClick={signUpButton}>
+                {" "}
+                회원가입{" "}
+              </Button>
             </Grid>
             <Grid container xs={6} justifyContent="end">
               <Button color="secondary">
