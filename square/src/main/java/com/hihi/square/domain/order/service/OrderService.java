@@ -7,14 +7,17 @@ import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.OrderMenuRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderResponseDto;
 import com.hihi.square.domain.order.dto.response.OrderMenuResponseDto;
+import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import com.hihi.square.domain.order.entity.*;
 import com.hihi.square.domain.order.repository.OrderRepository;
 import com.hihi.square.domain.order.repository.OrderMenuRespository;
+import com.hihi.square.domain.point.service.PointService;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.repository.SaleRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +37,8 @@ public class OrderService {
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
     private final SaleRepository saleRepository;
+    private final PointService pointService;
+    private final CustomerService customerService;
 
     public Integer saveOrder(Customer customer, OrderRequestDto request) {
 
@@ -151,5 +156,45 @@ public class OrderService {
 
     public List<Optional<Order>> findByStore(Store store) {
         return orderRepository.findByStore(store);
+    }
+
+    public void updateOrderAccepted(Order order) {
+        Customer customer = order.getCustomer();
+        // 포인트 적립
+        Long point = order.getFinalPrice() / 100;  // 1% 적립
+        pointService.save(order.getOrdId(), customer, point, 1);
+        customer.updatePoint(customer.getPoint() + point);
+
+        // 상태 변경
+        order.updateOrderStatus(OrderStatus.ORDER_ACCEPT);
+
+        // rank 반영
+
+        customerService.save(customer);
+        orderRepository.save(order);
+    }
+
+    public RefundInfoResponseDto updateOrderDenied(Order order) {
+        Customer customer = order.getCustomer();
+
+        // 포인트 반환
+        pointService.save(order.getOrdId(), customer, order.getUsedPoint(), 1);
+        customer.updatePoint(customer.getPoint() + order.getUsedPoint());
+
+        // 상태 변경
+        order.updateOrderStatus(OrderStatus.ORDER_REJECT);
+
+        // 결제 취소
+        RefundInfoResponseDto response = RefundInfoResponseDto.builder()
+                .ordId(order.getOrdId())
+                .payment(order.getPaymentMethod())
+                .finalPrice(order.getFinalPrice())
+                .orderStatus(order.getStatus())
+                .build();
+
+        customerService.save(customer);
+        orderRepository.save(order);
+
+        return response;
     }
 }
