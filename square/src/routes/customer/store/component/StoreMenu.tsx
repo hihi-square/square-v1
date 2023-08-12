@@ -9,7 +9,7 @@ type Item = {
   menuThumbnail: string;
   menuImage: string;
   description: string;
-  status: number;
+  status: string;
   popularity: boolean;
   signature: boolean;
   price: number;
@@ -28,6 +28,7 @@ interface Props {
 }
 
 export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
+  const token = localStorage.getItem("accessToken");
   const [menus, setMenus] = useState<CategoryMenu[]>([]);
 
   const handlePurchase = (item: Item) => {
@@ -41,9 +42,12 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
     axios({
       url: `${REST_API}store/menu/${storeId}`,
       method: "GET",
-      params: {},
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
+        console.log(response.data);
         setMenus(response.data);
       })
       .catch((error) => {
@@ -67,7 +71,7 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
             </Grid>
             {categoryMenu.menuItems &&
               categoryMenu.menuItems.map((menu, innerIndex) =>
-                menu.status === 0 ? null : (
+                menu.status !== "ON" ? null : (
                   <Grid xs={12} key={innerIndex}>
                     <Button
                       onClick={() => {

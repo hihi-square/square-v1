@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Chip,
@@ -14,9 +15,37 @@ import "../../../Seller.css";
 interface ReadyItemsProps {
   product: Iproduct;
   dragProvided: DraggableProvided;
+  setCurrProduct: React.Dispatch<React.SetStateAction<Iproduct>>;
+  realProduct: React.MutableRefObject<{
+    id: number;
+    userId: number;
+    image: string;
+    thumbnail: string;
+    categoryId: number;
+    categoryName: string;
+    name: string;
+    signature: boolean;
+    popular: boolean;
+    price: number;
+    status: string;
+    createdAt: string;
+    modifiedAt: string;
+    salRecord: number;
+    description: string;
+    sequence: number;
+  }>;
+  setClick: React.Dispatch<React.SetStateAction<number>>;
+  click: number;
 }
 
-export default function ReadyItems({ product, dragProvided }: ReadyItemsProps) {
+export default function ReadyItems({
+  product,
+  dragProvided,
+  setCurrProduct,
+  realProduct,
+  setClick,
+  click,
+}: ReadyItemsProps) {
   return (
     <>
       <ListItem
@@ -25,11 +54,19 @@ export default function ReadyItems({ product, dragProvided }: ReadyItemsProps) {
           "&:last-child td, &:last-child th": {
             border: 0,
           },
+          backgroundColor: click === product.id ? "grey" : "white",
         }}
         ref={dragProvided.innerRef}
         {...dragProvided.draggableProps}
         {...dragProvided.dragHandleProps}
         alignItems="flex-start"
+        onClick={() => {
+          if (product.status !== "CATE") {
+            click === product.id ? setClick(-1) : setClick(product.id);
+            setCurrProduct({ ...product });
+            realProduct.current = { ...product };
+          }
+        }}
       >
         <ListItemAvatar>
           <Avatar alt="음식사진" src={product.thumbnail} />

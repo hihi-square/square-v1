@@ -9,7 +9,7 @@ export interface Iproduct {
   signature: boolean;
   popular: boolean;
   price: number;
-  status: number;
+  status: string;
   createdAt: string;
   modifiedAt: string;
   salRecord: number;
