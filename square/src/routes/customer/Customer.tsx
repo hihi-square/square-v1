@@ -10,7 +10,7 @@ import Chat from "./chat/chat";
 import MyPage from "./my/MyPage";
 import Cart from "./deal/Cart";
 import Pay from "./deal/Pay";
-import OrderList from "./deal/orderList";
+import OrderList from "./deal/OrderList";
 import MyArea from "./my/MyArea";
 import MyInfo from "./my/MyInfo";
 import MyOrderHistory from "./my/MyOrderHistory";
