@@ -8,6 +8,7 @@ import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -76,7 +77,7 @@ public class OrderController {
 	// 주문 status 수정 및 포인트 차감 및 적립
 	@Transactional
 	@PatchMapping("/customer-pay")
-	public ResponseEntity<CommonResponseDto> updatePaymentStatus(@RequestBody PaymentRequestDto request) {
+	public ResponseEntity<?> updatePaymentStatus(@RequestBody PaymentRequestDto request) {
 		CommonResponseDto response = CommonResponseDto.builder()
 			.statusCode(200)
 			.message("UPDATE_SUCCESS")
@@ -112,11 +113,12 @@ public class OrderController {
 	// 가게 주문 수락시 프로세스 -> return도 가게로 들어가는거임
 	@Transactional
 	@PatchMapping("/store-acceptance/{ordId}")
-	public ResponseEntity<CommonResponseDto> updateOrderSuccess(@PathVariable Integer ordId) {
-		CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(200)
-				.message("UPDATE_SUCCESS")
-				.build();
+	public ResponseEntity<?> updateOrderSuccess(@PathVariable Integer ordId) {
+		OrderIdResponseDto response = OrderIdResponseDto.builder()
+			.ordId(ordId)
+			.status(200)
+			.message("UPDATE_SUCCESS")
+			.build();
 		Order order = orderService.findByOrderId(ordId).get();
 		orderService.updateOrderAccepted(order);
 		
@@ -124,6 +126,7 @@ public class OrderController {
 		eventPublisher.publishEvent(new OrderEvent(order, "주문이 수락되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
 
 	// 가게 주문 거절시 프로세스
 	@Transactional
@@ -134,6 +137,23 @@ public class OrderController {
 		
 		// 소비자로 알림 전송 : 주문 거절됨 환불 진행
 		eventPublisher.publishEvent(new OrderEvent(order, "주문이 거절되었습니다."));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	// STEP 04
+	// 픽업 완료시 상태변경
+	@Transactional
+	@PatchMapping("/store-pickup/{ordId}")
+	public ResponseEntity<?> updateOrderPickup(@PathVariable Integer ordId) {
+		CommonResponseDto response = CommonResponseDto.builder()
+				.statusCode(200)
+				.message("UPDATE_SUCCESS")
+				.build();
+		Order order = orderService.findByOrderId(ordId).get();
+		orderService.updateOrderPickup(order);
+
+		// 소비자로 알림 전송 : 픽업 완료
+		eventPublisher.publishEvent(new OrderEvent(order, "픽업이 완료되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

@@ -17,8 +17,10 @@ import com.hihi.square.domain.sale.repository.SaleRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.UserRankType;
 import com.hihi.square.domain.user.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -159,18 +162,8 @@ public class OrderService {
     }
 
     public void updateOrderAccepted(Order order) {
-        Customer customer = order.getCustomer();
-        // 포인트 적립
-        Long point = order.getFinalPrice() / 100;  // 1% 적립
-        pointService.save(order.getOrdId(), customer, point, 1);
-        customer.updatePoint(customer.getPoint() + point);
-
         // 상태 변경
         order.updateOrderStatus(OrderStatus.ORDER_ACCEPT);
-
-        // rank 반영
-
-        customerService.save(customer);
         orderRepository.save(order);
     }
 
@@ -196,5 +189,39 @@ public class OrderService {
         orderRepository.save(order);
 
         return response;
+    }
+
+    public void updateOrderPickup(Order order) {
+        Customer customer = order.getCustomer();
+
+        // rank 반영
+        Integer orderCount = orderRepository.countOrderByCustomerAndCreatedAtBetween(customer, LocalDateTime.now().minusDays(30), LocalDateTime.now());
+        Integer earningRate = 0;
+        if(orderCount >= 30) {
+            customer.updateRank(UserRankType.UR04);
+            earningRate = 5;
+        }
+        else if(orderCount >= 15) {
+            customer.updateRank(UserRankType.UR03);
+            earningRate = 3;
+        }
+        else if(orderCount >= 5) {
+            customer.updateRank(UserRankType.UR02);
+            earningRate = 1;
+        }
+        else{
+            customer.updateRank(UserRankType.UR01);
+        }
+
+        // 포인트 적립
+        Long point = order.getFinalPrice() / 100 * earningRate;  // rank 에 따라 상이한 적립금액
+        pointService.save(order.getOrdId(), customer, point, 1);
+        customer.updatePoint(customer.getPoint() + point);
+
+        // 상태 변경
+        order.updateOrderStatus(OrderStatus.PICKUP_COMPLETE);
+        orderRepository.save(order);
+
+        customerService.save(customer);
     }
 }

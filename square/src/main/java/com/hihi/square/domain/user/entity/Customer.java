@@ -33,6 +33,10 @@ public class Customer extends User{
 		this.point = point;
 	}
 
+	public void updateRank(UserRankType rank) {
+		this.rank = rank;
+	}
+
 	@OneToMany(mappedBy = "customer")
 	@Builder.Default
 	private List<CustomerAddress> customerAddressList = new ArrayList<>();
