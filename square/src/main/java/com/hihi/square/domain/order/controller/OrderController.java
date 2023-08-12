@@ -85,6 +85,15 @@ public class OrderController {
 		Order order = orderService.findById(request.getOrdId()).get();
 		Customer customer = order.getCustomer();
 
+		// regietered 상태가 아닌데 결제를 시도할 때
+		if(order.getStatus() != OrderStatus.REGISTERED) {
+			CommonResponseDto.builder()
+					.statusCode(400)
+					.message("PREVIOUS_STATUS_NOT_REGISTERED")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		// 결제 성공시
 		if (request.getPaymentSuccess()) {
 			order.updateOrderStatus(OrderStatus.PAYMENT_COMPLETE);
@@ -114,12 +123,23 @@ public class OrderController {
 	@Transactional
 	@PatchMapping("/store-acceptance/{ordId}")
 	public ResponseEntity<?> updateOrderSuccess(@PathVariable Integer ordId) {
+
+		Order order = orderService.findByOrderId(ordId).get();
+
+		// 잘못된 요청일때
+		if(order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("PREVIOUS_STATUS_NOT_PAYMENT_COMPLETE")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		OrderIdResponseDto response = OrderIdResponseDto.builder()
 			.ordId(ordId)
 			.status(200)
-			.message("UPDATE_SUCCESS")
+			.message("ORDER_ACCEPTED")
 			.build();
-		Order order = orderService.findByOrderId(ordId).get();
 		orderService.updateOrderAccepted(order);
 		
 		// 소비자로 알림 전송 : 주문 수락됨
@@ -133,6 +153,16 @@ public class OrderController {
 	@PatchMapping("/store-denied/{ordId}")
 	public ResponseEntity<?> updateOrderDenied(@PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
+
+		// 잘못된 요청일때
+		if(order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("PREVIOUS_STATUS_NOT_PAYMENT_COMPLETE")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		RefundInfoResponseDto response = orderService.updateOrderDenied(order);
 		
 		// 소비자로 알림 전송 : 주문 거절됨 환불 진행
@@ -145,15 +175,26 @@ public class OrderController {
 	@Transactional
 	@PatchMapping("/store-pickup/{ordId}")
 	public ResponseEntity<?> updateOrderPickup(@PathVariable Integer ordId) {
+		Order order = orderService.findByOrderId(ordId).get();
+
+		// 잘못된 요청일때
+		if(order.getStatus() != OrderStatus.ORDER_ACCEPT) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("PREVIOUS_STATUS_NOT_ORDER_ACCEPT")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
+		orderService.updateOrderPickup(order);
+		// 소비자로 알림 전송 : 픽업 완료
+		eventPublisher.publishEvent(new OrderEvent(order, "픽업이 완료되었습니다."));
+
 		CommonResponseDto response = CommonResponseDto.builder()
 				.statusCode(200)
 				.message("UPDATE_SUCCESS")
 				.build();
-		Order order = orderService.findByOrderId(ordId).get();
-		orderService.updateOrderPickup(order);
 
-		// 소비자로 알림 전송 : 픽업 완료
-		eventPublisher.publishEvent(new OrderEvent(order, "픽업이 완료되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
