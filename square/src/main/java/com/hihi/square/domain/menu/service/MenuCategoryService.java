@@ -70,9 +70,7 @@ public class MenuCategoryService {
 	@Transactional(readOnly = true)
 	public List<MenuCategoryDto> getAllMenuByCategory(User user) {
 
-		System.out.println("user : " + user);
 		List<MenuCategoryDto> response = new ArrayList<>();
-		System.out.println("user : " + user + " " + response);
 		List<MenuCategory> menuCategories = menuCategoryRepository.findByUserOrderBySequence(user);
 		for (MenuCategory menuCategory : menuCategories) {
 			List<MenuItemResponseDto> menus = new ArrayList<>();
