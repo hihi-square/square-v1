@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.entity.OrderStatus;
 import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.global.sse.NotificationService;
 import com.hihi.square.global.sse.entity.NotificationType;
 
@@ -22,13 +23,23 @@ public class OrderEventListener implements ApplicationListener<OrderEvent> {
 	@Override
 	public void onApplicationEvent(OrderEvent event) {
 		Order order = event.getOrder();
-		// OrderEvent가 발생하면 여기서 알림 전송 로직을 처리합니다.
-		// 예를 들어, 결제 완료 시에만 알림을 전송하고 싶다면 아래와 같이 처리할 수 있습니다.
+		OrderStatus status = order.getStatus();
+		//결제 완료 시에 가게에 알림 전송
 		if (order.getStatus() == OrderStatus.PAYMENT_COMPLETE) {
 			Store store = order.getStore();
-
-			// OrderResponseDto orderResponseDto =
-			notificationService.send(store, NotificationType.READY, "주문이 도착했어요.", null);
+			notificationService.send(store, NotificationType.READY, event.getContent(), "/order/" + order.getOrdId());
+		}
+		//가게에서 주문 수락 or 취소 시
+		else if ((status == OrderStatus.ORDER_ACCEPT) || (status == OrderStatus.ORDER_REJECT)) {
+			Customer customer = order.getCustomer();
+			notificationService.send(customer, NotificationType.READY, event.getContent(),
+				"/order/" + order.getOrdId());
+		}
+		//고객이 픽업을 완료했을 때
+		else if (status == OrderStatus.PICKUP_COMPLETE) {
+			Customer customer = order.getCustomer();
+			notificationService.send(customer, NotificationType.READY, event.getContent(),
+				"/order/" + order.getOrdId());
 		}
 	}
 }

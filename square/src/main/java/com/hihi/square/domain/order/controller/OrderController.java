@@ -97,7 +97,7 @@ public class OrderController {
 				customerRepository.save(customer);
 			}
 			//store에게 주문 도착 알림 전송
-			eventPublisher.publishEvent(new OrderEvent(order));
+			eventPublisher.publishEvent(new OrderEvent(order, "주문이 도착했습니다."));
 
 		} else {
 			order.updateOrderStatus(OrderStatus.PAYMENT_FAILED);
@@ -106,15 +106,6 @@ public class OrderController {
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
-	// 결제 완료 후 가게에 알림 전송
-	// @TransactionalEventListener
-	// public void alarmOrder(Store store) {
-	// 	String content = "주문이요.";
-	// 	//확인 클릭 -> 주문 상태 변경 -> 가게에 전송
-	// 	String url = "/store/menuitem/1";    //test
-	// 	notificationService.send(store, NotificationType.READY, content, url);
-	// }
 
 	// 주문 상세 조회
 	@Transactional(readOnly = true)

@@ -5,18 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import com.hihi.square.domain.menu.dto.response.CartStoreResponseDto;
-import com.hihi.square.domain.menu.dto.response.MenuItemResponseDto;
-import com.hihi.square.domain.store.entity.Store;
-import com.hihi.square.domain.store.service.StoreService;
 import org.springframework.stereotype.Service;
 
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
+import com.hihi.square.domain.menu.dto.response.CartStoreResponseDto;
+import com.hihi.square.domain.menu.dto.response.MenuItemResponseDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
 import com.hihi.square.domain.menu.repository.MenuRepository;
+import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.service.StoreService;
+import com.hihi.square.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +45,10 @@ public class MenuService {
 		return menuRepository.save(saveMenu);
 	}
 
-	public void updateMenuList(List<MenuRequestDto> menuRequestList) {
+	public void updateMenuList(User user, List<MenuRequestDto> menuRequestList) {
 		for (MenuRequestDto menuRequestDto : menuRequestList) {
 			Long menuId = menuRequestDto.getId();
-			Integer usrId = menuRequestDto.getUserId();
+			Integer usrId = user.getUsrId();
 			Long categoryId = menuRequestDto.getCategoryId();
 			String menuStatus = menuRequestDto.getStatus();
 			Integer sequence = menuRequestDto.getSequence();
@@ -90,11 +91,11 @@ public class MenuService {
 		List<CartStoreResponseDto> response = new ArrayList<>();
 
 		HashMap<Integer, List<Menu>> storeMenuMap = new HashMap<>();
-		for(Integer itemId : itemIds) {
+		for (Integer itemId : itemIds) {
 			Menu menu = menuRepository.findById(itemId.longValue()).get();
 			Integer storeId = menu.getUser().getUsrId();
 			// store에 해당하는 메뉴가 있다면 그냥 넣기
-			if(storeMenuMap.containsKey(storeId)) {
+			if (storeMenuMap.containsKey(storeId)) {
 				storeMenuMap.get(storeId).add(menu);
 			} else {   // 없다면 새로 만들어서 넣기
 				List<Menu> menuList = new ArrayList<>();
@@ -103,33 +104,33 @@ public class MenuService {
 			}
 		}
 
-		for(Integer storeId : storeMenuMap.keySet()) {
+		for (Integer storeId : storeMenuMap.keySet()) {
 			List<Menu> menuList = storeMenuMap.get(storeId);
 			List<MenuItemResponseDto> menuItemResponseDtoList = new ArrayList<>();
 			//CartStoreResponseDto 에 넣기 위한 menuItemList 만들기
-			for(Menu menu : menuList) {
+			for (Menu menu : menuList) {
 				MenuItemResponseDto dto = MenuItemResponseDto.builder()
-						.menuId(menu.getMenuId())
-						.menuName(menu.getName())
-						.description(menu.getDescription())
-						.status(menu.getStatus())
-						.signature(menu.isSignature())
-						.popularity(menu.isPopularity())
-						.price(menu.getPrice())
-						.menuThumbnail(menu.getThumbnail())
-						.menuImage(menu.getImage())
-						.build();
+					.menuId(menu.getMenuId())
+					.menuName(menu.getName())
+					.description(menu.getDescription())
+					.status(menu.getStatus())
+					.signature(menu.isSignature())
+					.popularity(menu.isPopularity())
+					.price(menu.getPrice())
+					.menuThumbnail(menu.getThumbnail())
+					.menuImage(menu.getImage())
+					.build();
 
 				menuItemResponseDtoList.add(dto);
 			}
 			// 가게별 Dto 만들기
 			Store store = storeService.findByUsrId(storeId).get();
 			CartStoreResponseDto cartStoreResponseDto = CartStoreResponseDto.builder()
-					.storeId(store.getUsrId())
-					.storeName(store.getName())
-					.storeAddress(store.getAddress())
-					.menuItems(menuItemResponseDtoList)
-					.build();
+				.storeId(store.getUsrId())
+				.storeName(store.getName())
+				.storeAddress(store.getAddress())
+				.menuItems(menuItemResponseDtoList)
+				.build();
 
 			response.add(cartStoreResponseDto);
 		}

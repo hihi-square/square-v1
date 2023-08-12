@@ -20,8 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MenuRequestDto {
 	private Long id;
-	@NotEmpty
-	private int userId;
+	// private int userId;
 	private User user;
 	// private StoreMenuCategory storeMenuCategory;
 	@NotEmpty
@@ -46,7 +45,8 @@ public class MenuRequestDto {
 	public Menu toEntity() {
 		Menu menu = Menu.builder()
 			.menuId(id)
-			.user(user.builder().usrId(userId).build())
+			// .user(user.builder().usrId(userId).build())
+			.user(user)
 			// .scm_id(scm_id)    //객체 변환 필요
 			.menuCategory(menuCategory.builder().id(categoryId).name(categoryName).build())
 			.name(name)

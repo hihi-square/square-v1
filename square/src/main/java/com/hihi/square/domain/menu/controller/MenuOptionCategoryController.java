@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +18,8 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuOptionCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuOptionCategory;
 import com.hihi.square.domain.menu.service.MenuOptionCategoryService;
+import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,17 +28,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MenuOptionCategoryController {
 	private final MenuOptionCategoryService menuOptionCategoryService;
+	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(@RequestHeader Long menId) {
-		// String uid = authentication.getName();
-		// User user = userService.findByUid(uid).get();
-		//
-		// List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
-		List<MenuOptionCategory> menuOptionList = menuOptionCategoryService.findAllByMenuId(menId);
+	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(Authentication authentication) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		List<MenuOptionCategory> menuOptionCategoryList = menuOptionCategoryService.findAllByUserId(user.getUsrId());
+		// List<MenuOptionCategory> menuOptionList = menuOptionCategoryService.findAllByMenuId(menId);
 		List<MenuOptionCategoryResponseDto> responseList = new ArrayList<>();
 
-		for (MenuOptionCategory menuOptionCategory : menuOptionList) {
+		for (MenuOptionCategory menuOptionCategory : menuOptionCategoryList) {
 			responseList.add(new MenuOptionCategoryResponseDto(menuOptionCategory));
 		}
 
@@ -55,7 +58,8 @@ public class MenuOptionCategoryController {
 
 	@PostMapping
 	public ResponseEntity<CommonResponseDto<?>> saveMenuOptionCategory(
-		@RequestBody MenuOptionCategoryRequestDto request) {
+		Authentication authentication, @RequestBody MenuOptionCategoryRequestDto request) {
+
 		MenuOptionCategory menuOptionCategory = request.toEntity();
 		menuOptionCategoryService.saveMenuOptionCategory(menuOptionCategory);
 		return ResponseEntity.ok(CommonResponseDto.success(null));

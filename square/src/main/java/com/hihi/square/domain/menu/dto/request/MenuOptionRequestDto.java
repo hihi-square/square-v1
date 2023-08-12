@@ -26,7 +26,6 @@ public class MenuOptionRequestDto {
 	private MenuOptionCategory optionCategory;
 	private Long menuId;
 	private Menu menu;
-	private Integer userId;
 	private User user;
 	@NotEmpty
 	private String name;
@@ -42,7 +41,7 @@ public class MenuOptionRequestDto {
 			.id(id)
 			.optionCategory(optionCategory.builder().id(mocId).build())
 			.menu(menu.builder().menuId(menuId).build())
-			.user(user.builder().usrId(userId).build())
+			.user(user)
 			.name(name)
 			.content(content)
 			.price(price)

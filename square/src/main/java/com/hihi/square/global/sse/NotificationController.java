@@ -47,7 +47,6 @@ public class NotificationController {
 	public ResponseEntity<CommonResponseDto<?>> getAllNotification() {
 		List<Notification> notificationList = notificationService.findAll();
 		List<NotificationResponseDto> responseList = new ArrayList<>();
-		// log.info("optionList:{}", notificationList);
 		for (Notification notification : notificationList) {
 			responseList.add(new NotificationResponseDto(notification));
 		}
