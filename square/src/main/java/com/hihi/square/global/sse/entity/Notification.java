@@ -36,13 +36,9 @@ public class Notification extends BaseTime {
 	@Column(name = "ala_id")
 	private Long id;
 
-	// @Embedded
-	// private NotificationContent content;
 	private String content;
 
-	// @Embedded
 	@Column(name = "related_url")
-	// private RelatedURL url;
 	private String url;
 
 	@Column(name = "is_read", nullable = false)
@@ -62,18 +58,8 @@ public class Notification extends BaseTime {
 		Boolean isRead) {
 		this.receiver = receiver;
 		this.notificationType = notificationType;
-		// this.content = new NotificationContent(content);
-		// this.url = new RelatedURL(url);
 		this.content = content;
 		this.url = url;
 		this.isRead = isRead;
 	}
-
-	// public String getContent() {
-	// 	return content.getContent();
-	// }
-	//
-	// public String getUrl() {
-	// 	return url.getUrl();
-	// }
 }

@@ -9,6 +9,7 @@ import com.hihi.square.domain.menu.dto.request.MenuOptionRequestDto;
 import com.hihi.square.domain.menu.entity.MenuOption;
 import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.menu.repository.MenuOptionRepository;
+import com.hihi.square.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +34,9 @@ public class MenuOptionService {
 		return menuOptionRepository.save(saveMenuOption);
 	}
 
-	public void updateMenuOptionList(List<MenuOptionRequestDto> requestList) {
+	public void updateMenuOptionList(User user, List<MenuOptionRequestDto> requestList) {
 		for (MenuOptionRequestDto request : requestList) {
+			request.setUser(user);
 			Long meoId = request.getId();
 			Long mocId = request.getMocId();
 			String status = request.getStatus();

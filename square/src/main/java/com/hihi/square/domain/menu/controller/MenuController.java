@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +22,7 @@ import com.hihi.square.domain.menu.dto.response.MenuResponseDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.menu.service.MenuService;
+import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,12 +39,12 @@ public class MenuController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllMenus(@RequestHeader Integer userId) {
-		// String uid = authentication.getName();
-		// User user = userService.findByUid(uid).get();
-		//
-		// List<Menu> menuList = menuService.findAllByUserId(user.getUsrId());
-		List<Menu> menuList = menuService.findAllByUserId(userId);
+	public ResponseEntity<CommonResponseDto<?>> getAllMenus(Authentication authentication) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		List<Menu> menuList = menuService.findAllByUserId(user.getUsrId());
+		// List<Menu> menuList = menuService.findAllByUserId(userId);
 		List<MenuResponseDto> menuResponseDtoList = new ArrayList<>();
 
 		for (Menu menu : menuList) {
@@ -65,7 +66,11 @@ public class MenuController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CommonResponseDto<?>> saveMenu(@RequestBody MenuRequestDto menuRequestDto) {
+	public ResponseEntity<CommonResponseDto<?>> saveMenu(Authentication authentication,
+		@RequestBody MenuRequestDto menuRequestDto) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		menuRequestDto.setUser(user);
 		// log.debug("menu ", menuRequestDto);
 		// MenuCategory menuCategory = MenuCategory.builder()
 		// 	.user(menu.getUser())
@@ -84,17 +89,25 @@ public class MenuController {
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<CommonResponseDto<?>> updateMenu(
-		@PathVariable Long id, @RequestBody MenuRequestDto menuRequestDto) {
+		Authentication authentication, @PathVariable Long id, @RequestBody MenuRequestDto menuRequestDto) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
 		menuRequestDto.setId(id);
+		menuRequestDto.setUser(user);
 		Menu menu = menuService.updateMenu(menuRequestDto);
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuResponseDto(menu)));
 	}
 
 	@PatchMapping("/list")
-	public ResponseEntity<CommonResponseDto<?>> updateMenuList(@RequestBody MenuRequestDto menuRequestDto) {
+	public ResponseEntity<CommonResponseDto<?>> updateMenuList(Authentication authentication,
+		@RequestBody MenuRequestDto menuRequestDto) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
 		List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
 		// List<Menu> menuList = new ArrayList<>();
-		menuService.updateMenuList(menuRequestDtos);
+		menuService.updateMenuList(user, menuRequestDtos);
 		return ResponseEntity.ok(CommonResponseDto.success(null));
 	}
 

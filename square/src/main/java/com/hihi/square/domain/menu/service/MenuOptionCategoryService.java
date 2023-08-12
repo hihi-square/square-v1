@@ -54,4 +54,9 @@ public class MenuOptionCategoryService {
 		return menuOptionCategory;
 	}
 
+	public List<MenuOptionCategory> findAllByUserId(Integer userId) {
+		List<MenuOptionCategory> menuOptionCategoryList = optionCategoryRepository.findAllByUserId(userId);
+		return menuOptionCategoryList;
+	}
+
 }

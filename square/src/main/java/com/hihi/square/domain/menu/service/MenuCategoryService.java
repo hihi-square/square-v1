@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.hihi.square.domain.menu.entity.MenuStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,12 +39,11 @@ public class MenuCategoryService {
 		return menuCategoryRepository.save(saveMenuCategory);
 	}
 
-	public void updateMenuList(List<MenuCategoryRequestDto> requestList) {
+	public void updateMenuList(User user, List<MenuCategoryRequestDto> requestList) {
 		for (MenuCategoryRequestDto request : requestList) {
+			request.setUser(user);
 			Long categoryId = request.getId();
 			Integer sequence = request.getSequence();
-			// log.info("categoryId : {}", categoryId);
-			// log.info("sequence : {}", sequence);
 			menuCategoryRepository.updateMenuCategoryList(categoryId, sequence);
 		}
 	}

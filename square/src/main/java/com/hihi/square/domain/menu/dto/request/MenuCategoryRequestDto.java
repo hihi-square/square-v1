@@ -20,7 +20,7 @@ public class MenuCategoryRequestDto {
 	@NotEmpty
 	private Long id;
 	@NotEmpty
-	private Integer userId;
+	// private Integer userId;
 	private User user;
 	private String name;
 	@NotEmpty
@@ -31,7 +31,7 @@ public class MenuCategoryRequestDto {
 	public MenuCategory toEntity() {
 		MenuCategory menuCategory = MenuCategory.builder()
 			.id(id)
-			.user(user.builder().usrId(userId).build())
+			.user(user)
 			.name(name)
 			.sequence(sequence)
 			.build();

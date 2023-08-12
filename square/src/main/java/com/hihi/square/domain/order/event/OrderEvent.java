@@ -9,9 +9,11 @@ import lombok.Getter;
 @Getter
 public class OrderEvent extends ApplicationEvent {
 	private Order order;
+	private String content;
 
-	public OrderEvent(Order order) {
+	public OrderEvent(Order order, String content) {
 		super(order);
 		this.order = order;
+		this.content = content;
 	}
 }
