@@ -30,7 +30,7 @@ function NaverRedirect() {
     }
   }, [code, navigate]); 
 
-  return <div>{code}</div>;
+  return <></>
 }
 
 export default NaverRedirect;

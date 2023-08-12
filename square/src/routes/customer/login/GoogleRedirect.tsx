@@ -7,6 +7,8 @@ function GoogleRedirect() {
   const code = new URL(window.location.href).searchParams.get("code");
   const navigate = useNavigate();
 
+  console.log({code})
+  
   useEffect(() => { 
     if (code) {
       axios.get(`http://i9b208.p.ssafy.io:8811/api/v1/user/google?code=${code}`)
@@ -32,7 +34,6 @@ function GoogleRedirect() {
 
   return (
     <div>
-      {code}
     </div>
   );
 }

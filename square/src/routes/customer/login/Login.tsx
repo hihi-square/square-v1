@@ -120,17 +120,17 @@ export default function Login() {
   };
   const kakaoLogin = (): void => {
     // 카카오 OAuth2.0 인증 페이지로 리다이렉트
-    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=409915cf48a47370a92cea926084d5a1&redirect_uri=http://localhost:3000/login/KakaoRedirect&response_type=code";
+    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=409915cf48a47370a92cea926084d5a1&redirect_uri=https://i9b208.p.ssafy.io/login/KakaoRedirect&response_type=code";
   };
 
   const NaverLogin = (): void => {
 
-    window.location.href = "https://nid.naver.com/oauth2.0/authorize?client_id=C4jdFBfefASIcQgC9GDg&response_type=code&redirect_uri=http://localhost:3000/login/NaverRedirect&state=test";
+    window.location.href = "https://nid.naver.com/oauth2.0/authorize?client_id=C4jdFBfefASIcQgC9GDg&response_type=code&redirect_uri=https://i9b208.p.ssafy.io/login/NaverRedirect&state=test";
   };
 
   const GoogleLogin = (): void => {
 
-    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=737783992238-n4bpttnif5c1a4a3r5j1747n7t8di5fu.apps.googleusercontent.com&redirect_uri=http://localhost:3000/login/GoogleRedirect&response_type=code&scope=openid email profile`;
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=167666714068-su36v2r5mu1j6spjan4cda8q42hbdhf3.apps.googleusercontent.com&redirect_uri=https://i9b208.p.ssafy.io/GoogleRedirect&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile email`;
   };
   
 

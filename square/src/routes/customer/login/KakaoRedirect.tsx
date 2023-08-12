@@ -31,8 +31,7 @@ function KakaoRedirect() {
 
   return (
     <div>
-      
-      {code}
+
     </div>
   );
 }
