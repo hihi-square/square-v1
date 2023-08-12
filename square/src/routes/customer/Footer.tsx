@@ -15,10 +15,14 @@ import {
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom"; // 이 부분을 수정
-import { styled } from "@mui/system";
 
-export default function Footer() {
+interface FooterProps {
+  now: number;
+}
+
+export default function Footer({ now }: FooterProps) {
   // const [value, setValue] = React.useState(0);
+  const navigate = useNavigate();
 
   return (
     <Paper
@@ -35,7 +39,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 1) navigate("/main");
             }}
           >
             <Box component="div">
@@ -87,7 +91,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 3) navigate("/board");
             }}
           >
             <Box component="div">
@@ -139,7 +143,7 @@ export default function Footer() {
               flexDirection: "column",
             }}
             onClick={() => {
-              // setValue(0);
+              if (now !== 10) navigate("/mypage");
             }}
           >
             <Box component="div">

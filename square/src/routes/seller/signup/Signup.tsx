@@ -1,5 +1,5 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import axios from "axios";
 import DaumPostcodeEmbed from "react-daum-postcode";
@@ -12,14 +12,14 @@ declare global {
 }
 
 export default function SignUp() {
-  const [name, setName] = useState<string>(""); // 타입 명시
-  const [id, setId] = useState<string>(""); // 타입 명시
-  const [pw, setPw] = useState<string>(""); // 타입 명시
+  const [name, setName] = useState<string>("");
   const [nameValid, setNameValid] = useState(false);
 
   const [id, setId] = useState<string>("");
   const [idValid, setIdValid] = useState(false);
   const [isIdDuplicated, setIsIdDuplicated] = useState(false);
+
+  const [pw, setPw] = useState<string>("");
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
 
@@ -33,47 +33,44 @@ export default function SignUp() {
   const [phoneNumberValid, setPhoneNumberValid] = useState(false);
 
   const [marketing, setMarketing] = useState<boolean>(false);
-  
-  const [bcode, setBcode] = useState<string>("")
-  const [address, setAddress] = useState<string>("")
-  const [storeName, setStoreName] = useState<string>("")
-  const [storePhone, setStorePhone] = useState<string>("")
+
+  const [bcode, setBcode] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [storeName, setStoreName] = useState<string>("");
+  const [storePhone, setStorePhone] = useState<string>("");
   const [storePhoneValid, setStorePhoneValid] = useState(false);
 
-  const [content, setContent] = useState<string>("")
-  const [bank, setBank] = useState<string>("")
-  const [accountValid, setAccountValid] = useState(false)
-  const [account, setAccount] = useState<string>("")
+  const [content, setContent] = useState<string>("");
+  const [bank, setBank] = useState<string>("");
+  const [accountValid, setAccountValid] = useState(false);
+  const [account, setAccount] = useState<string>("");
 
-  const [latitude, setLatitude] = useState<string>("")
-  const [longtitude, setLongtitude] = useState<string>("")
-  
-  const [saveAddress, setSaveAddress] = useState<string>("")
+  const [latitude, setLatitude] = useState<string>("");
+  const [longtitude, setLongtitude] = useState<string>("");
+
+  const [saveAddress, setSaveAddress] = useState<string>("");
 
   // const [businessInformation, setBusinessInformation] = useState<string>("") // 하위 key-value 쌍을 어떻게 정의?
 
-  const [companyRegistrationNumber, setCompanyRegistrationNumber] = useState<string>("")
-  const [companyRegistrationNumberValid, setCompanyRegistrationNumberValid] = useState(false)
-  const [ceoName, setCeoName] = useState<string>("")
-  const [openingDate, setOpeningDate] = useState<string>("")
-  const [openingDateValid, setOpeningDateValid] = useState(false)
+  const [companyRegistrationNumber, setCompanyRegistrationNumber] =
+    useState<string>("");
+  const [companyRegistrationNumberValid, setCompanyRegistrationNumberValid] =
+    useState(false);
+  const [ceoName, setCeoName] = useState<string>("");
+  const [openingDate, setOpeningDate] = useState<string>("");
+  const [openingDateValid, setOpeningDateValid] = useState(false);
 
-  const [corporateRegistrationNumber, setCorporateRegistrationNumber] = useState<string>("")
-  const [corporateRegistrationNumberValid, setCorporateRegistrationNumberValid] = useState(false)
+  const [corporateRegistrationNumber, setCorporateRegistrationNumber] =
+    useState<string>("");
+  const [
+    corporateRegistrationNumberValid,
+    setCorporateRegistrationNumberValid,
+  ] = useState(false);
 
-  const [businessName, setBusinessName] = useState<string>("")
-  const [businessFile, setBusinessFile] = useState<string>("")
+  const [businessName, setBusinessName] = useState<string>("");
+  const [businessFile, setBusinessFile] = useState<string>("");
 
-  // 회원가입 버튼 활성화 여부 업데이트 함수
-  const updateNotAllow = () => {
-    setNotAllow(
-      !idValid ||
-      !pwValid ||
-      !isValidBusinessNumber(businessNumber) ||
-      !isValidRepresentativeName(representativeName) ||
-      !isValidOpeningDate(openingDate)
-    );
-  };
+  // const geocoder = new kakao.maps.services.Geocoder();
 
   const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -90,7 +87,7 @@ export default function SignUp() {
 
   const handleCheckId = () => {
     axios
-      .get(`http://i9b208.p.ssafy.io:8811/user/id/${id}`) 
+      .get(`http://i9b208.p.ssafy.io:8811/user/id/${id}`)
       .then((response) => {
         setIsIdDuplicated(response.data.duplicated);
         updateNotAllow();
@@ -104,6 +101,7 @@ export default function SignUp() {
     setPw(e.target.value);
     const regex =
       /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
+
     setPwValid(regex.test(e.target.value));
     updateNotAllow();
   };
@@ -112,6 +110,7 @@ export default function SignUp() {
     setEmail(e.target.value);
     // 이메일 유효성 검사
     const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
     setEmailValid(regex.test(e.target.value));
     updateNotAllow();
   };
@@ -127,46 +126,47 @@ export default function SignUp() {
     setPhoneNumber(e.target.value);
     // 전화번호 유효성 검사 (여기서는 숫자 11자리로 가정)
     const regex = /^\d{11}$/;
+
     setPhoneNumberValid(regex.test(e.target.value));
     updateNotAllow();
   };
 
-  const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value)
-    updateNotAllow();
+  const handleStoreName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStoreName(e.target.value);
   };
 
-  const handleStoreName  = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStoreName(e.target.value)
-  };
-
-  const handleStorePhone  = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStorePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStorePhone(e.target.value);
     // 전화번호 유효성 검사 (여기서는 숫자 10자리로 가정)
     const regex = /^\d{10}$/;
+
     setStorePhoneValid(regex.test(e.target.value));
     updateNotAllow();
   };
 
-  const handleContent  = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContent(e.target.value)
+  const handleContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
   };
 
-  const handleBank  = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBank(e.target.value)
+  const handleBank = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBank(e.target.value);
   };
 
   const handleAccount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAccount(e.target.value)
+    setAccount(e.target.value);
     const regex = /^\d{10,14}$/;
+
     setAccountValid(regex.test(e.target.value));
     updateNotAllow();
   };
 
-  const handleCompanyRegistrationNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCompanyRegistrationNumber = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setCompanyRegistrationNumber(e.target.value);
     // 사업자등록번호 유효성 검사 (여기서는 숫자 11자리로 가정)
     const regex = /^\d{11}$/;
+
     setCompanyRegistrationNumberValid(regex.test(e.target.value));
     updateNotAllow();
   };
@@ -180,14 +180,18 @@ export default function SignUp() {
     setOpeningDate(e.target.value);
     // 오픈 날짜 유효성 검사 (여기서는 숫자 8자리로 가정)
     const regex = /^\d{8}$/;
+
     setOpeningDateValid(regex.test(e.target.value));
     updateNotAllow();
   };
 
-  const handleCorporateRegistrationNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCorporateRegistrationNumber(e.target.value)
+  const handleCorporateRegistrationNumber = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCorporateRegistrationNumber(e.target.value);
     // 법인등록번호 유효성검사
     const regex = /^\d{11}$/;
+
     setCorporateRegistrationNumberValid(regex.test(e.target.value));
     updateNotAllow();
   };
@@ -205,75 +209,85 @@ export default function SignUp() {
     setMarketing(e.target.checked);
     updateNotAllow();
   };
-  
+
   const updateNotAllow = () => {
-    setNotAllow(!idValid || !pwValid || !nameValid || !emailValid || !nicknameValid || !phoneNumberValid || !accountValid);
+    setNotAllow(
+      !idValid ||
+        !pwValid ||
+        !nameValid ||
+        !emailValid ||
+        !nicknameValid ||
+        !phoneNumberValid ||
+        !accountValid
+    );
   };
 
-  const { kakao } = window;
-
+  // eslint-disable-next-line no-shadow
   const onDataHandler = (address: Address) => {
     console.log(address.address);
     setBcode(address.bcode);
     setSaveAddress(address.address);
-  
-    axios.get(`https://dapi.kakao.com/v2/local/search/address.json?query=${address.address}`, {
-      headers: {
-        Authorization: "KakaoAK 409915cf48a47370a92cea926084d5a1" // git에 올리지 말 것! api키는 항상 다른데 보관 gitignore가 되는 곳에
-      }
-    })
-      .then(response => (
-        // console.log(response.data.documents[0].y)
-        setLongtitude(response.data.documents[0].x)
+
+    axios
+      .get(
+        `https://dapi.kakao.com/v2/local/search/address.json?query=${address.address}`,
+        {
+          headers: {
+            Authorization: "KakaoAK 409915cf48a47370a92cea926084d5a1", // git에 올리지 말 것! api키는 항상 다른데 보관 gitignore가 되는 곳에
+          },
+        }
+      )
+      .then(
+        (response) =>
+          // console.log(response.data.documents[0].y)
+          setLongtitude(response.data.documents[0].x)
         // setLatitude(response.data.documents[0].y)
-      ))
-      .catch(error => (
-        console.log(error)
-      ))
+      )
+      .catch((error) => console.log(error));
   };
 
   const handleSignup = () => {
     const body = {
       uid: id,
       password: pw,
-      name: name,
-      email: email,
-      nickname: nickname,
-      phoneNumber: phoneNumber,
-      marketing: marketing,
-      bcode: bcode,
-      address: address,
-      storeName: storeName,
-      storePhone: storePhone,
-      content: content,
-      bank: bank,
-      latitude: latitude,
-      longtitude: longtitude,
+      name,
+      email,
+      nickname,
+      phoneNumber,
+      marketing,
+      bcode,
+      address,
+      storeName,
+      storePhone,
+      content,
+      bank,
+      latitude,
+      longtitude,
       businessInformation: {
-        companyRegistrationNumber: companyRegistrationNumber,
-        ceoName: ceoName,
-        openingDate: openingDate,
-        corporateRegistrationNumber: corporateRegistrationNumber,
-        businessName: businessName,
-        businessFile: businessFile,
-      }
+        companyRegistrationNumber,
+        ceoName,
+        openingDate,
+        corporateRegistrationNumber,
+        businessName,
+        businessFile,
+      },
     };
 
     axios
-    .post("http://43.201.255.188:8811/store/business-license", body)
-    .then((response) => {
-          if (response.data.success) {
-            console.log("성공???")
-            alert("회원가입에 성공했습니다.");
-            window.location.href = "/login";
-          } else {
-            alert("이미 등록된 아이디입니다.");
-          }
-        })
-        .catch((error) => {
-          console.error("회원가입 오류:", error);
-          alert("회원가입에 실패했습니다.");
-        });
+      .post("http://i9b208.p.ssafy.io:8811/store", body)
+      .then((response) => {
+        if (response.data.success) {
+          console.log("성공???");
+          alert("회원가입에 성공했습니다.");
+          window.location.href = "/login";
+        } else {
+          alert("이미 등록된 아이디입니다.");
+        }
+      })
+      .catch((error) => {
+        console.error("회원가입 오류:", error);
+        alert("회원가입에 실패했습니다.");
+      });
   };
 
   return (
@@ -318,8 +332,179 @@ export default function SignUp() {
           )}
         </div>
 
-        <div style={{ marginTop: '26px' }} className="inputTitle">
-          사업자 등록번호
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          비밀번호
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="password"
+            placeholder="비밀번호를 입력하세요 (영문, 숫자, 특수문자 포함 8-20자)"
+            value={pw}
+            onChange={handlePw}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!pwValid && pw.length > 0 && (
+            <div>
+              비밀번호는 영문, 숫자, 특수문자를 포함하여 8-20자로 입력해주세요.
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          이메일
+        </div>
+
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="이메일을 입력하세요"
+            value={email}
+            onChange={handleEmail}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!emailValid && email.length > 0 && (
+            <div>올바른 이메일 형식이 아닙니다.</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          닉네임
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="닉네임을 입력하세요 (최소 3글자)"
+            value={nickname}
+            onChange={handleNickname}
+          />
+        </div>
+
+        <div className="errorMessageWrap">
+          {!nicknameValid && nickname.length > 0 && (
+            <div>닉네임은 최소 3글자 이상 입력해주세요.</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          전화번호
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="전화번호를 입력하세요 (숫자 11자리)"
+            value={phoneNumber}
+            onChange={handlePhoneNumber}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!phoneNumberValid && phoneNumber.length > 0 && (
+            <div>올바른 전화번호 형식이 아닙니다. (숫자 11자리)</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          사업자정보
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          가게 이름
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="가게 이름을 입력하세요."
+            value={storeName}
+            onChange={handleStoreName}
+          />
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          가게전화번호
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="가게 전화번호를 입력하세요 (숫자 10자리)"
+            value={storePhone}
+            onChange={handleStorePhone}
+          />
+        </div>
+        <div className="errorMessageWrap">
+          {!storePhoneValid && storePhone.length > 0 && (
+            <div>올바른 전화번호 형식이 아닙니다. (숫자 10자리)</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          content
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="내용을 입력하세요."
+            value={content}
+            onChange={handleContent}
+          />
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          bank
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="가게 이름을 입력하세요."
+            value={bank}
+            onChange={handleBank}
+          />
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          Account
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="계좌를 입력하세요."
+            value={account}
+            onChange={handleAccount}
+          />
+        </div>
+
+        <div className="errorMessageWrap">
+          {!accountValid && account.length > 0 && (
+            <div>올바른 계좌번호 형식이 아닙니다.</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          주소 입력란
+          <DaumPostcodeEmbed onComplete={onDataHandler} />
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            readOnly
+            type="text"
+            placeholder="주소를 입력하세요"
+            value={saveAddress}
+            // onChange={handleAddress}
+          />
+        </div>
+
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          사업자등록번호
         </div>
         <div className="inputWrap">
           <input
@@ -331,9 +516,10 @@ export default function SignUp() {
           />
         </div>
         <div className="errorMessageWrap">
-          {!isValidBusinessNumber(businessNumber) && businessNumber.length > 0 && (
-            <div>올바른 사업자 등록번호 형식이 아닙니다. (예: 1234567890)</div>
-          )}
+          {!companyRegistrationNumberValid &&
+            companyRegistrationNumber.length > 0 && (
+              <div>올바른 사업자등록번호 형식이 아닙니다. (숫자 10자리)</div>
+            )}
         </div>
 
         <div style={{ marginTop: "26px" }} className="inputTitle">
@@ -349,7 +535,7 @@ export default function SignUp() {
           />
         </div>
 
-        <div style={{ marginTop: '26px' }} className="inputTitle">
+        <div style={{ marginTop: "26px" }} className="inputTitle">
           오픈날짜
         </div>
         <div className="inputWrap">
@@ -362,13 +548,13 @@ export default function SignUp() {
           />
         </div>
         <div className="errorMessageWrap">
-          {!isValidRepresentativeName(representativeName) && representativeName.length > 0 && (
-            <div>대표자 성명을 입력해주세요.</div>
+          {!openingDateValid && openingDate.length > 0 && (
+            <div>올바른 오픈날짜 형식이 아닙니다. (숫자 8자리)</div>
           )}
         </div>
 
-        <div style={{ marginTop: '26px' }} className="inputTitle">
-          개업일자
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          법인등록번호
         </div>
         <div className="inputWrap">
           <input
@@ -380,14 +566,46 @@ export default function SignUp() {
           />
         </div>
         <div className="errorMessageWrap">
-          {!corporateRegistrationNumberValid && corporateRegistrationNumber.length > 0 && (
-            <div>올바른 법인등록번호 형식이 아닙니다. (숫자 10자리)</div>
-          )}
+          {!corporateRegistrationNumberValid &&
+            corporateRegistrationNumber.length > 0 && (
+              <div>올바른 법인등록번호 형식이 아닙니다. (숫자 10자리)</div>
+            )}
         </div>
 
-        {/* 이메일, 닉네임, 전화번호, 마케팅 동의 관련 코드 생략 */}
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          사업명
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="사업명을 입력하세요."
+            value={businessName}
+            onChange={handleBusinessName}
+          />
+        </div>
 
-      </div>
+        <div style={{ marginTop: "26px" }} className="inputTitle">
+          비즈니스 파일
+        </div>
+        <div className="inputWrap">
+          <input
+            className="input"
+            type="text"
+            placeholder="대표자 성명을 입력하세요."
+            value={businessFile}
+            onChange={handleBusinessFile}
+          />
+        </div>
+
+        <div style={{ marginTop: "26px" }}>
+          <input
+            type="checkbox"
+            checked={marketing}
+            onChange={handleMarketing}
+          />
+          마케팅 동의
+        </div>
 
         <div>
           <button

@@ -93,14 +93,10 @@ export default function Login() {
         data: {
           uid: id,
           password: pw,
-          authenticate: "UA02",
+          authenticate: "UA01",
         },
       })
         .then((response) => {
-          // console.log(response.data.refreshToken)
-          // console.log(response.data.accessToken)
-
-          // localStorage 대신 sessionStorage 사용
           sessionStorage.setItem("accessToken", response.data.accessToken);
           sessionStorage.setItem("refreshToken", response.data.refreshToken);
 

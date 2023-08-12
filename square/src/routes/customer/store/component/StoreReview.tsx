@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Card, CardContent, Typography, Grid, Container, Box, CardMedia } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Container,
+  Box,
+  CardMedia,
+} from "@mui/material";
 
 function StoreReview({ storeId }: { storeId?: string }) {
   const [reviews] = useState([
@@ -12,8 +20,8 @@ function StoreReview({ storeId }: { storeId?: string }) {
       images: [
         { url: "1번 리뷰 이미지1", thumb: "1번 리뷰 썸네일1" },
         { url: "1번 리뷰 이미지2", thumb: "1번 리뷰 썸네일2" },
-        { url: "1번 리뷰 이미지3", thumb: "1번 리뷰 썸네일3" }
-      ]
+        { url: "1번 리뷰 이미지3", thumb: "1번 리뷰 썸네일3" },
+      ],
     },
     {
       reviewId: 4,
@@ -21,7 +29,7 @@ function StoreReview({ storeId }: { storeId?: string }) {
       rating: 2,
       content: "맛잇어요",
       createdAt: [2023, 8, 7, 23, 25, 59],
-      images: []
+      images: [],
     },
     {
       reviewId: 6,
@@ -32,8 +40,8 @@ function StoreReview({ storeId }: { storeId?: string }) {
       images: [
         { url: "1번 리뷰 이미지1", thumb: "1번 리뷰 썸네일1" },
         { url: "1번 리뷰 이미지2", thumb: "1번 리뷰 썸네일2" },
-        { url: "1번 리뷰 이미지3", thumb: "1번 리뷰 썸네일3" }
-      ]
+        { url: "1번 리뷰 이미지3", thumb: "1번 리뷰 썸네일3" },
+      ],
     },
     {
       reviewId: 6,
@@ -44,12 +52,12 @@ function StoreReview({ storeId }: { storeId?: string }) {
       images: [
         { url: "1번 리뷰 이미지1", thumb: "1번 리뷰 썸네일1" },
         { url: "1번 리뷰 이미지2", thumb: "1번 리뷰 썸네일2" },
-        { url: "1번 리뷰 이미지3", thumb: "1번 리뷰 썸네일3" }
-      ]
+        { url: "1번 리뷰 이미지3", thumb: "1번 리뷰 썸네일3" },
+      ],
     },
   ]);
 
-    // useEffect(() => {
+  // useEffect(() => {
   //   axios.get(`${REST_API}review/${storeId}`)
   //     .then(response => {
   //       setReviews(response.data.reviews);
@@ -66,14 +74,21 @@ function StoreReview({ storeId }: { storeId?: string }) {
           <Grid item xs={12} key={idx}>
             <Card>
               <CardContent>
-                <Grid container justifyContent="space-between" alignItems="center">
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Typography variant="h6">{review.userNickname}</Typography>
-                  <Typography color="textSecondary">{review.createdAt.slice(0, 3).join('-')} {review.createdAt.slice(3, 5).join(':')}</Typography>
+                  <Typography color="textSecondary">
+                    {review.createdAt.slice(0, 3).join("-")}{" "}
+                    {review.createdAt.slice(3, 5).join(":")}
+                  </Typography>
                 </Grid>
                 <Box mt={2}>
                   <Typography variant="body2">별점: {review.rating}</Typography>
                 </Box>
-                
+
                 {review.images && review.images.length > 0 && (
                   <Box mt={2}>
                     {review.images.map((image, imgIdx) => (
