@@ -247,6 +247,7 @@ public class StoreController {
 				.backgroundImgUrl(images)
 				.isOpened(store.getIsOpened())
 				.latitude(store.getLatitude())
+				.logo(store.getLogo())
 				.longitude(store.getLongitude())
 				.build();
 		return new ResponseEntity<>(res, HttpStatus.OK);
