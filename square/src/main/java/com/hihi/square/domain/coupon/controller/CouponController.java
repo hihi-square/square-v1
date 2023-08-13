@@ -77,6 +77,18 @@ public class CouponController {
 		return new ResponseEntity<>(IssueRequestCouponResponseDto.builder().coupons(coupons).statusCode(200).build(), HttpStatus.OK);
 	}
 
+	// 읍면동 지역 + depth 에 대해서 현재 발급 가능한 쿠폰이 있는 가게 리스트
+	@GetMapping("/emd/{admCode}/{depth}")
+	public ResponseEntity<?> getStoreListAvailableCoupon(@PathVariable("admCode") Long admCode, @PathVariable("depth")Integer depth) {
+		Optional<EmdAddress> emdAddressOptional = emdAddressService.findByAdmCode(admCode);
+		if (emdAddressOptional.isEmpty()){
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_EMD").build(), HttpStatus.BAD_REQUEST);
+		}
+		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdAddressOptional.get().getAemId(), depth);
+		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddressList);
+		return new ResponseEntity<>(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
+	}
+
 	// 해당 가게에 있는 사용 가능한 쿠폰 개수
 	@GetMapping("/count/{id}")
 	public ResponseEntity<?> countAvailableCoupon(@PathVariable("id") Integer storeId){
@@ -169,17 +181,7 @@ public class CouponController {
 			StoreUserCouponResponseDto.builder().coupons(result).statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
 	}
 
-	// 읍면동 지역 + depth 에 대해서 현재 발급 가능한 쿠폰이 있는 가게 리스트
-	@GetMapping("/emd/{emdId}/{depth}")
-	public ResponseEntity<?> getStoreListAvailableCoupon(@PathVariable("emdId") Integer emdId, @PathVariable("depth")Integer depth) {
-		Optional<EmdAddress> emdAddressOptional = emdAddressService.findById(emdId);
-		if (emdAddressOptional.isEmpty()){
-			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_EMD").build(), HttpStatus.BAD_REQUEST);
-		}
-		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
-		List<EmdStoreCouponSaleDto> result = couponService.findByEmdAddressWithAvailableCoupon(emdAddressList);
-		return new ResponseEntity<>(EmdStoreCouponSaleResponseDto.builder().statusCode(200).stores(result).build(), HttpStatus.OK);
-	}
+
 
 	// 가게에서 발급요청 받은 쿠폰 승인
 	@PatchMapping("/issue")

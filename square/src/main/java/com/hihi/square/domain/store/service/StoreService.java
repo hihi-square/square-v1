@@ -24,9 +24,10 @@ import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.BusinessInformationRepository;
 import com.hihi.square.domain.store.repository.StoreCategoryRepository;
+import com.hihi.square.domain.user.entity.User;
+
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.EmdAddress;
-import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.repository.EmdAddressRepository;
 import com.hihi.square.domain.user.service.EmdAddressService;
 
@@ -110,7 +111,9 @@ public class StoreService {
 					.storeAddress(store.getAddress())
 					.mainMenu(menuName)
 					.logo(store.getLogo())
-					.isOpen(store.getIsOpened())
+					.longitude(store.getLongitude())
+					.latitude(store.getLatitude())
+					.isOpened(store.getIsOpened())
 					.build();
 			stores.add(res);
 		}
@@ -142,7 +145,9 @@ public class StoreService {
 				.storeAddress(s.getAddress())
 				.mainMenu(menuName)
 				.logo(s.getLogo())
-				.isOpen(s.getIsOpened())
+				.isOpened(s.getIsOpened())
+				.latitude(s.getLatitude())
+				.longitude(s.getLongitude())
 				.build();
 			stores.add(res);
 		}
@@ -187,6 +192,7 @@ public class StoreService {
 					.rating(reviewService.getAverageRating(store))
 					.categories(categories)
 					.mainMenu(menuName)
+					.isOpened(store.getIsOpened())
 					.build()
 			);
 		}

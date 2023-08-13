@@ -1,10 +1,12 @@
-package com.hihi.square.domain.store.controller;
+package com.hihi.square.domain.note.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/store/business-day")
-public class StoreBusinessDayController {
+@RequestMapping("/note")
+public class NoteController {
+
+
 
 }

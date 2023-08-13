@@ -92,9 +92,10 @@ public class User {
 		this.refreshToken = null;
 	}
 
-	public void updateUserInfo(String nickname, String phone) {
+	public void updateUserInfo(String nickname, String phone, String email) {
 		this.nickname = nickname;
 		this.phone = phone;
+		this.email = email;
 	}
 
 	public void updateUserProfile(String url, String thumbnail) {
