@@ -8,9 +8,6 @@ import Customer from "./routes/customer/Customer";
 import Error from "./routes/error/Error";
 import File from "./routes/test/File";
 
-// import CustomerSignUp from "routes/customer/signup/CustomerSignup";
-// import CustomerLogin from "routes/customer/login/CustomerLogin";
-
 const theme = createTheme({
   typography: {
     fontFamily: "Pretendard, sans-serif",

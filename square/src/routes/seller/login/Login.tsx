@@ -259,10 +259,7 @@ export default function Login() {
               <Button color="secondary"> 회원가입 </Button>
             </Grid>
             <Grid container xs={6} justifyContent="end">
-              <Button color="secondary">
-                {" "}
-                아이디/비밀번dfdfdfdfdf호 찾기{" "}
-              </Button>
+              <Button color="secondary"> 아이디/비밀번호 찾기 </Button>
             </Grid>
           </Grid>
         </Grid>

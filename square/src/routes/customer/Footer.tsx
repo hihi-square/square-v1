@@ -1,7 +1,11 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import { Unstable_Grid2 as Grid, Box, Button, Typography } from "@mui/material";
-
+import {
+  Paper,
+  Unstable_Grid2 as Grid,
+  Box,
+  Button,
+  Typography,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -10,23 +14,20 @@ import {
   faMessage,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom"; // 이 부분을 수정
 
-type Props = {
+interface FooterProps {
   now: number;
-};
+}
 
-export default function Footer({ now }: Props) {
+export default function Footer({ now }: FooterProps) {
+  // const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
 
   return (
-    <Grid
-      sx={{
-        backgroundColor: "white",
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
-        maxWidth: "600px",
-      }}
+    <Paper
+      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      elevation={3}
     >
       <Grid container xs={12}>
         <Grid xs>
@@ -116,7 +117,7 @@ export default function Footer({ now }: Props) {
               flexDirection: "column",
             }}
             onClick={() => {
-              if (now !== 4) navigate("/orderlist");
+              if (now !== 4) navigate("/order");
             }}
           >
             <Box component="div">
@@ -142,7 +143,7 @@ export default function Footer({ now }: Props) {
               flexDirection: "column",
             }}
             onClick={() => {
-              if (now !== 5) navigate("/my");
+              if (now !== 10) navigate("/mypage");
             }}
           >
             <Box component="div">
@@ -160,6 +161,6 @@ export default function Footer({ now }: Props) {
           </Button>
         </Grid>
       </Grid>
-    </Grid>
+    </Paper>
   );
 }

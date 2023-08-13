@@ -1,10 +1,12 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
+import {
+  AppBar,
+  Toolbar,
+  Unstable_Grid2 as Grid,
+  Typography,
+  Button,
+  IconButton,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -31,8 +33,8 @@ export default function Appbar() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color="appbar">
+      <Grid xs={12}>
+        <AppBar position="static" color="appbar" sx={{ height: 70 }}>
           <Toolbar>
             <IconButton
               size="large"
@@ -62,7 +64,7 @@ export default function Appbar() {
             <Button color="inherit">{user}님, 환영합니다.</Button>
           </Toolbar>
         </AppBar>
-      </Box>
+      </Grid>
     </ThemeProvider>
   );
 }
