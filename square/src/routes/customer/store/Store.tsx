@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -48,12 +50,13 @@ function StorePage() {
     signature: boolean;
     price: number;
   };
-
+  const token = sessionStorage.getItem("accessToken");
   const [info, setInfo] = useState<Store>();
   const { store } = useParams<{ store?: string }>();
   const [state, setState] = useState<boolean>(false);
   const [curItem, setCurItem] = useState<Item>();
   const [selectedTab, setSelectedTab] = useState("menu");
+  const [isZzim, setZzim] = useState<boolean>(false);
 
   useEffect(() => {
     // storeId를 사용해 메뉴 정보를 가져오는 API를 호출합니다.
@@ -65,6 +68,20 @@ function StorePage() {
       .then((response) => {
         // eslint-disable-next-line no-console
         setInfo(response.data);
+      })
+      .catch((error) => {
+        // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
+      });
+
+    axios({
+      url: `${REST_API}dibs/${store}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((resp) => {
+        if (resp.data.message === "EXISTS") setZzim(true);
       })
       .catch((error) => {
         // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
@@ -88,6 +105,10 @@ function StorePage() {
     }
   };
 
+  const handleZzim = () => {
+    console.log("gd");
+  };
+
   return (
     <Grid
       container
@@ -105,12 +126,20 @@ function StorePage() {
         xs={12}
         sx={{ position: "absolute", top: 0, justifyContent: "center" }}
       >
-        <Grid xs={12}>
-          <img
-            src={info && info.backgroundImgUrl[0]}
-            alt="가게배너"
-            style={{ width: "100%", height: "auto" }}
-          />
+        <Grid xs={12} sx={{ display: "flex" }}>
+          {info && info.backgroundImgUrl.length > 0 ? (
+            <img
+              src={info && info.backgroundImgUrl[0]}
+              alt="가게배너"
+              style={{ width: "100%", height: "auto" }}
+            />
+          ) : (
+            <img
+              src="/img/store/store1.png"
+              style={{ width: "100%", height: "auto" }}
+              alt="가게배너"
+            />
+          )}
         </Grid>
         <Grid container xs={10}>
           <Grid xs={12} mt="10px">
@@ -143,8 +172,11 @@ function StorePage() {
           mt="5px"
           sx={{ display: "flex", justifyContent: "space-around" }}
         >
-          <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
-            <FontAwesomeIcon icon={faHeart} style={{ color: "gray" }} />
+          <IconButton
+            sx={{ fontSize: "18px", color: isZzim ? "red" : "grey" }}
+            onClick={handleZzim}
+          >
+            <FontAwesomeIcon icon={faHeart} />
             <Typography
               variant="subtitle1"
               component="div"
@@ -152,7 +184,7 @@ function StorePage() {
                 fontWeight: 400,
                 textAlign: "center",
                 fontSize: "18px",
-                color: "gray",
+                color: "grey",
                 padding: "0px 10px",
               }}
             >
@@ -202,10 +234,21 @@ function StorePage() {
           mt="10px"
           sx={{ display: "flex", justifyContent: "center" }}
         >
-          <Paper
-            elevation={1}
-            sx={{ width: "80%", minHeight: "200px" }}
-          ></Paper>
+          <Paper elevation={1} sx={{ width: "80%", minHeight: "200px" }}>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{
+                fontWeight: 400,
+                textAlign: "center",
+                fontSize: "18px",
+                color: "gray",
+                padding: "0px 10px",
+              }}
+            >
+              {info?.content}
+            </Typography>
+          </Paper>
         </Grid>
         <Grid xs={12} mt="20px">
           <Divider variant="middle"></Divider>

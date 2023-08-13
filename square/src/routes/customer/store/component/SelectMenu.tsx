@@ -118,7 +118,11 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
               },
             }}
           >
-            <img src={menu.menuImage} alt="menu" />
+            <img
+              src={menu.menuThumbnail}
+              style={{ width: "100%", height: "100%" }}
+              alt="menu"
+            />
           </Box>
           <Box>
             <Typography
@@ -162,22 +166,6 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
             justifyContent: "center",
           }}
         >
-          <Box>
-            <Typography
-              variant="subtitle1"
-              component="div"
-              sx={{
-                fontWeight: 400,
-                textAlign: "left",
-                color: "secondary.main",
-                padding: "0px 5px 10px 20px",
-                width: "90%",
-                whiteSpace: "pre-line",
-              }}
-            >
-              이곳은 옵션이 들어갈 자리입니다.
-            </Typography>
-          </Box>
           <Grid container justifyContent="center">
             <Grid xs={6}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -207,7 +195,14 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
               </Typography>
             </Grid>
           </Grid>
-          <Button onClick={handleAddCart}>장바구니에 담기</Button>
+          <Button
+            onClick={() => {
+              setState(false);
+              handleAddCart();
+            }}
+          >
+            장바구니에 담기
+          </Button>
         </Paper>
       </Paper>
     );

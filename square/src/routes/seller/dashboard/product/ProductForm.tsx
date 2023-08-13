@@ -131,6 +131,7 @@ export default function ProductForm({
         .then((resp) => {
           handleCurrProduct("image", resp.data.file.url);
           handleCurrProduct("thumbnail", resp.data.file.thumb);
+
           create(currProduct);
         })
         .catch(() => {});
@@ -265,9 +266,9 @@ export default function ProductForm({
             <Button
               disabled={!isFormValid()}
               onClick={() => {
-                setFileName("");
                 postImage();
                 setOpen(false);
+                setFileName("");
               }}
             >
               등록
