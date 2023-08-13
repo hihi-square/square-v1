@@ -10,6 +10,7 @@ import com.hihi.square.domain.coupon.entity.IssueCoupon;
 import com.hihi.square.domain.coupon.service.CouponService;
 import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.user.service.UserService;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -171,8 +172,18 @@ public class OrderController {
 	// 가게 주문 수락시 프로세스 -> return도 가게로 들어가는거임
 	@Transactional
 	@PatchMapping("/store-acceptance/{ordId}")
-	public ResponseEntity<?> updateOrderSuccess(@PathVariable Integer ordId) {
+	public ResponseEntity<?> updateOrderSuccess(Authentication authentication, @PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
+
+		// 가게 주인이 아닐때
+		String uid = authentication.getName();
+		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
@@ -202,8 +213,18 @@ public class OrderController {
 	// 가게 주문 거절시 프로세스
 	@Transactional
 	@PatchMapping("/store-denied/{ordId}")
-	public ResponseEntity<?> updateOrderDenied(@PathVariable Integer ordId) {
+	public ResponseEntity<?> updateOrderDenied(Authentication authentication, @PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
+
+		// 가게 주인이 아닐때
+		String uid = authentication.getName();
+		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
@@ -234,8 +255,18 @@ public class OrderController {
 	// 픽업 완료시 상태변경
 	@Transactional
 	@PatchMapping("/store-pickup/{ordId}")
-	public ResponseEntity<?> updateOrderPickup(@PathVariable Integer ordId) {
+	public ResponseEntity<?> updateOrderPickup(Authentication authentication, @PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
+
+		// 가게 주인이 아닐때
+		String uid = authentication.getName();
+		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.ORDER_ACCEPT) {
@@ -270,7 +301,18 @@ public class OrderController {
 	// 주문 내역 전체 조회 사용자별로
 	@Transactional(readOnly = true)
 	@GetMapping("/customer/{cusId}")
-	public ResponseEntity<?> findOrderByUserId(@PathVariable Integer cusId) {
+	public ResponseEntity<?> findOrderByUserId(Authentication authentication, @PathVariable Integer cusId) {
+
+		// 로그인한 유저와 주문한 사용자가 다를때
+		String uid = authentication.getName();
+		if(userService.findByUid(uid).get().getUsrId() != cusId) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		List<OrderResponseDto> response = new ArrayList<>();
 		Customer customer = customerRepository.findById(cusId).get();
 		List<Optional<Order>> orders = orderService.findByCustomer(customer);
@@ -286,7 +328,18 @@ public class OrderController {
 	// 주문 내역 전체 조회 가게별로
 	@Transactional(readOnly = true)
 	@GetMapping("/store/{stoId}")
-	public ResponseEntity<?> findOrderByStoreId(@PathVariable Integer stoId) {
+	public ResponseEntity<?> findOrderByStoreId(Authentication authentication, @PathVariable Integer stoId) {
+
+		// 로그인한 유저와 가게가 다를때
+		String uid = authentication.getName();
+		if(userService.findByUid(uid).get().getUsrId() != stoId) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		List<OrderResponseDto> response = new ArrayList<>();
 		Store store = storeRepository.findById(stoId).get();
 		List<Optional<Order>> orders = orderService.findByStore(store);
