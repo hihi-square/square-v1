@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +64,7 @@ public class MenuOptionCategoryController {
 
 		MenuOptionCategory menuOptionCategory = request.toEntity();
 		menuOptionCategoryService.saveMenuOptionCategory(menuOptionCategory);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@PatchMapping("/{id}")
@@ -78,19 +79,18 @@ public class MenuOptionCategoryController {
 	public ResponseEntity<CommonResponseDto<?>> updateMenuOptionCategoryList(
 		@RequestBody MenuOptionCategoryRequestDto request) {
 		List<MenuOptionCategoryRequestDto> optionCategoryList = request.getData();
-		// List<Menu> menuList = new ArrayList<>();
 		menuOptionCategoryService.updateMenuOptionCategoryList(optionCategoryList);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
-	// @DeleteMapping("/{id}")
-	// public ResponseEntity<CommonResponseDto<?>> deleteMenuOptionCategory(
-	// 	@PathVariable Long id) {
-	// 	MenuOptionCategory menuOptionCategory = menuOptionCategoryService.findById(id);
-	// 	if (menuOptionCategory == null) {
-	// 		return ResponseEntity.badRequest().build();
-	// 	}
-	// 	menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
-	// 	return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
-	// }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<CommonResponseDto<?>> deleteMenuOptionCategory(
+		@PathVariable Long id) {
+		MenuOptionCategory menuOptionCategory = menuOptionCategoryService.findById(id);
+		if (menuOptionCategory == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
+		return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
+	}
 }

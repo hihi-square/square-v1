@@ -88,7 +88,7 @@ public class MenuOptionController {
 
 		MenuOption menuOption = request.toEntity();
 		menuOptionService.saveMenuOption(menuOption);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@PatchMapping("/{id}")
@@ -112,7 +112,7 @@ public class MenuOptionController {
 		List<MenuOptionRequestDto> menuOptionList = request.getData();
 		log.info("optionList : {}", menuOptionList);
 		menuOptionService.updateMenuOptionList(user, menuOptionList);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@DeleteMapping("/{id}")

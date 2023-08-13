@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,7 @@ import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderIdResponseDto;
 import com.hihi.square.domain.order.dto.response.OrderResponseDto;
+import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.entity.OrderStatus;
 import com.hihi.square.domain.order.event.OrderEvent;
@@ -45,8 +45,6 @@ public class OrderController {
 	private final StoreRepository storeRepository;
 	private final OrderService orderService;
 	private final PointService pointService;
-
-	// private final NotificationService notificationService;
 	private final ApplicationEventPublisher eventPublisher;
 
 	// 주문 아이디 조회 id : 주문 아이디
@@ -114,12 +112,12 @@ public class OrderController {
 	@PatchMapping("/store-acceptance/{ordId}")
 	public ResponseEntity<CommonResponseDto> updateOrderSuccess(@PathVariable Integer ordId) {
 		CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(200)
-				.message("UPDATE_SUCCESS")
-				.build();
+			.statusCode(200)
+			.message("UPDATE_SUCCESS")
+			.build();
 		Order order = orderService.findByOrderId(ordId).get();
 		orderService.updateOrderAccepted(order);
-		
+
 		// 소비자로 알림 전송 : 주문 수락됨
 		eventPublisher.publishEvent(new OrderEvent(order, "주문이 수락되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -131,12 +129,11 @@ public class OrderController {
 	public ResponseEntity<?> updateOrderDenied(@PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
 		RefundInfoResponseDto response = orderService.updateOrderDenied(order);
-		
+
 		// 소비자로 알림 전송 : 주문 거절됨 환불 진행
 		eventPublisher.publishEvent(new OrderEvent(order, "주문이 거절되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 
 	// 주문 상세 조회
 	@Transactional(readOnly = true)

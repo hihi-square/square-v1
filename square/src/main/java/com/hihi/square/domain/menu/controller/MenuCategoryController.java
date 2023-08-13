@@ -39,7 +39,6 @@ public class MenuCategoryController {
 		User user = userService.findByUid(uid).get();
 
 		List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
-		// List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(userId);
 		List<MenuCategoryResponseDto> responseList = new ArrayList<>();
 
 		for (MenuCategory menuCategory : menuCategoryList) {
@@ -68,7 +67,7 @@ public class MenuCategoryController {
 
 		MenuCategory menuCategory = request.toEntity();
 		menuCategoryService.saveMenuCategory(menuCategory);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@PatchMapping("/{id}")
@@ -89,8 +88,6 @@ public class MenuCategoryController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 		List<MenuCategoryRequestDto> requestDtos = request.getData();
-		// log.info("requestDtos : {}", requestDtos);
-		// List<Menu> menuList = new ArrayList<>();
 		menuCategoryService.updateMenuList(user, requestDtos);
 		return ResponseEntity.ok(CommonResponseDto.success(null));
 	}
@@ -99,6 +96,7 @@ public class MenuCategoryController {
 	public ResponseEntity<CommonResponseDto<?>> deleteMenuCategory(
 		@PathVariable Long id) {
 		MenuCategory menuCategory = menuCategoryService.findById(id);
+
 		if (menuCategory == null) {
 			return ResponseEntity.badRequest().build();
 		}

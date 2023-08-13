@@ -8,6 +8,7 @@ import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.global.s3.ImageResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +31,9 @@ public class MenuRequestDto {
 	@NotEmpty
 	private String name;
 	private Integer price;
-	private String image;
-	private String thumbnail;
+	private ImageResponseDto menuImage;
+	// private String image;
+	// private String thumbnail;
 	private boolean signature;
 	private boolean popularity;
 	// private MenuStatus status;
@@ -51,8 +53,9 @@ public class MenuRequestDto {
 			.menuCategory(menuCategory.builder().id(categoryId).name(categoryName).build())
 			.name(name)
 			.price(price)
-			.image(image)
-			.thumbnail(thumbnail)
+			// .image(image)
+			// .thumbnail(thumbnail)
+			// .image(menuImage)
 			.signature(signature)
 			.popularity(popularity)
 			.status(MenuStatus.from(status))

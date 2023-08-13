@@ -63,8 +63,11 @@ public class MenuCategoryService {
 	}
 
 	public MenuCategory findById(Long menuCategoryId) {
-		MenuCategory menuCategory = menuCategoryRepository.findById(menuCategoryId).get();
-		return menuCategory;
+		Optional<MenuCategory> menuCategory = menuCategoryRepository.findById(menuCategoryId);
+		if (menuCategory.isEmpty())
+			return null;
+		// MenuCategory menuCategory = menuCategoryRepository.findById(menuCategoryId).get();
+		return menuCategory.get();
 	}
 
 	@Transactional(readOnly = true)
