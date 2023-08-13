@@ -27,9 +27,7 @@ export default function CategoryStore() {
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = sessionStorage.getItem('accessToken') || '';
-
-  console.log(token)
+  const token = sessionStorage.getItem("accessToken") || "";
 
   useEffect(() => {
     if (category) {
