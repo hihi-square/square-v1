@@ -13,17 +13,20 @@ export default function Seller() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <Grid xs={12}>
-        <Appbar />
-      </Grid>
-      <Grid xs={12} container>
-        <Grid xs={2} className="full-size sidebar">
+    <Grid
+      xs={12}
+      container
+      flexDirection="column"
+      sx={{ width: "1500px", height: "1000px" }}
+    >
+      <Appbar />
+      <Grid xs={12} container sx={{ flexGrow: 1 }}>
+        <Grid xs={2} className="sidebar">
           <Box className="button" sx={{ marginTop: "3%" }}>
             <Typography
               variant="h5"
               component="div"
-              sx={{ flexGrow: 1, fontWeight: 700 }}
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
               onClick={() => {
                 navigate("product");
               }}
@@ -35,7 +38,7 @@ export default function Seller() {
             <Typography
               variant="h5"
               component="div"
-              sx={{ flexGrow: 1, fontWeight: 700 }}
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
               onClick={() => {
                 navigate("sale");
               }}
@@ -47,7 +50,7 @@ export default function Seller() {
             <Typography
               variant="h5"
               component="div"
-              sx={{ flexGrow: 1, fontWeight: 700 }}
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
               onClick={() => {
                 navigate("order");
               }}
@@ -59,7 +62,7 @@ export default function Seller() {
             <Typography
               variant="h5"
               component="div"
-              sx={{ flexGrow: 1, fontWeight: 700 }}
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
             >
               고객 관리
             </Typography>
@@ -68,7 +71,7 @@ export default function Seller() {
             <Typography
               variant="h5"
               component="div"
-              sx={{ flexGrow: 1, fontWeight: 700 }}
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
             >
               피드 관리
             </Typography>
@@ -77,13 +80,13 @@ export default function Seller() {
             <Typography
               variant="h5"
               component="div"
-              sx={{ flexGrow: 1, fontWeight: 700 }}
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
             >
               커뮤니티
             </Typography>
           </Box>
         </Grid>
-        <Grid xs={10} container className="full-size component-page">
+        <Grid xs={10} container className="component-page">
           <Routes>
             <Route path="/" element={<Main />} />
 
@@ -91,6 +94,6 @@ export default function Seller() {
           </Routes>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }
