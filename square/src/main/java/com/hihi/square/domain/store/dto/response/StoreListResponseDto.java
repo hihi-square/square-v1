@@ -14,4 +14,5 @@ public class StoreListResponseDto {
     private String storeAddress;
     private String mainMenu;
     private String logo;
+    private Boolean isOpen;
 }

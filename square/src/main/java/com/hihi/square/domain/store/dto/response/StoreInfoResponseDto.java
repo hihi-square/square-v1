@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 public class StoreInfoResponseDto {
 
+	private Boolean isOpen;
 	private String storeName;
 	private String storePhone;
 	private EmdAddress emdAddress;

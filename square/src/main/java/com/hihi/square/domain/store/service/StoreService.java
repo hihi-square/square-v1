@@ -103,14 +103,15 @@ public class StoreService {
 				}
 			}
 			StoreListResponseDto res = StoreListResponseDto.builder()
-				.scbId(id)
-				.storeId(store.getUsrId())
-				.storeName(store.getStoreName())
-				.content(store.getContent())
-				.storeAddress(store.getAddress())
-				.mainMenu(menuName)
-				.logo(store.getLogo())
-				.build();
+					.scbId(id)
+					.storeId(store.getUsrId())
+					.storeName(store.getStoreName())
+					.content(store.getContent())
+					.storeAddress(store.getAddress())
+					.mainMenu(menuName)
+					.logo(store.getLogo())
+					.isOpen(store.getIsOpened())
+					.build();
 			stores.add(res);
 		}
 		return stores;
@@ -141,6 +142,7 @@ public class StoreService {
 				.storeAddress(s.getAddress())
 				.mainMenu(menuName)
 				.logo(s.getLogo())
+				.isOpen(s.getIsOpened())
 				.build();
 			stores.add(res);
 		}
