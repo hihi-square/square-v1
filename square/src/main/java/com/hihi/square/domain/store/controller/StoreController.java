@@ -8,11 +8,11 @@ import com.hihi.square.domain.image.service.ImageService;
 import com.hihi.square.domain.menu.dto.response.MenuCategoryDto;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
 import com.hihi.square.domain.menu.service.MenuService;
+import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
+import com.hihi.square.domain.sale.service.SaleService;
 import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
-import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreSearchListDto;
-import com.hihi.square.domain.store.dto.response.StoreSearchResponseDto;
+import com.hihi.square.domain.store.dto.response.*;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
-import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreUpdateResponseDto;
 import com.hihi.square.domain.store.entity.BusinessInformation;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.service.BusinessInformationService;
@@ -59,6 +57,7 @@ public class StoreController {
 	private final MenuService menuService;
 	private final EmdAddressService emdAddressService;
 	private final ImageService imageService;
+	private final SaleService saleService;
 	// 사업자 등록번호 중복확인
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
@@ -194,6 +193,7 @@ public class StoreController {
 		List<Image> images = imageService.getImageResponseList("STORE", store.getUsrId());
 
 		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
+				.isOpen(store.getIsOpened())
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
 				.address(store.getAddress())
@@ -207,7 +207,13 @@ public class StoreController {
 	@GetMapping("/menu/{usrId}")
 	public ResponseEntity<?> getAllMenuByCategory(@PathVariable Integer usrId) {
 		User user = userService.findByUsrId(usrId).get();
-		List<MenuCategoryDto> response = menuCategoryService.getAllMenuByCategory(user);
+		List<StoreSaleDto> sales = saleService.getStoreInProgressSales((Store) user);
+		List<MenuCategoryDto> menus = menuCategoryService.getAllMenuByCategory(user);
+
+		StoreMenuResponseDto response = StoreMenuResponseDto.builder()
+				.sales(sales)
+				.menus(menus)
+				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
