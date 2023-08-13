@@ -11,6 +11,7 @@ import net.bytebuddy.asm.Advice;
 
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.entity.IssueCoupon;
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 
 public interface IssueCouponRepository extends JpaRepository<IssueCoupon, Integer> {
@@ -24,4 +25,7 @@ public interface IssueCouponRepository extends JpaRepository<IssueCoupon, Intege
 	Integer countByCouponAndIsUsed(Coupon coupon, boolean isUsed);
 
 	List<IssueCoupon> findByCustomer(Customer customer);
+
+	@Query("select ic from IssueCoupon ic, Coupon c where ic.coupon = c and c.toStore = :store and ic.customer = :customer and ic.expiredAt > :now and ic.isUsed = false")
+	List<IssueCoupon> findByToStoreAndCustomerAvailable(Store store, Customer customer, LocalDateTime now);
 }

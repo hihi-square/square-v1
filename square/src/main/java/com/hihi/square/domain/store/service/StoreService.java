@@ -4,18 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.review.service.ReviewService;
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.store.dto.response.StoreCategorySelectedDto;
+import com.hihi.square.domain.store.dto.response.StoreInfoDto;
 import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreSearchListDto;
+import com.hihi.square.domain.store.entity.BankType;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.BusinessInformationRepository;
 import com.hihi.square.domain.store.repository.StoreCategoryRepository;
+import com.hihi.square.domain.user.dto.response.UserInfoDto;
 import com.hihi.square.domain.user.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -96,6 +103,9 @@ public class StoreService {
 					.storeAddress(store.getAddress())
 					.mainMenu(menuName)
 					.logo(store.getLogo())
+				.longitude(store.getLongitude())
+				.latitude(store.getLatitude())
+				.isOpened(store.getIsOpened())
 					.build();
 			stores.add(res);
 		}
@@ -126,6 +136,9 @@ public class StoreService {
 				.storeAddress(s.getAddress())
 				.mainMenu(menuName)
 				.logo(s.getLogo())
+				.isOpened(s.getIsOpened())
+				.latitude(s.getLatitude())
+				.longitude(s.getLongitude())
 				.build();
 			stores.add(res);
 		}
@@ -169,6 +182,7 @@ public class StoreService {
 					.rating(reviewService.getAverageRating(store))
 					.categories(categories)
 					.mainMenu(menuName)
+					.isOpened(store.getIsOpened())
 					.build()
 			);
 		}
