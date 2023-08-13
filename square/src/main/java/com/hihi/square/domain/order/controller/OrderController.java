@@ -98,8 +98,16 @@ public class OrderController {
 	// 주문 등록
 	@Transactional
 	@PostMapping
-	public ResponseEntity<OrderIdResponseDto> registerOrder(@RequestBody OrderRequestDto request) {
+	public ResponseEntity<?> registerOrder(Authentication authentication, @RequestBody OrderRequestDto request) {
+
 		Customer customer = customerRepository.findById(request.getCusId()).get();
+
+		String uid = authentication.getName();
+		if(!(userService.findByUid(uid).get() instanceof Customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+
+
 		// 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
 		if (request.getUsedPoint() > customer.getPoint()) {
 			return new ResponseEntity<>(OrderIdResponseDto.builder().status(400).message("POINT_NOT_ENOUTH").build(),
@@ -126,13 +134,25 @@ public class OrderController {
 	// 주문 status 수정 및 포인트 차감 및 적립
 	@Transactional
 	@PatchMapping("/customer-pay")
-	public ResponseEntity<?> updatePaymentStatus(@RequestBody PaymentRequestDto request) {
+	public ResponseEntity<?> updatePaymentStatus(Authentication authentication, @RequestBody PaymentRequestDto request) {
 		CommonResponseDto response = CommonResponseDto.builder()
 			.statusCode(200)
 			.message("UPDATE_SUCCESS")
 			.build();
 		Order order = orderService.findById(request.getOrdId()).get();
 		Customer customer = order.getCustomer();
+
+		// 주문자가 고객이 아닐때
+		String uid = authentication.getName();
+		if(!(userService.findByUid(uid).get() instanceof Customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+
+		// 주문자가 고객이지만 로그인한 유저와 같지 않을 때
+		Customer LoginCustomer = (Customer)userService.findByUid(uid).get();
+		if(!LoginCustomer.equals(customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_SAME_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
 
 		// regietered 상태가 아닌데 결제를 시도할 때
 		if (order.getStatus() != OrderStatus.REGISTERED) {
