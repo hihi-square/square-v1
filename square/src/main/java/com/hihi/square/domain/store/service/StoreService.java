@@ -103,7 +103,6 @@ public class StoreService {
 				}
 			}
 			StoreListResponseDto res = StoreListResponseDto.builder()
-<<<<<<< HEAD
 					.scbId(id)
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
@@ -113,16 +112,6 @@ public class StoreService {
 					.logo(store.getLogo())
 					.isOpen(store.getIsOpened())
 					.build();
-=======
-				.scbId(id)
-				.storeId(store.getUsrId())
-				.storeName(store.getStoreName())
-				.content(store.getContent())
-				.storeAddress(store.getAddress())
-				.mainMenu(menuName)
-				.logo(store.getLogo())
-				.build();
->>>>>>> 6debec19235b55c6d5cbc5ae68b901b8b3410ad4
 			stores.add(res);
 		}
 		return stores;

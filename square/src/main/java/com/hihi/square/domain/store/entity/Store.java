@@ -44,9 +44,6 @@ public class Store extends User {
 	@Column(name="open_time")
 	private String openTime;
 
-	@Column(name = "open_time")
-	private String openTime;
-
 	// @OneToMany(mappedBy = "store")
 	// // @JoinColumn
 	// @Builder.Default
