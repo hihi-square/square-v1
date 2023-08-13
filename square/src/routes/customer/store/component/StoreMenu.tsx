@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios"; // axios를 import합니다.
@@ -28,7 +30,7 @@ interface Props {
 }
 
 export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
-  const token = localStorage.getItem("accessToken");
+  const token = sessionStorage.getItem("accessToken");
   const [menus, setMenus] = useState<CategoryMenu[]>([]);
 
   const handlePurchase = (item: Item) => {

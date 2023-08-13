@@ -26,11 +26,15 @@ import Footer from "../Footer";
 
 function StorePage() {
   type Store = {
-    name: string;
-    image: string[];
+    account: string;
     address: string;
-    phone: string;
+    bank: string;
     content: string;
+    emdAddress: string;
+    isOpened: false;
+    storeName: string;
+    storePhone: string;
+    backgroundImgUrl: string[];
   };
 
   type Item = {
@@ -45,30 +49,21 @@ function StorePage() {
     price: number;
   };
 
+  const [info, setInfo] = useState<Store>();
   const { store } = useParams<{ store?: string }>();
   const [state, setState] = useState<boolean>(false);
   const [curItem, setCurItem] = useState<Item>();
-
-  const [info, setInfo] = useState<Store>({
-    name: "펭소네 구멍가게",
-    image: ["/img/store/store1.png"],
-    address: "대전광역시 유성구 봉명동 펭소 1길",
-    phone: "010-0000-0000",
-    content: "안녕하세요 펭소입니다 저희 가게에 오신걸 환영합니다!",
-  });
   const [selectedTab, setSelectedTab] = useState("menu");
 
   useEffect(() => {
     // storeId를 사용해 메뉴 정보를 가져오는 API를 호출합니다.
 
     axios({
-      url: `${REST_API}store/${store}`,
+      url: `${REST_API}store/header/${store}`,
       method: "GET",
-      params: {},
     })
       .then((response) => {
         // eslint-disable-next-line no-console
-        console.log("받아온 데이터:", response.data);
         setInfo(response.data);
       })
       .catch((error) => {
@@ -104,7 +99,7 @@ function StorePage() {
         zIndex: "2",
       }}
     >
-      <Header setAni={null} name={info.name} />
+      <Header setAni={null} name={info ? info.storeName : ""} />
       <Grid
         container
         xs={12}
@@ -112,7 +107,7 @@ function StorePage() {
       >
         <Grid xs={12}>
           <img
-            src={info.image[0]}
+            src={info && info.backgroundImgUrl[0]}
             alt="가게배너"
             style={{ width: "100%", height: "auto" }}
           />
@@ -128,7 +123,7 @@ function StorePage() {
                 whiteSpace: "pre-line",
               }}
             >
-              {info.name}
+              {info && info.storeName}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -139,7 +134,7 @@ function StorePage() {
                 whiteSpace: "pre-line",
               }}
             >
-              {info.address}
+              {info && info.address}
             </Typography>
           </Grid>
         </Grid>

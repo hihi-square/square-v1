@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /** @jsxImportSource @emotion/react */
 
 import React, { useState, ChangeEvent, useEffect } from "react";
