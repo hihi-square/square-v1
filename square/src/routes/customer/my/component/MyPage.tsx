@@ -36,7 +36,6 @@ function MyPage() {
     };
     point: number;
     rank: string;
-    social: string;
   };
 
   // eslint-disable-next-line no-console

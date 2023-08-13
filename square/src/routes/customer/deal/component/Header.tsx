@@ -1,10 +1,21 @@
 import React from "react";
 import "App.css";
+import { useNavigate } from "react-router-dom";
 import { Unstable_Grid2 as Grid, Typography, IconButton } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
-export default function Header() {
+interface Props {
+  page: string;
+}
+
+export default function Header({ page }: Props) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(-1);
+  };
+
   return (
     <Grid
       container
@@ -19,7 +30,7 @@ export default function Header() {
       }}
     >
       <Grid xs={2} container justifyContent="center">
-        <IconButton>
+        <IconButton onClick={handleClick}>
           <FontAwesomeIcon
             icon={faChevronLeft}
             style={{ color: "#000000" }}
@@ -33,7 +44,7 @@ export default function Header() {
           component="h5"
           sx={{ fontWeight: 700, textAlign: "center" }}
         >
-          장바구니
+          {page}
         </Typography>
       </Grid>
       <Grid xs={2} container justifyContent="center"></Grid>

@@ -37,6 +37,9 @@ function StorePage() {
     storeName: string;
     storePhone: string;
     backgroundImgUrl: string[];
+    logo: string;
+    latitude: number;
+    longitude: number;
   };
 
   type Item = {
@@ -66,7 +69,6 @@ function StorePage() {
       method: "GET",
     })
       .then((response) => {
-        // eslint-disable-next-line no-console
         setInfo(response.data);
       })
       .catch((error) => {
@@ -351,7 +353,16 @@ function StorePage() {
       </Grid>
       <Grid container xs={12} justifyContent="center">
         <Footer now={6} />
-        <SelectMenu state={state} setState={setState} curItem={curItem} />
+        {info && (
+          <SelectMenu
+            storeId={Number(store)}
+            storeName={info?.storeName}
+            storeThumbnail={info?.logo}
+            state={state}
+            setState={setState}
+            curItem={curItem}
+          />
+        )}
       </Grid>
     </Grid>
   );
