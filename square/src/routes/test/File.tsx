@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { ChangeEvent, useRef, useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import Cropper, { ReactCropperElement } from "react-cropper";
