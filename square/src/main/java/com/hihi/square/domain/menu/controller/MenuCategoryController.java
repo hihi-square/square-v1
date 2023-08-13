@@ -66,13 +66,18 @@ public class MenuCategoryController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
+		//가게, 관리자만 접근 가능
 		if (user instanceof Customer) {
 			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
 		}
 
 		request.setUser(user);
-
 		MenuCategory menuCategory = request.toEntity();
+
+		//미분류 카테고리 생성불가
+		if (menuCategoryService.isExistsCategory(menuCategory.getUser().getUsrId())) {
+			return ResponseEntity.ok(CommonResponseDto.error(400, "This Name Cannot Use"));
+		}
 		menuCategoryService.saveMenuCategory(menuCategory);
 		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}

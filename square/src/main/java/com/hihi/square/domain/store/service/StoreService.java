@@ -55,7 +55,7 @@ public class StoreService {
 		storeRepository.save(store);
 		businessInformation.setStore(store);
 		biRepostiory.save(businessInformation);
-
+		
 		//회원 가입 시, 메뉴 default category 생성
 		MenuCategoryRequestDto menuCategoryRequestDto = MenuCategoryRequestDto.builder()
 			.user(store)

@@ -16,6 +16,15 @@ import lombok.RequiredArgsConstructor;
 public class MenuOptionCategoryService {
 	private final MenuOptionCategoryRepository optionCategoryRepository;
 
+	public boolean isExistsCategory(Long menId) {
+		Optional<MenuOptionCategory> optionCategory = optionCategoryRepository.findByName(menId,
+			"미분류");
+		if (optionCategory.isPresent()) {
+			return true;
+		} else
+			return false;
+	}
+
 	public void saveMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
 		optionCategoryRepository.save(menuOptionCategory);
 	}

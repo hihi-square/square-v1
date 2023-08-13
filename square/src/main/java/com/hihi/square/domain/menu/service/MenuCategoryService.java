@@ -26,6 +26,15 @@ public class MenuCategoryService {
 	private final MenuCategoryRepository menuCategoryRepository;
 	private final MenuRepository menuRepository;
 
+	public boolean isExistsCategory(Integer userId) {
+		Optional<MenuCategory> menuCategory = menuCategoryRepository.findByName(userId,
+			"미분류");
+		if (menuCategory.isPresent()) {
+			return true;
+		} else
+			return false;
+	}
+
 	public void saveMenuCategory(MenuCategory menuCategory) {
 		menuCategoryRepository.save(menuCategory);
 	}
