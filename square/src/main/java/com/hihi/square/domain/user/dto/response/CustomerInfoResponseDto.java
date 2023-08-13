@@ -15,7 +15,7 @@ import lombok.Data;
 public class CustomerInfoResponseDto {
 	private Integer statusCode;
 	private UserInfoDto info;
-	private UserRankType rank;
+	private String rank;
 	private UserSocialLoginType social;
 	private Long point;
 }

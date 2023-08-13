@@ -23,7 +23,6 @@ public class UserInfoDto {
 	private String uid;
 	private String password;
 	private String phone;
-
 	private String nickname;
 	private String name;
 	private String email;
