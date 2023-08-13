@@ -22,6 +22,15 @@ export default function Seller() {
       <Appbar />
       <Grid xs={12} container sx={{ flexGrow: 1 }}>
         <Grid xs={2} className="sidebar">
+          <Box className="button">
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
+            >
+              가게 관리
+            </Typography>
+          </Box>
           <Box className="button" sx={{ marginTop: "3%" }}>
             <Typography
               variant="h5"
@@ -64,25 +73,7 @@ export default function Seller() {
               component="div"
               sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
             >
-              고객 관리
-            </Typography>
-          </Box>
-          <Box className="button">
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
-            >
               피드 관리
-            </Typography>
-          </Box>
-          <Box className="button">
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
-            >
-              커뮤니티
             </Typography>
           </Box>
         </Grid>

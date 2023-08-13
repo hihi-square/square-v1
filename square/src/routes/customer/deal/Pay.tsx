@@ -29,6 +29,19 @@ export default function Pay() {
       );
       setFinalPrice(totalPrice - points);
     }
+  }, []);
+
+  useEffect(() => {
+    if (location.state && location.state.items) {
+      setTotalPrice(
+        location.state.items.reduce(
+          (total: number, item: any) =>
+            item.isChecked ? total + item.price * item.quantity : total,
+          0
+        )
+      );
+      setFinalPrice(totalPrice - points);
+    }
   }, [points]);
 
   const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,13 +105,14 @@ export default function Pay() {
     })
       .then((res) => {
         // eslint-disable-next-line no-console
-        console.log("받아온 데이터:", res.data);
+        console.log("받아온 데이터:");
+        console.log(res.data);
 
         try {
           const response = Bootpay.requestPayment({
             application_id: "64cf839d00be04001c6993d3",
             price: finalPrice,
-            order_name: location.state.storeName,
+            order_name: "주문합니다요",
             order_id: `${location.state.storeName}CODE${Math.floor(
               Math.random() * 10000000
             )}`,
@@ -124,8 +138,8 @@ export default function Pay() {
           console.log(error);
         }
       })
-      .catch((error) => {
-        // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
+      .catch((err) => {
+        console.log(err);
       });
   };
 
