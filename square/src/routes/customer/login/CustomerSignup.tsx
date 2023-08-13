@@ -72,25 +72,19 @@ export default function CustomerSignUp() {
 
   const handleCheckId = () => {
     // 서버에 아이디 중복 확인 요청 보내기
-    console.log("아이디는", id);
     axios
       .get(`${REST_API}user/id/${id}`)
       .then((response) => {
         // 서버 응답 처리
         if (response.data.message === "VALID") {
-          console.log(response.data);
           setIsIdDuplicated(false);
           setMessage("사용 가능한 아이디 입니다.");
         } else {
           setIsIdDuplicated(true);
           // setMessage("사용 불가능한 아이디 입니다.");
         }
-        console.log("성공햇당");
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error("아이디 중복 확인 오류:", error);
-      });
+      .catch((error) => {});
   };
 
   const handlePw = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,7 +154,6 @@ export default function CustomerSignUp() {
     axios
       .post(`${REST_API}user`, body)
       .then((response) => {
-        console.log(response.status);
         // 서버 응답 처리
         if (response.status === 201) {
           // eslint-disable-next-line no-alert
@@ -174,8 +167,6 @@ export default function CustomerSignUp() {
         }
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error("회원가입 오류:", error);
         // eslint-disable-next-line no-alert
         alert("회원가입에 실패했습니다.");
       });

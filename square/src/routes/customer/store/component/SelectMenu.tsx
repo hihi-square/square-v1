@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { CartItem, Choice, RootState } from "redux/redux";
+import { CartItem } from "redux/redux";
 import {
   Box,
   Button,
   Divider,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+  DialogTitle,
   Paper,
   SwipeableDrawer,
   Typography,
@@ -25,14 +29,24 @@ type Item = {
 };
 
 interface Props {
+  storeId: number;
+  storeName: string;
+  storeThumbnail: string;
   state: boolean;
   setState: React.Dispatch<React.SetStateAction<boolean>>;
   curItem: Item | undefined;
 }
 
-export default function SelectMenu({ state, curItem, setState }: Props) {
+export default function SelectMenu({
+  state,
+  curItem,
+  setState,
+  storeId,
+  storeName,
+  storeThumbnail,
+}: Props) {
   const [quantity, setQuantity] = useState(1);
-  const choice: Choice = useSelector((s: RootState) => s.choice);
+  const [isSame, setSame] = useState<boolean>(false);
 
   const handleIncrease = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -44,15 +58,25 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
     }
   };
 
+  const addCart = () => {
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+
+    if (cart.storeId === storeId) {
+      handleAddCart();
+    } else {
+      setSame(true);
+    }
+  };
+
   const handleAddCart = () => {
     if (!curItem) {
       return;
     }
 
     const cartItem: CartItem = {
-      storeId: choice.storeId,
-      storeThumbnail: choice.storeThumbnail,
-      storeName: choice.storeName,
+      storeId,
+      storeThumbnail,
+      storeName,
       items: [
         {
           productId: curItem.menuId,
@@ -68,11 +92,12 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
 
     const cart = JSON.parse(localStorage.getItem("cart") || "{}");
 
-    if (cart.storeId === cartItem.storeId) {
+    if (cart.storeId === storeId) {
       cartItem.items = [...cart.items, ...cartItem.items];
     }
 
     localStorage.setItem("cart", JSON.stringify(cartItem));
+    setSame(false);
   };
 
   const toggleDrawer =
@@ -198,7 +223,7 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
           <Button
             onClick={() => {
               setState(false);
-              handleAddCart();
+              addCart();
             }}
           >
             장바구니에 담기
@@ -208,13 +233,44 @@ export default function SelectMenu({ state, curItem, setState }: Props) {
     );
 
   return (
-    <SwipeableDrawer
-      anchor={"bottom"}
-      open={state}
-      onClose={toggleDrawer(false)}
-      onOpen={toggleDrawer(true)}
-    >
-      {list(curItem)}
-    </SwipeableDrawer>
+    <>
+      <SwipeableDrawer
+        anchor={"bottom"}
+        open={state}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+      >
+        {list(curItem)}
+      </SwipeableDrawer>
+      <Dialog
+        open={isSame}
+        onClose={() => {
+          setSame(false);
+        }}
+      >
+        <DialogTitle>다른 가게의 상품이 담긴 장바구니가 있습니다.</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            장바구니의 상품을 이 가게의 상품으로 바꾸시겠습니까?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setSame(false);
+            }}
+          >
+            아니오
+          </Button>
+          <Button
+            onClick={() => {
+              handleAddCart();
+            }}
+          >
+            예
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
