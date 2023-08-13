@@ -8,7 +8,9 @@ public enum NotificationType {
 	//수락
 	ACCEPT,
 	//거절
-	REJECT;
+	REJECT,
+	//완료
+	COMPLETED;
 
 	@JsonCreator
 	public static NotificationType from(String value) {

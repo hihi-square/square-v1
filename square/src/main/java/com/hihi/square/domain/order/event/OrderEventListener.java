@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.entity.OrderStatus;
+import com.hihi.square.domain.order.service.OrderService;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.global.sse.NotificationService;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderEventListener implements ApplicationListener<OrderEvent> {
 
 	private final NotificationService notificationService;
+	private final OrderService orderService;
 
 	@Override
 	public void onApplicationEvent(OrderEvent event) {
@@ -40,10 +42,10 @@ public class OrderEventListener implements ApplicationListener<OrderEvent> {
 				"/order/" + order.getOrdId());
 		}
 		//고객이 픽업을 완료했을 때
-		// else if (status == OrderStatus.PICKUP_COMPLETE) {
-		// 	Customer customer = order.getCustomer();
-		// 	notificationService.send(customer, NotificationType.READY, event.getContent(),
-		// 		"/order/" + order.getOrdId());
-		// }
+		else if (status == OrderStatus.PICKUP_COMPLETE) {
+			Customer customer = order.getCustomer();
+			notificationService.send(customer, NotificationType.COMPLETED, event.getContent(),
+				"/order/" + order.getOrdId());
+		}
 	}
 }
