@@ -62,6 +62,9 @@ public class Order {
 
 	@Column(name = "payment_method")
 	private String paymentMethod;
+
+	@Column(name = "uic_id")
+	private Integer uicId;
 	public void updateOrderStatus(OrderStatus status) {
 		this.status = status;
 	}

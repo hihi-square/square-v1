@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
+import com.hihi.square.domain.coupon.entity.Coupon;
+import com.hihi.square.domain.coupon.entity.DiscountType;
+import com.hihi.square.domain.coupon.entity.IssueCoupon;
+import com.hihi.square.domain.coupon.service.IssueCouponService;
+import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
@@ -46,10 +48,44 @@ public class OrderController {
 	private final OrderService orderService;
 	private final PointService pointService;
 	private final ApplicationEventPublisher eventPublisher;
+	private final IssueCouponService issueCouponService;
+	private final UserService userService;
 
-	// 주문 아이디 조회 id : 주문 아이디
-	//    @GetMapping("/{id}")
-	// STEP 01
+	// order 에서 사용가능한 쿠폰 리스트 불러주기
+	@Transactional
+	@GetMapping("/coupon")
+	public ResponseEntity<?> findAllCoupon(Authentication authentication, @RequestParam Integer stoId, Long totalPrice) {
+		String uid = authentication.getName();
+		Store store = storeRepository.findById(stoId).get();
+		Customer customer = (Customer) userService.findByUid(uid).get();
+
+		List<OrderCouponResponseDto> response = new ArrayList<>();
+
+		List<IssueCoupon> AvailableCoupons = issueCouponService.findAllAvailableCouponByToStore(store, customer);
+		for(IssueCoupon issueCoupon : AvailableCoupons) {
+			Boolean isAvailable = false;
+			Coupon coupon = issueCoupon.getCoupon();
+			if(totalPrice >= coupon.getMinOrderPrice()) {
+				isAvailable = true;
+			}
+
+			OrderCouponResponseDto responseDto = OrderCouponResponseDto.builder()
+					.uicId(issueCoupon.getId())
+					.name(coupon.getName())
+					.content(coupon.getContent())
+					.expiredAt(issueCoupon.getExpiredAt())
+					.discountType(coupon.getDiscountType())
+					.rate(coupon.getRate())
+					.minOrderPrice(coupon.getMinOrderPrice())
+					.maxDiscountPrice(coupon.getMaxDiscountPrice())
+					.isAvailable(isAvailable)
+					.build();
+
+			response.add(responseDto);
+		}
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 	// 주문 등록
 	@Transactional
@@ -61,6 +97,14 @@ public class OrderController {
 			return new ResponseEntity<>(OrderIdResponseDto.builder().status(400).message("POINT_NOT_ENOUTH").build(),
 				HttpStatus.BAD_REQUEST);
 		}
+
+		if(request.getUicId() != null) {
+			// 사용자 쿠폰 아이디로 사용 바꿔주기
+			IssueCoupon coupon = issueCouponService.findById(request.getUicId()).get();
+			coupon.updateIsUsed(true);
+			issueCouponService.save(coupon);
+		}
+
 
 		// 주문 등록
 		Integer ordId = orderService.saveOrder(customer, request);
@@ -107,8 +151,17 @@ public class OrderController {
 			//store에게 주문 도착 알림 전송
 			eventPublisher.publishEvent(new OrderEvent(order, "주문이 도착했습니다."));
 
-		} else {
+		} else {  // 결제 실패시
 			order.updateOrderStatus(OrderStatus.PAYMENT_FAILED);
+
+			// 쿠폰 다시 상태 안썼다는걸로 돌려주기
+			if(order.getUicId() != null) {
+				// 사용자 쿠폰 아이디로 사용 바꿔주기
+				IssueCoupon coupon = issueCouponService.findById(order.getUicId()).get();
+				coupon.updateIsUsed(false);
+				issueCouponService.save(coupon);
+			}
+
 		}
 		orderService.save(order);
 
@@ -156,6 +209,15 @@ public class OrderController {
 				.message("PREVIOUS_STATUS_NOT_PAYMENT_COMPLETE")
 				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
+		// 쿠폰 반환
+		// 쿠폰 다시 상태 안썼다는걸로 돌려주기
+		if(order.getUicId() != null) {
+			// 사용자 쿠폰 아이디로 사용 바꿔주기
+			IssueCoupon coupon = issueCouponService.findById(order.getUicId()).get();
+			coupon.updateIsUsed(false);
+			issueCouponService.save(coupon);
 		}
 
 		RefundInfoResponseDto response = orderService.updateOrderDenied(order);

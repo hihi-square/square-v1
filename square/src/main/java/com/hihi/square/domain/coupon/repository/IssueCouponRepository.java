@@ -28,4 +28,5 @@ public interface IssueCouponRepository extends JpaRepository<IssueCoupon, Intege
 
 	@Query("select ic from IssueCoupon ic, Coupon c where ic.coupon = c and c.toStore = :store and ic.customer = :customer and ic.expiredAt > :now and ic.isUsed = false")
 	List<IssueCoupon> findByToStoreAndCustomerAvailable(Store store, Customer customer, LocalDateTime now);
+
 }
