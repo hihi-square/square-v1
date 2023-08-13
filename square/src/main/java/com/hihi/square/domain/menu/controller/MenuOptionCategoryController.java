@@ -96,6 +96,9 @@ public class MenuOptionCategoryController {
 		if (menuOptionCategory == null) {
 			return ResponseEntity.badRequest().build();
 		}
+
+		menuOptionCategoryService.updateOptionCategoryToZero(menuOptionCategory.getMenu().getMenuId(),
+			menuOptionCategory.getId());
 		menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
 	}
