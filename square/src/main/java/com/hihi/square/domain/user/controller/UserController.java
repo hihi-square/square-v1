@@ -1,5 +1,6 @@
 package com.hihi.square.domain.user.controller;
 
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.dto.request.*;
 import com.hihi.square.domain.user.dto.response.CustomerInfoResponseDto;
 import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
@@ -43,6 +44,9 @@ public class UserController {
 		Optional<User> optionalUser = userService.findByUid(uid);
 		if (optionalUser.isEmpty()) {
 			return new ResponseEntity(CommonResponseDto.builder().message("NOT_EXISTS_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		if (optionalUser.get() instanceof Store) {
+			return new ResponseEntity(CommonResponseDto.builder().message("NOT_CUSTOMER_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
 		}
 		Customer customer = (Customer) optionalUser.get();
 		UserInfoDto userInfo = userService.getMyInfo(uid);

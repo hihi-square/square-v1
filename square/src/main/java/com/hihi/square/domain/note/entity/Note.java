@@ -37,7 +37,6 @@ public class Note {
 	private User toUser;
 	@Column(name="send_at")
 	private LocalDateTime sendAt;
-	private String title;
 	private String content;
 
 }
