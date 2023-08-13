@@ -1,4 +1,4 @@
-package com.hihi.square.domain.note.entity;
+package com.hihi.square.domain.dm.entity;
 
 import java.time.LocalDateTime;
 
@@ -23,11 +23,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "note")
-public class Note {
+@Table(name = "dm")
+public class DM {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="not_id")
+	@Column(name="dim_id")
 	private Integer id;
 	@JoinColumn(name="from_id")
 	@ManyToOne
