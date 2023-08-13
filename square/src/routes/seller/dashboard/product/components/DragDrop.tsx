@@ -113,14 +113,16 @@ export default function ProductList({
 
       for (const category of categorys) {
         idxMap.set(category.id, category.sequence);
-        menuArr.push({
-          ...initProduct,
-          id: category.id,
-          name: category.name,
-          categoryId: category.id,
-          sequence: 0,
-          status: "CATE",
-        });
+        if (category.name !== "미분류") {
+          menuArr.push({
+            ...initProduct,
+            id: category.id,
+            name: category.name,
+            categoryId: category.id,
+            sequence: 0,
+            status: "CATE",
+          });
+        }
       }
 
       menuArr.sort((a: Iproduct, b: Iproduct) => {
@@ -259,7 +261,7 @@ export default function ProductList({
     for (const readyItem of ready) {
       newProducts.push({
         id: readyItem.id,
-        categoryId: cateCode,
+        categoryId: 1,
         status: "STOP",
         sequence: itemsequence,
       });
@@ -323,9 +325,6 @@ export default function ProductList({
               axios({
                 url: `${REST_API}store/menucategory/${del.id}`,
                 method: "DELETE",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
               })
                 .then(() => {
                   setReload(true);

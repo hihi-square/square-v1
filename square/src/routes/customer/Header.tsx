@@ -35,7 +35,7 @@ export default function Header({ cateNum, setAni }: Props) {
     setLocation(event.target.value);
   };
   const handleCartClick = () => {
-    navigate("/cart");
+    navigate("/deal/cart");
   };
 
   return (

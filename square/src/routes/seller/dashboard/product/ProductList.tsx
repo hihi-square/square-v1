@@ -151,9 +151,6 @@ export default function ProductList() {
     axios({
       url: `${REST_API}store/menuitem/${realProduct.current.id}`,
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     })
       .then(() => {
         // 상품 데이터를 보내고 응답이 왔다면 다시 렌더링합니다.
@@ -163,7 +160,7 @@ export default function ProductList() {
         setReload(true);
       })
       .catch((error) => {
-        navigate("/error");
+        console.log(error);
       });
   };
 
@@ -188,6 +185,8 @@ export default function ProductList() {
       sequence: length + 1,
     };
 
+    console.log(newCate);
+
     axios({
       url: `${REST_API}store/menucategory`,
       method: "POST",
@@ -198,8 +197,9 @@ export default function ProductList() {
         ...newCate,
       },
     })
-      .then(() => {
+      .then((res) => {
         // 상품 데이터를 보내고 응답이 왔다면 다시 렌더링합니다.
+        console.log(res);
         console.log("등록");
         setCurrProduct({ ...initProduct });
         realProduct.current = { ...initProduct };

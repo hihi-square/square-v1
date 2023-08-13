@@ -7,15 +7,13 @@ import Store from "./store/Store";
 import Board from "./main/board/Board";
 import BoardForm from "./main/board/BoardForm";
 import Chat from "./chat/chat";
-import MyPage from "./my/MyPage";
-import Cart from "./deal/Cart";
-import Pay from "./deal/Pay";
+import MyPage from "./my/My";
+import Deal from "./deal/Deal";
 import Order from "./order/Order";
-import MyArea from "./my/MyArea";
-import MyInfo from "./my/MyInfo";
-import MyRegular from "./my/MyRegular";
-import MyReview from "./my/MyReview";
-import MyBoard from "./my/MyBoard";
+import MyInfo from "./my/component/MyInfo";
+import MyRegular from "./my/component/MyRegular";
+import MyReview from "./my/component/MyReview";
+import MyBoard from "./my/component/MyBoard";
 import Main from "./main/Main";
 import Login from "./login/Login";
 import Map from "./map/Map";
@@ -48,15 +46,13 @@ export default function Customer() {
         <Route path="/order" element={<Order />} />
 
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/myarea" element={<MyArea />} />
         <Route path="/myinfo" element={<MyInfo />} />
 
         <Route path="/myregular" element={<MyRegular />} />
         <Route path="/myreview" element={<MyReview />} />
         <Route path="/myboard" element={<MyBoard />} />
+        <Route path="/deal/*" element={<Deal />} />
 
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/pay" element={<Pay />} />
         <Route path="*" element={<Login />} />
         <Route path="/signup" element={<CustomerSignUp />} />
         <Route path="/login/KakaoRedirect" element={<KakaoRedirect />} />
