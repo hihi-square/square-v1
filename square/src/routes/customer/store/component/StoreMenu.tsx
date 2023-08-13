@@ -48,7 +48,7 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
     })
       .then((response) => {
         console.log(response.data);
-        setMenus(response.data);
+        setMenus(response.data.menus);
       })
       .catch((error) => {
         // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
@@ -57,7 +57,7 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
 
   return (
     <Grid container xs={11}>
-      {menus &&
+      {menus.length > 0 &&
         menus.map((categoryMenu, index) => (
           <Grid container xs={12} key={index}>
             <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }}>

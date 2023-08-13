@@ -17,6 +17,7 @@ function Cart() {
 
   const handleOrderClick = () => {
     localStorage.setItem("cart", JSON.stringify(cartItem));
+    console.log(cartItem);
     navigate("/pay", { state: cartItem });
   };
 

@@ -24,7 +24,7 @@ export default function ProductList() {
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
   const userInfo = localStorage.getItem("userInfo");
-  const user = userInfo ? JSON.parse(userInfo).userId : "";
+  const user = userInfo ? JSON.parse(userInfo).userId : 0;
 
   const initProduct: Iproduct = {
     id: 0,
@@ -60,7 +60,7 @@ export default function ProductList() {
         url: `${REST_API}store/menuitem`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          storeId: user,
         },
       })
         .then((res) => {
@@ -68,7 +68,7 @@ export default function ProductList() {
             url: `${REST_API}store/menucategory`,
             method: "GET",
             headers: {
-              Authorization: `Bearer ${token}`,
+              storeId: user,
             },
           })
             .then((res2) => {

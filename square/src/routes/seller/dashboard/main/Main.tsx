@@ -7,10 +7,12 @@ import {
   Unstable_Grid2 as Grid,
   Box,
   Button,
+  Chip,
   Divider,
   Paper,
   List,
   ListItem,
+  InputBase,
   IconButton,
   Typography,
 } from "@mui/material";
@@ -31,13 +33,50 @@ type StoreInfo = {
 };
 
 export default function Main() {
+  const array: number[][] = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+  ];
+  const textArray: string[] = [
+    "도넛",
+    "주스",
+    "샐러드",
+    "커피",
+    "빵",
+    "케이크",
+    "탕후루",
+    "간편음식",
+    "분식",
+    "샌드위치",
+    "김밥",
+    "회/초밥",
+  ];
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
   const userInfo = localStorage.getItem("userInfo");
   const user = userInfo ? JSON.parse(userInfo).userId : 0;
 
+  const [isOpened, setOpened] = useState<boolean>(true);
   const [reload, setReload] = useState<boolean>(true); // 아이템 업로드
   const [storeInfo, setStoreInfo] = useState<StoreInfo>();
+  const [tags, setTags] = useState<string[]>([]);
+  const [myTag, setMyTag] = useState<string>("");
+
+  const handleTag: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (event) => {
+    const curr = event.target.value;
+
+    setMyTag(curr);
+  };
+
+  const handleDelete = (index: number) => {
+    const tmpList = [...tags];
+
+    tmpList.splice(index, 1);
+    setTags(tmpList);
+  };
 
   useEffect(() => {
     if (reload) {
@@ -181,18 +220,153 @@ export default function Main() {
       <Grid className="half-size" xs={7} sx={{ paddingBottom: "10px" }}>
         <Paper elevation={3} sx={{ width: "95%", margin: "10px 0px" }}>
           <Typography
-            variant="body2"
-            component="div"
+            variant="h4"
+            component="h4"
             sx={{
               fontWeight: 500,
             }}
           >
-            사진 수정
+            현재 가게는 {isOpened ? "영업 중" : "닫힘"} 상태입니다.
           </Typography>
-          <Button>가게 열기</Button>
+          <Typography
+            variant="h6"
+            component="h6"
+            sx={{
+              fontWeight: 500,
+            }}
+          >
+            {isOpened
+              ? "오늘의 판매를 종료하려면 가게를 닫아주세요."
+              : "오늘의 판매를 시작하려면 가게를 열어주세요."}
+          </Typography>
+          <Box sx={{ width: "95%", height: "150px", backgroundColor: "grey" }}>
+            가게 영업일 정하는 곳
+          </Box>
+          <Button
+            onClick={() => {
+              setOpened(!isOpened);
+            }}
+          >
+            {isOpened ? "가게 닫기" : "가게 열기"}
+          </Button>
         </Paper>
         <Paper elevation={3} sx={{ width: "95%", margin: "10px 0px" }}>
-          dd
+          <Typography
+            variant="h6"
+            component="h6"
+            sx={{
+              fontWeight: 500,
+            }}
+          >
+            검색 키워드
+          </Typography>
+          <Paper
+            component="form"
+            sx={{
+              p: "2px 4px",
+              display: "flex",
+              justifyContent: "space-around",
+              width: "90%",
+              height: "50px",
+            }}
+          >
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              fullWidth
+              value={myTag}
+              onChange={handleTag}
+              placeholder="원하는 검색 키워드를 입력하세요"
+              inputProps={{ "aria-label": "해시태그로 검색" }}
+            />
+            <IconButton
+              onClick={() => {
+                setTags([...tags, myTag]);
+                setMyTag("");
+              }}
+              sx={{ fontSize: "20px" }}
+            >
+              <FontAwesomeIcon icon={faPen} style={{ color: "gray" }} />
+            </IconButton>
+          </Paper>
+          <Typography
+            variant="body2"
+            component="div"
+            sx={{
+              fontWeight: 400,
+              color: "secondary.main",
+              paddingTop: "5px",
+              width: "90%",
+              textAlign: "left",
+            }}
+          >
+            현재 검색어
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              paddingTop: "5px",
+              maxWidth: "90%",
+              overflowX: "auto",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              scrollbarWidth: "none",
+            }}
+          >
+            {tags.map((chip, idx) => (
+              <>
+                <Chip
+                  label={chip}
+                  size="small"
+                  variant="outlined"
+                  onDelete={() => {
+                    handleDelete(idx);
+                  }}
+                  sx={{
+                    padding: "0px 0px",
+                  }}
+                />
+                <Box sx={{ padding: "0px 5px" }}></Box>
+              </>
+            ))}
+          </Box>
+          {array.map((row, idx) => (
+            <Grid container xs={12} justifyContent="center" key={`a${idx}`}>
+              {row.map((col, innerIdx) => (
+                <Grid
+                  xs={3}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                  key={innerIdx}
+                >
+                  <img
+                    src={`/img/icon/icon${col}.png`}
+                    style={{ width: "60%" }}
+                    alt="hashtag"
+                  />
+                  <Typography
+                    variant="body1"
+                    component="div"
+                    sx={{
+                      fontWeight: 700,
+                      color: "secondary.main",
+                      padding: "0px",
+                      width: "90%",
+                      textAlign: "center",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {textArray[col - 1]}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          ))}
         </Paper>
       </Grid>
     </>

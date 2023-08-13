@@ -10,7 +10,6 @@ import {
 
 export default function Options() {
   const [open, setOpen] = useState<boolean>(true);
-  const [clicked, setClicked] = useState<number>();
 
   const handleClick = () => {
     setOpen(!open);

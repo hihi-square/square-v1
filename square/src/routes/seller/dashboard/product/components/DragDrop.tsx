@@ -330,8 +330,8 @@ export default function ProductList({
                 .then(() => {
                   setReload(true);
                 })
-                .catch(() => {
-                  navigate("/error");
+                .catch((er) => {
+                  console.log(er);
                 });
             }
           })
