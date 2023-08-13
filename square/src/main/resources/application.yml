@@ -70,13 +70,13 @@ cloud:
 social:
   kakao:
     rest-api: 409915cf48a47370a92cea926084d5a1
-    redirect-uri: http://localhost:3000/login/KakaoRedirect
+    redirect-uri: https://i9b208.p.ssafy.io/login/KakaoRedirect
   naver:
     client-id: C4jdFBfefASIcQgC9GDg
     client-secret: 8xQtnJy7L1
-    redirect-uri: http://localhost:3000/login/NaverRedirect
+    redirect-uri: https://i9b208.p.ssafy.io/login/NaverRedirect
     state: test
   google:
     client-id: 167666714068-su36v2r5mu1j6spjan4cda8q42hbdhf3.apps.googleusercontent.com
     client-secret: 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
-    redirect-uri: http://localhost:3000/login/GoogleRedirect
+    redirect-uri: https://i9b208.p.ssafy.io/login/GoogleRedirect

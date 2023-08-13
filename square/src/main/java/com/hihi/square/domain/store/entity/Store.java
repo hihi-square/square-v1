@@ -41,6 +41,8 @@ public class Store extends User {
 	private String account;
 	// 가게 로고 이미지
 	private String logo;
+	@Column(name="open_time")
+	private String openTime;
 
 	@Column(name = "open_time")
 	private String openTime;
