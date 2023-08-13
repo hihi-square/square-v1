@@ -39,7 +39,6 @@ public class SaleService {
     private final SaleMenuRepository saleMenuRepository;
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
-    // private final StoreCategoryRepository storeCategoryRepository;
     private final StoreService storeService;
 
     @Transactional

@@ -12,10 +12,16 @@ import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.service.SaleService;
 import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
-import com.hihi.square.domain.store.dto.response.*;
+import com.hihi.square.domain.store.dto.response.StoreInfoDto;
+import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
+import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
+import com.hihi.square.domain.store.dto.response.StoreMenuResponseDto;
+import com.hihi.square.domain.store.dto.response.StoreSearchListDto;
+import com.hihi.square.domain.store.dto.response.StoreSearchResponseDto;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
+import com.hihi.square.domain.user.dto.response.UserInfoDto;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
@@ -31,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
+
+import com.hihi.square.domain.store.dto.response.StoreInfoResDto;
+import com.hihi.square.domain.store.dto.response.StoreUpdateResponseDto;
 import com.hihi.square.domain.store.entity.BusinessInformation;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.service.BusinessInformationService;
@@ -58,6 +67,41 @@ public class StoreController {
 	private final EmdAddressService emdAddressService;
 	private final ImageService imageService;
 	private final SaleService saleService;
+
+	// 가게 회원정보 보기
+	@GetMapping
+	public ResponseEntity viewMyInfo(Authentication authentication) {
+		String uid = authentication.getName();
+		if (!(userService.findByUid(uid).get() instanceof Store)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_STORE_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store  = storeService.findByUid(uid).get();
+		UserInfoDto userInfo = userService.getMyInfo(uid);
+		StoreInfoDto storeInfo = StoreInfoDto.builder()
+			.emdAddress(store.getEmdAddress())
+			.address(store.getAddress())
+			.storeName(store.getStoreName())
+			.storePhone(store.getStorePhone())
+			.content(store.getContent())
+			.bank(store.getBank())
+			.account(store.getAccount())
+			.logo(store.getLogo())
+			.openTime(store.getOpenTime())
+			.latitude(store.getLatitude())
+			.longitude(store.getLongitude())
+			.hashtags(store.getHashtags())
+			.isOpened(store.getIsOpened())
+			.build();
+		StoreInfoResDto response = StoreInfoResDto.builder()
+			.userInfo(userInfo)
+			.storeInfo(storeInfo)
+			.statusCode(200)
+			.build();
+
+		return new ResponseEntity(response, HttpStatus.OK);
+
+	}
+
 	// 사업자 등록번호 중복확인
 	@GetMapping("/business-license/{number}")
 	public ResponseEntity<CommonResponseDto> validateDuplicateCompanyRegistration(@PathVariable Integer number) {
@@ -119,14 +163,14 @@ public class StoreController {
 		storeService.updateStoreInfo(store, request);
 
 		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
-			.storeName(store.getStoreName())
-			.storePhone(store.getStorePhone())
-			.emdAddress(store.getEmdAddress())
-			.address(store.getAddress())
-			.content(store.getContent())
-			.bank(store.getBank())
-			.account(store.getAccount())
-			.build();
+				.storeName(store.getStoreName())
+				.storePhone(store.getStorePhone())
+				.emdAddress(store.getEmdAddress())
+				.address(store.getAddress())
+				.content(store.getContent())
+				.bank(store.getBank())
+				.account(store.getAccount())
+				.build();
 
 		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
 	}
@@ -199,6 +243,7 @@ public class StoreController {
 				.address(store.getAddress())
 				.content(store.getContent())
 				.backgroundImgUrl(images)
+				.isOpened(store.getIsOpened())
 				.build();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
@@ -249,4 +294,6 @@ public class StoreController {
 		}
 		return new ResponseEntity(StoreSearchResponseDto.builder().stores(stores).statusCode(200).build(), HttpStatus.OK);
 	}
+
+
 }
