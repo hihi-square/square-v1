@@ -65,6 +65,9 @@ function ImagePreview({
       const aspectRatio = croppedCanvas.width / croppedCanvas.height;
       const thumbnailHeight = thumbnailWidth / aspectRatio;
 
+      canvas.width = thumbnailWidth;
+      canvas.height = thumbnailHeight;
+
       ctx?.drawImage(croppedCanvas, 0, 0, thumbnailWidth, thumbnailHeight);
       handleCurrProduct("thumbnail", canvas.toDataURL("image/jpeg"));
       setCroppedImage(croppedCanvas.toDataURL());

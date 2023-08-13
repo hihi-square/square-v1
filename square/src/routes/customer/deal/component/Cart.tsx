@@ -1,15 +1,12 @@
 /* eslint-disable no-console */
-import { useNavigate, useLocation } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 // import axios from 'axios';
-import { Box, Button, Checkbox } from "@mui/material";
+import { Unstable_Grid2 as Grid, Box, Button, Checkbox } from "@mui/material";
 
 import { CartItem } from "redux/redux";
 
 function Cart() {
-  const location = useLocation();
-
   const navigate = useNavigate();
   const [cartItem, setCartItem] = useState<CartItem>(
     JSON.parse(localStorage.getItem("cart") || "{}")
@@ -18,7 +15,7 @@ function Cart() {
   const handleOrderClick = () => {
     localStorage.setItem("cart", JSON.stringify(cartItem));
     console.log(cartItem);
-    navigate("/pay", { state: cartItem });
+    navigate("/deal/pay", { state: cartItem });
   };
 
   const handleQuantityChange = (index: number, action: "add" | "subtract") => {
@@ -45,16 +42,6 @@ function Cart() {
     setCartItem(newCartItem);
   };
 
-  const goBack = () => {
-    const previousState = location.state?.from;
-
-    if (previousState) {
-      navigate(previousState);
-    } else {
-      navigate(-1);
-    }
-  };
-
   const paymentButtonStyle = {
     display: "flex",
     justifyContent: "space-between",
@@ -69,13 +56,9 @@ function Cart() {
   };
 
   return (
-    <>
-      <header>
-        <ArrowBackIcon onClick={goBack} />
-        장바구니
-      </header>
+    <Grid container xs={12} flexDirection="column">
       {cartItem && cartItem.items ? (
-        <>
+        <Grid>
           <div>
             <div className="cart">
               <div>{cartItem.storeName}</div>
@@ -133,11 +116,11 @@ function Cart() {
               </div>
             </button>
           </div>
-        </>
+        </Grid>
       ) : (
         <div></div>
       )}
-    </>
+    </Grid>
   );
 }
 

@@ -96,7 +96,6 @@ export default function ProductList() {
   const handleCurrProduct = (key: string, value: string | boolean | number) => {
     realProduct.current = { ...realProduct.current, [key]: value };
 
-    console.log(realProduct);
     setCurrProduct((prev) => ({ ...prev, [key]: value }));
   };
 
