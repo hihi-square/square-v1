@@ -39,6 +39,8 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
   useEffect(() => {
     // storeId를 사용해 메뉴 정보를 가져오는 API를 호출합니다.
 
+    console.log({storeId})
+
     axios({
       url: `${REST_API}store/menu/${storeId}`,
       method: "GET",
@@ -51,7 +53,8 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
         setMenus(response.data);
       })
       .catch((error) => {
-        // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
+
+        console.error("메뉴 정보를 불러오는데 실패했습니다.",error);
       });
   }, [storeId]); // storeId가 변경될 때마다 API 호출을 다시 합니다.
 

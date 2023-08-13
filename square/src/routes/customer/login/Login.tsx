@@ -123,7 +123,7 @@ export default function Login() {
   };
 
   const GoogleLogin = (): void => {
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=167666714068-su36v2r5mu1j6spjan4cda8q42hbdhf3.apps.googleusercontent.com&redirect_uri=https://i9b208.p.ssafy.io/GoogleRedirect&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile email`;
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=167666714068-su36v2r5mu1j6spjan4cda8q42hbdhf3.apps.googleusercontent.com&redirect_uri=https://i9b208.p.ssafy.io/login/GoogleRedirect&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile email`;
   };
 
   return (

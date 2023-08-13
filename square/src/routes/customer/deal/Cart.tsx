@@ -14,6 +14,8 @@ function Cart() {
   const [cartItem, setCartItem] = useState<CartItem>(
     JSON.parse(localStorage.getItem("cart") || "{}")
   );
+  
+  console.log(cartItem)
 
   const handleOrderClick = () => {
     localStorage.setItem("cart", JSON.stringify(cartItem));

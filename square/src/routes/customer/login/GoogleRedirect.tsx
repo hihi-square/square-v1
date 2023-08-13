@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { REST_API } from "redux/redux";
 
 // import axios from 'axios';
 function GoogleRedirect() {
@@ -11,7 +12,7 @@ function GoogleRedirect() {
   
   useEffect(() => { 
     if (code) {
-      axios.get(`http://i9b208.p.ssafy.io:8811/api/v1/user/google?code=${code}`)
+      axios.get(`${REST_API}api/v1/user/google?code=${code}`)
         .then((response) => {
           console.log(response.data);
           const ACCESS_TOKEN = response.headers.authorization;
