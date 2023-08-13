@@ -38,7 +38,8 @@ public class NotificationService {
 
 		// 503 에러를 방지하기 위한 더미 이벤트 전송
 		String eventId = makeTimeIncludeId(memberId);
-		sendNotification(emitter, eventId, emitterId, "EventStream Created. [userId=" + memberId + "]");
+		sendNotification(emitter, eventId, emitterId,
+			"Complete payment, EventStream Created. [userId=" + memberId + "]");
 
 		// 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
 		if (hasLostData(lastEventId)) {

@@ -31,6 +31,7 @@ import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.global.common.CommonResponseDto;
+import com.hihi.square.global.sse.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class OrderController {
 	private final OrderService orderService;
 	private final PointService pointService;
 	private final ApplicationEventPublisher eventPublisher;
+	private final NotificationService notificationService;
 
 	// 주문 아이디 조회 id : 주문 아이디
 	//    @GetMapping("/{id}")
@@ -64,6 +66,7 @@ public class OrderController {
 
 		// 주문 등록
 		Integer ordId = orderService.saveOrder(customer, request);
+		notificationService.subscribe(request.getStoId().longValue(), "");
 
 		return new ResponseEntity<>(OrderIdResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(),
 			HttpStatus.CREATED);
@@ -105,7 +108,12 @@ public class OrderController {
 				customerRepository.save(customer);
 			}
 			//store에게 주문 도착 알림 전송
-			eventPublisher.publishEvent(new OrderEvent(order, "주문이 도착했습니다."));
+			notificationService.subscribe(customer.getUsrId().longValue(), "");
+
+			log.info("status : {}", order.getStatus());
+			log.info("orderId : {}", order.getOrdId());
+			eventPublisher.publishEvent(
+				new OrderEvent(order, "주문이 도착했습니다."));
 
 		} else {
 			order.updateOrderStatus(OrderStatus.PAYMENT_FAILED);
@@ -139,7 +147,8 @@ public class OrderController {
 		orderService.updateOrderAccepted(order);
 
 		// 소비자로 알림 전송 : 주문 수락됨
-		eventPublisher.publishEvent(new OrderEvent(order, "주문이 수락되었습니다."));
+		eventPublisher.publishEvent(
+			new OrderEvent(order, "주문이 수락되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -161,7 +170,8 @@ public class OrderController {
 		RefundInfoResponseDto response = orderService.updateOrderDenied(order);
 
 		// 소비자로 알림 전송 : 주문 거절됨 환불 진행
-		eventPublisher.publishEvent(new OrderEvent(order, "주문이 거절되었습니다."));
+		eventPublisher.publishEvent(
+			new OrderEvent(order, "주문이 거절되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -183,7 +193,8 @@ public class OrderController {
 
 		orderService.updateOrderPickup(order);
 		// 소비자로 알림 전송 : 픽업 완료
-		eventPublisher.publishEvent(new OrderEvent(order, "픽업이 완료되었습니다."));
+		eventPublisher.publishEvent(
+			new OrderEvent(order, "픽업이 완료되었습니다."));
 
 		CommonResponseDto response = CommonResponseDto.builder()
 			.statusCode(200)
