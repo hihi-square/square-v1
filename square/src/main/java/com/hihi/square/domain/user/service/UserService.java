@@ -132,4 +132,7 @@ public class UserService {
 			.build();
 	}
 
+	public Optional<User> findByNickname(String nickname) {
+		return userRepository.findByNickname(nickname);
+	}
 }
