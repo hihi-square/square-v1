@@ -20,6 +20,7 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuOptionCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuOptionCategory;
 import com.hihi.square.domain.menu.service.MenuOptionCategoryService;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
@@ -33,10 +34,9 @@ public class MenuOptionCategoryController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(Authentication authentication,
-		@RequestParam("menu") Long menuId) {
-		String uid = authentication.getName();
-		User user = userService.findByUid(uid).get();
+	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(@RequestParam("menu") Long menuId) {
+		// String uid = authentication.getName();
+		// User user = userService.findByUid(uid).get();
 
 		List<MenuOptionCategory> menuOptionCategoryList = menuOptionCategoryService.findAllByMenuId(menuId);
 		List<MenuOptionCategoryResponseDto> responseList = new ArrayList<>();
@@ -61,6 +61,12 @@ public class MenuOptionCategoryController {
 	@PostMapping
 	public ResponseEntity<CommonResponseDto<?>> saveMenuOptionCategory(
 		Authentication authentication, @RequestBody MenuOptionCategoryRequestDto request) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
 
 		MenuOptionCategory menuOptionCategory = request.toEntity();
 		menuOptionCategoryService.saveMenuOptionCategory(menuOptionCategory);

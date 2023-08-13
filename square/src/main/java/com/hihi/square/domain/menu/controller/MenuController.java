@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuResponseDto;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.service.MenuService;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
@@ -37,11 +39,12 @@ public class MenuController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllMenus(Authentication authentication) {
-		String uid = authentication.getName();
-		User user = userService.findByUid(uid).get();
+	public ResponseEntity<CommonResponseDto<?>> getAllMenus(@RequestHeader Integer storeId) {
+		// String uid = authentication.getName();
+		// User user = userService.findByUid(uid).get();
 
-		List<Menu> menuList = menuService.findAllByUserId(user.getUsrId());
+		// List<Menu> menuList = menuService.findAllByUserId(user.getUsrId());
+		List<Menu> menuList = menuService.findAllByUserId(storeId);
 		List<MenuResponseDto> menuResponseDtoList = new ArrayList<>();
 
 		for (Menu menu : menuList) {
@@ -67,6 +70,11 @@ public class MenuController {
 		@RequestBody MenuRequestDto menuRequestDto) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
+
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
+		
 		menuRequestDto.setUser(user);
 		// 메뉴 카테고리 유무 검사
 		if (!menuService.validateDuplicateCategoryId(menuRequestDto.getCategoryId())) {
@@ -84,6 +92,10 @@ public class MenuController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
+
 		menuRequestDto.setId(id);
 		menuRequestDto.setUser(user);
 		Menu menu = menuService.updateMenu(menuRequestDto);
@@ -96,11 +108,16 @@ public class MenuController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
+
 		List<MenuRequestDto> menuRequestDtos = menuRequestDto.getData();
 		menuService.updateMenuList(user, menuRequestDtos);
 		return ResponseEntity.ok(CommonResponseDto.success(null));
 	}
 
+	//메뉴 삭제
 	@DeleteMapping("/{id}")
 	public ResponseEntity<CommonResponseDto<?>> deleteMenu(
 		@PathVariable Long id) {
