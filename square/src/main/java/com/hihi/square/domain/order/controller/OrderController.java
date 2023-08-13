@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.entity.IssueCoupon;
+import com.hihi.square.domain.coupon.service.CouponService;
 import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -191,6 +192,10 @@ public class OrderController {
 
 		// 소비자로 알림 전송 : 주문 수락됨
 		eventPublisher.publishEvent(new OrderEvent(order, "주문이 수락되었습니다."));
+
+		// 쿠폰 발급
+		orderService.redeemAllAvailableCouponFromStore(order);
+
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
