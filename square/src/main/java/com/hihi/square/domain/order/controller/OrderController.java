@@ -6,10 +6,8 @@ import java.util.Optional;
 
 import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
-import com.hihi.square.domain.coupon.entity.DiscountType;
 import com.hihi.square.domain.coupon.entity.IssueCoupon;
 import com.hihi.square.domain.coupon.service.IssueCouponService;
-import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
