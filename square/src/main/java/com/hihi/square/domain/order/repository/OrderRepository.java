@@ -5,6 +5,7 @@ import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Optional<Order>> findByCustomer(Customer customer);
 
     List<Optional<Order>> findByStore(Store store);
+
+    Integer countOrderByCustomerAndCreatedAtBetween(Customer customer, LocalDateTime start, LocalDateTime end);
 }
