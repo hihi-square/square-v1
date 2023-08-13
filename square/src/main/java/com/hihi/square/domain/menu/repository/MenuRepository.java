@@ -34,10 +34,12 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 	@Query(value = "update menu set status=:status where men_id=:menId", nativeQuery = true)
 	void updateStatus(@Param("menId") Long menId, @Param("status") String status);
 
+	@Transactional
 	@Modifying
 	@Query(value = "delete from menu_option where men_id = :menId", nativeQuery = true)
 	void deleteOptionByMenuId(@Param("menId") Long menId);
 
+	@Transactional
 	@Modifying
 	@Query(value = "delete from menu_option_category where men_id = :menId", nativeQuery = true)
 	void deleteOptionCategoryByMenuId(@Param("menId") Long menId);
