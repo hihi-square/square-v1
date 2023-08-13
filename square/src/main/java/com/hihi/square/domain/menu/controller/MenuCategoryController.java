@@ -75,7 +75,8 @@ public class MenuCategoryController {
 		MenuCategory menuCategory = request.toEntity();
 
 		//미분류 카테고리 생성불가
-		if (menuCategoryService.isExistsCategory(menuCategory.getUser().getUsrId())) {
+		if (menuCategory.getName().equals("미분류") && menuCategoryService.isExistsCategory(
+			menuCategory.getUser().getUsrId())) {
 			return ResponseEntity.ok(CommonResponseDto.error(400, "This Name Cannot Use"));
 		}
 		menuCategoryService.saveMenuCategory(menuCategory);
