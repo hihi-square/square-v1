@@ -133,12 +133,7 @@ export default function Pay() {
       },
     })
       .then((res) => {
-        // eslint-disable-next-line no-console
-        console.log("받아온 데이터:");
-        console.log(res.data);
-
         ordId = res.data.ordId;
-        console.log(ordId);
 
         Bootpay.requestPayment({
           application_id: "64cf839d00be04001c6993d3",

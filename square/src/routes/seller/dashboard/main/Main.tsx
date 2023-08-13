@@ -81,6 +81,26 @@ export default function Main() {
   useEffect(() => {
     if (reload) {
       axios({
+        url: `${REST_API}store`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch(() => {
+          navigate("/error");
+        });
+
+      setReload(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (reload) {
+      axios({
         url: `${REST_API}store/header/${user}`,
         method: "GET",
         headers: {

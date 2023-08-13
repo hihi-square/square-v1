@@ -6,7 +6,7 @@ import Main from "./main/Main";
 // import Product from "./product/Product";
 import ProductList from "./product/ProductList";
 // import Sale from "./sale/Sale.js";
-import Order from "./order/Order.js";
+import Order from "./order/Order";
 import "../Seller.css";
 
 export default function Seller() {
