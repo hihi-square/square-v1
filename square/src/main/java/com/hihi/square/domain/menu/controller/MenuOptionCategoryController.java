@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuOptionCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuOptionCategory;
 import com.hihi.square.domain.menu.service.MenuOptionCategoryService;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
@@ -32,10 +34,9 @@ public class MenuOptionCategoryController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(Authentication authentication,
-		@RequestParam("menu") Long menuId) {
-		String uid = authentication.getName();
-		User user = userService.findByUid(uid).get();
+	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(@RequestParam("menu") Long menuId) {
+		// String uid = authentication.getName();
+		// User user = userService.findByUid(uid).get();
 
 		List<MenuOptionCategory> menuOptionCategoryList = menuOptionCategoryService.findAllByMenuId(menuId);
 		List<MenuOptionCategoryResponseDto> responseList = new ArrayList<>();
@@ -60,10 +61,16 @@ public class MenuOptionCategoryController {
 	@PostMapping
 	public ResponseEntity<CommonResponseDto<?>> saveMenuOptionCategory(
 		Authentication authentication, @RequestBody MenuOptionCategoryRequestDto request) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
 
 		MenuOptionCategory menuOptionCategory = request.toEntity();
 		menuOptionCategoryService.saveMenuOptionCategory(menuOptionCategory);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@PatchMapping("/{id}")
@@ -78,19 +85,18 @@ public class MenuOptionCategoryController {
 	public ResponseEntity<CommonResponseDto<?>> updateMenuOptionCategoryList(
 		@RequestBody MenuOptionCategoryRequestDto request) {
 		List<MenuOptionCategoryRequestDto> optionCategoryList = request.getData();
-		// List<Menu> menuList = new ArrayList<>();
 		menuOptionCategoryService.updateMenuOptionCategoryList(optionCategoryList);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
-	// @DeleteMapping("/{id}")
-	// public ResponseEntity<CommonResponseDto<?>> deleteMenuOptionCategory(
-	// 	@PathVariable Long id) {
-	// 	MenuOptionCategory menuOptionCategory = menuOptionCategoryService.findById(id);
-	// 	if (menuOptionCategory == null) {
-	// 		return ResponseEntity.badRequest().build();
-	// 	}
-	// 	menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
-	// 	return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
-	// }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<CommonResponseDto<?>> deleteMenuOptionCategory(
+		@PathVariable Long id) {
+		MenuOptionCategory menuOptionCategory = menuOptionCategoryService.findById(id);
+		if (menuOptionCategory == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
+		return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
+	}
 }

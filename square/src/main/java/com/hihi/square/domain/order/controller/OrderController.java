@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,6 +20,7 @@ import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderIdResponseDto;
 import com.hihi.square.domain.order.dto.response.OrderResponseDto;
+import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.entity.OrderStatus;
 import com.hihi.square.domain.order.event.OrderEvent;
@@ -46,8 +45,6 @@ public class OrderController {
 	private final StoreRepository storeRepository;
 	private final OrderService orderService;
 	private final PointService pointService;
-
-	// private final NotificationService notificationService;
 	private final ApplicationEventPublisher eventPublisher;
 
 	// 주문 아이디 조회 id : 주문 아이디
@@ -86,11 +83,11 @@ public class OrderController {
 		Customer customer = order.getCustomer();
 
 		// regietered 상태가 아닌데 결제를 시도할 때
-		if(order.getStatus() != OrderStatus.REGISTERED) {
+		if (order.getStatus() != OrderStatus.REGISTERED) {
 			CommonResponseDto.builder()
-					.statusCode(400)
-					.message("PREVIOUS_STATUS_NOT_REGISTERED")
-					.build();
+				.statusCode(400)
+				.message("PREVIOUS_STATUS_NOT_REGISTERED")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -123,15 +120,14 @@ public class OrderController {
 	@Transactional
 	@PatchMapping("/store-acceptance/{ordId}")
 	public ResponseEntity<?> updateOrderSuccess(@PathVariable Integer ordId) {
-
 		Order order = orderService.findByOrderId(ordId).get();
 
 		// 잘못된 요청일때
-		if(order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
+		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("PREVIOUS_STATUS_NOT_PAYMENT_COMPLETE")
-					.build();
+				.statusCode(400)
+				.message("PREVIOUS_STATUS_NOT_PAYMENT_COMPLETE")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -141,12 +137,11 @@ public class OrderController {
 			.message("ORDER_ACCEPTED")
 			.build();
 		orderService.updateOrderAccepted(order);
-		
+
 		// 소비자로 알림 전송 : 주문 수락됨
 		eventPublisher.publishEvent(new OrderEvent(order, "주문이 수락되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 
 	// 가게 주문 거절시 프로세스
 	@Transactional
@@ -155,16 +150,16 @@ public class OrderController {
 		Order order = orderService.findByOrderId(ordId).get();
 
 		// 잘못된 요청일때
-		if(order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
+		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("PREVIOUS_STATUS_NOT_PAYMENT_COMPLETE")
-					.build();
+				.statusCode(400)
+				.message("PREVIOUS_STATUS_NOT_PAYMENT_COMPLETE")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
 		RefundInfoResponseDto response = orderService.updateOrderDenied(order);
-		
+
 		// 소비자로 알림 전송 : 주문 거절됨 환불 진행
 		eventPublisher.publishEvent(new OrderEvent(order, "주문이 거절되었습니다."));
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -178,11 +173,11 @@ public class OrderController {
 		Order order = orderService.findByOrderId(ordId).get();
 
 		// 잘못된 요청일때
-		if(order.getStatus() != OrderStatus.ORDER_ACCEPT) {
+		if (order.getStatus() != OrderStatus.ORDER_ACCEPT) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("PREVIOUS_STATUS_NOT_ORDER_ACCEPT")
-					.build();
+				.statusCode(400)
+				.message("PREVIOUS_STATUS_NOT_ORDER_ACCEPT")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -191,13 +186,12 @@ public class OrderController {
 		eventPublisher.publishEvent(new OrderEvent(order, "픽업이 완료되었습니다."));
 
 		CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(200)
-				.message("UPDATE_SUCCESS")
-				.build();
+			.statusCode(200)
+			.message("UPDATE_SUCCESS")
+			.build();
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 
 	// 주문 상세 조회
 	@Transactional(readOnly = true)

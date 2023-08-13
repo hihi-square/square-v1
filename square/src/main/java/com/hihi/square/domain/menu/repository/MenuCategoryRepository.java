@@ -24,5 +24,4 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategory, Long
 		@Param("sequence") Integer sequence);
 
 	List<MenuCategory> findByUserOrderBySequence(User user);
-
 }

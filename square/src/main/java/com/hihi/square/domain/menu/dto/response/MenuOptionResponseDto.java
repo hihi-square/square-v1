@@ -14,6 +14,7 @@ public class MenuOptionResponseDto {
 	private String content;
 	private Integer price;
 	private String status;
+	private Integer sequence;
 
 	public MenuOptionResponseDto(MenuOption menuOption) {
 		this.id = menuOption.getId();
@@ -24,5 +25,6 @@ public class MenuOptionResponseDto {
 		this.content = menuOption.getContent();
 		this.price = menuOption.getPrice();
 		this.status = menuOption.getStatus().name();
+		this.sequence = menuOption.getSequence();
 	}
 }
