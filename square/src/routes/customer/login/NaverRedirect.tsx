@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +28,7 @@ function NaverRedirect() {
           navigate("/main");
         })
         .catch((error) => {
-          console.error("네이버 로그인 에러:", error);
+          console.error("네이버 로그인 에러입니다:", error);
         });
     }
   }, [code, navigate]);
