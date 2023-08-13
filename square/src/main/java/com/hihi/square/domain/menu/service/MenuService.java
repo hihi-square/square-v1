@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.hihi.square.domain.menu.dto.request.MenuOptionCategoryRequestDto;
 import com.hihi.square.domain.menu.dto.request.MenuRequestDto;
 import com.hihi.square.domain.menu.dto.response.CartStoreResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuItemResponseDto;
@@ -14,6 +15,7 @@ import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.menu.repository.MenuCategoryRepository;
+import com.hihi.square.domain.menu.repository.MenuOptionCategoryRepository;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.service.StoreService;
@@ -29,11 +31,20 @@ public class MenuService {
 
 	private final MenuRepository menuRepository;
 	private final MenuCategoryRepository menuCategoryRepository;
+	private final MenuOptionCategoryRepository menuOptionCategoryRepository;
 	private final StoreService storeService;
 
 	public void saveMenu(MenuRequestDto menuRequestDto) {
 		Menu menu = menuRequestDto.toEntity();
-		menuRepository.save(menu);
+		menu = menuRepository.save(menu);
+
+		//메뉴 생성 시, default 옵션 카테고리 생성
+		MenuOptionCategoryRequestDto optionCategoryRequestDto = MenuOptionCategoryRequestDto.builder()
+			.menId(menu.getMenuId())
+			.name("미분류")
+			.sequence(0)
+			.build();
+		menuOptionCategoryRepository.save(optionCategoryRequestDto.toEntity());
 	}
 
 	public Menu updateMenu(MenuRequestDto menuRequestDto) {
@@ -57,6 +68,9 @@ public class MenuService {
 	}
 
 	public void deleteMenu(Menu menu) {
+		//메뉴에 해당하는 옵션 카테고리, 옵션 삭제
+		menuRepository.deleteOptionByMenuId(menu.getMenuId());
+		menuRepository.deleteOptionCategoryByMenuId(menu.getMenuId());
 		menuRepository.updateStatus(menu.getMenuId(), MenuStatus.OFF.name());
 	}
 

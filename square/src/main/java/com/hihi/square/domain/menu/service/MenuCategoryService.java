@@ -48,6 +48,12 @@ public class MenuCategoryService {
 		}
 	}
 
+	public void updateMenuCategoryToZero(Integer userId, Long mecId) {
+		//미분류 번호로 지정
+		MenuCategory menuCategory = menuCategoryRepository.findByName(userId, "미분류").get();
+		menuCategoryRepository.updateMenuCategoryToZero(mecId, menuCategory.getId());
+	}
+
 	public void deleteMenuCategory(MenuCategory menuCategory) {
 		menuCategoryRepository.delete(menuCategory);
 	}

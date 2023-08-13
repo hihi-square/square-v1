@@ -32,4 +32,5 @@ public interface MenuOptionRepository extends JpaRepository<MenuOption, Long> {
 	@Query(value = "update menu_option set moc_id=:mocId, status=:status, sequence=:sequence  where meo_id = :meoId", nativeQuery = true)
 	void updateMenuOptionList(@Param("meoId") Long meoId,
 		@Param("mocId") Long mocId, @Param("status") String status, @Param("sequence") Integer sequence);
+	
 }
