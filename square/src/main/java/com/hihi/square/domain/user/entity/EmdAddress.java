@@ -41,5 +41,7 @@ public class EmdAddress {
 	@JoinColumn(name = "asi_id")
 	private SiggAddress siggAddress;
 
-
+	public String getFullName() {
+		return sidoName+" "+siggName+" "+name;
+	}
 }
