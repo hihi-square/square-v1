@@ -39,6 +39,12 @@ public class MenuOptionCategoryService {
 		}
 	}
 
+	public void updateOptionCategoryToZero(Long menId, Long mocId) {
+		//미분류 번호로 지정
+		MenuOptionCategory menuOptionCategory = optionCategoryRepository.findByName(menId, "미분류").get();
+		optionCategoryRepository.updateOptionCategoryToZero(mocId, menuOptionCategory.getId());
+	}
+
 	public void deleteMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
 		optionCategoryRepository.delete(menuOptionCategory);
 	}

@@ -74,7 +74,7 @@ public class MenuController {
 		if (user instanceof Customer) {
 			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
 		}
-		
+
 		menuRequestDto.setUser(user);
 		// 메뉴 카테고리 유무 검사
 		if (!menuService.validateDuplicateCategoryId(menuRequestDto.getCategoryId())) {
@@ -125,6 +125,8 @@ public class MenuController {
 		if (menu == null) {
 			return ResponseEntity.badRequest().build();
 		}
+		//옵션도 같이 삭제
+		
 		menuService.deleteMenu(menu);
 		log.debug("menu : {}", menu);
 		return ResponseEntity.ok(CommonResponseDto.success("success"));
