@@ -32,8 +32,8 @@ public class MenuRequestDto {
 	private String name;
 	private Integer price;
 	private ImageResponseDto menuImage;
-	// private String image;
-	// private String thumbnail;
+	private String image;
+	private String thumbnail;
 	private boolean signature;
 	private boolean popularity;
 	// private MenuStatus status;
@@ -53,8 +53,8 @@ public class MenuRequestDto {
 			.menuCategory(menuCategory.builder().id(categoryId).name(categoryName).build())
 			.name(name)
 			.price(price)
-			// .image(image)
-			// .thumbnail(thumbnail)
+			.image(image)
+			.thumbnail(thumbnail)
 			// .image(menuImage)
 			.signature(signature)
 			.popularity(popularity)

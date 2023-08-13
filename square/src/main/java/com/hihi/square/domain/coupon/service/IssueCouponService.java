@@ -2,6 +2,7 @@ package com.hihi.square.domain.coupon.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -49,4 +50,11 @@ public class IssueCouponService {
 		return issueCouponRepository.findByToStoreAndCustomerAvailable(store, customer, LocalDateTime.now());
 	}
 
+	public Optional<IssueCoupon> findById(Integer uicId) {
+		return issueCouponRepository.findById(uicId);
+	}
+
+	public void save(IssueCoupon issueCoupon){
+		issueCouponRepository.save(issueCoupon);
+	}
 }

@@ -16,7 +16,6 @@ import lombok.Data;
 @Builder
 public class StoreInfoResponseDto {
 
-	private Boolean isOpen;
 	private String storeName;
 	private String storePhone;
 	private EmdAddress emdAddress;
@@ -26,6 +25,9 @@ public class StoreInfoResponseDto {
 	private BankType bank;
 	private String account;
 	private List<Image> backgroundImgUrl;
+	private String logo;
 	private Boolean isOpened;
+	private Float latitude;
+	private Float longitude;
 
 }

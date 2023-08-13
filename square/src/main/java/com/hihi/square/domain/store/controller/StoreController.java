@@ -170,6 +170,9 @@ public class StoreController {
 				.content(store.getContent())
 				.bank(store.getBank())
 				.account(store.getAccount())
+				.isOpened(store.getIsOpened())
+				.latitude(store.getLatitude())
+				.longitude(store.getLongitude())
 				.build();
 
 		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
@@ -237,13 +240,15 @@ public class StoreController {
 		List<Image> images = imageService.getImageResponseList("STORE", store.getUsrId());
 
 		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
-				.isOpen(store.getIsOpened())
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
-				.address(store.getAddress())
+				.address(store.getEmdAddress().getFullName()+" "+store.getAddress())
 				.content(store.getContent())
 				.backgroundImgUrl(images)
 				.isOpened(store.getIsOpened())
+				.latitude(store.getLatitude())
+				.logo(store.getLogo())
+				.longitude(store.getLongitude())
 				.build();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}

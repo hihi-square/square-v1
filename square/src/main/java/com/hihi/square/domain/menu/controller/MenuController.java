@@ -136,7 +136,8 @@ public class MenuController {
 	// 가게 별로 정렬후에, response 객체로 정렬해서 넘겨주기
 	@GetMapping("/items={itemIds}")
 	public ResponseEntity<?> getMenuItemsById(@PathVariable List<Integer> itemIds) {
-		List<CartStoreResponseDto> cartInfo = menuService.getMenuItemsById(itemIds);
+
+		CartStoreResponseDto cartInfo = menuService.getMenuItemsById(itemIds);
 		return new ResponseEntity<>(cartInfo, HttpStatus.OK);
 	}
 

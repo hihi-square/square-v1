@@ -1,6 +1,9 @@
 package com.hihi.square.domain.order.service;
 
 
+import com.hihi.square.domain.coupon.entity.Coupon;
+import com.hihi.square.domain.coupon.service.CouponService;
+import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.menu.entity.Menu;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
@@ -42,6 +45,8 @@ public class OrderService {
     private final SaleRepository saleRepository;
     private final PointService pointService;
     private final CustomerService customerService;
+    private final CouponService couponService;
+    private final IssueCouponService issueCouponService;
 
     public Integer saveOrder(Customer customer, OrderRequestDto request) {
 
@@ -225,5 +230,17 @@ public class OrderService {
         orderRepository.save(order);
 
         customerService.save(customer);
+    }
+
+    public void redeemAllAvailableCouponFromStore(Order order) {
+        List<Coupon> couponList = couponService.findAllAvailableCouponByFromStore(order.getStore());
+
+        for(Coupon coupon : couponList) {
+            // 발급 안된 쿠폰이면 + 어짜피 위에서 유효기간 걸러줌
+            if(issueCouponService.isAlreadyIssued(order.getCustomer(), coupon)) continue;
+            if(order.getTotalPrice() > coupon.getIssueCondition()){
+                issueCouponService.issueCoupon(order.getCustomer(), coupon);
+            }
+        }
     }
 }

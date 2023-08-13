@@ -100,30 +100,14 @@ public class MenuService {
 	}
 
 	// 장바구니 아이템 가게별로 정렬 후 반환
-	public List<CartStoreResponseDto> getMenuItemsById(List<Integer> itemIds) {
+	public CartStoreResponseDto getMenuItemsById(List<Integer> itemIds) {
 
-		List<CartStoreResponseDto> response = new ArrayList<>();
+		Store store = (Store)menuRepository.findById(itemIds.get(0).longValue()).get().getUser();
 
-		HashMap<Integer, List<Menu>> storeMenuMap = new HashMap<>();
-		for (Integer itemId : itemIds) {
+		List<MenuItemResponseDto> menuItemResponseDtoList = new ArrayList<>();
+		for(Integer itemId : itemIds) {
 			Menu menu = menuRepository.findById(itemId.longValue()).get();
-			Integer storeId = menu.getUser().getUsrId();
-			// store에 해당하는 메뉴가 있다면 그냥 넣기
-			if (storeMenuMap.containsKey(storeId)) {
-				storeMenuMap.get(storeId).add(menu);
-			} else {   // 없다면 새로 만들어서 넣기
-				List<Menu> menuList = new ArrayList<>();
-				menuList.add(menu);
-				storeMenuMap.put(storeId, menuList);
-			}
-		}
-
-		for (Integer storeId : storeMenuMap.keySet()) {
-			List<Menu> menuList = storeMenuMap.get(storeId);
-			List<MenuItemResponseDto> menuItemResponseDtoList = new ArrayList<>();
-			//CartStoreResponseDto 에 넣기 위한 menuItemList 만들기
-			for (Menu menu : menuList) {
-				MenuItemResponseDto dto = MenuItemResponseDto.builder()
+			MenuItemResponseDto dto = MenuItemResponseDto.builder()
 					.menuId(menu.getMenuId())
 					.menuName(menu.getName())
 					.description(menu.getDescription())
@@ -135,19 +119,17 @@ public class MenuService {
 					.menuImage(menu.getImage())
 					.build();
 
-				menuItemResponseDtoList.add(dto);
-			}
-			// 가게별 Dto 만들기
-			Store store = storeService.findByUsrId(storeId).get();
-			CartStoreResponseDto cartStoreResponseDto = CartStoreResponseDto.builder()
+			menuItemResponseDtoList.add(dto);
+		}
+
+		CartStoreResponseDto cartStoreResponseDto = CartStoreResponseDto.builder()
 				.storeId(store.getUsrId())
 				.storeName(store.getName())
 				.storeAddress(store.getAddress())
 				.menuItems(menuItemResponseDtoList)
 				.build();
 
-			response.add(cartStoreResponseDto);
-		}
-		return response;
+		return cartStoreResponseDto;
+
 	}
 }

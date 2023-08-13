@@ -53,7 +53,7 @@ public class UserController {
 		CustomerInfoResponseDto response = CustomerInfoResponseDto.builder()
 			.statusCode(200)
 			.info(userInfo)
-			.rank(customer.getRank())
+			.rank(customerService.getRankName(customer.getRank()))
 			.social(customer.getSocial())
 			.point(customer.getPoint())
 			.build();
