@@ -26,7 +26,7 @@ public class StoreEventListener implements ApplicationListener<StoreNoticeEvent>
 
 		//찜한 고객들에게 알림 전송
 		for (User user : userList) {
-			notificationService.send(user, NotificationType.REJECT, event.getContent(), "notice",
+			notificationService.send(user, NotificationType.REJECT, "notice", event.getContent(),
 				"/store/daily/" + notice.getSnoId());
 		}
 	}
