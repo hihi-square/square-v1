@@ -21,6 +21,11 @@ import CustomerSignUp from "./login/CustomerSignup";
 import KakaoRedirect from "./login/KakaoRedirect";
 import NaverRedirect from "./login/NaverRedirect";
 import GoogleRedirect from "./login/GoogleRedirect";
+import Message from "../customer/main/Message";
+import MessageForm from "../customer/main/MessageForm";
+import Finish from "../customer/deal/Finish";
+import PickUp from "../customer/deal/PickUp";
+import SSEComponent from "./SSEComponent";
 
 export default function Customer() {
   return (
@@ -53,11 +58,17 @@ export default function Customer() {
         <Route path="/myboard" element={<MyBoard />} />
         <Route path="/deal/*" element={<Deal />} />
 
+        <Route path="/pickup" element={<PickUp />} />
         <Route path="*" element={<Login />} />
         <Route path="/signup" element={<CustomerSignUp />} />
         <Route path="/login/KakaoRedirect" element={<KakaoRedirect />} />
         <Route path="/login/GoogleRedirect" element={<GoogleRedirect />} />
         <Route path="/login/NaverRedirect" element={<NaverRedirect />} />
+        <Route path="/message" element={<Message />} />
+        <Route path="/finish" element={<Finish />} />
+        <Route path="/message/:userId" element={<MessageForm />} />
+
+        <Route path="/test" element={<SSEComponent />} />
       </Routes>
     </Grid>
   );

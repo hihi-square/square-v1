@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { REST_API } from "redux/redux";
 
 function NaverRedirect() {
+  console.log(REST_API);
   const code = new URL(window.location.href).searchParams.get("code");
   const navigate = useNavigate();
 
