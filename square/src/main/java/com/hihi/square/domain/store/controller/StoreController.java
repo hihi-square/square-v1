@@ -12,12 +12,7 @@ import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.service.SaleService;
 import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
-import com.hihi.square.domain.store.dto.response.StoreInfoDto;
-import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreMenuResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreSearchListDto;
-import com.hihi.square.domain.store.dto.response.StoreSearchResponseDto;
+import com.hihi.square.domain.store.dto.response.*;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
@@ -38,8 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 
-import com.hihi.square.domain.store.dto.response.StoreInfoResDto;
-import com.hihi.square.domain.store.dto.response.StoreUpdateResponseDto;
 import com.hihi.square.domain.store.entity.BusinessInformation;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.service.BusinessInformationService;
@@ -265,12 +258,16 @@ public class StoreController {
 	@GetMapping("/header/{id}")
 	public ResponseEntity<?> getStoreHeaderInfo(@PathVariable Integer id) {
 		Store store = storeService.findByUsrId(id).get();
+		EmdAddress emdAddress = store.getEmdAddress();
 
-		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
+		StoreHeaderResponseDto res = StoreHeaderResponseDto.builder()
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
-				.emdAddress(store.getEmdAddress())
-				.address(store.getAddress())
+				.aemId(emdAddress.getAemId())
+				.sidoName(emdAddress.getSidoName())
+				.dongName(emdAddress.getName())
+				.siggName(emdAddress.getSiggName())
+				.address(emdAddress.getFullName() + " " + store.getAddress())
 				.content(store.getContent())
 				.isOpened(store.getIsOpened())
 				.latitude(store.getLatitude())
