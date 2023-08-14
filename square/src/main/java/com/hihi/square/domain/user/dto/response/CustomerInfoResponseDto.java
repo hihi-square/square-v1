@@ -18,4 +18,5 @@ public class CustomerInfoResponseDto {
 	private String rank;
 	private UserSocialLoginType social;
 	private Long point;
+	private Integer dibsCount;
 }

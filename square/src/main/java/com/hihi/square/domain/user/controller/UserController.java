@@ -1,5 +1,6 @@
 package com.hihi.square.domain.user.controller;
 
+import com.hihi.square.domain.dibs.respository.DibsRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.dto.request.*;
 import com.hihi.square.domain.user.dto.response.CustomerInfoResponseDto;
@@ -35,6 +36,7 @@ public class UserController {
 	private final UserService userService;
 	private final CustomerService customerService;
 	private final PasswordEncoder passwordEncoder;
+	private final DibsRepository dibsRepository;
 
 
 	// 내 정보 보기
@@ -50,12 +52,14 @@ public class UserController {
 		}
 		Customer customer = (Customer) optionalUser.get();
 		UserInfoDto userInfo = userService.getMyInfo(uid);
+		Integer dibs = dibsRepository.countByCustomer(customer);
 		CustomerInfoResponseDto response = CustomerInfoResponseDto.builder()
 			.statusCode(200)
 			.info(userInfo)
 			.rank(customerService.getRankName(customer.getRank()))
 			.social(customer.getSocial())
 			.point(customer.getPoint())
+			.dibsCount(dibs)
 			.build();
 		return new ResponseEntity(response, HttpStatus.OK);
 	}

@@ -17,4 +17,6 @@ public interface DibsRepository extends JpaRepository<Dibs, Integer> {
 	List<Dibs> findByCustomer(Customer customer);
 
 	List<Dibs> findCustomerByStore(Store store);
+
+	Integer countByCustomer(Customer customer);
 }
