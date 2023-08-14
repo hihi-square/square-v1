@@ -22,7 +22,12 @@ export default function Seller() {
       <Appbar />
       <Grid xs={12} container sx={{ flexGrow: 1 }}>
         <Grid xs={2} className="sidebar">
-          <Box className="button">
+          <Box
+            className="button"
+            onClick={() => {
+              navigate("");
+            }}
+          >
             <Typography
               variant="h5"
               component="div"
@@ -31,38 +36,45 @@ export default function Seller() {
               가게 관리
             </Typography>
           </Box>
-          <Box className="button" sx={{ marginTop: "3%" }}>
+          <Box
+            className="button"
+            sx={{ marginTop: "3%" }}
+            onClick={() => {
+              navigate("product");
+            }}
+          >
             <Typography
               variant="h5"
               component="div"
               sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
-              onClick={() => {
-                navigate("product");
-              }}
             >
               상품 관리
             </Typography>
           </Box>
-          <Box className="button">
+          <Box
+            className="button"
+            onClick={() => {
+              navigate("sale");
+            }}
+          >
             <Typography
               variant="h5"
               component="div"
               sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
-              onClick={() => {
-                navigate("sale");
-              }}
             >
               세일 관리
             </Typography>
           </Box>
-          <Box className="button">
+          <Box
+            className="button"
+            onClick={() => {
+              navigate("order");
+            }}
+          >
             <Typography
               variant="h5"
               component="div"
               sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
-              onClick={() => {
-                navigate("order");
-              }}
             >
               주문 관리
             </Typography>

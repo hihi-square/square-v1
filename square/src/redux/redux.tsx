@@ -2,7 +2,7 @@ import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Itype } from "modules/types";
 
 // 공통 API 요청 주소
-export const REST_API = "https://i9b208.p.ssafy.io:8811/";
+export const REST_API = "https://i9b208.p.ssafy.io:8080/";
 
 const user = createSlice({
   name: "user",
