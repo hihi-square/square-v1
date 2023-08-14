@@ -234,6 +234,33 @@ public class StoreController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	// 처음 회원가입시 카테고리 다중등록
+	@PostMapping("/big-category/ids={id}")
+	public ResponseEntity<?> registerStoreCategorySelectionByStore(Authentication authentication, @PathVariable List<Integer> id) {
+		String uid = authentication.getName();
+		// 판매자가 아니라면 등록불가
+		if (!(userService.findByUid(uid).get() instanceof Store)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store = storeService.findByUid(uid).get();
+
+		Integer registeredCategoryCount = storeCategoryService.countByStore(store);
+		if(registeredCategoryCount + id.size() > 3) {
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("MAXIMUM_COUNT").build(), HttpStatus.BAD_REQUEST);
+		}
+		for(Integer categoryId : id) {
+			StoreCategoryBig storeCategoryBig = categoryService.findById(categoryId).get();
+			if(storeCategoryService.validateDuplicateStoreCategory(store, storeCategoryBig)) {
+				return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("ALREADY_EXISTS").build(), HttpStatus.BAD_REQUEST);
+			}
+		}
+		for(Integer categoryId : id) {
+			StoreCategoryBig storeCategoryBig = categoryService.findById(categoryId).get();
+			storeCategoryService.save(store, storeCategoryBig);
+		}
+		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(201).message("CREATE_SUCCESS").build(), HttpStatus.CREATED);
+	}
+
 	// 가게 정보 상단 조회
 	@GetMapping("/header/{id}")
 	public ResponseEntity<?> getStoreHeaderInfo(@PathVariable Integer id) {

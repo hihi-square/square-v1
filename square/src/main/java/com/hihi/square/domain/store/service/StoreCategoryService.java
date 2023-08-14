@@ -30,10 +30,15 @@ public class StoreCategoryService {
     public List<StoreCategorySelected> findByStoreCategoryBig(StoreCategoryBig storeCategoryBig) {
         return storeCategoryRepository.findByStoreCategoryBig(storeCategoryBig);
     }
+
+    @Transactional(readOnly = true)
     public List<StoreCategorySelected> findByStore(Store store) {
         return storeCategoryRepository.findByStore(store);
     }
 
+    public Integer countByStore(Store store) {
+        return storeCategoryRepository.countByStore(store);
+    }
     // 가게 카테고리 중복 확인 ( 가게 아이디, 카테고리아이디)
     @Transactional
     public boolean validateDuplicateStoreCategory(Store store, StoreCategoryBig storeCategoryBig) {

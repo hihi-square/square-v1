@@ -1,5 +1,6 @@
 package com.hihi.square.domain.store.controller;
 
+import com.hihi.square.domain.menu.dto.response.RegisteredCategoryresponseDto;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbUpdateRequestDto;
@@ -24,7 +25,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/scb")
@@ -137,7 +140,35 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 전체 카테고리중 가게가 등록된 카테고리 boolean값 반환 하지만 모든 조회
+    @GetMapping("/store/registered")
+    public ResponseEntity<?> selectAllByStoreIdAndRegistered(Authentication authentication) {
+        String uid = authentication.getName();
+        Store store = (Store) userService.findByUid(uid).get();
 
+        List<StoreCategoryBig> bigCategories = categoryService.findAll();
+        Map<Integer, Boolean> isRegistered = new HashMap<>();
 
+        for (StoreCategoryBig bigCategory : bigCategories) {
+            isRegistered.put(bigCategory.getScbId(), false);
+        }
 
+        List<StoreCategorySelected> categories = storeCategoryService.findByStore(store);
+        for (StoreCategorySelected category : categories) {
+            isRegistered.put(category.getStoreCategoryBig().getScbId(), true);
+        }
+
+        List<RegisteredCategoryresponseDto> response = new ArrayList<>();
+        for (StoreCategoryBig bigCategory : bigCategories) {
+            Integer scbId = bigCategory.getScbId();
+            Boolean registered = isRegistered.get(scbId);
+            RegisteredCategoryresponseDto dto = RegisteredCategoryresponseDto.builder()
+                    .scbId(scbId)
+                    .name(bigCategory.getName())
+                    .isRegistered(registered)
+                    .build();
+            response.add(dto);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
