@@ -59,6 +59,6 @@ public class SseController {
 	public void sendData(@PathVariable Integer userId) {
 		User user = userService.findByUsrId(userId).get();
 		// User user = userService.findByUid(name).get();
-		notificationService.send(user, NotificationType.READY, "test", "message", "data");
+		notificationService.send(user, NotificationType.READY, "test", "test", "data");
 	}
 }
