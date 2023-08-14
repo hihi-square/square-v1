@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hihi.square.domain.dibs.service.DibsService;
 import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
 import com.hihi.square.domain.image.entity.Image;
 import com.hihi.square.domain.image.respository.ImageRepository;
@@ -37,16 +38,19 @@ import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/store/daily")
 @RequiredArgsConstructor
+@Slf4j
 public class StoreNoticeController {
 
 	private final UserService userService;
 	private final StoreNoticeService storeNoticeService;
 	private final ImageRepository imageRepository;
 	private final EmdAddressService emdAddressService;
+	private final DibsService dibsService;
 	private final ApplicationEventPublisher eventPublisher;
 
 	//가게 공지 작성
@@ -63,7 +67,7 @@ public class StoreNoticeController {
 		Notice notice = storeNoticeService.write((Store)user, request);
 
 		//찜한 고객에게 이벤트 발생
-		List<User> userList = storeNoticeService.getDibsByStore((Store)user);
+		List<User> userList = dibsService.getCustomerByStore((Store)user);
 		eventPublisher.publishEvent(new StoreNoticeEvent(notice, "새로운 공지가 있어요.", userList));
 
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS_WRITE").build(),

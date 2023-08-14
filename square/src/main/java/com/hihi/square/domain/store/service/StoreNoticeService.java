@@ -23,10 +23,12 @@ import com.hihi.square.global.s3.S3Service;
 import com.hihi.square.global.s3.dto.FileThumbDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class StoreNoticeService {
 	private final StoreNoticeRepository storeNoticeRepository;
 	private final ImageRepository imageRepository;
@@ -246,7 +248,17 @@ public class StoreNoticeService {
 		return result;
 	}
 
-	public List<User> getDibsByStore(Store store) {
-		return storeNoticeRepository.findDibsByStore(store.getUsrId());
-	}
+	// public List<User> getDibsByStore(Store store) {
+	// 	Integer stoId = store.getUsrId();
+	// 	List<Dibs> dibs = dibsRepository.findByCustomerAndStore(stoId);
+	// 	List<User> userList = new ArrayList<>();
+	// 	log.info("userId : {}", store.getUsrId());
+	//
+	// 	for (Dibs dib : dibs) {
+	// 		Integer userId = dib.getCustomer().getUsrId();
+	// 		User user = userService.findByUsrId(userId).get();
+	// 		userList.add(user);
+	// 	}
+	// 	return userList;
+	// }
 }
