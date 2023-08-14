@@ -35,12 +35,11 @@ public class SseController {
 	@GetMapping(value = "/subscribe", produces = "text/event-stream")
 	@ResponseStatus(HttpStatus.OK)
 	public SseEmitter subscribe(Authentication authentication,
-		@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId,
-		@RequestHeader String type) {
+		@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
 		String uName = authentication.getName();
 		//UserId Integer -> Long type으로 변경 필요
 		Long userId = userService.findByUid(uName).get().getUsrId().longValue();
-		return notificationService.subscribe(userId, lastEventId, type);
+		return notificationService.subscribe(userId, lastEventId);
 	}
 
 	//알림 전체 조회
