@@ -123,7 +123,7 @@ public class OrderController {
 
 		// 주문 등록
 		Integer ordId = orderService.saveOrder(customer, request);
-		notificationService.subscribe(request.getStoId().longValue(), "", "order");
+		notificationService.subscribe(request.getStoId().longValue(), "");
 
 		return new ResponseEntity<>(OrderIdResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(),
 			HttpStatus.CREATED);
@@ -181,7 +181,7 @@ public class OrderController {
 				customerRepository.save(customer);
 			}
 			//store에게 주문 도착 알림 전송
-			notificationService.subscribe(customer.getUsrId().longValue(), "", "order");
+			notificationService.subscribe(customer.getUsrId().longValue(), "");
 
 			log.info("status : {}", order.getStatus());
 			log.info("orderId : {}", order.getOrdId());
