@@ -55,9 +55,10 @@ public class NotificationController {
 	}
 
 	//알림 전송
-	@PostMapping("/send-data/{name}")
-	public void sendData(@PathVariable String name) {
-		User user = userService.findByUid(name).get();
+	@PostMapping("/send-data/{userId}")
+	public void sendData(@PathVariable Integer userId) {
+		User user = userService.findByUsrId(userId).get();
+		// User user = userService.findByUid(name).get();
 		notificationService.send(user, NotificationType.READY, "test", "data");
 	}
 }

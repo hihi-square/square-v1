@@ -39,7 +39,7 @@ public class NotificationService {
 		// 503 에러를 방지하기 위한 더미 이벤트 전송
 		String eventId = makeTimeIncludeId(memberId);
 		sendNotification(emitter, eventId, emitterId,
-			"Complete payment, EventStream Created. [userId=" + memberId + "]");
+			"EventStream Created. [userId=" + memberId + "]");
 
 		// 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
 		if (hasLostData(lastEventId)) {
@@ -57,7 +57,7 @@ public class NotificationService {
 		try {
 			emitter.send(SseEmitter.event()
 				.id(eventId)
-				.name("message")
+				.name("message")    //front에서 onmessage로 받기 때문에 event 명 설정
 				.data(data));
 		} catch (IOException exception) {
 			emitterRepository.deleteById(emitterId);
