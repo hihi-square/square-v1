@@ -147,6 +147,7 @@ public class OrderService {
                 .usedPoint(order.getUsedPoint())
                 .finalPrice(order.getFinalPrice())
                 .status(order.getStatus())
+                .createdAt(order.getCreatedAt())
                 .build();
 
         return orderResponse;
