@@ -8,7 +8,7 @@ import com.hihi.square.domain.order.entity.OrderStatus;
 import com.hihi.square.domain.order.service.OrderService;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.global.sse.NotificationService;
+import com.hihi.square.global.sse.SseService;
 import com.hihi.square.global.sse.entity.NotificationType;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderEventListener implements ApplicationListener<OrderEvent> {
 
-	private final NotificationService notificationService;
+	private final SseService notificationService;
 	private final OrderService orderService;
 
 	@Override
@@ -29,22 +29,23 @@ public class OrderEventListener implements ApplicationListener<OrderEvent> {
 		//결제 완료 시에 가게에 알림 전송
 		if (order.getStatus() == OrderStatus.PAYMENT_COMPLETE) {
 			Store store = order.getStore();
-			notificationService.send(store, NotificationType.READY, event.getContent(), "/order/" + order.getOrdId());
+			notificationService.send(store, NotificationType.READY, "order", event.getContent(),
+				"/order/" + order.getOrdId());
 		}
 		//가게에서 주문 수락 or 취소 시
 		else if (status == OrderStatus.ORDER_ACCEPT) {
 			Customer customer = order.getCustomer();
-			notificationService.send(customer, NotificationType.ACCEPT, event.getContent(),
+			notificationService.send(customer, NotificationType.ACCEPT, "order", event.getContent(),
 				"/order/" + order.getOrdId());
 		} else if (status == OrderStatus.ORDER_REJECT) {
 			Customer customer = order.getCustomer();
-			notificationService.send(customer, NotificationType.REJECT, event.getContent(),
+			notificationService.send(customer, NotificationType.REJECT, "order", event.getContent(),
 				"/order/" + order.getOrdId());
 		}
 		//고객이 픽업을 완료했을 때
 		else if (status == OrderStatus.PICKUP_COMPLETE) {
 			Customer customer = order.getCustomer();
-			notificationService.send(customer, NotificationType.COMPLETED, event.getContent(),
+			notificationService.send(customer, NotificationType.COMPLETED, "order", event.getContent(),
 				"/order/" + order.getOrdId());
 		}
 	}
