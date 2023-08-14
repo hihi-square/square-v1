@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.sse.dto.NotificationResponseDto;
 import com.hihi.square.global.sse.entity.Notification;
@@ -55,10 +56,14 @@ public class NotificationService {
 
 	private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
 		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jsonData = objectMapper.writeValueAsString(data);
+
 			emitter.send(SseEmitter.event()
 				.id(eventId)
 				.name("message")
-				.data(data));
+				// .data(data));
+				.data(jsonData));
 		} catch (IOException exception) {
 			emitterRepository.deleteById(emitterId);
 		}
