@@ -1,5 +1,11 @@
 package com.hihi.square.domain.store.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hihi.square.domain.image.dto.request.ImageRequestDto;
 import com.hihi.square.domain.image.dto.response.ImagesDetailResponseDto;
@@ -17,13 +23,6 @@ import com.hihi.square.global.s3.S3Service;
 import com.hihi.square.global.s3.dto.FileThumbDto;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,15 +33,15 @@ public class StoreNoticeService {
 	private final S3Service s3Service;
 
 	@Transactional
-	public void write(Store store, StoreNoticeWriteRequestDto request) {
+	public Notice write(Store store, StoreNoticeWriteRequestDto request) {
 		Notice notice = Notice.builder()
 			.emdAddress(store.getEmdAddress())
-				.content(request.getContent())
-				.store(store)
-				.state(request.getState())
-				.build();
-		storeNoticeRepository.save(notice);
-		for(ImageRequestDto image : request.getImages()){
+			.content(request.getContent())
+			.store(store)
+			.state(request.getState())
+			.build();
+		Notice saveNotice = storeNoticeRepository.save(notice);
+		for (ImageRequestDto image : request.getImages()) {
 			imageRepository.save(Image.builder()
 				.url(image.getUrl())
 				.order(image.getOrder())
@@ -52,18 +51,18 @@ public class StoreNoticeService {
 				.build());
 
 		}
+		return saveNotice;
 	}
-
 
 	public List<StoreNoticeResponseDto> getNoticeList(Store store) {
 		List<StoreNoticeResponseDto> result = new ArrayList<>();
 		List<Notice> notices = storeNoticeRepository.findAllByStoreOrderByCreatedAtDesc(store);
 
-		for(Notice notice : notices){
+		for (Notice notice : notices) {
 			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
 			List<ImagesDetailResponseDto> imageResponseDtoList = new ArrayList<>();
 
-			for(Image img : images){
+			for (Image img : images) {
 				imageResponseDtoList.add(
 					ImagesDetailResponseDto.builder()
 						.imgId(img.getImgId())
@@ -77,17 +76,17 @@ public class StoreNoticeService {
 			}
 
 			result.add(StoreNoticeResponseDto.builder()
-					.snoId(notice.getSnoId())
-					.storeName(notice.getStore().getStoreName())
-					.storeId(notice.getStore().getUsrId())
-					.storeLogo(notice.getStore().getLogo())
-					.content(notice.getContent())
-					.createdAt(notice.getCreatedAt())
-					.modifiedAt(notice.getModifiedAt())
-					.state(notice.getState())
-					.images(
-						imageResponseDtoList
-					).build());
+				.snoId(notice.getSnoId())
+				.storeName(notice.getStore().getStoreName())
+				.storeId(notice.getStore().getUsrId())
+				.storeLogo(notice.getStore().getLogo())
+				.content(notice.getContent())
+				.createdAt(notice.getCreatedAt())
+				.modifiedAt(notice.getModifiedAt())
+				.state(notice.getState())
+				.images(
+					imageResponseDtoList
+				).build());
 		}
 
 		return result;
@@ -104,11 +103,11 @@ public class StoreNoticeService {
 		notice.updateState(request.getState());
 		storeNoticeRepository.save(notice);
 		imageRepository.deleteByTypeAndConnectedId("SNO", notice.getSnoId());
-		for(int i=0;i<request.getImages().size();i++){
+		for (int i = 0; i < request.getImages().size(); i++) {
 			FileThumbDto image = request.getImages().get(i);
 			imageRepository.save(Image.builder()
 				.url(image.getUrl())
-				.order(i+1)
+				.order(i + 1)
 				.type("SNO")
 				.connectedId(notice.getSnoId())
 				.thumbnail(image.getThumb())
@@ -139,11 +138,11 @@ public class StoreNoticeService {
 		List<StoreNoticeResponseDto> result = new ArrayList<>();
 		List<Notice> notices = storeNoticeRepository.findAllByStoreAndPublicOrderByCreatedAtDesc(store);
 
-		for(Notice notice : notices){
+		for (Notice notice : notices) {
 			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
 			List<ImagesDetailResponseDto> imageResponseDtoList = new ArrayList<>();
 
-			for(Image img : images){
+			for (Image img : images) {
 				imageResponseDtoList.add(
 					ImagesDetailResponseDto.builder()
 						.imgId(img.getImgId())
@@ -176,11 +175,11 @@ public class StoreNoticeService {
 		List<StoreNoticeResponseDto> result = new ArrayList<>();
 		List<Notice> notices = storeNoticeRepository.findAllByEmdListOrderByCreatedAtDesc(emdAddressList);
 
-		for(Notice notice : notices){
+		for (Notice notice : notices) {
 			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
 			List<ImagesDetailResponseDto> imageResponseDtoList = new ArrayList<>();
 
-			for(Image img : images){
+			for (Image img : images) {
 				imageResponseDtoList.add(
 					ImagesDetailResponseDto.builder()
 						.imgId(img.getImgId())
@@ -214,11 +213,11 @@ public class StoreNoticeService {
 		List<StoreNoticeResponseDto> result = new ArrayList<>();
 		List<Notice> notices = storeNoticeRepository.findByUserDibs(user);
 
-		for(Notice notice : notices){
+		for (Notice notice : notices) {
 			List<Image> images = imageRepository.findAllByTypeAndConnectedIdOrderByOrder("SNO", notice.getSnoId());
 			List<ImagesDetailResponseDto> imageResponseDtoList = new ArrayList<>();
 
-			for(Image img : images){
+			for (Image img : images) {
 				imageResponseDtoList.add(
 					ImagesDetailResponseDto.builder()
 						.imgId(img.getImgId())
@@ -245,5 +244,9 @@ public class StoreNoticeService {
 		}
 
 		return result;
+	}
+
+	public List<User> getDibsByStore(Store store) {
+		return storeNoticeRepository.findDibsByStore(store.getUsrId());
 	}
 }

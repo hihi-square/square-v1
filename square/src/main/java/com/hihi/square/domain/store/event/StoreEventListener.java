@@ -1,9 +1,12 @@
 package com.hihi.square.domain.store.event;
 
+import java.util.List;
+
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.entity.Notice;
+import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.sse.NotificationService;
 import com.hihi.square.global.sse.entity.NotificationType;
 
@@ -14,13 +17,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class StoreEventListener implements ApplicationListener<StoreNoticeEvent> {
-
 	private final NotificationService notificationService;
 
 	@Override
 	public void onApplicationEvent(StoreNoticeEvent event) {
-		Store store = event.getStore();
-		notificationService.send(store, NotificationType.REJECT, event.getContent(),
-			"/order/" + store.getUsrId());
+		Notice notice = event.getNotice();
+		List<User> userList = event.getUserList();
+
+		//찜한 고객들에게 알림 전송
+		for (User user : userList) {
+			notificationService.send(user, NotificationType.REJECT, event.getContent(),
+				"/store/daily/" + notice.getSnoId());
+		}
 	}
 }

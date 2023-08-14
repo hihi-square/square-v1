@@ -28,6 +28,7 @@ import com.hihi.square.domain.store.dto.response.StoreNoticeResponseDto;
 import com.hihi.square.domain.store.dto.response.StoreNoticesResponseDto;
 import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.event.StoreNoticeEvent;
 import com.hihi.square.domain.store.service.StoreNoticeService;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
@@ -58,8 +59,13 @@ public class StoreNoticeController {
 			return new ResponseEntity(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
 				HttpStatus.BAD_GATEWAY);
 		}
-		storeNoticeService.write((Store)user, request);
-		// eventPublisher.publishEvent(new OrderEvent(order, "주문이 수락되었습니다."));
+
+		Notice notice = storeNoticeService.write((Store)user, request);
+
+		//찜한 고객에게 이벤트 발생
+		List<User> userList = storeNoticeService.getDibsByStore((Store)user);
+		eventPublisher.publishEvent(new StoreNoticeEvent(notice, "새로운 공지가 있어요.", userList));
+
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS_WRITE").build(),
 			HttpStatus.CREATED);
 	}
