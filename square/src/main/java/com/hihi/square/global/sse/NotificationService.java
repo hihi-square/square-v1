@@ -57,6 +57,7 @@ public class NotificationService {
 		try {
 			emitter.send(SseEmitter.event()
 				.id(eventId)
+				.name("message")
 				.data(data));
 		} catch (IOException exception) {
 			emitterRepository.deleteById(emitterId);
@@ -91,20 +92,20 @@ public class NotificationService {
 		);
 	}
 
-	public void send2(User receiver, NotificationType notificationType, String content, String url) {
-		Notification notification = notificationRepository.save(
-			createNotification(receiver, notificationType, content, url));
-
-		String receiverId = String.valueOf(receiver.getUsrId());
-		String eventId = receiverId + "_" + System.currentTimeMillis();
-		Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
-		emitters.forEach(
-			(key, emitter) -> {
-				emitterRepository.saveEventCache(key, notification);
-				sendNotification(emitter, eventId, key, new NotificationResponseDto(notification));
-			}
-		);
-	}
+	// public void send2(User receiver, NotificationType notificationType, String content, String url) {
+	// 	Notification notification = notificationRepository.save(
+	// 		createNotification(receiver, notificationType, content, url));
+	//
+	// 	String receiverId = String.valueOf(receiver.getUsrId());
+	// 	String eventId = receiverId + "_" + System.currentTimeMillis();
+	// 	Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
+	// 	emitters.forEach(
+	// 		(key, emitter) -> {
+	// 			emitterRepository.saveEventCache(key, notification);
+	// 			sendNotification(emitter, eventId, key, "data: { \"message\" : \"number : " + 1 + "\" }\n\n");
+	// 		}
+	// 	);
+	// }
 
 	private Notification createNotification(User receiver, NotificationType notificationType, String content,
 		String url) {
@@ -113,7 +114,6 @@ public class NotificationService {
 			.notificationType(notificationType)
 			.content(content)
 			.url(url)
-			// .order(Order.builder().ordId(orderResponseDto.getOrdId()).build())
 			.isRead(false)
 			.build();
 	}
