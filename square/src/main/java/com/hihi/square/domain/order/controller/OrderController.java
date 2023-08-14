@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
-import com.hihi.square.domain.coupon.entity.Coupon;
-import com.hihi.square.domain.coupon.entity.IssueCoupon;
-import com.hihi.square.domain.coupon.service.IssueCouponService;
-import com.hihi.square.domain.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
+import com.hihi.square.domain.coupon.entity.Coupon;
+import com.hihi.square.domain.coupon.entity.IssueCoupon;
+import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderIdResponseDto;
@@ -37,8 +36,9 @@ import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.repository.CustomerRepository;
+import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
-import com.hihi.square.global.sse.NotificationService;
+import com.hihi.square.global.sse.SseService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class OrderController {
 	private final OrderService orderService;
 	private final PointService pointService;
 	private final ApplicationEventPublisher eventPublisher;
-	private final NotificationService notificationService;
+	private final SseService notificationService;
 	private final IssueCouponService issueCouponService;
 	private final UserService userService;
 
@@ -103,10 +103,10 @@ public class OrderController {
 		Customer customer = customerRepository.findById(request.getCusId()).get();
 
 		String uid = authentication.getName();
-		if(!(userService.findByUid(uid).get() instanceof Customer)) {
-			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		if (!(userService.findByUid(uid).get() instanceof Customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(),
+				HttpStatus.BAD_REQUEST);
 		}
-
 
 		// 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
 		if (request.getUsedPoint() > customer.getPoint()) {
@@ -123,7 +123,7 @@ public class OrderController {
 
 		// 주문 등록
 		Integer ordId = orderService.saveOrder(customer, request);
-		notificationService.subscribe(request.getStoId().longValue(), "");
+		notificationService.subscribe(request.getStoId().longValue(), "", "order");
 
 		return new ResponseEntity<>(OrderIdResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(),
 			HttpStatus.CREATED);
@@ -134,7 +134,8 @@ public class OrderController {
 	// 주문 status 수정 및 포인트 차감 및 적립
 	@Transactional
 	@PatchMapping("/customer-pay")
-	public ResponseEntity<?> updatePaymentStatus(Authentication authentication, @RequestBody PaymentRequestDto request) {
+	public ResponseEntity<?> updatePaymentStatus(Authentication authentication,
+		@RequestBody PaymentRequestDto request) {
 		CommonResponseDto response = CommonResponseDto.builder()
 			.statusCode(200)
 			.message("UPDATE_SUCCESS")
@@ -144,14 +145,17 @@ public class OrderController {
 
 		// 주문자가 고객이 아닐때
 		String uid = authentication.getName();
-		if(!(userService.findByUid(uid).get() instanceof Customer)) {
-			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		if (!(userService.findByUid(uid).get() instanceof Customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(),
+				HttpStatus.BAD_REQUEST);
 		}
 
 		// 주문자가 고객이지만 로그인한 유저와 같지 않을 때
 		Customer LoginCustomer = (Customer)userService.findByUid(uid).get();
-		if(!LoginCustomer.equals(customer)) {
-			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_SAME_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		if (!LoginCustomer.equals(customer)) {
+			return new ResponseEntity<>(
+				CommonResponseDto.builder().message("NOT_SAME_CUSTOMER").statusCode(400).build(),
+				HttpStatus.BAD_REQUEST);
 		}
 
 		// regietered 상태가 아닌데 결제를 시도할 때
@@ -177,7 +181,7 @@ public class OrderController {
 				customerRepository.save(customer);
 			}
 			//store에게 주문 도착 알림 전송
-			notificationService.subscribe(customer.getUsrId().longValue(), "");
+			notificationService.subscribe(customer.getUsrId().longValue(), "", "order");
 
 			log.info("status : {}", order.getStatus());
 			log.info("orderId : {}", order.getOrdId());
@@ -210,11 +214,11 @@ public class OrderController {
 
 		// 가게 주인이 아닐때
 		String uid = authentication.getName();
-		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+		if (storeRepository.findByUid(uid).get() != order.getStore()) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("NO_AUTHORIZATION")
-					.build();
+				.statusCode(400)
+				.message("NO_AUTHORIZATION")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -251,11 +255,11 @@ public class OrderController {
 
 		// 가게 주인이 아닐때
 		String uid = authentication.getName();
-		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+		if (storeRepository.findByUid(uid).get() != order.getStore()) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("NO_AUTHORIZATION")
-					.build();
+				.statusCode(400)
+				.message("NO_AUTHORIZATION")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -294,11 +298,11 @@ public class OrderController {
 
 		// 가게 주인이 아닐때
 		String uid = authentication.getName();
-		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+		if (storeRepository.findByUid(uid).get() != order.getStore()) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("NO_AUTHORIZATION")
-					.build();
+				.statusCode(400)
+				.message("NO_AUTHORIZATION")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -340,11 +344,11 @@ public class OrderController {
 
 		// 로그인한 유저와 주문한 사용자가 다를때
 		String uid = authentication.getName();
-		if(userService.findByUid(uid).get().getUsrId() != cusId) {
+		if (userService.findByUid(uid).get().getUsrId() != cusId) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("NO_AUTHORIZATION")
-					.build();
+				.statusCode(400)
+				.message("NO_AUTHORIZATION")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 
@@ -367,11 +371,11 @@ public class OrderController {
 
 		// 로그인한 유저와 가게가 다를때
 		String uid = authentication.getName();
-		if(userService.findByUid(uid).get().getUsrId() != stoId) {
+		if (userService.findByUid(uid).get().getUsrId() != stoId) {
 			CommonResponseDto response = CommonResponseDto.builder()
-					.statusCode(400)
-					.message("NO_AUTHORIZATION")
-					.build();
+				.statusCode(400)
+				.message("NO_AUTHORIZATION")
+				.build();
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 

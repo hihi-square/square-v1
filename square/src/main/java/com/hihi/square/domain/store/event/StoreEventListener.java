@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.global.sse.NotificationService;
+import com.hihi.square.global.sse.SseService;
 import com.hihi.square.global.sse.entity.NotificationType;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class StoreEventListener implements ApplicationListener<StoreNoticeEvent> {
-	private final NotificationService notificationService;
+	private final SseService notificationService;
 
 	@Override
 	public void onApplicationEvent(StoreNoticeEvent event) {
@@ -26,7 +26,7 @@ public class StoreEventListener implements ApplicationListener<StoreNoticeEvent>
 
 		//찜한 고객들에게 알림 전송
 		for (User user : userList) {
-			notificationService.send(user, NotificationType.REJECT, event.getContent(),
+			notificationService.send(user, NotificationType.REJECT, event.getContent(), "notice",
 				"/store/daily/" + notice.getSnoId());
 		}
 	}

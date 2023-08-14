@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationService {
+public class SseService {
 	private final EmitterRepository emitterRepository = new EmitterRepositoryImpl();
 	private final NotificationRepository notificationRepository;
 
@@ -30,7 +30,7 @@ public class NotificationService {
 		return notificationList;
 	}
 
-	public SseEmitter subscribe(Long memberId, String lastEventId) {
+	public SseEmitter subscribe(Long memberId, String lastEventId, String type) {
 		String emitterId = makeTimeIncludeId(memberId);
 		SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
 		emitter.onCompletion(() -> emitterRepository.deleteById(emitterId));
@@ -38,7 +38,7 @@ public class NotificationService {
 
 		// 503 에러를 방지하기 위한 더미 이벤트 전송
 		String eventId = makeTimeIncludeId(memberId);
-		sendNotification(emitter, eventId, emitterId,
+		sendNotification(emitter, eventId, emitterId, type,
 			"EventStream Created. [userId=" + memberId + "]");
 
 		// 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
@@ -53,11 +53,11 @@ public class NotificationService {
 		return memberId + "_" + System.currentTimeMillis();
 	}
 
-	private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
+	private void sendNotification(SseEmitter emitter, String eventId, String emitterId, String type, Object data) {
 		try {
 			emitter.send(SseEmitter.event()
 				.id(eventId)
-				.name("message")    //front에서 onmessage로 받기 때문에 event 명 설정
+				.name(type)    //front에서 onmessage로 받기 때문에 event 명 설정
 				.data(data));
 		} catch (IOException exception) {
 			emitterRepository.deleteById(emitterId);
@@ -73,11 +73,11 @@ public class NotificationService {
 			String.valueOf(memberId));
 		eventCaches.entrySet().stream()
 			.filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-			.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
+			.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, "message", entry.getValue()));
 	}
 
 	// @TransactionalEventListener
-	public void send(User receiver, NotificationType notificationType, String content, String url) {
+	public void send(User receiver, NotificationType notificationType, String type, String content, String url) {
 		Notification notification = notificationRepository.save(
 			createNotification(receiver, notificationType, content, url));
 
@@ -87,7 +87,7 @@ public class NotificationService {
 		emitters.forEach(
 			(key, emitter) -> {
 				emitterRepository.saveEventCache(key, notification);
-				sendNotification(emitter, eventId, key, new NotificationResponseDto(notification));
+				sendNotification(emitter, eventId, key, type, new NotificationResponseDto(notification));
 			}
 		);
 	}
