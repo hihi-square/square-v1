@@ -132,10 +132,22 @@ export default function Login() {
               sx={{ fontWeight: 800, textAlign: { xs: "center", md: "start" } }}
               gutterBottom
             >
-              <Box component="span" sx={{ color: "primary.main" }}>
+              <Box component="span" sx={{ color: "secondary.main" }}>
                 S
               </Box>
               quare
+              <Typography
+                variant="h3"
+                component="span"
+                sx={{
+                  fontWeight: 700,
+                  textAlign: "center",
+                  marginLeft: "10px",
+                }}
+                gutterBottom
+              >
+                판매자
+              </Typography>
             </Typography>
           </Grid>
           <Grid xs={9}>
@@ -188,13 +200,17 @@ export default function Login() {
               <Button
                 onClick={onClickConfirmButton}
                 variant="contained"
-                color="primary"
+                color="secondary"
                 sx={{ height: "60px" }}
                 fullWidth
               >
                 <Typography
-                  variant="h6"
-                  sx={{ fontWeight: 400, textAlign: "center" }}
+                  variant="h4"
+                  sx={{
+                    color: "red",
+                    fontWeight: 700,
+                    textAlign: "center",
+                  }}
                 >
                   로그인
                 </Typography>

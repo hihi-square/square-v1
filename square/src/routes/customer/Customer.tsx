@@ -26,6 +26,7 @@ import MessageForm from "../customer/main/MessageForm";
 import Finish from "../customer/deal/Finish";
 import PickUp from "../customer/deal/PickUp";
 import SSEComponent from "./SSEComponent";
+import Error from "./error/Error";
 
 export default function Customer() {
   return (
@@ -37,7 +38,7 @@ export default function Customer() {
       sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
     >
       <Routes>
-        <Route path="/main" element={<Main />} />
+        <Route path="/error" element={<Error />} />
         <Route path="/list/:category" element={<List />} />
         <Route path="/lList/location" element={<StoreListByLocation />} />
 
@@ -59,7 +60,7 @@ export default function Customer() {
         <Route path="/deal/*" element={<Deal />} />
 
         <Route path="/pickup" element={<PickUp />} />
-        <Route path="*" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<CustomerSignUp />} />
         <Route path="/login/KakaoRedirect" element={<KakaoRedirect />} />
         <Route path="/login/GoogleRedirect" element={<GoogleRedirect />} />
@@ -69,6 +70,7 @@ export default function Customer() {
         <Route path="/message/:userId" element={<MessageForm />} />
 
         <Route path="/test" element={<SSEComponent />} />
+        <Route path="/*" element={<Main />} />
       </Routes>
     </Grid>
   );
