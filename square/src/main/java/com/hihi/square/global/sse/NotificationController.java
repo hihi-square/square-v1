@@ -54,6 +54,7 @@ public class NotificationController {
 		return ResponseEntity.ok(CommonResponseDto.success(responseList));
 	}
 
+	//알림 전송
 	@PostMapping("/send-data/{name}")
 	public void sendData(@PathVariable String name) {
 		User user = userService.findByUid(name).get();

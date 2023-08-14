@@ -122,7 +122,7 @@ public class MenuCategoryController {
 		if (menuCategory == null) {
 			return ResponseEntity.badRequest().build();
 		}
-		menuCategoryService.updateMenuCategoryToZero(menuCategory.getUser().getUsrId(), menuCategory.getId());
+		// menuCategoryService.updateMenuCategoryToZero(menuCategory.getUser().getUsrId(), menuCategory.getId());
 		menuCategoryService.deleteMenuCategory(menuCategory);
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuCategoryResponseDto(menuCategory)));
 	}

@@ -1,19 +1,24 @@
 package com.hihi.square.domain.store.event;
 
+import java.util.List;
+
 import org.springframework.context.ApplicationEvent;
 
-import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.store.entity.Notice;
+import com.hihi.square.domain.user.entity.User;
 
 import lombok.Getter;
 
 @Getter
 public class StoreNoticeEvent extends ApplicationEvent {
-	private Store store;
+	private Notice notice;
 	private String content;
+	private List<User> userList;
 
-	public StoreNoticeEvent(Store store, String content) {
-		super(store);
-		this.store = store;
+	public StoreNoticeEvent(Notice notice, String content, List<User> userList) {
+		super(notice);
+		this.notice = notice;
 		this.content = content;
+		this.userList = userList;
 	}
 }

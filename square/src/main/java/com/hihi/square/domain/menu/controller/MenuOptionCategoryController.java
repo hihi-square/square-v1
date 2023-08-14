@@ -103,8 +103,8 @@ public class MenuOptionCategoryController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		menuOptionCategoryService.updateOptionCategoryToZero(menuOptionCategory.getMenu().getMenuId(),
-			menuOptionCategory.getId());
+		// menuOptionCategoryService.updateOptionCategoryToZero(menuOptionCategory.getMenu().getMenuId(),
+		// 	menuOptionCategory.getId());
 		menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
 	}
