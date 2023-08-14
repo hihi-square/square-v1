@@ -24,7 +24,6 @@ public class StoreInfoResponseDto {
 	@Enumerated(EnumType.STRING)
 	private BankType bank;
 	private String account;
-	private List<Image> backgroundImgUrl;
 	private String logo;
 	private Boolean isOpened;
 	private Float latitude;

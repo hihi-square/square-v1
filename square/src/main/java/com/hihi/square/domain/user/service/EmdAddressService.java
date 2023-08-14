@@ -51,15 +51,14 @@ public class EmdAddressService {
 				}
 			}
 		}
-		System.out.println(resultId);
 		for(Integer id : resultId){
 			result.add(emdAddressRepository.findById(id).get());
 		}
 		return result;
 	}
 
-	public Optional<EmdAddress> findByAdmCode(Long admCode) {
-		return emdAddressRepository.findByAdmCode(admCode);
+	public Optional<EmdAddress> findByBCode(Long bCode) {
+		return emdAddressRepository.findByBCode(bCode);
 	}
 
 	public Optional<EmdAddress> findById(Integer emdId) {

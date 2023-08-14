@@ -68,8 +68,7 @@ public class StoreService {
 
 	@Transactional
 	public void updateStoreInfo(Store store, StoreUpdateRequestDto request) {
-		EmdAddress emdAddress = emdAddressRepository.findByAdmCode(request.getBcode()).get();
-		store.updateStoreInfo(request, emdAddress);
+		store.updateStoreInfo(request, emdAddressRepository);
 		storeRepository.save(store);
 	}
 
@@ -108,7 +107,7 @@ public class StoreService {
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
-					.storeAddress(store.getAddress())
+					.storeAddress(store.getEmdAddress().getFullName()+" "+store.getAddress())
 					.mainMenu(menuName)
 					.logo(store.getLogo())
 					.longitude(store.getLongitude())
@@ -142,7 +141,7 @@ public class StoreService {
 				.storeId(s.getUsrId())
 				.storeName(s.getStoreName())
 				.content(s.getContent())
-				.storeAddress(s.getAddress())
+				.storeAddress(s.getEmdAddress().getFullName()+" "+s.getAddress())
 				.mainMenu(menuName)
 				.logo(s.getLogo())
 				.isOpened(s.getIsOpened())
@@ -185,7 +184,7 @@ public class StoreService {
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
-					.storeAddress(store.getAddress())
+					.storeAddress(store.getEmdAddress().getFullName()+" "+store.getAddress())
 					.thumbnail(store.getProfileThumb())
 					.latitude(store.getLatitude())
 					.longitude(store.getLongitude())
@@ -225,7 +224,7 @@ public class StoreService {
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
-					.storeAddress(store.getAddress())
+					.storeAddress(store.getEmdAddress().getFullName()+" "+store.getAddress())
 					.mainMenu(menuName)
 					.logo(store.getLogo())
 					.latitude(store.getLatitude())
@@ -261,7 +260,7 @@ public class StoreService {
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
-					.storeAddress(store.getAddress())
+					.storeAddress(store.getEmdAddress().getFullName()+" "+store.getAddress())
 					.mainMenu(menuName)
 					.logo(store.getLogo())
 					.latitude(store.getLatitude())

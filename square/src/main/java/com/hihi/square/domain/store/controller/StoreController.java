@@ -79,7 +79,7 @@ public class StoreController {
 		UserInfoDto userInfo = userService.getMyInfo(uid);
 		StoreInfoDto storeInfo = StoreInfoDto.builder()
 			.emdAddress(store.getEmdAddress())
-			.address(store.getAddress())
+			.address(store.getEmdAddress().getFullName()+" "+store.getAddress())
 			.storeName(store.getStoreName())
 			.storePhone(store.getStorePhone())
 			.content(store.getContent())
@@ -118,7 +118,7 @@ public class StoreController {
 	// 가게 회원가입
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> storeSignup(@RequestBody @Valid StoreRegisterRequestDto request) {
-		Optional<EmdAddress> emdAddress = emdAddressService.findByAdmCode(request.getBCode());
+		Optional<EmdAddress> emdAddress = emdAddressService.findByBCode(request.getBCode());
 		if(emdAddress.isEmpty()){
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_ADM_CODE").build(), HttpStatus.BAD_REQUEST);
 		}
@@ -167,7 +167,7 @@ public class StoreController {
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
 				.emdAddress(store.getEmdAddress())
-				.address(store.getAddress())
+				.address(store.getEmdAddress().getFullName()+" "+store.getAddress())
 				.content(store.getContent())
 				.bank(store.getBank())
 				.account(store.getAccount())
@@ -175,6 +175,7 @@ public class StoreController {
 				.latitude(store.getLatitude())
 				.longitude(store.getLongitude())
 				.banner(store.getBanner())
+				.logo(store.getLogo())
 				.build();
 
 		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
@@ -188,9 +189,9 @@ public class StoreController {
 		return new ResponseEntity<>(stores, HttpStatus.OK);
 	}
 	// 사용자 선택 가게 카테고리 + 읍면동 주소 + depth
-	@GetMapping("/big-category/{id}/{admCode}/{depth}")
-	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id, @PathVariable Long admCode, @PathVariable Integer depth) {
-		Optional<EmdAddress> emdAddress = emdAddressService.findByAdmCode(admCode);
+	@GetMapping("/big-category/{id}/{bCode}/{depth}")
+	public ResponseEntity<?> getStoreByBigCategory(@PathVariable Integer id, @PathVariable Long bCode, @PathVariable Integer depth) {
+		Optional<EmdAddress> emdAddress = emdAddressService.findByBCode(bCode);
 		if (emdAddress.isEmpty()){
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_ADM_CODE").build(), HttpStatus.BAD_REQUEST);
 		}
@@ -238,15 +239,11 @@ public class StoreController {
 	public ResponseEntity<?> getStoreHeaderInfo(@PathVariable Integer id) {
 		Store store = storeService.findByUsrId(id).get();
 
-		// 이미지 파일 받아오기
-		List<Image> images = imageService.getImageResponseList("STORE", store.getUsrId());
-
 		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
 				.address(store.getEmdAddress().getFullName()+" "+store.getAddress())
 				.content(store.getContent())
-				.backgroundImgUrl(images)
 				.isOpened(store.getIsOpened())
 				.latitude(store.getLatitude())
 				.logo(store.getLogo())
@@ -287,9 +284,9 @@ public class StoreController {
 	}
 
 	// 가게 이름 + 해시태그 검색
-	@GetMapping("/search/{admCode}/{depth}")
-	public ResponseEntity searchByQuery(@PathVariable("admCode") Long admCode, @PathVariable("depth")Integer depth, @PathParam("query") String query) {
-		Optional<EmdAddress> optionalEmdAddress = emdAddressService.findByAdmCode(admCode);
+	@GetMapping("/search/{bCode}/{depth}")
+	public ResponseEntity searchByQuery(@PathVariable("bCode") Long bCode, @PathVariable("depth")Integer depth, @PathParam("query") String query) {
+		Optional<EmdAddress> optionalEmdAddress = emdAddressService.findByBCode(bCode);
 		if (optionalEmdAddress.isEmpty()){
 			return new ResponseEntity(CommonResponseDto.builder().message("INVALID_ADM_CODE").statusCode(400).build(), HttpStatus.BAD_REQUEST);
 		}

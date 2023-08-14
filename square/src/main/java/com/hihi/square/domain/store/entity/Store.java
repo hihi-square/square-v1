@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.repository.EmdAddressRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -56,8 +57,7 @@ public class Store extends User {
 	@Column(name = "is_opened")
 	private Boolean isOpened;
 
-	public void updateStoreInfo(StoreUpdateRequestDto request, EmdAddress emdAddress) {
-		this.emdAddress = emdAddress;
+	public void updateStoreInfo(StoreUpdateRequestDto request, EmdAddressRepository emdAddressRepository) {
 		this.address = request.getAddress();
 		this.storeName = request.getStoreName();
 		this.storePhone = request.getStorePhone();
@@ -67,6 +67,14 @@ public class Store extends User {
 		this.hashtags = request.getHashtags();
 		if (request.getBanner() != null){
 			this.banner = request.getBanner();
+		}
+		if(request.getLogo() != null) {
+			this.logo = request.getLogo();
+		}
+		if (request.getLatitude() != null) {
+			this.latitude = request.getLatitude();
+			this.longitude = request.getLongitude();
+			this.emdAddress = emdAddressRepository.findByBCode(request.getBCode()).get();
 		}
 	}
 

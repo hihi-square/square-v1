@@ -25,16 +25,16 @@ public class EmdAddressController {
 
 	private final EmdAddressService emdAddressService;
 
-	@GetMapping("/{admCode}/{depth}")
-	public ResponseEntity getDepthEmdAddress(@PathVariable("admCode") Long admCode, @PathVariable("depth") Integer depth){
-		Optional<EmdAddress> emdAddress = emdAddressService.findByAdmCode(admCode);
+	@GetMapping("/{bCode}/{depth}")
+	public ResponseEntity getDepthEmdAddress(@PathVariable("bCode") Long bCode, @PathVariable("depth") Integer depth){
+		Optional<EmdAddress> emdAddress = emdAddressService.findByBCode(bCode);
 		if (emdAddress.isEmpty()) {
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_ADM_CODE").build(), HttpStatus.BAD_REQUEST);
 		}
 		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdAddress.get().getAemId(), depth);
 		List<String> result = new ArrayList<>();
 		for(EmdAddress e : emdAddressList){
-			result.add(e.getAdmCode().toString());
+			result.add(e.getBCode().toString());
 		}
 		return new ResponseEntity(result, HttpStatus.OK);
 	}
