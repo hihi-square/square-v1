@@ -31,7 +31,7 @@ type StoreInfo = {
   bank: string;
   content: string;
   emdAddress: {
-    admCode: number;
+    bcode: number;
     aemId: number;
     fullName: string;
     siggAdress: {
@@ -172,6 +172,7 @@ export default function Main() {
         },
       })
         .then((res) => {
+          console.log(res);
           setStoreInfo({ ...res.data.storeInfo });
         })
         .catch(() => {
@@ -193,7 +194,7 @@ export default function Main() {
         data: {
           storeName: storeInfo?.storeName,
           storePhone: storeInfo?.storePhone,
-          bcode: storeInfo?.emdAddress.admCode,
+          bcode: storeInfo?.emdAddress.bcode,
           address: storeInfo?.address,
           content: storeInfo?.content,
           bank: storeInfo?.bank,
@@ -481,7 +482,9 @@ export default function Main() {
                         newControl[3] = false;
                         setControl(newControl);
                       }}
-                    ></Button>
+                    >
+                      닫기
+                    </Button>
                   </>
                 )}
               </ListItem>
