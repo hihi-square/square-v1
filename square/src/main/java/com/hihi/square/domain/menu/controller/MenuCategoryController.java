@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +20,8 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
+import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,13 +36,11 @@ public class MenuCategoryController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllMenuCategory(@RequestHeader Integer userId) {
+	public ResponseEntity<CommonResponseDto<?>> getAllMenuCategory(@RequestHeader Integer storeId) {
 		// String uid = authentication.getName();
 		// User user = userService.findByUid(uid).get();
-		//
-		// List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
-		List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(userId);
-		// List<MenuCategory> menuCategoryList = menuCategoryService.findAll();
+
+		List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(storeId);
 		List<MenuCategoryResponseDto> responseList = new ArrayList<>();
 
 		for (MenuCategory menuCategory : menuCategoryList) {
@@ -60,26 +61,56 @@ public class MenuCategoryController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CommonResponseDto<?>> saveMenuCategory(@RequestBody MenuCategoryRequestDto request) {
+	public ResponseEntity<CommonResponseDto<?>> saveMenuCategory(Authentication authentication,
+		@RequestBody MenuCategoryRequestDto request) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		//가게, 관리자만 접근 가능
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
+
+		request.setUser(user);
 		MenuCategory menuCategory = request.toEntity();
+
+		//미분류 카테고리 생성불가
+		if (menuCategory.getName().equals("미분류") && menuCategoryService.isExistsCategory(
+			menuCategory.getUser().getUsrId())) {
+			return ResponseEntity.ok(CommonResponseDto.error(400, "This Name Cannot Use"));
+		}
 		menuCategoryService.saveMenuCategory(menuCategory);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<CommonResponseDto<?>> updateMenuCategory(
-		@PathVariable Long id, @RequestBody MenuCategoryRequestDto request) {
+		Authentication authentication, @PathVariable Long id, @RequestBody MenuCategoryRequestDto request) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
+
 		request.setId(id);
+		request.setUser(user);
 		MenuCategory menuCategory = menuCategoryService.updateMenuCategory(request);
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuCategoryResponseDto(menuCategory)));
 	}
 
 	@PatchMapping("/list")
-	public ResponseEntity<CommonResponseDto<?>> updateMenuCategoryList(@RequestBody MenuCategoryRequestDto request) {
+	public ResponseEntity<CommonResponseDto<?>> updateMenuCategoryList(Authentication authentication,
+		@RequestBody MenuCategoryRequestDto request) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
+
 		List<MenuCategoryRequestDto> requestDtos = request.getData();
-		// log.info("requestDtos : {}", requestDtos);
-		// List<Menu> menuList = new ArrayList<>();
-		menuCategoryService.updateMenuList(requestDtos);
+		menuCategoryService.updateMenuList(user, requestDtos);
 		return ResponseEntity.ok(CommonResponseDto.success(null));
 	}
 
@@ -87,9 +118,11 @@ public class MenuCategoryController {
 	public ResponseEntity<CommonResponseDto<?>> deleteMenuCategory(
 		@PathVariable Long id) {
 		MenuCategory menuCategory = menuCategoryService.findById(id);
+
 		if (menuCategory == null) {
 			return ResponseEntity.badRequest().build();
 		}
+		// menuCategoryService.updateMenuCategoryToZero(menuCategory.getUser().getUsrId(), menuCategory.getId());
 		menuCategoryService.deleteMenuCategory(menuCategory);
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuCategoryResponseDto(menuCategory)));
 	}

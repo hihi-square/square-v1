@@ -13,16 +13,7 @@ public class S3Service {
 	private final S3Uploader s3Uploader;
 
 	private String getUrl(String type, Boolean isThumb){
-		String url = "";
-		String now = LocalDate.now().toString();
-		switch (type){
-			case "storeNotice":
-				url = "static/store/"+now+"/notice/images";
-				break;
-			case "userProfile":
-				url="static/user/"+now+"/profile";
-				break;
-		}
+		String url = "static/"+LocalDate.now().toString()+"/"+type;
 		if (isThumb) url += "/thumb";
 		return url;
 	}

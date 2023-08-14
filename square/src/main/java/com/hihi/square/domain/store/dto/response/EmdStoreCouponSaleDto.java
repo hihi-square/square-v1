@@ -17,7 +17,8 @@ public class EmdStoreCouponSaleDto {
 	private String thumbnail;
 	private Float latitude;
 	private Float longitude;
-	// private Float rating; -> 추후 추가
+	private Boolean isOpened;
+	private Float rating;
 	@Builder.Default
 	private List<StoreCategorySelectedDto> categories = new ArrayList<>();
 }

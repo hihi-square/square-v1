@@ -46,4 +46,8 @@ public class IssueCoupon {
 	@Column(name="is_used")
 	private Boolean isUsed;
 
+	public void updateIsUsed(Boolean isUsed) {
+		this.isUsed = isUsed;
+	}
+
 }

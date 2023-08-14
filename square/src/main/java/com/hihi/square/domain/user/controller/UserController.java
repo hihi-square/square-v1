@@ -1,10 +1,15 @@
 package com.hihi.square.domain.user.controller;
 
+import com.hihi.square.domain.dibs.respository.DibsRepository;
+import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.dto.request.*;
+import com.hihi.square.domain.user.dto.response.CustomerInfoResponseDto;
 import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
+import com.hihi.square.domain.user.dto.response.UserInfoDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.entity.UserRankType;
 import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.service.CustomerService;
 import com.hihi.square.domain.user.service.UserService;
@@ -15,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +36,34 @@ public class UserController {
 	private final UserService userService;
 	private final CustomerService customerService;
 	private final PasswordEncoder passwordEncoder;
+	private final DibsRepository dibsRepository;
+
+
+	// 내 정보 보기
+	@GetMapping
+	public ResponseEntity viewMyInfo(Authentication authentication) {
+		String uid = authentication.getName();
+		Optional<User> optionalUser = userService.findByUid(uid);
+		if (optionalUser.isEmpty()) {
+			return new ResponseEntity(CommonResponseDto.builder().message("NOT_EXISTS_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		if (optionalUser.get() instanceof Store) {
+			return new ResponseEntity(CommonResponseDto.builder().message("NOT_CUSTOMER_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		Customer customer = (Customer) optionalUser.get();
+		UserInfoDto userInfo = userService.getMyInfo(uid);
+		Integer dibs = dibsRepository.countByCustomer(customer);
+		CustomerInfoResponseDto response = CustomerInfoResponseDto.builder()
+			.statusCode(200)
+			.info(userInfo)
+			.rank(customerService.getRankName(customer.getRank()))
+			.social(customer.getSocial())
+			.point(customer.getPoint())
+			.dibsCount(dibs)
+			.build();
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
+
 
 	//회원가입
 	@PostMapping
@@ -93,7 +127,7 @@ public class UserController {
 		}
 		// 접근 권한이 없음 || // 로그인 방법 상이
 		if(!request.getAuthenticate().toString().equals(user.getDecriminatorValue()) || ((user instanceof Customer) && !((Customer)user).getSocial().equals(
-			UserSocialLoginType.US01))) {
+			UserSocialLoginType.DEFAULT))) {
 			fResponse.setMessage("NOT_AUTHENTICATED");
 			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
 		}
@@ -140,11 +174,13 @@ public class UserController {
 
 	// 구매자 정보 수정
 	@PatchMapping
+	@Transactional
 	public ResponseEntity updateCustomer(Authentication authentication, @Valid @RequestBody CustomerUpdateRequestDto request){
 		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
 		// 닉네임은 유니크 !
-		if (userService.validateDuplicateNickname(request.getNickname())){
-			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(409).message("ALREADY_EXISTS_NICKNAME"), HttpStatus.CONFLICT);
+		if (!user.getNickname().equals(request.getNickname()) && userService.validateDuplicateNickname(request.getNickname())){
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(409).message("ALREADY_EXISTS_NICKNAME").build(), HttpStatus.CONFLICT);
 		}
 		userService.updateUserInfo(uid, request);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
@@ -168,5 +204,4 @@ public class UserController {
 			HttpStatus.OK);
 
 	}
-	
 }

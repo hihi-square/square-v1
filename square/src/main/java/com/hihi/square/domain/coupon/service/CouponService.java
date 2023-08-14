@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hihi.square.domain.coupon.dto.request.StoreCouponRegistDto;
+import com.hihi.square.domain.coupon.dto.response.IssueRequestCouponDto;
+import com.hihi.square.domain.coupon.entity.CouponStatus;
+import com.hihi.square.domain.coupon.entity.DiscountType;
 import com.hihi.square.domain.store.dto.response.EmdStoreCouponSaleDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.repository.CouponRepository;
@@ -34,9 +37,10 @@ public class CouponService {
 	private final StoreService storeService;
 
 	@Transactional
-	public void createCoupon(Store store, StoreCouponRegistDto request) {
+	public void createCoupon(Store toStore, Store fromStore,  StoreCouponRegistDto request) {
 		Coupon coupon = Coupon.builder()
-			.store(store)
+			.toStore(toStore)
+			.fromStore(fromStore)
 			.name(request.getName())
 			.content(request.getContent())
 			.createdAt(LocalDateTime.now())
@@ -46,16 +50,18 @@ public class CouponService {
 			.rate(request.getRate())
 			.minOrderPrice(request.getMinOrderPrice())
 			.maxDiscountPrice(request.getMaxDiscountPrice())
+			.status(toStore.getUsrId() == fromStore.getUsrId() ? CouponStatus.ISSUE : CouponStatus.PENDING)
+			.issueCondition(request.getIssueCondition())
 			.build();
 		couponRepository.save(coupon);
 	}
 
-	public List<Coupon> findAllAvailableCouponByStore(Store store) {
-		return couponRepository.findByAllAvailableStoreCoupon(store, LocalDateTime.now());
+	public List<Coupon> findAllAvailableCouponByFromStore(Store store) {
+		return couponRepository.findByAllAvailableFromStoreCoupon(store, LocalDateTime.now());
 	}
 
 	public List<Coupon> findAllByStore(Store store) {
-		return couponRepository.findAllByStore(store);
+		return couponRepository.findAllByToStoreOrFromStore(store, store);
 	}
 
 	public Optional<Coupon> findById(Integer couponId) {
@@ -63,13 +69,46 @@ public class CouponService {
 	}
 
 	public Integer countAvailableCoupon(Store store) {
-		return couponRepository.countByStoreAndStartAtIsBeforeAndExpiredAtIsAfter(store, LocalDateTime.now(), LocalDateTime.now());
+		return couponRepository.countByFromStoreAndStartAtIsBeforeAndExpiredAtIsAfter(store, LocalDateTime.now(), LocalDateTime.now());
 	}
 	private List<StoreCategorySelectedDto> categories = new ArrayList<>();
 
-	public List<EmdStoreCouponSaleDto> findByEmdAddressWithAvailableCoupon(EmdAddress emdAddress) {
-		List<Store> stores = storeRepository.findByEmdAddressAndHaveAvailableCoupon(emdAddress, LocalDateTime.now());
+	public List<EmdStoreCouponSaleDto> findByEmdAddressWithAvailableCoupon(List<EmdAddress> emdAddressList) {
+		List<Store> stores = storeRepository.findByEmdAddressAndHaveAvailableCoupon(emdAddressList, LocalDateTime.now());
 		List<EmdStoreCouponSaleDto> result = storeService.storeToEmdStoreCouponSaleDto(stores);
 		return result;
+	}
+
+
+
+	public List<IssueRequestCouponDto> findIssueRequestCouponByStore(Store store) {
+		List<Coupon> couponList = couponRepository.findIssueRequestCouponByStore(store, LocalDateTime.now());
+		List<IssueRequestCouponDto> result = new ArrayList<>();
+		for(Coupon coupon : couponList) {
+			result.add(
+				IssueRequestCouponDto.builder()
+					.id(coupon.getId())
+					.name(coupon.getName())
+					.content(coupon.getContent())
+					.toStoreId(coupon.getToStore().getUsrId())
+					.toStoreName(coupon.getToStore().getStoreName())
+					.createdAt(coupon.getCreatedAt())
+					.startAt(coupon.getStartAt())
+					.expiredAt(coupon.getExpiredAt())
+					.discountType(coupon.getDiscountType())
+					.rate(coupon.getRate())
+					.minOrderPrice(coupon.getMinOrderPrice())
+					.maxDiscountPrice(coupon.getMaxDiscountPrice())
+					.issueCondition(coupon.getIssueCondition())
+					.build()
+			);
+		}
+		return result;
+	}
+
+	@Transactional
+	public void acceptRequestCoupon(Coupon coupon, CouponStatus status) {
+		coupon.acceptRequestCoupon(status);
+		couponRepository.save(coupon);
 	}
 }

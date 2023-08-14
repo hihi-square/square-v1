@@ -2,6 +2,7 @@ package com.hihi.square.domain.user.service;
 
 import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
+import com.hihi.square.domain.user.dto.response.UserInfoDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.repository.CustomerRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -51,6 +53,11 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	@Transactional
+	public void saveSocialUser(User user) {
+		userRepository.save(user);
+	}
+
 	public Optional<User> findByUid(String uid) {
 		return userRepository.findByUid(uid);
 	}
@@ -67,7 +74,7 @@ public class UserService {
 				.usrId(user.getUsrId())
 				.userNickname(user.getNickname())
 				.build();
-		userRepository.updateRefreshToken(refreshToken, user.getUid());
+		userRepository.updateRefreshToken(refreshToken, LocalDateTime.now(), user.getUid());
 		return successLogin;
 
 	}
@@ -94,7 +101,7 @@ public class UserService {
 	@Transactional
 	public void updateUserInfo(String uid, CustomerUpdateRequestDto request) {
 		User user = userRepository.findByUid(uid).get();
-		user.updateUserInfo(request.getNickname(), request.getPhone());
+		user.updateUserInfo(request.getNickname(), request.getPhone(), request.getEmail());
 		userRepository.save(user);
 	}
 
@@ -111,6 +118,21 @@ public class UserService {
 		user.updateUserProfile(null, null);
 		userRepository.save(user);
 	}
+	public UserInfoDto getMyInfo(String uid) {
+		User user = userRepository.findByUid(uid).get();
+		return UserInfoDto.builder()
+			.uid(user.getUid())
+			.password(user.getPassword())
+			.phone(user.getPhone())
+			.nickname(user.getNickname())
+			.name(user.getName())
+			.email(user.getEmail())
+			.marketingAgree(user.isMarketingAgree())
+			.profile(user.getProfile())
+			.build();
+	}
 
-
+	public Optional<User> findByNickname(String nickname) {
+		return userRepository.findByNickname(nickname);
+	}
 }

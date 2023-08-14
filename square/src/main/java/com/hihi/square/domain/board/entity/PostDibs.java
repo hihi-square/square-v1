@@ -14,18 +14,26 @@ import javax.persistence.Table;
 import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.User;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "post_dibs")
-public class PostDibs extends BaseTime {
+public class PostDibs {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="pod_id")
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "usr_id")
 	private User user;
 
 	@ManyToOne

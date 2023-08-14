@@ -38,10 +38,10 @@ public class DibsController {
 
 	//찜하기
 	@PostMapping("/{storeId}")
-	public ResponseEntity<CommonResponseDto> dibStore(Authentication authentication, @PathVariable(name = "storeId") String storeId){
+	public ResponseEntity<CommonResponseDto> dibStore(Authentication authentication, @PathVariable(name = "storeId") Integer storeId){
 		String uid =authentication.getName();
 		Optional<User> optionalUser =userService.findByUid(uid);
-		Optional<User> optionalStore = userService.findByUid(storeId);
+		Optional<User> optionalStore = userService.findByUsrId(storeId);
 		if (!optionalUser.isPresent() || !(optionalUser.get() instanceof Customer)){
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_UID").build(),
 				HttpStatus.BAD_REQUEST);
@@ -64,10 +64,10 @@ public class DibsController {
 	
 	//찜취소
 	@DeleteMapping("/{storeId}")
-	public ResponseEntity<CommonResponseDto> dibCancel(Authentication authentication, @PathVariable(name = "storeId") String storeId){
+	public ResponseEntity<CommonResponseDto> dibCancel(Authentication authentication, @PathVariable(name = "storeId") Integer storeId){
 		String uid =authentication.getName();
 		Optional<User> optionalUser =userService.findByUid(uid);
-		Optional<User> optionalStore = userService.findByUid(storeId);
+		Optional<User> optionalStore = userService.findByUsrId(storeId);
 		if (!optionalUser.isPresent() || !(optionalUser.get() instanceof Customer)){
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_UID").build(),
 				HttpStatus.BAD_REQUEST);

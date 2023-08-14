@@ -68,6 +68,13 @@ public class User {
 	@Column(name="profile_thumb")
 	private String profileThumb;
 
+	public User(String uid, String name, String nickname, String email) {
+		this.uid = uid;
+		this.name = name;
+		this.nickname = nickname;
+		this.email = email;
+	}
+
 	@Transient
 	public String getDecriminatorValue() {
 		return this.getClass().getAnnotation(DiscriminatorValue.class).value();
@@ -85,13 +92,18 @@ public class User {
 		this.refreshToken = null;
 	}
 
-	public void updateUserInfo(String nickname, String phone) {
+	public void updateUserInfo(String nickname, String phone, String email) {
 		this.nickname = nickname;
 		this.phone = phone;
+		this.email = email;
 	}
 
 	public void updateUserProfile(String url, String thumbnail) {
 		this.profile = url;
 		this.profileThumb = thumbnail;
+	}
+
+	public void setPasswordNull() {
+		this.password = "";
 	}
 }

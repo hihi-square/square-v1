@@ -49,7 +49,7 @@ public class CustomerRegisterRequestDto {
 			.modifiedAt(LocalDateTime.now())
 			.lastLogin(LocalDateTime.now())
 			.status(UserStatusType.valueOf(UserStatusType.ST01.name()))
-			.social(UserSocialLoginType.valueOf(UserSocialLoginType.US01.name()))
+			.social(UserSocialLoginType.DEFAULT)
 			.point(0L)
 			.build();
 

@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.menu.dto.request.MenuOptionCategoryRequestDto;
@@ -19,6 +20,9 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuOptionCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuOptionCategory;
 import com.hihi.square.domain.menu.service.MenuOptionCategoryService;
+import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,18 +31,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MenuOptionCategoryController {
 	private final MenuOptionCategoryService menuOptionCategoryService;
+	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(@RequestHeader Integer userId,
-		@RequestHeader Long menId) {
+	public ResponseEntity<CommonResponseDto<?>> getAllOptionCategory(@RequestParam("menu") Long menuId) {
 		// String uid = authentication.getName();
 		// User user = userService.findByUid(uid).get();
-		//
-		// List<MenuCategory> menuCategoryList = menuCategoryService.findAllByUserId(user.getUsrId());
-		List<MenuOptionCategory> menuOptionList = menuOptionCategoryService.findAllById(userId, menId);
+
+		List<MenuOptionCategory> menuOptionCategoryList = menuOptionCategoryService.findAllByMenuId(menuId);
 		List<MenuOptionCategoryResponseDto> responseList = new ArrayList<>();
 
-		for (MenuOptionCategory menuOptionCategory : menuOptionList) {
+		for (MenuOptionCategory menuOptionCategory : menuOptionCategoryList) {
 			responseList.add(new MenuOptionCategoryResponseDto(menuOptionCategory));
 		}
 
@@ -57,10 +60,23 @@ public class MenuOptionCategoryController {
 
 	@PostMapping
 	public ResponseEntity<CommonResponseDto<?>> saveMenuOptionCategory(
-		@RequestBody MenuOptionCategoryRequestDto request) {
+		Authentication authentication, @RequestBody MenuOptionCategoryRequestDto request) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+
+		if (user instanceof Customer) {
+			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		}
+
 		MenuOptionCategory menuOptionCategory = request.toEntity();
+
+		//미분류 카테고리 생성불가
+		if (menuOptionCategory.getName().equals("미분류") && menuOptionCategoryService.isExistsCategory(
+			menuOptionCategory.getMenu().getMenuId())) {
+			return ResponseEntity.ok(CommonResponseDto.error(400, "This Name Cannot Use"));
+		}
 		menuOptionCategoryService.saveMenuOptionCategory(menuOptionCategory);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@PatchMapping("/{id}")
@@ -75,9 +91,8 @@ public class MenuOptionCategoryController {
 	public ResponseEntity<CommonResponseDto<?>> updateMenuOptionCategoryList(
 		@RequestBody MenuOptionCategoryRequestDto request) {
 		List<MenuOptionCategoryRequestDto> optionCategoryList = request.getData();
-		// List<Menu> menuList = new ArrayList<>();
 		menuOptionCategoryService.updateMenuOptionCategoryList(optionCategoryList);
-		return ResponseEntity.ok(CommonResponseDto.success(null));
+		return ResponseEntity.ok(CommonResponseDto.success("success"));
 	}
 
 	@DeleteMapping("/{id}")
@@ -87,6 +102,9 @@ public class MenuOptionCategoryController {
 		if (menuOptionCategory == null) {
 			return ResponseEntity.badRequest().build();
 		}
+
+		// menuOptionCategoryService.updateOptionCategoryToZero(menuOptionCategory.getMenu().getMenuId(),
+		// 	menuOptionCategory.getId());
 		menuOptionCategoryService.deleteMenuOptionCategory(menuOptionCategory);
 		return ResponseEntity.ok(CommonResponseDto.success(new MenuOptionCategoryResponseDto(menuOptionCategory)));
 	}

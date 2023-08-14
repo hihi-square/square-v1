@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.hihi.square.domain.menu.entity.MenuStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +26,15 @@ public class MenuCategoryService {
 	private final MenuCategoryRepository menuCategoryRepository;
 	private final MenuRepository menuRepository;
 
+	public boolean isExistsCategory(Integer userId) {
+		Optional<MenuCategory> menuCategory = menuCategoryRepository.findByName(userId,
+			"미분류");
+		if (menuCategory.isPresent()) {
+			return true;
+		} else
+			return false;
+	}
+
 	public void saveMenuCategory(MenuCategory menuCategory) {
 		menuCategoryRepository.save(menuCategory);
 	}
@@ -40,14 +48,19 @@ public class MenuCategoryService {
 		return menuCategoryRepository.save(saveMenuCategory);
 	}
 
-	public void updateMenuList(List<MenuCategoryRequestDto> requestList) {
+	public void updateMenuList(User user, List<MenuCategoryRequestDto> requestList) {
 		for (MenuCategoryRequestDto request : requestList) {
+			request.setUser(user);
 			Long categoryId = request.getId();
 			Integer sequence = request.getSequence();
-			// log.info("categoryId : {}", categoryId);
-			// log.info("sequence : {}", sequence);
 			menuCategoryRepository.updateMenuCategoryList(categoryId, sequence);
 		}
+	}
+
+	public void updateMenuCategoryToZero(Integer userId, Long mecId) {
+		//미분류 번호로 지정
+		MenuCategory menuCategory = menuCategoryRepository.findByName(userId, "미분류").get();
+		menuCategoryRepository.updateMenuCategoryToZero(mecId, menuCategory.getId());
 	}
 
 	public void deleteMenuCategory(MenuCategory menuCategory) {
@@ -65,16 +78,17 @@ public class MenuCategoryService {
 	}
 
 	public MenuCategory findById(Long menuCategoryId) {
-		MenuCategory menuCategory = menuCategoryRepository.findById(menuCategoryId).get();
-		return menuCategory;
+		Optional<MenuCategory> menuCategory = menuCategoryRepository.findById(menuCategoryId);
+		if (menuCategory.isEmpty())
+			return null;
+		// MenuCategory menuCategory = menuCategoryRepository.findById(menuCategoryId).get();
+		return menuCategory.get();
 	}
 
 	@Transactional(readOnly = true)
 	public List<MenuCategoryDto> getAllMenuByCategory(User user) {
 
-		System.out.println("user : " + user);
 		List<MenuCategoryDto> response = new ArrayList<>();
-		System.out.println("user : " + user + " " + response);
 		List<MenuCategory> menuCategories = menuCategoryRepository.findByUserOrderBySequence(user);
 		for (MenuCategory menuCategory : menuCategories) {
 			List<MenuItemResponseDto> menus = new ArrayList<>();

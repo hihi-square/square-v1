@@ -30,7 +30,7 @@ public class EmdAddress {
 	private String sidoName;
 
 	@Column(name="adm_code")
-	private Long admCode;
+	private Long bCode;
 	private String name;
 
 
@@ -41,5 +41,7 @@ public class EmdAddress {
 	@JoinColumn(name = "asi_id")
 	private SiggAddress siggAddress;
 
-
+	public String getFullName() {
+		return sidoName+" "+siggName+" "+name;
+	}
 }

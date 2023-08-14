@@ -22,17 +22,16 @@ import lombok.NoArgsConstructor;
 public class MenuOptionRequestDto {
 	private Long id;
 	@NotEmpty
-	private Long moId;    //menuOptionCategory id
+	private Long mocId;    //menuOptionCategory id
 	private MenuOptionCategory optionCategory;
 	private Long menuId;
 	private Menu menu;
-	private Integer userId;
 	private User user;
 	@NotEmpty
 	private String name;
 	private String content;
 	private int price;
-	private MenuStatus status;
+	private String status;
 	private Integer sequence;
 
 	private List<MenuOptionRequestDto> data;
@@ -40,13 +39,13 @@ public class MenuOptionRequestDto {
 	public MenuOption toEntity() {
 		MenuOption menuOption = MenuOption.builder()
 			.id(id)
-			.optionCategory(optionCategory.builder().id(moId).build())
+			.optionCategory(optionCategory.builder().id(mocId).build())
 			.menu(menu.builder().menuId(menuId).build())
-			.user(user.builder().usrId(userId).build())
+			.user(user)
 			.name(name)
 			.content(content)
 			.price(price)
-			.status(status)
+			.status(MenuStatus.from(status))
 			.sequence(sequence)
 			.build();
 		return menuOption;

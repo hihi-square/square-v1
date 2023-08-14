@@ -16,6 +16,15 @@ import lombok.RequiredArgsConstructor;
 public class MenuOptionCategoryService {
 	private final MenuOptionCategoryRepository optionCategoryRepository;
 
+	public boolean isExistsCategory(Long menId) {
+		Optional<MenuOptionCategory> optionCategory = optionCategoryRepository.findByName(menId,
+			"미분류");
+		if (optionCategory.isPresent()) {
+			return true;
+		} else
+			return false;
+	}
+
 	public void saveMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
 		optionCategoryRepository.save(menuOptionCategory);
 	}
@@ -39,12 +48,18 @@ public class MenuOptionCategoryService {
 		}
 	}
 
+	public void updateOptionCategoryToZero(Long menId, Long mocId) {
+		//미분류 번호로 지정
+		MenuOptionCategory menuOptionCategory = optionCategoryRepository.findByName(menId, "미분류").get();
+		optionCategoryRepository.updateOptionCategoryToZero(mocId, menuOptionCategory.getId());
+	}
+
 	public void deleteMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
 		optionCategoryRepository.delete(menuOptionCategory);
 	}
 
-	public List<MenuOptionCategory> findAllById(Integer userId, Long menId) {
-		List<MenuOptionCategory> menuCategoryList = optionCategoryRepository.findAllById(userId, menId);
+	public List<MenuOptionCategory> findAllByMenuId(Long menId) {
+		List<MenuOptionCategory> menuCategoryList = optionCategoryRepository.findAllByMenuId(menId);
 		return menuCategoryList;
 	}
 
@@ -52,6 +67,11 @@ public class MenuOptionCategoryService {
 	public MenuOptionCategory findById(Long mocId) {
 		MenuOptionCategory menuOptionCategory = optionCategoryRepository.findById(mocId).get();
 		return menuOptionCategory;
+	}
+
+	public List<MenuOptionCategory> findAllByUserId(Integer userId) {
+		List<MenuOptionCategory> menuOptionCategoryList = optionCategoryRepository.findAllByUserId(userId);
+		return menuOptionCategoryList;
 	}
 
 }

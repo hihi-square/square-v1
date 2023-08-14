@@ -11,10 +11,14 @@ import lombok.Data;
 public class StoreUpdateRequestDto {
 	private String storeName;
 	private String storePhone;
-	private Integer aemId;
+	private Long bCode;
 	private String address;
 	private String content;
-	@Enumerated(EnumType.STRING)
 	private BankType bank;
 	private String account;
+	private String hashtags;
+	private String banner;
+	private String logo;
+	private Float latitude;
+	private Float longitude;
 }

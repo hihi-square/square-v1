@@ -1,6 +1,7 @@
 package com.hihi.square.domain.menu.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,6 +24,14 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategory, Long
 	void updateMenuCategoryList(@Param("categoryId") Long categoryId,
 		@Param("sequence") Integer sequence);
 
-	List<MenuCategory> findByUserOrderBySequence(User user);
+	@Transactional
+	@Query(value = "select * from menu_category where usr_id = :userId and name = :name", nativeQuery = true)
+	Optional<MenuCategory> findByName(@Param("userId") Integer userId, @Param("name") String name);
 
+	@Transactional
+	@Modifying
+	@Query(value = "update menu set mec_id = :updateMecId where mec_id = :mecId", nativeQuery = true)
+	void updateMenuCategoryToZero(@Param("mecId") Long mecId, @Param("updateMecId") Long updateMecId);
+
+	List<MenuCategory> findByUserOrderBySequence(User user);
 }

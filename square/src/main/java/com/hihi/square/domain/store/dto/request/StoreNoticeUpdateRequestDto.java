@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hihi.square.domain.image.dto.request.ImageRequestDto;
+import com.hihi.square.global.s3.dto.FileThumbDto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +17,8 @@ public class StoreNoticeUpdateRequestDto {
 
 	private String content;
 
-	private Integer usrId;
-
 	private String state;
 
-	private List<ImageRequestDto> images = new ArrayList<>();
+	private List<FileThumbDto> images = new ArrayList<>();
 
 }

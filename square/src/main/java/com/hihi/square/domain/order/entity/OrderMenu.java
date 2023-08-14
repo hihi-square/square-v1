@@ -1,11 +1,8 @@
 package com.hihi.square.domain.order.entity;
 
-import com.hihi.square.domain.menu.entity.Menu;
-import com.hihi.square.domain.sale.entity.Sale;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -15,6 +12,7 @@ import javax.persistence.*;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="order_menu")
 public class OrderMenu {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +20,8 @@ public class OrderMenu {
     private Integer ormId;
 
     @ManyToOne
-    @JoinColumn(name = "odt_id")
-    private OrderDetail orderDetail;
+    @JoinColumn(name = "ord_id")
+    private Order order;
 
     @Column(name = "product_id")
     private Integer productId;

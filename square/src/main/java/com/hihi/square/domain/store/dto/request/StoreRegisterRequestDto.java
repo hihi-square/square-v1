@@ -35,7 +35,8 @@ public class StoreRegisterRequestDto{
 	protected boolean marketingAgree;
 
 	@NotNull
-	private Long admCode;
+	private Long bCode;
+
 	@NotEmpty
 	private String address;
 	@NotEmpty
@@ -46,6 +47,11 @@ public class StoreRegisterRequestDto{
 	private BankType bank;
 	@NotEmpty
 	private String account;
+
+	private Float latitude;
+	private Float longitude;
+	private String banner;
+	private String logo;
 
 
 	private BusinessInformationRegisterRequestDto businessInformation;
@@ -70,6 +76,10 @@ public class StoreRegisterRequestDto{
 			.content(content)
 			.bank(bank)
 			.account(account)
+			.latitude(latitude)
+			.longitude(longitude)
+			.banner(banner)
+			.logo(logo)
 			.build();
 	}
 	public BusinessInformation toEntityBusinessInformation(){

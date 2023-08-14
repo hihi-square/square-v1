@@ -13,6 +13,10 @@ import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.user.entity.User;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
+
+	@Override
+	Menu save(Menu menu);
+
 	@Transactional
 	@Modifying
 	@Query(value = "select * from menu where usr_id = :userId", nativeQuery = true)
@@ -29,6 +33,16 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 	@Modifying
 	@Query(value = "update menu set status=:status where men_id=:menId", nativeQuery = true)
 	void updateStatus(@Param("menId") Long menId, @Param("status") String status);
+
+	@Transactional
+	@Modifying
+	@Query(value = "delete from menu_option where men_id = :menId", nativeQuery = true)
+	void deleteOptionByMenuId(@Param("menId") Long menId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "delete from menu_option_category where men_id = :menId", nativeQuery = true)
+	void deleteOptionCategoryByMenuId(@Param("menId") Long menId);
 
 	List<Menu> findByUserAndPopularityIsTrue(User user);
 
