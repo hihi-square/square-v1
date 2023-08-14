@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <title>Square</title>
+  </head>
+  <body>
+    <div id="root" style="width: 100vw"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=30071062eee32dea2e332a7b73d24f26&libraries=services,clusterer,drawing"
+    ></script>
+    <script
+      src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
+      integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      Kakao.init("0eaeeb3d63726bc8cfb88ad1cdb509cd");
+      Kakao.isInitialized();
+    </script>
+  </body>
+</html>
