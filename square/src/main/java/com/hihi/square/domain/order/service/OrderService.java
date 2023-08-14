@@ -162,11 +162,11 @@ public class OrderService {
     }
 
     public List<Optional<Order>> findByCustomer(Customer customer) {
-        return orderRepository.findByCustomer(customer);
+        return orderRepository.findByCustomerOrderByCreatedAtDesc(customer);
     }
 
     public List<Optional<Order>> findByStore(Store store) {
-        return orderRepository.findByStore(store);
+        return orderRepository.findByStoreOrderByCreatedAtDesc(store);
     }
 
     public void updateOrderAccepted(Order order) {
