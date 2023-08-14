@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.sse.dto.NotificationResponseDto;
 import com.hihi.square.global.sse.entity.Notification;
@@ -55,9 +56,14 @@ public class NotificationService {
 
 	private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
 		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jsonData = objectMapper.writeValueAsString(data);
+
 			emitter.send(SseEmitter.event()
 				.id(eventId)
-				.data(data));
+				.name("message")
+				// .data(data));
+				.data(jsonData));
 		} catch (IOException exception) {
 			emitterRepository.deleteById(emitterId);
 		}
@@ -91,6 +97,21 @@ public class NotificationService {
 		);
 	}
 
+	// public void send2(User receiver, NotificationType notificationType, String content, String url) {
+	// 	Notification notification = notificationRepository.save(
+	// 		createNotification(receiver, notificationType, content, url));
+	//
+	// 	String receiverId = String.valueOf(receiver.getUsrId());
+	// 	String eventId = receiverId + "_" + System.currentTimeMillis();
+	// 	Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
+	// 	emitters.forEach(
+	// 		(key, emitter) -> {
+	// 			emitterRepository.saveEventCache(key, notification);
+	// 			sendNotification(emitter, eventId, key, "data: { \"message\" : \"number : " + 1 + "\" }\n\n");
+	// 		}
+	// 	);
+	// }
+
 	private Notification createNotification(User receiver, NotificationType notificationType, String content,
 		String url) {
 		return Notification.builder()
@@ -98,7 +119,6 @@ public class NotificationService {
 			.notificationType(notificationType)
 			.content(content)
 			.url(url)
-			// .order(Order.builder().ordId(orderResponseDto.getOrdId()).build())
 			.isRead(false)
 			.build();
 	}

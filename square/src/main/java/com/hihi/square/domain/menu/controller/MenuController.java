@@ -126,7 +126,7 @@ public class MenuController {
 			return ResponseEntity.badRequest().build();
 		}
 		//옵션도 같이 삭제
-		
+
 		menuService.deleteMenu(menu);
 		log.debug("menu : {}", menu);
 		return ResponseEntity.ok(CommonResponseDto.success("success"));
