@@ -242,6 +242,7 @@ public class StoreController {
 		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
+				.emdAddress(store.getEmdAddress())
 				.address(store.getAddress())
 				.content(store.getContent())
 				.isOpened(store.getIsOpened())
