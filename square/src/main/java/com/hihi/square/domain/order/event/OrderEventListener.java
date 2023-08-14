@@ -45,7 +45,7 @@ public class OrderEventListener implements ApplicationListener<OrderEvent> {
 		//고객이 픽업을 완료했을 때
 		else if (status == OrderStatus.PICKUP_COMPLETE) {
 			Customer customer = order.getCustomer();
-			notificationService.send(customer, NotificationType.COMPLETED, "order", event.getContent(),
+			notificationService.send(customer, NotificationType.COMPLETED, "pickup", event.getContent(),
 				"/order/" + order.getOrdId());
 		}
 	}
