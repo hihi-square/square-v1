@@ -50,6 +50,7 @@ public class StoreRegisterRequestDto{
 
 	private Float latitude;
 	private Float longitude;
+	private String banner;
 
 
 	private BusinessInformationRegisterRequestDto businessInformation;
@@ -76,6 +77,7 @@ public class StoreRegisterRequestDto{
 			.account(account)
 			.latitude(latitude)
 			.longitude(longitude)
+			.banner(banner)
 			.build();
 	}
 	public BusinessInformation toEntityBusinessInformation(){

@@ -21,6 +21,7 @@ import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.UserRankType;
+import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public class OrderService {
     private final MenuRepository menuRepository;
     private final SaleRepository saleRepository;
     private final PointService pointService;
-    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
     private final CouponService couponService;
     private final IssueCouponService issueCouponService;
 
@@ -145,6 +146,7 @@ public class OrderService {
                 .totalPrice(order.getTotalPrice())
                 .usedPoint(order.getUsedPoint())
                 .finalPrice(order.getFinalPrice())
+                .status(order.getStatus())
                 .build();
 
         return orderResponse;
@@ -190,7 +192,7 @@ public class OrderService {
                 .orderStatus(order.getStatus())
                 .build();
 
-        customerService.save(customer);
+        customerRepository.save(customer);
         orderRepository.save(order);
 
         return response;
@@ -228,8 +230,7 @@ public class OrderService {
         // 상태 변경
         order.updateOrderStatus(OrderStatus.PICKUP_COMPLETE);
         orderRepository.save(order);
-
-        customerService.save(customer);
+        customerRepository.save(customer);
     }
 
     public void redeemAllAvailableCouponFromStore(Order order) {

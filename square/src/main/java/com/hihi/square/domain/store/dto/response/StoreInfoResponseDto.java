@@ -29,5 +29,6 @@ public class StoreInfoResponseDto {
 	private Boolean isOpened;
 	private Float latitude;
 	private Float longitude;
+	private String banner;
 
 }

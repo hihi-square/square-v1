@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
+import com.hihi.square.domain.coupon.entity.Coupon;
+import com.hihi.square.domain.coupon.entity.IssueCoupon;
+import com.hihi.square.domain.coupon.service.IssueCouponService;
+import com.hihi.square.domain.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
-import com.hihi.square.domain.coupon.entity.Coupon;
-import com.hihi.square.domain.coupon.entity.IssueCoupon;
-import com.hihi.square.domain.coupon.service.IssueCouponService;
 import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderIdResponseDto;
@@ -36,7 +37,6 @@ import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.repository.CustomerRepository;
-import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 import com.hihi.square.global.sse.NotificationService;
 
@@ -98,8 +98,16 @@ public class OrderController {
 	// 주문 등록
 	@Transactional
 	@PostMapping
-	public ResponseEntity<OrderIdResponseDto> registerOrder(@RequestBody OrderRequestDto request) {
+	public ResponseEntity<?> registerOrder(Authentication authentication, @RequestBody OrderRequestDto request) {
+
 		Customer customer = customerRepository.findById(request.getCusId()).get();
+
+		String uid = authentication.getName();
+		if(!(userService.findByUid(uid).get() instanceof Customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+
+
 		// 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
 		if (request.getUsedPoint() > customer.getPoint()) {
 			return new ResponseEntity<>(OrderIdResponseDto.builder().status(400).message("POINT_NOT_ENOUTH").build(),
@@ -126,13 +134,25 @@ public class OrderController {
 	// 주문 status 수정 및 포인트 차감 및 적립
 	@Transactional
 	@PatchMapping("/customer-pay")
-	public ResponseEntity<?> updatePaymentStatus(@RequestBody PaymentRequestDto request) {
+	public ResponseEntity<?> updatePaymentStatus(Authentication authentication, @RequestBody PaymentRequestDto request) {
 		CommonResponseDto response = CommonResponseDto.builder()
 			.statusCode(200)
 			.message("UPDATE_SUCCESS")
 			.build();
 		Order order = orderService.findById(request.getOrdId()).get();
 		Customer customer = order.getCustomer();
+
+		// 주문자가 고객이 아닐때
+		String uid = authentication.getName();
+		if(!(userService.findByUid(uid).get() instanceof Customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+
+		// 주문자가 고객이지만 로그인한 유저와 같지 않을 때
+		Customer LoginCustomer = (Customer)userService.findByUid(uid).get();
+		if(!LoginCustomer.equals(customer)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_SAME_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
 
 		// regietered 상태가 아닌데 결제를 시도할 때
 		if (order.getStatus() != OrderStatus.REGISTERED) {
@@ -185,8 +205,18 @@ public class OrderController {
 	// 가게 주문 수락시 프로세스 -> return도 가게로 들어가는거임
 	@Transactional
 	@PatchMapping("/store-acceptance/{ordId}")
-	public ResponseEntity<?> updateOrderSuccess(@PathVariable Integer ordId) {
+	public ResponseEntity<?> updateOrderSuccess(Authentication authentication, @PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
+
+		// 가게 주인이 아닐때
+		String uid = authentication.getName();
+		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
@@ -216,8 +246,18 @@ public class OrderController {
 	// 가게 주문 거절시 프로세스
 	@Transactional
 	@PatchMapping("/store-denied/{ordId}")
-	public ResponseEntity<?> updateOrderDenied(@PathVariable Integer ordId) {
+	public ResponseEntity<?> updateOrderDenied(Authentication authentication, @PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
+
+		// 가게 주인이 아닐때
+		String uid = authentication.getName();
+		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
@@ -249,8 +289,18 @@ public class OrderController {
 	// 픽업 완료시 상태변경
 	@Transactional
 	@PatchMapping("/store-pickup/{ordId}")
-	public ResponseEntity<?> updateOrderPickup(@PathVariable Integer ordId) {
+	public ResponseEntity<?> updateOrderPickup(Authentication authentication, @PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
+
+		// 가게 주인이 아닐때
+		String uid = authentication.getName();
+		if(storeRepository.findByUid(uid).get() != order.getStore()) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.ORDER_ACCEPT) {
@@ -286,7 +336,18 @@ public class OrderController {
 	// 주문 내역 전체 조회 사용자별로
 	@Transactional(readOnly = true)
 	@GetMapping("/customer/{cusId}")
-	public ResponseEntity<?> findOrderByUserId(@PathVariable Integer cusId) {
+	public ResponseEntity<?> findOrderByUserId(Authentication authentication, @PathVariable Integer cusId) {
+
+		// 로그인한 유저와 주문한 사용자가 다를때
+		String uid = authentication.getName();
+		if(userService.findByUid(uid).get().getUsrId() != cusId) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		List<OrderResponseDto> response = new ArrayList<>();
 		Customer customer = customerRepository.findById(cusId).get();
 		List<Optional<Order>> orders = orderService.findByCustomer(customer);
@@ -302,7 +363,18 @@ public class OrderController {
 	// 주문 내역 전체 조회 가게별로
 	@Transactional(readOnly = true)
 	@GetMapping("/store/{stoId}")
-	public ResponseEntity<?> findOrderByStoreId(@PathVariable Integer stoId) {
+	public ResponseEntity<?> findOrderByStoreId(Authentication authentication, @PathVariable Integer stoId) {
+
+		// 로그인한 유저와 가게가 다를때
+		String uid = authentication.getName();
+		if(userService.findByUid(uid).get().getUsrId() != stoId) {
+			CommonResponseDto response = CommonResponseDto.builder()
+					.statusCode(400)
+					.message("NO_AUTHORIZATION")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+
 		List<OrderResponseDto> response = new ArrayList<>();
 		Store store = storeRepository.findById(stoId).get();
 		List<Optional<Order>> orders = orderService.findByStore(store);

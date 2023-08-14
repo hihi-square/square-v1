@@ -1,5 +1,6 @@
 package com.hihi.square.domain.order.dto.response;
 
+import com.hihi.square.domain.order.entity.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class OrderResponseDto {
     private Long totalPrice;
     private Long usedPoint;
     private Long finalPrice;
+    private OrderStatus status;
 
     // 결제 내역 결제 테이블에서 가져오기
 
