@@ -18,8 +18,6 @@ public class NotificationResponseDto {
 	@Builder
 	public NotificationResponseDto(Notification notification) {
 		this.id = notification.getId();
-		// this.content = notification.getContent().getContent();
-		// this.url = notification.getUrl().getUrl();
 		this.content = notification.getContent();
 		this.url = notification.getUrl();
 		this.isRead = notification.getIsRead();
