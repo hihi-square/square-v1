@@ -27,7 +27,7 @@ public class StoreInfoDto {
 	private Float latitude;
 	private Float longitude;
 	private String hashtags;
-	@Column(name="is_opened")
 	private Boolean isOpened;
+	private String banner;
 
 }

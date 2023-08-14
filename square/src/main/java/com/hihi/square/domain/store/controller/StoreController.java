@@ -91,6 +91,7 @@ public class StoreController {
 			.longitude(store.getLongitude())
 			.hashtags(store.getHashtags())
 			.isOpened(store.getIsOpened())
+			.banner(store.getBanner())
 			.build();
 		StoreInfoResDto response = StoreInfoResDto.builder()
 			.userInfo(userInfo)
@@ -173,6 +174,7 @@ public class StoreController {
 				.isOpened(store.getIsOpened())
 				.latitude(store.getLatitude())
 				.longitude(store.getLongitude())
+				.banner(store.getBanner())
 				.build();
 
 		return new ResponseEntity<>(StoreUpdateResponseDto.builder().store(res).statusCode(200).message("UPDATE_INFO").build(), HttpStatus.OK);
@@ -249,6 +251,7 @@ public class StoreController {
 				.latitude(store.getLatitude())
 				.logo(store.getLogo())
 				.longitude(store.getLongitude())
+				.banner(store.getBanner())
 				.build();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}

@@ -51,6 +51,7 @@ jwt:
 
 server:
   port: 8811
+  max-http-header-size: 2MB
 
 # AWS
 cloud:

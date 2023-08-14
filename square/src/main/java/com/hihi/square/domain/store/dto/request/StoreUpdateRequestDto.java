@@ -18,4 +18,5 @@ public class StoreUpdateRequestDto {
 	private BankType bank;
 	private String account;
 	private String hashtags;
+	private String banner;
 }

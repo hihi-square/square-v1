@@ -43,6 +43,7 @@ public class Store extends User {
 	private String logo;
 	@Column(name = "open_time")
 	private String openTime;
+	private String banner;
 
 	// @OneToMany(mappedBy = "store")
 	// // @JoinColumn
@@ -64,6 +65,9 @@ public class Store extends User {
 		this.bank = request.getBank();
 		this.account = request.getAccount();
 		this.hashtags = request.getHashtags();
+		if (request.getBanner() != null){
+			this.banner = request.getBanner();
+		}
 	}
 
 	public void updateOpen(boolean isOpened) {
