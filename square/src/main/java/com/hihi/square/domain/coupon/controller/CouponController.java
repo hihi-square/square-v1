@@ -78,9 +78,9 @@ public class CouponController {
 	}
 
 	// 읍면동 지역 + depth 에 대해서 현재 발급 가능한 쿠폰이 있는 가게 리스트
-	@GetMapping("/emd/{admCode}/{depth}")
-	public ResponseEntity<?> getStoreListAvailableCoupon(@PathVariable("admCode") Long admCode, @PathVariable("depth")Integer depth) {
-		Optional<EmdAddress> emdAddressOptional = emdAddressService.findByAdmCode(admCode);
+	@GetMapping("/emd/{bCode}/{depth}")
+	public ResponseEntity<?> getStoreListAvailableCoupon(@PathVariable("bCode") Long bCode, @PathVariable("depth")Integer depth) {
+		Optional<EmdAddress> emdAddressOptional = emdAddressService.findByBCode(bCode);
 		if (emdAddressOptional.isEmpty()){
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_EMD").build(), HttpStatus.BAD_REQUEST);
 		}

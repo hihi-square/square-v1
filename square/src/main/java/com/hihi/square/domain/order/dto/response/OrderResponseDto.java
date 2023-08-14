@@ -4,6 +4,7 @@ import com.hihi.square.domain.order.entity.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,6 +21,7 @@ public class OrderResponseDto {
     private Long usedPoint;
     private Long finalPrice;
     private OrderStatus status;
+    private LocalDateTime createdAt;
 
     // 결제 내역 결제 테이블에서 가져오기
 

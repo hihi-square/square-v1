@@ -16,6 +16,7 @@ public interface EmdAddressRepository extends JpaRepository<EmdAddress, Integer>
 	@Query("select e from EmdAddress e where e.sidoName like :sidoName and e.siggName like :siggName and e.name like :emdName")
 	Optional<EmdAddress> findByLikeNames(String sidoName, String siggName, String emdName);
 
-	Optional<EmdAddress> findByAdmCode(Long admCode);
+	@Query("select e from EmdAddress e where e.bCode = :bCode")
+	Optional<EmdAddress> findByBCode(Long bCode);
 
 }

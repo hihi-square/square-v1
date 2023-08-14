@@ -51,6 +51,7 @@ public class StoreRegisterRequestDto{
 	private Float latitude;
 	private Float longitude;
 	private String banner;
+	private String logo;
 
 
 	private BusinessInformationRegisterRequestDto businessInformation;
@@ -78,6 +79,7 @@ public class StoreRegisterRequestDto{
 			.latitude(latitude)
 			.longitude(longitude)
 			.banner(banner)
+			.logo(logo)
 			.build();
 	}
 	public BusinessInformation toEntityBusinessInformation(){
