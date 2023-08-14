@@ -14,9 +14,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     Optional<Order> findById(Integer id);
     // 주문 조회 가게 별로
 
-    List<Optional<Order>> findByCustomer(Customer customer);
+    List<Optional<Order>> findByCustomerOrderByCreatedAtDesc(Customer customer);
 
-    List<Optional<Order>> findByStore(Store store);
+    List<Optional<Order>> findByStoreOrderByCreatedAtDesc(Store store);
 
     Integer countOrderByCustomerAndCreatedAtBetween(Customer customer, LocalDateTime start, LocalDateTime end);
 }
