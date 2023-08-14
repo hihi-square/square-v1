@@ -122,7 +122,7 @@ public class CategoryController {
     }
 
     // 가게에 등록된 카테고리 삭제
-    @DeleteMapping("/store/{id}")
+    @DeleteMapping("/store/{scsId}")
     public ResponseEntity<CommonResponseDto> deleteStoreCategory(@PathVariable Integer id) {
         CommonResponseDto response = CommonResponseDto.builder()
                 .statusCode(200)

@@ -30,11 +30,6 @@ public class StoreCategoryBig {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @JsonIgnore // 이거 없애면 모든 findAll에 데이터가 날라옴
-    @Builder.Default
-    @OneToMany(mappedBy = "storeCategoryBig", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<StoreCategorySelected> storeCategorySelectedList = new ArrayList<>();
-
     public void updateScbCategory(ScbUpdateRequestDto request) {
         this.name = request.getName();
         this.createdAt = LocalDateTime.now();
