@@ -252,24 +252,13 @@ export default function ProductList({
     let catesequence = 1;
     let itemsequence = 1;
     let cateCode = 1;
+    let defaultCategory = 1;
 
     const newProducts = [];
     const newCategorys: Category[] = [];
     const deleteCategorys: Category[] = [];
 
-    // STOP 상태인 것을 먼저 넣습니다.
-    for (const readyItem of ready) {
-      newProducts.push({
-        id: readyItem.id,
-        categoryId: readyItem.categoryId,
-        status: "STOP",
-        sequence: itemsequence,
-      });
-      itemsequence++;
-    }
-
     // ON 상태인 것들을 넣습니다.
-    itemsequence = 1;
     for (let i = 0; i < menu.length; i++) {
       if (menu[i].status !== "CATE") {
         newProducts.push({
@@ -282,6 +271,7 @@ export default function ProductList({
       } else {
         cateCode = menu[i].id;
         if (i !== menu.length - 1 && menu[i + 1].status !== "CATE") {
+          defaultCategory = cateCode;
           newCategorys.push({
             id: cateCode,
             userId: user,
@@ -297,6 +287,19 @@ export default function ProductList({
         itemsequence = 1;
         catesequence++;
       }
+    }
+
+    itemsequence = 1;
+
+    // STOP 상태인 것을 먼저 넣습니다.
+    for (const readyItem of ready) {
+      newProducts.push({
+        id: readyItem.id,
+        categoryId: defaultCategory,
+        status: "STOP",
+        sequence: itemsequence,
+      });
+      itemsequence++;
     }
 
     axios({
