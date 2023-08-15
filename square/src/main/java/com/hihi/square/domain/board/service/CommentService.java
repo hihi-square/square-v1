@@ -108,7 +108,12 @@ public class CommentService {
 				commentRepository.save(comment);
 			}
 		} else {
+			Comment parent = comment.getReComment();
 			commentRepository.delete(comment);
+			if (parent.getState().equals(Status.S02) && commentRepository.findReCommentByComment(parent).size() == 0){
+				commentRepository.delete(parent);
+			}
+
 		}
 
 	}
