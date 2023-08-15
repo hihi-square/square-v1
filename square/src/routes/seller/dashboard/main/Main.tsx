@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { REST_API } from "redux/redux";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 import {
   Unstable_Grid2 as Grid,
   Box,
@@ -90,12 +91,7 @@ export default function Main() {
   const [isBanner, setBanner] = useState<boolean>(false);
   const [isLogo, setLogo] = useState<boolean>(false);
   const [changed, setChanged] = useState<boolean>(false);
-  const [control, setControl] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [control, setControl] = useState<boolean[]>([false, false, false]);
 
   const handleForm = (index: number) => {
     const newControl = [...control];
@@ -120,7 +116,6 @@ export default function Main() {
       setStoreInfo({ ...storeInfo, storeName: name });
       setChanged(true);
     }
-    console.log(changed);
   };
 
   const handlePhone = (storePhone: string) => {
@@ -128,15 +123,6 @@ export default function Main() {
       setStoreInfo({ ...storeInfo, storePhone });
       setChanged(true);
     }
-    console.log(changed);
-  };
-
-  const handleAddress = (address: string) => {
-    if (storeInfo) {
-      setStoreInfo({ ...storeInfo, address });
-      setChanged(true);
-    }
-    console.log(changed);
   };
 
   const handleContent = (content: string) => {
@@ -144,7 +130,6 @@ export default function Main() {
       setStoreInfo({ ...storeInfo, content });
       setChanged(true);
     }
-    console.log(changed);
   };
 
   const handleTag: React.ChangeEventHandler<
@@ -462,38 +447,36 @@ export default function Main() {
                   </IconButton>
                 }
               >
-                {storeInfo && !control[3] && storeInfo.address}
-                {storeInfo && control[3] && (
-                  <>
-                    <TextField
-                      id="address"
-                      name="address"
-                      value={storeInfo.address}
-                      fullWidth
-                      variant="outlined"
-                      onChange={(e) => {
-                        handleAddress(e.target.value);
-                      }}
-                    />
-                    <Button
-                      onClick={() => {
-                        const newControl = [...control];
-
-                        newControl[3] = false;
-                        setControl(newControl);
-                      }}
-                    >
-                      닫기
-                    </Button>
-                  </>
-                )}
+                {storeInfo && storeInfo.address}
               </ListItem>
               <Divider></Divider>
             </List>
             <Box
-              sx={{ width: "90%", height: "200px", backgroundColor: "grey" }}
+              sx={{ width: "90%", height: "300px", backgroundColor: "grey" }}
             >
-              지도가 들어갈 공간
+              <Map // 지도를 표시할 Container
+                center={{
+                  // 지도의 중심좌표
+                  lat: storeInfo?.latitude ? storeInfo?.latitude : 33.450701,
+                  lng: storeInfo?.longitude ? storeInfo?.longitude : 126.570667,
+                }}
+                style={{
+                  // 지도의 크기
+                  width: "100%",
+                  height: "100%",
+                }}
+                level={1} // 지도의 확대 레벨
+              >
+                <MapMarker // 마커를 생성합니다
+                  position={{
+                    // 마커가 표시될 위치입니다
+                    lat: storeInfo?.latitude ? storeInfo?.latitude : 33.450701,
+                    lng: storeInfo?.longitude
+                      ? storeInfo?.longitude
+                      : 126.570667,
+                  }}
+                />
+              </Map>
             </Box>
           </Grid>
         </Paper>

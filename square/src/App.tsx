@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Routes, Route } from "react-router-dom";
 import { Unstable_Grid2 as Grid } from "@mui/material";
-import { green, grey } from "@mui/material/colors";
+import { green } from "@mui/material/colors";
 import "./App.css";
 import Seller from "./routes/seller/Seller";
 import Customer from "./routes/customer/Customer";
@@ -26,14 +26,16 @@ const theme = createTheme({
       main: green[900],
     },
     secondary: {
-      main: grey[500],
+      main: "#c89e6f",
+      dark: "#f0e7d6",
+      light: "#603f2e",
     },
   },
 });
 
 function App() {
   return (
-    <Grid container className="App" sx={{ width: "100%", height: "100vh" }}>
+    <Grid container className="App" sx={{ width: "100%", height: "auto" }}>
       <ThemeProvider theme={theme}>
         <Grid
           container

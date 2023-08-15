@@ -27,7 +27,7 @@ function ImagePreview({
   // 이미지 파일을 올리면 파일을 바꿉니다.
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
-    const MAX_SIZE = 5 * 1024 * 1024; // 최대 5MB
+    const MAX_SIZE = 10 * 1024 * 1024; // 최대 5MB
 
     if (file && file.size > MAX_SIZE) {
       return;
@@ -55,22 +55,63 @@ function ImagePreview({
     if (cropper) {
       const croppedCanvas = cropper.getCroppedCanvas();
 
-      handleCurrProduct("image", croppedCanvas.toDataURL());
+      // 300x300의 크기의 캔버스 생성
+      const finalCanvas = document.createElement("canvas");
+
+      finalCanvas.width = 300;
+      finalCanvas.height = 300;
+      const ctxFinal = finalCanvas.getContext("2d");
+
+      // 배경을 흰색으로 설정
+      if (ctxFinal) {
+        ctxFinal.fillStyle = "#FFFFFF";
+        ctxFinal.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+        // 크롭된 이미지를 중앙에 위치시킴
+        // 크롭된 이미지의 비율에 따라 크기 조절
+        let newWidth;
+        let newHeight;
+        const aspectRatio = croppedCanvas.width / croppedCanvas.height;
+
+        if (croppedCanvas.width > croppedCanvas.height) {
+          newWidth = 300;
+          newHeight = 300 / aspectRatio;
+        } else {
+          newHeight = 300;
+          newWidth = 300 * aspectRatio;
+        }
+
+        // 크롭된 이미지를 중앙에 배치
+        const offsetX = (300 - newWidth) / 2;
+        const offsetY = (300 - newHeight) / 2;
+
+        ctxFinal.drawImage(
+          croppedCanvas,
+          0,
+          0,
+          croppedCanvas.width,
+          croppedCanvas.height,
+          offsetX,
+          offsetY,
+          newWidth,
+          newHeight
+        );
+
+        handleCurrProduct("image", finalCanvas.toDataURL());
+      }
 
       // thumbnail 생성
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      const thumbnailCanvas = document.createElement("canvas");
 
-      const thumbnailWidth = 150;
-      const aspectRatio = croppedCanvas.width / croppedCanvas.height;
-      const thumbnailHeight = thumbnailWidth / aspectRatio;
+      thumbnailCanvas.width = 150;
+      thumbnailCanvas.height = 150;
+      const ctxThumbnail = thumbnailCanvas.getContext("2d");
 
-      canvas.width = thumbnailWidth;
-      canvas.height = thumbnailHeight;
+      if (ctxThumbnail) {
+        ctxThumbnail.drawImage(finalCanvas, 0, 0, 150, 150);
 
-      ctx?.drawImage(croppedCanvas, 0, 0, thumbnailWidth, thumbnailHeight);
-      handleCurrProduct("thumbnail", canvas.toDataURL("image/jpeg"));
-      setCroppedImage(croppedCanvas.toDataURL());
+        handleCurrProduct("thumbnail", thumbnailCanvas.toDataURL("image/jpeg"));
+        setCroppedImage(finalCanvas.toDataURL());
+      }
     }
   };
 
@@ -91,7 +132,7 @@ function ImagePreview({
               display: "flex",
               alignItems: "center",
               height: "300px",
-              width: "300px",
+              width: "auto",
             }}
           >
             <img
@@ -106,8 +147,8 @@ function ImagePreview({
             sx={{
               display: "flex",
               alignItems: "center",
-              height: "300px",
-              width: "300px",
+              height: "150px",
+              width: "auto",
             }}
           >
             <img

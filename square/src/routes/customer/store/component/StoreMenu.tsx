@@ -2,8 +2,18 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
-import axios from "axios"; // axios를 import합니다.
-import { Unstable_Grid2 as Grid, Typography, Box, Button } from "@mui/material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import {
+  Unstable_Grid2 as Grid,
+  Box,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretUp, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import SelectMenu from "./SelectMenu";
 
 type Item = {
   menuId: number;
@@ -24,25 +34,28 @@ type CategoryMenu = {
 };
 
 interface Props {
-  storeId: string | undefined;
-  setState: React.Dispatch<React.SetStateAction<boolean>>;
-  setCurItem: React.Dispatch<React.SetStateAction<Item | undefined>>;
+  storeId: string;
+  storeName: string;
+  storeThumbnail: string;
 }
 
-export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
+export default function StoreMenu({
+  storeId,
+  storeName,
+  storeThumbnail,
+}: Props) {
   const token = sessionStorage.getItem("accessToken");
-  const [menus, setMenus] = useState<CategoryMenu[]>([]);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [menus, setMenus] = useState<CategoryMenu[]>();
+  const [menuSwitch, setMenuSwitch] = useState<boolean[]>();
+  const [curItem, setCurItem] = useState<Item>();
+  const [purchase, setPurchase] = useState<boolean>(false);
 
-  const handlePurchase = (item: Item) => {
-    setState(true);
-    setCurItem(item);
-  };
+  // axios 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
-  useEffect(() => {
-    // storeId를 사용해 메뉴 정보를 가져오는 API를 호출합니다.
-
-    console.log({storeId})
-
+  // 가게의 메뉴를 가져옵니다.
+  const getStoreMenu = () => {
     axios({
       url: `${REST_API}store/menu/${storeId}`,
       method: "GET",
@@ -51,131 +64,226 @@ export default function StoreMenu({ storeId, setState, setCurItem }: Props) {
       },
     })
       .then((response) => {
-        console.log(response.data);
         setMenus(response.data.menus);
+        setMenuSwitch(new Array(response.data.menus.length).fill(true));
       })
       .catch((error) => {
-
-        console.error("메뉴 정보를 불러오는데 실패했습니다.",error);
+        navigate("/error", { state: error });
       });
-  }, [storeId]); // storeId가 변경될 때마다 API 호출을 다시 합니다.
+  };
 
-  return (
-    <Grid container xs={11}>
-      {menus.length > 0 &&
-        menus.map((categoryMenu, index) => (
-          <Grid container xs={12} key={index}>
-            <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-              <Typography
-                variant="h5"
-                component="h5"
-                sx={{ fontWeight: 600, textAlign: "center" }}
-              >
-                {categoryMenu.categoryName}
-              </Typography>
-            </Grid>
-            {categoryMenu.menuItems &&
-              categoryMenu.menuItems.map((menu, innerIndex) =>
-                menu.status !== "ON" ? null : (
-                  <Grid xs={12} key={innerIndex}>
-                    <Button
-                      onClick={() => {
-                        handlePurchase(menu);
+  // axios 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  // useEffect 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+  // 로딩화면 출력 및 axios 통신
+  useEffect(() => {
+    getStoreMenu();
+    setLoading(false);
+  }, []);
+
+  // useEffect 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  // 함수 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+  // 현재의 아이템과 Dialog창을 열어준다.
+  const handlePurchase = (item: Item) => {
+    setCurItem(item);
+    setPurchase(true);
+  };
+
+  // 누른 카테고리의 메뉴들을 축소합니다.
+  const handleSwitch = (index: number) => {
+    if (menuSwitch) {
+      const newArray = [...menuSwitch];
+
+      newArray[index] = !newArray[index];
+      setMenuSwitch(newArray);
+    }
+  };
+
+  // 함수 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  if (loading) return <CircularProgress />;
+  else {
+    return (
+      <Grid container xs={10}>
+        {menus &&
+          menus.map((categoryMenu, index) => {
+            if (categoryMenu.categoryName === "미분류") return null;
+            return (
+              <Grid container xs={12} justifyContent="center" key={index}>
+                <Grid xs={12}>
+                  <Box
+                    onClick={() => {
+                      handleSwitch(index);
+                    }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      height: "40px",
+                      backgroundColor:
+                        menuSwitch && menuSwitch[index] ? "#d1d1d1" : "#e7e7e7",
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      sx={{
+                        marginLeft: "10px",
+                        fontWeight: 500,
+                        textAlign: "left",
+                        color: "black",
                       }}
-                      fullWidth
                     >
-                      <Grid container sx={{ width: "100%" }}>
-                        <Grid xs="auto">
-                          <Box
-                            sx={{
-                              width: { xs: "130px", md: "250px" },
-                              height: "auto",
-                              "& img": {
+                      {categoryMenu.categoryName}
+                    </Typography>
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      sx={{
+                        marginLeft: "10px",
+                        fontWeight: 500,
+                        textAlign: "left",
+                        color: "black",
+                      }}
+                    >
+                      {menuSwitch && menuSwitch[index] ? (
+                        <FontAwesomeIcon
+                          icon={faCaretDown}
+                          style={{ color: "#000000", marginRight: "20px" }}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={faCaretUp}
+                          style={{ color: "#000000", marginRight: "20px" }}
+                        />
+                      )}
+                    </Typography>
+                  </Box>
+                </Grid>
+                {categoryMenu?.menuItems.map((menu, innerIndex) =>
+                  menu.status !== "ON"
+                    ? null
+                    : menuSwitch &&
+                      menuSwitch[index] && (
+                        <Grid
+                          xs={12}
+                          container
+                          alignItems="center"
+                          sx={{ padding: "5px 0px" }}
+                          key={innerIndex}
+                          onClick={() => {
+                            handlePurchase(menu);
+                          }}
+                        >
+                          <Grid
+                            xs={3}
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <Box
+                              sx={{
                                 width: "100%",
                                 height: "auto",
-                              },
-                            }}
-                          >
-                            <img src={menu.menuThumbnail} alt="menu" />
-                          </Box>
-                        </Grid>
-                        <Grid container xs>
-                          <Box
-                            sx={{
-                              padding: "2px 2px 0px 0px",
-                              paddingBottom: "0px",
-                              flex: "1 0 auto",
-                              flexDirection: "column",
-                              width: "100%",
-                            }}
-                          >
-                            <Grid xs={12}>
-                              <Typography
-                                variant="h5"
-                                component="h5"
-                                sx={{
-                                  fontWeight: 700,
-                                  color: "black",
-                                  textAlign: "left",
-                                  padding: "10px 0px 4px 20px",
-                                  width: "90%",
-                                  whiteSpace: "nowrap",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                }}
-                              >
-                                {menu.menuName}
-                              </Typography>
-                            </Grid>
-                            <Grid xs={12} sx={{ overflow: "hidden" }}>
-                              <Typography
-                                variant="subtitle1"
-                                component="div"
-                                sx={{
-                                  fontWeight: 400,
-                                  textAlign: "left",
-                                  color: "secondary.main",
-                                  padding: "0px 5px 10px 20px",
-                                  width: "90%",
-                                  whiteSpace: "nowrap",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                }}
-                              >
-                                {menu.description}
-                              </Typography>
-                            </Grid>
-                            <Grid
-                              xs={12}
-                              sx={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
+                                "& img": {
+                                  width: "100%",
+                                  height: "auto",
+                                },
                               }}
                             >
-                              <Typography
-                                variant="h6"
-                                component="h6"
+                              <img src={menu.menuThumbnail} alt="menu" />
+                            </Box>
+                          </Grid>
+                          <Grid container xs={9}>
+                            <Box
+                              sx={{
+                                padding: "2px 2px 0px 0px",
+                                paddingBottom: "0px",
+                                flex: "1 0 auto",
+                                flexDirection: "column",
+                                width: "100%",
+                              }}
+                            >
+                              <Grid xs={12}>
+                                <Typography
+                                  variant="h5"
+                                  component="h5"
+                                  sx={{
+                                    fontWeight: 700,
+                                    color: "black",
+                                    textAlign: "left",
+                                    padding: "10px 0px 0px 20px",
+                                    width: "90%",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {menu.menuName}
+                                </Typography>
+                              </Grid>
+                              <Grid xs={12} sx={{ overflow: "hidden" }}>
+                                <Typography
+                                  variant="subtitle1"
+                                  component="div"
+                                  sx={{
+                                    fontWeight: 400,
+                                    textAlign: "left",
+                                    color: "secondary.main",
+                                    padding: "0px 5px 5px 20px",
+                                    width: "90%",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {menu.description}
+                                </Typography>
+                              </Grid>
+                              <Grid
+                                xs={12}
                                 sx={{
-                                  fontWeight: 400,
-                                  textAlign: "left",
-                                  padding: "0px 0px 10px 21px",
-                                  whiteSpace: "nowrap",
                                   overflow: "hidden",
                                   textOverflow: "ellipsis",
                                 }}
                               >
-                                {menu.price}원
-                              </Typography>
-                            </Grid>
-                          </Box>
+                                <Typography
+                                  variant="h6"
+                                  component="h6"
+                                  sx={{
+                                    color: "primary.main",
+                                    fontWeight: 600,
+                                    textAlign: "left",
+                                    padding: "0px 0px 10px 21px",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {menu.price}원
+                                </Typography>
+                              </Grid>
+                            </Box>
+                          </Grid>
+                          <Grid xs={12}>
+                            <Divider />
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Button>
-                  </Grid>
-                )
-              )}
-          </Grid>
-        ))}
-    </Grid>
-  );
+                      )
+                )}
+              </Grid>
+            );
+          })}
+        {curItem && (
+          <SelectMenu
+            storeId={Number(storeId)}
+            storeName={storeName}
+            storeThumbnail={storeThumbnail}
+            curItem={curItem}
+            purchase={purchase}
+            setPurchase={setPurchase}
+          />
+        )}
+      </Grid>
+    );
+  }
 }

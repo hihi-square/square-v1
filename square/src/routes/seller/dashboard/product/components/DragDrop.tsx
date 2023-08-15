@@ -261,7 +261,7 @@ export default function ProductList({
     for (const readyItem of ready) {
       newProducts.push({
         id: readyItem.id,
-        categoryId: 1,
+        categoryId: readyItem.categoryId,
         status: "STOP",
         sequence: itemsequence,
       });
