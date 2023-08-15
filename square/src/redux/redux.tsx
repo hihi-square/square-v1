@@ -17,7 +17,7 @@ const user = createSlice({
 type data = {
   id: number;
   content: string;
-  url: string;
+  storeName: string;
   isRead: boolean;
 };
 

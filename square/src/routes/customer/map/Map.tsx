@@ -1,14 +1,19 @@
 import React, { useEffect } from "react";
 import { Unstable_Grid2 as Grid } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import MapLayer from "./component/MapLayer";
 import Header from "./component/Header";
 import Footer from "../Footer";
 
-export default function Map() {
-  const dispatch = useDispatch();
+// import { REST_API } from "redux/redux";
 
-  useEffect(() => {}, [dispatch]);
+export default function Map() {
+  const token = sessionStorage.getItem("accessToken");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) navigate("/login");
+  }, []);
 
   return (
     <Grid
