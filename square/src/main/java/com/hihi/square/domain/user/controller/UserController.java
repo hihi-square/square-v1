@@ -8,10 +8,12 @@ import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
 import com.hihi.square.domain.user.dto.response.UserInfoDto;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.entity.UserRankType;
 import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.service.CustomerService;
+import com.hihi.square.domain.user.service.EmdAddressService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,19 @@ public class UserController {
 	private final CustomerService customerService;
 	private final PasswordEncoder passwordEncoder;
 	private final DibsRepository dibsRepository;
+	private final EmdAddressService emdAddressService;
 
+	// 내 위치 수정
+	@PatchMapping("/address/{bCode}")
+	public ResponseEntity updateMyAddress(Authentication authentication, @PathVariable(name = "bCode") Long bCode) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		if (user instanceof Store) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("ONLY_CUSTOMER").build(), HttpStatus.BAD_REQUEST);
+		}
+		userService.updateUserAddress(user, bCode);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+	}
 
 	// 내 정보 보기
 	@GetMapping
@@ -88,6 +102,8 @@ public class UserController {
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//저장
+		EmdAddress mainAddress = emdAddressService.findByBCode(request.getBCode()).get();
+		customer.updateMainAddress(mainAddress);
 		customerService.save(customer);
 		response.setStatusCode(201);
 		response.setMessage("SIGNUP_SUCCESS");

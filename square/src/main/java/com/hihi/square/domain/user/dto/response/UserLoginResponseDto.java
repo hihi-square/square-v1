@@ -17,4 +17,6 @@ public class UserLoginResponseDto {
 	private String userUid;
 	private Integer usrId;
 	private String userNickname;
+	private UserLoginAddressInfo address;
+
 }

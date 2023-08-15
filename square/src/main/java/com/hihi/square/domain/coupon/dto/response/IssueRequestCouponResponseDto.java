@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IssueRequestCouponResponseDto {
+	@Builder.Default
 	private List<IssueRequestCouponDto> coupons = new ArrayList<>();
 	private Integer statusCode;
 }

@@ -32,6 +32,7 @@ public class CustomerRegisterRequestDto {
 	private String email;
 	@NotNull
 	private boolean marketingAgree;
+	private Long bCode;
 
 
 	public Customer toEntity(){

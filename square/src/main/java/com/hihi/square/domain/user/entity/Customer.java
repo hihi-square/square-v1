@@ -37,8 +37,11 @@ public class Customer extends User{
 		this.rank = rank;
 	}
 
-	@OneToMany(mappedBy = "customer")
-	@Builder.Default
-	private List<CustomerAddress> customerAddressList = new ArrayList<>();
+	// @OneToMany(mappedBy = "customer")
+	// @Builder.Default
+	// private List<CustomerAddress> customerAddressList = new ArrayList<>();
 
+	public void updateMainAddress(EmdAddress emdAddress) {
+		super.updateMainAddress(emdAddress);
+	}
 }
