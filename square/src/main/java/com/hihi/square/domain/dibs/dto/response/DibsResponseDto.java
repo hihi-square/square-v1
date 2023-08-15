@@ -10,10 +10,14 @@ import lombok.Data;
 // @NoArgsConstructor
 public class DibsResponseDto {
 	private Integer dibId;
-	private Integer usrId;
-	private String uid;
-	private EmdAddress emdAddress;
-	private String address;
+	private Integer cusId;
+	private Integer stoId;
 	private String storeName;
-	private String storePhone;
+	private String content;
+	private String storeAddress;
+	private String mainMenu;
+	private String logo;
+	private Boolean isOpened;
+	private Float latitude;
+	private Float longitude;
 }

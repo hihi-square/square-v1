@@ -107,7 +107,7 @@ public class StoreService {
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
-					.storeAddress(store.getAddress())
+					.storeAddress(store.getEmdAddress().getFullName()+ " " + store.getAddress())
 					.mainMenu(menuName)
 					.logo(store.getLogo())
 					.longitude(store.getLongitude())
