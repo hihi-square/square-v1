@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   Unstable_Grid2 as Grid,
   Button,
@@ -35,105 +35,116 @@ import Message from "../customer/main/Message";
 import MessageForm from "../customer/main/MessageForm";
 import Finish from "../customer/deal/Finish";
 import PickUp from "../customer/deal/PickUp";
-import SSEComponent from "./SSEComponent";
 import Error from "./error/Error";
 
 type data = {
   id: number;
   content: string;
-  url: string;
+  storeName: string;
   isRead: boolean;
 };
 
 export default function Customer() {
+  const token = sessionStorage.getItem("accessToken");
+  const userInfo = sessionStorage.getItem("userInfo");
+  const navigate = useNavigate();
   const EventSource = EventSourcePolyfill;
   const dispatch = useDispatch();
   const orderMessage = useSelector(
     (state: RootState) => state.notifications.orderData
   );
-  const [orderPopupNumber] = useState<number>(1);
+  const [orderPopupNumber, setOrderPopupNumber] = useState<number>(0);
 
   useEffect(() => {
-    const headers = {
-      Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-      lastEventId: "",
-    };
+    if (!token || !userInfo) {
+      navigate("/login");
+      return undefined;
+    } else {
+      const headers = {
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+        lastEventId: "",
+      };
 
-    const eventSource = new EventSource(
-      "https://i9b208.p.ssafy.io:8080/notification/subscribe",
-      {
-        headers,
-        heartbeatTimeout: 180000,
-      }
-    );
-
-    eventSource.addEventListener("order", (event: any) => {
-      handleEvent("order", event);
-    });
-    eventSource.addEventListener("pickup", (event: any) => {
-      handleEvent("pickup", event);
-    });
-    eventSource.addEventListener("message", (event: any) => {
-      handleEvent("message", event);
-    });
-    eventSource.addEventListener("notice", (event: any) => {
-      handleEvent("notice", event);
-    });
-
-    eventSource.onopen = () => {
-      console.log("SSE 연결이 열렸습니다.");
-    };
-
-    eventSource.onmessage = (event) => {
-      console.log({ event });
-    };
-
-    const handleEvent = (eventName: string, event: any) => {
-      console.log(`${eventName} received data:`, event.data);
-
-      try {
-        const parsedData: data = JSON.parse(event.data);
-
-        switch (eventName) {
-          case "order":
-          case "pickup":
-            dispatch(pushOrderData(parsedData));
-            break;
-          case "message":
-            dispatch(setMessageData(parsedData));
-            break;
-          case "notice":
-            dispatch(setNoticeData(parsedData));
-            break;
-          default:
-            break;
+      const eventSource = new EventSource(
+        "https://i9b208.p.ssafy.io:8080/notification/subscribe",
+        {
+          headers,
+          heartbeatTimeout: 180000,
         }
-        console.log(`${eventName}: `, { event });
-      } catch (error) {
-        console.error(`Failed to parse JSON for ${eventName}:`, error);
-      }
-    };
+      );
 
-    eventSource.onerror = (event) => {
-      console.error("SSE 연결에 오류가 발생했습니다.", event);
+      eventSource.addEventListener("order", (event: any) => {
+        handleEvent("order", event);
+      });
+      eventSource.addEventListener("pickup", (event: any) => {
+        handleEvent("pickup", event);
+      });
+      eventSource.addEventListener("message", (event: any) => {
+        handleEvent("message", event);
+      });
+      eventSource.addEventListener("notice", (event: any) => {
+        handleEvent("notice", event);
+      });
 
-      setTimeout(() => {
-        console.log("SSE 다시 연결 시도중...");
-      }, 5000);
-    };
+      const handleEvent = (eventName: string, event: any) => {
+        console.log(`${eventName} received data:`, event.data);
 
-    return () => {
-      eventSource.close();
-    };
+        try {
+          const parsedData: data = JSON.parse(event.data);
+
+          console.log(parsedData);
+          switch (eventName) {
+            case "order":
+            case "pickup":
+              dispatch(pushOrderData(parsedData));
+              break;
+            case "message":
+              dispatch(setMessageData(parsedData));
+              break;
+            case "notice":
+              dispatch(setNoticeData(parsedData));
+              break;
+            default:
+              break;
+          }
+          console.log(`${eventName}: `, { event });
+        } catch (error) {
+          console.error(`Failed to parse JSON for ${eventName}:`, error);
+        }
+      };
+
+      eventSource.onerror = (event) => {
+        console.error("SSE 연결에 오류가 발생했습니다.", event);
+
+        setTimeout(() => {
+          console.log("SSE 다시 연결 시도중...");
+        }, 5000);
+      };
+
+      return () => {
+        eventSource.close();
+      };
+    }
   }, []);
+
+  const handlePopup = (index: number) => {
+    const length = orderMessage.length;
+
+    setOrderPopupNumber((orderPopupNumber + index + length) % length);
+  };
 
   return (
     <Grid
       container
       xs={12}
-      md={8}
       justifyContent="center"
-      sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
+      sx={{
+        maxWidth: "600px",
+        height: "100%",
+        backgroundImage: "url(/img/MobileBG.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       {orderMessage && orderMessage.length > 0 && (
         <Grid
@@ -169,36 +180,58 @@ export default function Customer() {
             >
               {orderMessage[orderPopupNumber].content}
             </Typography>
-            <Divider></Divider>
+
             <Typography
-              variant="h5"
-              component="h5"
+              variant="subtitle1"
+              component="div"
               sx={{
                 marginTop: "5px",
-                fontWeight: 500,
+                fontWeight: 400,
                 textAlign: "center",
                 whiteSpace: "pre-line",
               }}
             >
-              {orderMessage[orderPopupNumber].url}
+              {orderMessage[orderPopupNumber].storeName}
             </Typography>
+            <Divider sx={{ margin: "10px" }}></Divider>
             <Grid sx={{ display: "flex", width: "100%" }}>
               <Button sx={{ flexGrow: 1 }}>확인</Button>
               <Button sx={{ flexGrow: 1 }}>닫기</Button>
             </Grid>
 
-            <Grid
-              sx={{
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                display: "flex",
-                width: "100%",
-              }}
-            >
-              <Button sx={{ flexGrow: 1 }}>{`<`}</Button>
-              <Button sx={{ flexGrow: 1 }}>{`>`}</Button>
-            </Grid>
+            {orderMessage.length > 1 && (
+              <Grid
+                sx={{
+                  position: "absolute",
+                  top: "5px",
+                  right: "5px",
+                  width: "10%",
+                }}
+              >
+                <Button
+                  onClick={() => {
+                    handlePopup(1);
+                  }}
+                >{`>`}</Button>
+              </Grid>
+            )}
+
+            {orderMessage.length > 1 && (
+              <Grid
+                sx={{
+                  position: "absolute",
+                  top: "5px",
+                  left: "5px",
+                  width: "10%",
+                }}
+              >
+                <Button
+                  onClick={() => {
+                    handlePopup(1);
+                  }}
+                >{`<`}</Button>
+              </Grid>
+            )}
           </Paper>
         </Grid>
       )}
@@ -209,7 +242,7 @@ export default function Customer() {
         <Route path="/lList/location" element={<StoreListByLocation />} />
 
         <Route path="/store/:store" element={<Store />} />
-        <Route path="/map" element={<Map />} />
+        <Route path="/main" element={<Main />} />
         <Route path="/board" element={<Board />} />
         <Route path="/board/:selectedBoard/:boardId" element={<BoardForm />} />
 
@@ -231,8 +264,7 @@ export default function Customer() {
         <Route path="/finish" element={<Finish />} />
         <Route path="/message/:userId" element={<MessageForm />} />
 
-        <Route path="/test" element={<SSEComponent />} />
-        <Route path="/*" element={<Main />} />
+        <Route path="/*" element={<Map />} />
       </Routes>
     </Grid>
   );
