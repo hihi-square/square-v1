@@ -10,7 +10,6 @@ import {
   DialogContentText,
   DialogTitle,
   Paper,
-  SwipeableDrawer,
   Typography,
   TextField,
   Unstable_Grid2 as Grid,
@@ -32,18 +31,18 @@ interface Props {
   storeId: number;
   storeName: string;
   storeThumbnail: string;
-  state: boolean;
-  setState: React.Dispatch<React.SetStateAction<boolean>>;
-  curItem: Item | undefined;
+  curItem: Item;
+  purchase: boolean;
+  setPurchase: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SelectMenu({
-  state,
-  curItem,
-  setState,
   storeId,
   storeName,
   storeThumbnail,
+  curItem,
+  purchase,
+  setPurchase,
 }: Props) {
   const [quantity, setQuantity] = useState(1);
   const [isSame, setSame] = useState<boolean>(false);
@@ -100,20 +99,6 @@ export default function SelectMenu({
     setSame(false);
   };
 
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event &&
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-
-      setState(open);
-    };
-
   const list = (menu: Item | undefined) =>
     menu && (
       <Paper
@@ -124,7 +109,13 @@ export default function SelectMenu({
           justifyContent: "center",
         }}
       >
-        <Button onClick={toggleDrawer(false)}>X</Button>
+        <Button
+          onClick={() => {
+            setPurchase(false);
+          }}
+        >
+          X
+        </Button>
         <Paper
           sx={{
             width: "auto",
@@ -222,7 +213,7 @@ export default function SelectMenu({
           </Grid>
           <Button
             onClick={() => {
-              setState(false);
+              setPurchase(false);
               addCart();
             }}
           >
@@ -234,14 +225,7 @@ export default function SelectMenu({
 
   return (
     <>
-      <SwipeableDrawer
-        anchor={"bottom"}
-        open={state}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-      >
-        {list(curItem)}
-      </SwipeableDrawer>
+      <Dialog open={purchase}>{list(curItem)}</Dialog>
       <Dialog
         open={isSame}
         onClose={() => {

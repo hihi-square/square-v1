@@ -4,66 +4,48 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Unstable_Grid2 as Grid,
-  Typography,
+  Avatar,
+  Box,
   Button,
   CircularProgress,
-  IconButton,
   Divider,
-  Paper,
+  IconButton,
+  Typography,
 } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom"; // useParams를 import합니다.
+import { useParams, useNavigate } from "react-router-dom";
 import { REST_API } from "redux/redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPhone,
-  faHeart,
-  faLocationDot,
-} from "@fortawesome/free-solid-svg-icons";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { faPhone, faHeart, faShare } from "@fortawesome/free-solid-svg-icons";
 import Header from "./component/StoreHeader";
-// import Footer from "../Footer";
 import StoreMenu from "./component/StoreMenu";
 import StoreFeed from "./component/StoreFeed";
-import StoreReview from "./component/storeReview1";
-import SelectMenu from "./component/SelectMenu";
+import StoreReview from "./component/StoreReview";
 import Footer from "../Footer";
 
-function StorePage() {
-  type Store = {
-    account: string;
-    address: string;
-    bank: string;
-    content: string;
-    emdAddress: string;
-    isOpened: false;
-    storeName: string;
-    storePhone: string;
-    backgroundImgUrl: string;
-    logo: string;
-    latitude: number;
-    longitude: number;
-  };
+type Store = {
+  account: string;
+  address: string;
+  bank: string;
+  content: string;
+  emdAddress: string;
+  isOpened: false;
+  storeName: string;
+  storePhone: string;
+  banner: string;
+  logo: string;
+  latitude: number;
+  longitude: number;
+};
 
-  type Item = {
-    menuId: number;
-    menuName: string;
-    menuThumbnail: string;
-    menuImage: string;
-    description: string;
-    status: string;
-    popularity: boolean;
-    signature: boolean;
-    price: number;
-  };
-
+export default function StorePage() {
   const token = sessionStorage.getItem("accessToken");
   const navigate = useNavigate();
   const { store } = useParams<{ store?: string }>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const [info, setInfo] = useState<Store>();
-  const [state, setState] = useState<boolean>(false);
-  const [curItem, setCurItem] = useState<Item>();
-  const [selectedTab, setSelectedTab] = useState("menu");
+  const [selectedTab, setSelectedTab] = useState("메뉴");
   const [isZzim, setZzim] = useState<boolean>(false);
 
   // axios 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -75,10 +57,11 @@ function StorePage() {
       method: "GET",
     })
       .then((response) => {
+        console.log(response.data);
         setInfo(response.data);
       })
       .catch((error) => {
-        navigate("/error");
+        navigate("/error", { state: error });
       });
   };
 
@@ -116,16 +99,16 @@ function StorePage() {
   // 헤더에 따라서 보여줄 요소를 결정합니다.
   const renderTabContent = () => {
     switch (selectedTab) {
-      case "feed":
+      case "피드":
         return <StoreFeed storeId={store} />;
-      case "review":
+      case "리뷰":
         return <StoreReview />;
       default:
         return (
           <StoreMenu
-            setState={setState}
-            setCurItem={setCurItem}
-            storeId={store}
+            storeId={store || ""}
+            storeName={info?.storeName || ""}
+            storeThumbnail={info?.logo || ""}
           />
         );
     }
@@ -133,6 +116,11 @@ function StorePage() {
 
   const handleZzim = () => {
     console.log("gd");
+  };
+
+  // 맵이 형성될 때 마다, 맵의 크기를 변경해 주어 오류가 나지 않도록 합니다.
+  const handleMapCreation = (map: Window["kakao"]["maps"]["Map"]) => {
+    map.relayout();
   };
 
   // 함수 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -156,9 +144,9 @@ function StorePage() {
           sx={{ position: "absolute", top: 0, justifyContent: "center" }}
         >
           <Grid xs={12}>
-            {info && info.backgroundImgUrl ? (
+            {info?.banner ? (
               <img
-                src={info && info.backgroundImgUrl[0]}
+                src={info?.banner}
                 alt="가게배너"
                 style={{ width: "100%", height: "auto" }}
               />
@@ -171,7 +159,18 @@ function StorePage() {
             )}
           </Grid>
           <Grid container xs={10}>
-            <Grid xs={12} mt="10px">
+            <Grid
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+              mt="10px"
+            >
+              {info?.logo && (
+                <Avatar
+                  alt="로고"
+                  src={info?.logo}
+                  sx={{ marginRight: "10px" }}
+                />
+              )}
               <Typography
                 variant="h4"
                 component="h4"
@@ -181,18 +180,7 @@ function StorePage() {
                   whiteSpace: "pre-line",
                 }}
               >
-                {info && info.storeName}
-              </Typography>
-              <Typography
-                variant="subtitle1"
-                component="div"
-                sx={{
-                  fontWeight: 500,
-                  textAlign: "center",
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {info && info.address}
+                {info?.storeName}
               </Typography>
             </Grid>
           </Grid>
@@ -242,7 +230,7 @@ function StorePage() {
 
             <Divider orientation="vertical" variant="middle" flexItem />
             <IconButton sx={{ fontSize: "18px", color: "#000000" }}>
-              <FontAwesomeIcon icon={faLocationDot} style={{ color: "gray" }} />
+              <FontAwesomeIcon icon={faShare} style={{ color: "gray" }} />
               <Typography
                 variant="subtitle1"
                 component="div"
@@ -254,150 +242,92 @@ function StorePage() {
                   padding: "0px 10px",
                 }}
               >
-                지도
+                공유
               </Typography>
             </IconButton>
           </Grid>
-          <Grid
-            xs={12}
-            mt="10px"
-            sx={{ display: "flex", justifyContent: "center" }}
-          >
-            <Paper elevation={1} sx={{ width: "80%", minHeight: "200px" }}>
-              <Typography
-                variant="subtitle1"
-                component="div"
-                sx={{
-                  fontWeight: 400,
-                  textAlign: "center",
-                  fontSize: "18px",
-                  color: "gray",
-                  padding: "0px 10px",
+          <Grid xs={10}>
+            <Box
+              sx={{ width: "100%", height: "30vh", backgroundColor: "grey" }}
+            >
+              <Map
+                center={{
+                  lat: info?.latitude ? info?.latitude : 36.36633018880926,
+                  lng: info?.longitude ? info?.longitude : 127.29839813101623,
                 }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                level={1}
+                onCreate={handleMapCreation}
               >
-                {info?.content}
-              </Typography>
-            </Paper>
+                <MapMarker
+                  position={{
+                    lat: info?.latitude ? info?.latitude : 36.36633018880926,
+                    lng: info?.longitude ? info?.longitude : 127.29839813101623,
+                  }}
+                />
+              </Map>
+            </Box>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{
+                marginTop: "5px",
+                fontWeight: 500,
+                textAlign: "center",
+                whiteSpace: "pre-line",
+              }}
+            >
+              {info && info.address}
+            </Typography>
           </Grid>
+
           <Grid xs={12} mt="20px">
             <Divider variant="middle"></Divider>
           </Grid>
           <Grid
-            xs={12}
+            xs={11}
             sx={{
-              padding: "15px",
               display: "flex",
               justifyContent: "space-around",
             }}
           >
-            <Button
-              onClick={() => setSelectedTab("menu")}
-              sx={{
-                boxShadow:
-                  selectedTab === "menu"
-                    ? "3px 3px 5px rgba(0,0,0,0.3)"
-                    : "none",
-                backgroundColor:
-                  selectedTab === "menu" ? "#f0f0f0" : "transparent",
-                "&:hover": {
-                  backgroundColor:
-                    selectedTab === "menu" ? "#e0e0e0" : "transparent",
-                },
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h6"
+            {["메뉴", "피드", "리뷰"].map((menu, index) => (
+              <Button
+                onClick={() => setSelectedTab(menu)}
                 sx={{
-                  fontWeight: 500,
-                  textAlign: "center",
-                  fontSize: "20px",
-                  color: "black",
-                  padding: "0px 5px",
-                }}
-              >
-                메뉴
-              </Typography>
-            </Button>
-
-            <Button
-              onClick={() => setSelectedTab("feed")}
-              sx={{
-                boxShadow:
-                  selectedTab === "feed"
-                    ? "3px 3px 5px rgba(0,0,0,0.3)"
-                    : "none",
-                backgroundColor:
-                  selectedTab === "feed" ? "#f0f0f0" : "transparent",
-                "&:hover": {
+                  flexGrow: 1,
                   backgroundColor:
-                    selectedTab === "feed" ? "#e0e0e0" : "transparent",
-                },
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h6"
-                sx={{
-                  fontWeight: 500,
-                  textAlign: "center",
-                  fontSize: "20px",
-                  color: "black",
-                  padding: "0px 5px",
+                    selectedTab === menu ? "transparent" : "#f0f0f0",
                 }}
+                key={index}
               >
-                피드
-              </Typography>
-            </Button>
-
-            <Button
-              onClick={() => setSelectedTab("review")}
-              sx={{
-                boxShadow:
-                  selectedTab === "review"
-                    ? "3px 3px 5px rgba(0,0,0,0.3)"
-                    : "none",
-                backgroundColor:
-                  selectedTab === "review" ? "#f0f0f0" : "transparent",
-                "&:hover": {
-                  backgroundColor:
-                    selectedTab === "review" ? "#e0e0e0" : "transparent",
-                },
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="h6"
-                sx={{
-                  fontWeight: 500,
-                  textAlign: "center",
-                  fontSize: "20px",
-                  color: "black",
-                  padding: "0px 5px",
-                }}
-              >
-                리뷰
-              </Typography>
-            </Button>
+                <Typography
+                  variant="h6"
+                  component="h6"
+                  sx={{
+                    fontWeight: 500,
+                    textAlign: "center",
+                    fontSize: "18px",
+                    color: selectedTab === menu ? "black" : "grey",
+                    padding: "0px 5px",
+                  }}
+                >
+                  {menu}
+                </Typography>
+              </Button>
+            ))}
           </Grid>
           {renderTabContent()}
+          <Grid xs={12} sx={{ height: "80px" }}></Grid>
         </Grid>
+
         <Grid container xs={12} justifyContent="center">
           <Footer now={6} />
-          {info && (
-            <SelectMenu
-              storeId={Number(store)}
-              storeName={info?.storeName}
-              storeThumbnail={info?.logo}
-              state={state}
-              setState={setState}
-              curItem={curItem}
-            />
-          )}
         </Grid>
       </Grid>
     );
   }
 }
-
-export default StorePage;

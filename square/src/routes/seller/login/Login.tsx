@@ -205,7 +205,7 @@ export default function Login() {
                 fullWidth
               >
                 <Typography
-                  variant="h4"
+                  variant="h5"
                   sx={{
                     color: "red",
                     fontWeight: 700,
