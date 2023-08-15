@@ -1,5 +1,6 @@
 package com.hihi.square.domain.store.controller;
 
+import com.hihi.square.domain.menu.dto.response.RegisteredCategoryresponseDto;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.ScbUpdateRequestDto;
@@ -8,20 +9,25 @@ import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.entity.StoreCategorySelected;
 import com.hihi.square.domain.store.repository.CategoryRepository;
+import com.hihi.square.domain.store.repository.StoreCategoryRepository;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
 import com.hihi.square.domain.store.service.StoreService;
+import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/scb")
@@ -30,7 +36,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
     private final StoreCategoryService storeCategoryService;
-    private final StoreService storeService;
+    private final UserService userService;
 
     // 카테고리 대분류 다 가져오기
     @GetMapping
@@ -99,9 +105,11 @@ public class CategoryController {
     // 판매자 (store) 입장에서의 카테고리 CRUD ( C : StoreController 에 있음 )
 
     // 가게에서 등록한 카테고리 모두 조회
-    @GetMapping("/store/{id}")
-    public ResponseEntity<?> selectAllByStoreId(@PathVariable Integer id) {
-        Store store = storeService.findByUsrId(id).get();
+    @GetMapping("/store")
+    public ResponseEntity<?> selectAllByStoreId(Authentication authentication) {
+        String uid = authentication.getName();
+        Store store = (Store) userService.findByUid(uid).get();
+
         List<StoreCategorySelected> categories = storeCategoryService.findByStore(store);
 
         List<StoreCategoryResponseDto> storeCategoryInfo = new ArrayList<>();
@@ -117,17 +125,50 @@ public class CategoryController {
     }
 
     // 가게에 등록된 카테고리 삭제
-    @DeleteMapping("/store/{id}")
+    @DeleteMapping("/store/{scsId}")
     public ResponseEntity<CommonResponseDto> deleteStoreCategory(@PathVariable Integer id) {
         CommonResponseDto response = CommonResponseDto.builder()
                 .statusCode(200)
                 .message("SUCCESSFULLY_DELETED")
                 .build();
-        categoryService.deleteById(id);
+        if(storeCategoryService.findById(id).isEmpty()){
+            response.setStatusCode(409);
+            response.setMessage("NOT_EXISTED_CATEGORY");
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        }
+        storeCategoryService.deleteById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 전체 카테고리중 가게가 등록된 카테고리 boolean값 반환 하지만 모든 조회
+    @GetMapping("/store/registered")
+    public ResponseEntity<?> selectAllByStoreIdAndRegistered(Authentication authentication) {
+        String uid = authentication.getName();
+        Store store = (Store) userService.findByUid(uid).get();
 
+        List<StoreCategoryBig> bigCategories = categoryService.findAll();
+        Map<Integer, Boolean> isRegistered = new HashMap<>();
 
+        for (StoreCategoryBig bigCategory : bigCategories) {
+            isRegistered.put(bigCategory.getScbId(), false);
+        }
 
+        List<StoreCategorySelected> categories = storeCategoryService.findByStore(store);
+        for (StoreCategorySelected category : categories) {
+            isRegistered.put(category.getStoreCategoryBig().getScbId(), true);
+        }
+
+        List<RegisteredCategoryresponseDto> response = new ArrayList<>();
+        for (StoreCategoryBig bigCategory : bigCategories) {
+            Integer scbId = bigCategory.getScbId();
+            Boolean registered = isRegistered.get(scbId);
+            RegisteredCategoryresponseDto dto = RegisteredCategoryresponseDto.builder()
+                    .scbId(scbId)
+                    .name(bigCategory.getName())
+                    .isRegistered(registered)
+                    .build();
+            response.add(dto);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
