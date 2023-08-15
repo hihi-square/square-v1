@@ -4,11 +4,5 @@ import lombok.Data;
 
 @Data
 public class CustomerAddressCreateRequestDto {
-	private Double longitude; // 경도
-	private Double latitude; // 위도
-	private String sidoName; // 시도
-	private String siggName; // 시군구
-	private String emdName; // 읍면동
-	private String address; // 상세 주소
-	// private Integer usrId; // 유저 아이디
+	private Long bCode;
 }

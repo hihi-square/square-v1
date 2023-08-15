@@ -153,7 +153,7 @@ public class PostService {
 			.boardName(post.getBoard().getName())
 			.userId(post.getUser().getUsrId())
 			.userNickname(post.getUser().getNickname())
-			.emdId(post.getEmdAddress().getAemId())
+			.emdAddress(post.getEmdAddress())
 			.viewCnt(post.getViewCnt())
 			.title(post.getTitle())
 			.content(post.getContent())

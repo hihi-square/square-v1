@@ -11,5 +11,6 @@ import java.util.List;
 public class StoreAllSaleResponseDto {
     private String message;
     private Integer statusCode;
+    @Builder.Default
     private List<StoreSaleDto> sales = new ArrayList<>();
 }

@@ -36,7 +36,7 @@ public class PostDetailResponseDto {
 	private String boardName;
 	private Integer userId;
 	private String userNickname;
-	private Integer emdId;
+	private EmdAddress emdAddress;
 	private Integer viewCnt;
 	private String title;
 	private String content;

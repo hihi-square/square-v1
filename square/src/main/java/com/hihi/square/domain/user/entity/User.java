@@ -14,6 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
@@ -58,8 +61,9 @@ public class User {
 	private LocalDateTime lastLogin;
 	@Enumerated(EnumType.STRING)
 	private UserStatusType status;
-	@Column(name = "main_address")
-	private Integer mainAddress;
+	@JoinColumn(name = "main_address")
+	@ManyToOne
+	private EmdAddress mainAddress;
 	@Column(name = "marketing_agree")
 	private boolean marketingAgree;
 	@Column(name = "refresh_token")
@@ -105,5 +109,13 @@ public class User {
 
 	public void setPasswordNull() {
 		this.password = "";
+	}
+
+	protected void updateMainAddress(EmdAddress emdAddress) {
+		this.mainAddress = emdAddress;
+	}
+
+	public void updateUserAddress(EmdAddress mainAddress) {
+		this.mainAddress = mainAddress;
 	}
 }
