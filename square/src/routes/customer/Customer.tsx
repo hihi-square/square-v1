@@ -20,7 +20,7 @@ import List from "./list/List";
 import StoreListByLocation from "./map/component/storeListByLocation";
 import Store from "./store/Store";
 import Board from "./main/board/Board";
-import BoardForm from "./main/board/BoardForm";
+import BoardDetail from "./main/board/BoardDetail";
 import Chat from "./chat/chat";
 import MyPage from "./my/My";
 import Deal from "./deal/Deal";
@@ -211,7 +211,7 @@ export default function Customer() {
         <Route path="/store/:store" element={<Store />} />
         <Route path="/map" element={<Map />} />
         <Route path="/board" element={<Board />} />
-        <Route path="/board/:selectedBoard/:boardId" element={<BoardForm />} />
+        <Route path="/board/:id" element={<BoardDetail />} />
 
         <Route path="/chat" element={<Chat />} />
 
