@@ -12,6 +12,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+
 import { REST_API } from "redux/redux";
 
 export default function Login() {
@@ -129,7 +130,13 @@ export default function Login() {
   };
 
   return (
-    <>
+    <Grid
+      container
+      xs={12}
+      md={8}
+      justifyContent="center"
+      sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
+    >
       <Grid container xs={12} md={8}>
         <Grid
           container
@@ -280,6 +287,6 @@ export default function Login() {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }

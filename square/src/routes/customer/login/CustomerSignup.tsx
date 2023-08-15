@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 import { REST_API } from "redux/redux";
+import { Unstable_Grid2 as Grid } from "@mui/material";
 
 export default function CustomerSignUp() {
   const [username, setName] = useState("");
@@ -173,90 +174,134 @@ export default function CustomerSignUp() {
   };
 
   return (
-    <div className="page">
-      <div className="titleWrap">Sign up</div>
-      <div className="contentWrap">
-        <div className="inputTitle">이름</div>
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="text"
-            placeholder="홍길동"
-            value={username}
-            onChange={handleName}
-          />
-        </div>
-        <div className="errorMessageWrap">
-          {!nameValid && username.length > 0 && (
-            <div>이름을 최소 2글자 이상 입력해주세요.</div>
-          )}
-        </div>
+    <Grid
+      container
+      xs={12}
+      md={8}
+      justifyContent="center"
+      sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
+    >
+      <div className="page">
+        <div className="titleWrap">Sign up</div>
+        <div className="contentWrap">
+          <div className="inputTitle">이름</div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="text"
+              placeholder="홍길동"
+              value={username}
+              onChange={handleName}
+            />
+          </div>
+          <div className="errorMessageWrap">
+            {!nameValid && username.length > 0 && (
+              <div>이름을 최소 2글자 이상 입력해주세요.</div>
+            )}
+          </div>
 
-        <div className="inputTitle">닉네임</div>
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="text"
-            placeholder="홍홍홍"
-            value={nickname}
-            onChange={handleNickname}
-          />
-        </div>
-        <div className="errorMessageWrap">
-          {!nicknameValid && nickname.length > 0 && (
-            <div>닉네임을 최소 2글자 이상 입력해주세요.</div>
-          )}
-        </div>
+          <div className="inputTitle">닉네임</div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="text"
+              placeholder="홍홍홍"
+              value={nickname}
+              onChange={handleNickname}
+            />
+          </div>
+          <div className="errorMessageWrap">
+            {!nicknameValid && nickname.length > 0 && (
+              <div>닉네임을 최소 2글자 이상 입력해주세요.</div>
+            )}
+          </div>
 
-        <div className="inputTitle">이메일</div>
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="text"
-            placeholder="test@naver.com"
-            value={email}
-            onChange={handleEmail}
-          />
-        </div>
-        <div className="errorMessageWrap">
-          {!emailValid && email.length > 0 && (
-            <div>이메일을 제대로 입력해주세요.</div>
-          )}
+          <div className="inputTitle">이메일</div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="text"
+              placeholder="test@naver.com"
+              value={email}
+              onChange={handleEmail}
+            />
+          </div>
+          <div className="errorMessageWrap">
+            {!emailValid && email.length > 0 && (
+              <div>이메일을 제대로 입력해주세요.</div>
+            )}
+          </div>
+
+          <div style={{ marginTop: "26px" }} className="inputTitle">
+            Id
+          </div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="text"
+              placeholder="testid"
+              value={id}
+              onChange={handleId}
+            />
+            <button onClick={handleCheckId}>중복 확인</button>
+          </div>
+          <p>{message}</p>
+          <div className="errorMessageWrap">
+            {isIdDuplicated && <div>이미 사용 중인 아이디입니다.</div>}
+          </div>
+          <div className="errorMessageWrap">
+            {!idValid && id.length > 0 && (
+              <div>올바른 아이디를 입력해주세요.</div>
+            )}
+          </div>
+
+          <div style={{ marginTop: "26px" }} className="inputTitle">
+            비밀번호
+          </div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="password"
+              placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+              value={pw}
+              onChange={handlePw}
+            />
+          </div>
+          <div className="errorMessageWrap">
+            {!pwValid && pw.length > 0 && (
+              <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
+            )}
+          </div>
+
+          <div style={{ marginTop: "26px" }} className="inputTitle">
+            비밀번호 확인
+          </div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="password"
+              placeholder="설정한 비밀번호를 정확하게 입력해주세요"
+              value={checkPw}
+              onChange={handleCheckPw}
+            />
+          </div>
+          <div className="errorMessageWrap">
+            {!checkPwValid && checkPw.length > 0 && (
+              <div>비밀번호가 일치하지 않습니다.</div>
+            )}
+          </div>
         </div>
 
         <div style={{ marginTop: "26px" }} className="inputTitle">
-          Id
+          핸드폰번호
         </div>
         <div className="inputWrap">
           <input
             className="input"
-            type="text"
-            placeholder="testid"
-            value={id}
-            onChange={handleId}
-          />
-          <button onClick={handleCheckId}>중복 확인</button>
-        </div>
-        <p>{message}</p>
-        <div className="errorMessageWrap">
-          {isIdDuplicated && <div>이미 사용 중인 아이디입니다.</div>}
-        </div>
-        <div className="errorMessageWrap">
-          {!idValid && id.length > 0 && (
-            <div>올바른 아이디를 입력해주세요.</div>
-          )}
-        </div>
-
-        <div style={{ marginTop: "26px" }} className="inputTitle">
-          비밀번호
-        </div>
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="password"
-            placeholder="영문, 숫자, 특수문자 포함 8자 이상"
-            value={pw}
-            onChange={handlePw}
+            type="number"
+            placeholder="01012345678"
+            value={phone}
+            onChange={handlePhone}
           />
         </div>
         <div className="errorMessageWrap">
@@ -265,57 +310,25 @@ export default function CustomerSignUp() {
           )}
         </div>
 
-        <div style={{ marginTop: "26px" }} className="inputTitle">
-          비밀번호 확인
-        </div>
-        <div className="inputWrap">
+        <div style={{ marginTop: "26px" }}>
           <input
-            className="input"
-            type="password"
-            placeholder="설정한 비밀번호를 정확하게 입력해주세요"
-            value={checkPw}
-            onChange={handleCheckPw}
+            type="checkbox"
+            checked={marketing}
+            onChange={handleMarketing}
           />
+          마케팅 동의
         </div>
-        <div className="errorMessageWrap">
-          {!checkPwValid && checkPw.length > 0 && (
-            <div>비밀번호가 일치하지 않습니다.</div>
-          )}
+
+        <div>
+          <button
+            onClick={handleSignUp}
+            disabled={notAllow}
+            className="bottomButton"
+          >
+            가입하기
+          </button>
         </div>
       </div>
-
-      <div style={{ marginTop: "26px" }} className="inputTitle">
-        핸드폰번호
-      </div>
-      <div className="inputWrap">
-        <input
-          className="input"
-          type="number"
-          placeholder="01012345678"
-          value={phone}
-          onChange={handlePhone}
-        />
-      </div>
-      <div className="errorMessageWrap">
-        {!pwValid && pw.length > 0 && (
-          <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
-        )}
-      </div>
-
-      <div style={{ marginTop: "26px" }}>
-        <input type="checkbox" checked={marketing} onChange={handleMarketing} />
-        마케팅 동의
-      </div>
-
-      <div>
-        <button
-          onClick={handleSignUp}
-          disabled={notAllow}
-          className="bottomButton"
-        >
-          가입하기
-        </button>
-      </div>
-    </div>
+    </Grid>
   );
 }

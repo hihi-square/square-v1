@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { REST_API } from "redux/redux";
+import { Unstable_Grid2 as Grid } from "@mui/material";
 
 function KakaoRedirect() {
   const code = new URL(window.location.href).searchParams.get("code");
@@ -31,7 +32,15 @@ function KakaoRedirect() {
     }
   }, [code, navigate]);
 
-  return <div></div>;
+  return (
+    <Grid
+      container
+      xs={12}
+      md={8}
+      justifyContent="center"
+      sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
+    ></Grid>
+  );
 }
 
 export default KakaoRedirect;
