@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class PostWriteRequestDto {
 	private Integer boardId;
-	private Integer emdId;
+	private Long bCode;
 	private String title;
 	private String content;
 	private List<FileThumbDto> images = new ArrayList<>();

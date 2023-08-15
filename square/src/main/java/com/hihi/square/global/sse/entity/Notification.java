@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "notification")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper=false)
 public class Notification extends BaseTime {
 
 	@Id

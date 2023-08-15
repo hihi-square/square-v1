@@ -86,10 +86,16 @@ public class StoreService {
 		List<StoreCategorySelected> storeCategorySelectedList = storeCategoryService.findByStoreCategoryBig(
 			storeCategoryBig);
 
+		List<StoreListResponseDto> closedStores = new ArrayList<>();
+
 		List<StoreListResponseDto> stores = new ArrayList<>();
 		for (StoreCategorySelected s : storeCategorySelectedList) {
 			Store store = s.getStore();
 			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+
+			if(menuList.size() == 0) {
+				menuList = menuRepository.findAllByUserId(store.getUsrId());
+			}
 
 			// 인기메뉴가 3개 이상이면 3개만 가져오도록 함
 			int size = menuList.size() >= 3 ? 3 : menuList.size();
@@ -107,15 +113,22 @@ public class StoreService {
 					.storeId(store.getUsrId())
 					.storeName(store.getStoreName())
 					.content(store.getContent())
-					.storeAddress(store.getAddress())
+					.storeAddress(store.getEmdAddress().getFullName()+ " " + store.getAddress())
 					.mainMenu(menuName)
 					.logo(store.getLogo())
 					.longitude(store.getLongitude())
 					.latitude(store.getLatitude())
 					.isOpened(store.getIsOpened())
 					.build();
-			stores.add(res);
+
+			if(store.getIsOpened()) {
+				stores.add(res);
+			} else {
+				closedStores.add(res);
+			}
 		}
+		stores.addAll(closedStores);
+
 		return stores;
 
 	}

@@ -67,6 +67,7 @@ public class PostService {
 					.userProfile(post.getUser().getProfile())
 					.latitude(post.getLatitude())
 					.longitude(post.getLongitude())
+					.viewCount(post.getViewCnt())
 					.build()
 			);
 		}
@@ -153,7 +154,7 @@ public class PostService {
 			.boardName(post.getBoard().getName())
 			.userId(post.getUser().getUsrId())
 			.userNickname(post.getUser().getNickname())
-			.emdId(post.getEmdAddress().getAemId())
+			.emdAddress(post.getEmdAddress())
 			.viewCnt(post.getViewCnt())
 			.title(post.getTitle())
 			.content(post.getContent())
@@ -187,6 +188,7 @@ public class PostService {
 					.userProfile(post.getUser().getProfile())
 					.latitude(post.getLatitude())
 					.longitude(post.getLongitude())
+					.viewCount(post.getViewCnt())
 					.build()
 			);
 		}

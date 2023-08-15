@@ -50,5 +50,4 @@ public class CategoryService {
         storeCategoryBig.updateScbCategory(request);
         categoryRepository.save(storeCategoryBig);
     }
-
 }

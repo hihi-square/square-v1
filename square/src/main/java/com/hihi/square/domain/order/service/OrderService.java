@@ -10,6 +10,8 @@ import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.OrderMenuRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderResponseDto;
 import com.hihi.square.domain.order.dto.response.OrderMenuResponseDto;
+import com.hihi.square.domain.order.dto.response.OrderStatusCountDto;
+import com.hihi.square.domain.order.dto.response.PaymentAndOrderAcceptNumberResponseDto;
 import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import com.hihi.square.domain.order.entity.*;
 import com.hihi.square.domain.order.repository.OrderRepository;
@@ -20,6 +22,7 @@ import com.hihi.square.domain.sale.repository.SaleRepository;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.entity.UserRankType;
 import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.service.CustomerService;
@@ -245,4 +248,8 @@ public class OrderService {
             }
         }
     }
+
+	public List<OrderStatusCountDto> getOrderStatusCountByUser(User user) {
+        return orderRepository.findPaymentAndOrderAcceptNumberByUser((Customer) user);
+	}
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amazonaws.Response;
 import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.entity.IssueCoupon;
@@ -26,6 +27,8 @@ import com.hihi.square.domain.order.dto.request.OrderRequestDto;
 import com.hihi.square.domain.order.dto.request.PaymentRequestDto;
 import com.hihi.square.domain.order.dto.response.OrderIdResponseDto;
 import com.hihi.square.domain.order.dto.response.OrderResponseDto;
+import com.hihi.square.domain.order.dto.response.OrderStatusCountDto;
+import com.hihi.square.domain.order.dto.response.PaymentAndOrderAcceptNumberResponseDto;
 import com.hihi.square.domain.order.dto.response.RefundInfoResponseDto;
 import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.order.entity.OrderStatus;
@@ -35,6 +38,7 @@ import com.hihi.square.domain.point.service.PointService;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.repository.StoreRepository;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
@@ -337,23 +341,37 @@ public class OrderController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	// PAYMENT_COMPLETE, ORDER_ACCEPT 인 주문의 갯수 반환
+	@GetMapping("/customer/payment-order-num")
+	public ResponseEntity getPaymentAndOrderAcceptNumber(Authentication authentication) {
+		String uid = authentication.getName();
+		User user = userService.findByUid(uid).get();
+		if (user instanceof Store) {
+			return new ResponseEntity(CommonResponseDto.builder().message("ONLY_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+		}
+		List<OrderStatusCountDto> cntRes = orderService.getOrderStatusCountByUser(user);
+
+		PaymentAndOrderAcceptNumberResponseDto response = new PaymentAndOrderAcceptNumberResponseDto();
+		for(OrderStatusCountDto c : cntRes) {
+			System.out.println(c.getStatus()+" "+c.getCount());
+			if (c.getStatus().equals(OrderStatus.PAYMENT_COMPLETE)) response.setPaymentComplete(c.getCount().intValue());
+			else if (c.getStatus().equals(OrderStatus.ORDER_ACCEPT)) response.setOrderAccept(c.getCount().intValue());
+		}
+
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
+
+
 	// 주문 내역 전체 조회 사용자별로
 	@Transactional(readOnly = true)
-	@GetMapping("/customer/{cusId}")
-	public ResponseEntity<?> findOrderByUserId(Authentication authentication, @PathVariable Integer cusId) {
+	@GetMapping("/customer")
+	public ResponseEntity<?> findOrderByUserId(Authentication authentication) {
 
 		// 로그인한 유저와 주문한 사용자가 다를때
 		String uid = authentication.getName();
-		if (userService.findByUid(uid).get().getUsrId() != cusId) {
-			CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(400)
-				.message("NO_AUTHORIZATION")
-				.build();
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
+		Customer customer = (Customer) userService.findByUid(uid).get();
 
 		List<OrderResponseDto> response = new ArrayList<>();
-		Customer customer = customerRepository.findById(cusId).get();
 		List<Optional<Order>> orders = orderService.findByCustomer(customer);
 
 		for (Optional<Order> order : orders) {
@@ -366,21 +384,14 @@ public class OrderController {
 
 	// 주문 내역 전체 조회 가게별로
 	@Transactional(readOnly = true)
-	@GetMapping("/store/{stoId}")
-	public ResponseEntity<?> findOrderByStoreId(Authentication authentication, @PathVariable Integer stoId) {
+	@GetMapping("/store")
+	public ResponseEntity<?> findOrderByStoreId(Authentication authentication) {
 
 		// 로그인한 유저와 가게가 다를때
 		String uid = authentication.getName();
-		if (userService.findByUid(uid).get().getUsrId() != stoId) {
-			CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(400)
-				.message("NO_AUTHORIZATION")
-				.build();
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
+		Store store = (Store)userService.findByUid(uid).get();
 
 		List<OrderResponseDto> response = new ArrayList<>();
-		Store store = storeRepository.findById(stoId).get();
 		List<Optional<Order>> orders = orderService.findByStore(store);
 
 		for (Optional<Order> order : orders) {
@@ -390,4 +401,7 @@ public class OrderController {
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+
+
 }

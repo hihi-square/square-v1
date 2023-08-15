@@ -13,12 +13,14 @@ import lombok.Data;
 @Builder
 public class CommentListDto {
 
+	private Integer commentId;
 	private String comment;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private Integer userId;
 	private String userNickname;
 	private Boolean isDeleted;
+	private String userProfile;
 	@Builder.Default
 	private List<ReCommentListDto> recommentList = new ArrayList<>();
 

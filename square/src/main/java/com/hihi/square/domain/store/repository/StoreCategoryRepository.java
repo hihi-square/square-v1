@@ -21,4 +21,5 @@ public interface StoreCategoryRepository extends JpaRepository<StoreCategorySele
 
     Optional<StoreCategorySelected> findByStoreAndStoreCategoryBig(Store store, StoreCategoryBig storeCategoryBig);
 
+    Integer countByStore(Store store);
 }

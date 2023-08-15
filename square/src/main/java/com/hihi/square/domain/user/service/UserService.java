@@ -3,7 +3,9 @@ package com.hihi.square.domain.user.service;
 import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.response.UserInfoDto;
+import com.hihi.square.domain.user.dto.response.UserLoginAddressInfo;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.repository.UserRepository;
@@ -26,11 +28,11 @@ import java.util.Optional;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final EmdAddressService emdAddressService;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final S3Service s3Service;
 
-	private final CustomerRepository customerRepository;
 	public boolean validateDuplicateUid(String uid) {
 
 		Optional<User> user = userRepository.findByUid(uid);
@@ -65,6 +67,7 @@ public class UserService {
 	@Transactional
 	public UserLoginResponseDto updateRefreshToken(User user) {
 		String refreshToken = jwtService.createRefreshToken(user.getUid());
+		EmdAddress emdAddress = user.getMainAddress();
 		UserLoginResponseDto successLogin = UserLoginResponseDto.builder()
 				.statusCode(200)
 				.message("SUCCESS_LOGIN")
@@ -73,6 +76,13 @@ public class UserService {
 				.userUid(user.getUid())
 				.usrId(user.getUsrId())
 				.userNickname(user.getNickname())
+				.address(UserLoginAddressInfo.builder()
+					.bCode(emdAddress.getBCode())
+					.sidoName(emdAddress.getSidoName())
+					.siggName(emdAddress.getSiggName())
+					.emdName(emdAddress.getName())
+					.fullName(emdAddress.getFullName())
+					.build())
 				.build();
 		userRepository.updateRefreshToken(refreshToken, LocalDateTime.now(), user.getUid());
 		return successLogin;
@@ -134,5 +144,12 @@ public class UserService {
 
 	public Optional<User> findByNickname(String nickname) {
 		return userRepository.findByNickname(nickname);
+	}
+
+	@Transactional
+	public void updateUserAddress(User user, Long bCode) {
+		EmdAddress emdAddress = emdAddressService.findByBCode(bCode).get();
+		user.updateUserAddress(emdAddress);
+		userRepository.save(user);
 	}
 }

@@ -60,8 +60,9 @@ public class BoardController {
 	private final PostImageService postImageService;
 
 	// 읍면동과 depth에 따른 포스트 가져오기
-	@GetMapping("/{boardId}/{emdId}/{depth}")
-	public ResponseEntity getBoardPosts(Authentication authentication,@PathVariable("boardId") Integer boardId, @PathVariable("emdId") Integer emdId, @PathVariable("depth") Integer depth, @PathParam("query") String query){
+	@GetMapping("/{boardId}/{bCode}/{depth}")
+	public ResponseEntity getBoardPosts(Authentication authentication,@PathVariable("boardId") Integer boardId, @PathVariable("bCode") Long bCode, @PathVariable("depth") Integer depth, @PathParam("query") String query){
+
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 		Optional<Board> optionalBoard = boardService.findById(boardId);
@@ -69,7 +70,8 @@ public class BoardController {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_BOARD_ID").build(), HttpStatus.BAD_REQUEST);
 		}
 		Board board = optionalBoard.get();
-		List<EmdAddress> emdList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
+		EmdAddress emdAddress = emdAddressService.findByBCode(bCode).get();
+		List<EmdAddress> emdList = emdAddressService.getEmdAddressWithDepth(emdAddress.getAemId(), depth);
 		List<PostListDto> result = postService.findByEmdListAndBoardWithQuery(emdList, board, query, user);
 		return new ResponseEntity<>(PostListResponseDto.builder().statusCode(200).posts(result).build(), HttpStatus.OK);
 	}
@@ -84,7 +86,7 @@ public class BoardController {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_BOARD_ID").build(), HttpStatus.BAD_REQUEST);
 		}
 		Board board = optionalBoard.get();
-		Optional<EmdAddress> optionalEmdAddress = emdAddressService.findById(request.getEmdId());
+		Optional<EmdAddress> optionalEmdAddress = emdAddressService.findByBCode(request.getBCode());
 		if (optionalEmdAddress.isEmpty()){
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_EMDADDRESS").build(), HttpStatus.BAD_REQUEST);
 		}

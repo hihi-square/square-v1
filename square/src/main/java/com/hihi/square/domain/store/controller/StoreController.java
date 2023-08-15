@@ -12,12 +12,7 @@ import com.hihi.square.domain.sale.dto.response.StoreSaleDto;
 import com.hihi.square.domain.sale.service.SaleService;
 import com.hihi.square.domain.store.dto.request.ScsRegisterRequestDto;
 import com.hihi.square.domain.store.dto.request.StoreRegisterRequestDto;
-import com.hihi.square.domain.store.dto.response.StoreInfoDto;
-import com.hihi.square.domain.store.dto.response.StoreInfoResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreListResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreMenuResponseDto;
-import com.hihi.square.domain.store.dto.response.StoreSearchListDto;
-import com.hihi.square.domain.store.dto.response.StoreSearchResponseDto;
+import com.hihi.square.domain.store.dto.response.*;
 import com.hihi.square.domain.store.entity.StoreCategoryBig;
 import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
@@ -38,8 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.store.dto.request.StoreUpdateRequestDto;
 
-import com.hihi.square.domain.store.dto.response.StoreInfoResDto;
-import com.hihi.square.domain.store.dto.response.StoreUpdateResponseDto;
 import com.hihi.square.domain.store.entity.BusinessInformation;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.service.BusinessInformationService;
@@ -67,6 +60,9 @@ public class StoreController {
 	private final EmdAddressService emdAddressService;
 	private final ImageService imageService;
 	private final SaleService saleService;
+
+
+
 
 	// 가게 회원정보 보기
 	@GetMapping
@@ -234,15 +230,47 @@ public class StoreController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	// 처음 회원가입시 카테고리 다중등록
+	@PostMapping("/big-category/ids={id}")
+	public ResponseEntity<?> registerStoreCategorySelectionByStore(Authentication authentication, @PathVariable List<Integer> id) {
+		String uid = authentication.getName();
+		// 판매자가 아니라면 등록불가
+		if (!(userService.findByUid(uid).get() instanceof Store)) {
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE").build(), HttpStatus.BAD_REQUEST);
+		}
+		Store store = storeService.findByUid(uid).get();
+
+		Integer registeredCategoryCount = storeCategoryService.countByStore(store);
+		if(registeredCategoryCount + id.size() > 3) {
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("MAXIMUM_COUNT").build(), HttpStatus.BAD_REQUEST);
+		}
+		for(Integer categoryId : id) {
+			StoreCategoryBig storeCategoryBig = categoryService.findById(categoryId).get();
+			if(storeCategoryService.validateDuplicateStoreCategory(store, storeCategoryBig)) {
+				return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("ALREADY_EXISTS").build(), HttpStatus.BAD_REQUEST);
+			}
+		}
+		for(Integer categoryId : id) {
+			StoreCategoryBig storeCategoryBig = categoryService.findById(categoryId).get();
+			storeCategoryService.save(store, storeCategoryBig);
+		}
+		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(201).message("CREATE_SUCCESS").build(), HttpStatus.CREATED);
+	}
+
 	// 가게 정보 상단 조회
 	@GetMapping("/header/{id}")
 	public ResponseEntity<?> getStoreHeaderInfo(@PathVariable Integer id) {
 		Store store = storeService.findByUsrId(id).get();
+		EmdAddress emdAddress = store.getEmdAddress();
 
-		StoreInfoResponseDto res = StoreInfoResponseDto.builder()
+		StoreHeaderResponseDto res = StoreHeaderResponseDto.builder()
 				.storeName(store.getStoreName())
 				.storePhone(store.getStorePhone())
-				.address(store.getAddress())
+				.aemId(emdAddress.getAemId())
+				.sidoName(emdAddress.getSidoName())
+				.dongName(emdAddress.getName())
+				.siggName(emdAddress.getSiggName())
+				.address(emdAddress.getFullName() + " " + store.getAddress())
 				.content(store.getContent())
 				.isOpened(store.getIsOpened())
 				.latitude(store.getLatitude())
