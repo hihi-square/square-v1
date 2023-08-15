@@ -91,6 +91,10 @@ public class StoreService {
 			Store store = s.getStore();
 			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
 
+			if(menuList.size() == 0) {
+				menuList = menuRepository.findAllByUserId(store.getUsrId());
+			}
+
 			// 인기메뉴가 3개 이상이면 3개만 가져오도록 함
 			int size = menuList.size() >= 3 ? 3 : menuList.size();
 
