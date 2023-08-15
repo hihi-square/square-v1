@@ -41,6 +41,9 @@ public class DibsService {
 
 	public List<DibsResponseDto> getUserDibs(Customer customer) {
 		List<Dibs> dibsList = dibsRepository.findByCustomer(customer);
+
+		List<DibsResponseDto> closedStoreList = new ArrayList<>();
+
 		List<DibsResponseDto> result = new ArrayList<>();
 		for (Dibs d : dibsList) {
 			Store store = d.getStore();
@@ -62,7 +65,7 @@ public class DibsService {
 					menuName += menuList.get(i).getName() + ", ";
 				}
 			}
-			result.add(DibsResponseDto.builder()
+			DibsResponseDto dto = DibsResponseDto.builder()
 				.dibId(d.getDibId())
 				.cusId(customer.getUsrId())
 				.stoId(store.getUsrId())
@@ -74,8 +77,13 @@ public class DibsService {
 				.isOpened(store.getIsOpened())
 				.latitude(store.getLatitude())
 				.longitude(store.getLongitude())
-				.build());
+				.build();
+
+			if(store.getIsOpened()) {
+				result.add(dto);
+			} else closedStoreList.add(dto);
 		}
+		result.addAll(closedStoreList);
 		return result;
 	}
 

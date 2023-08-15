@@ -86,6 +86,8 @@ public class StoreService {
 		List<StoreCategorySelected> storeCategorySelectedList = storeCategoryService.findByStoreCategoryBig(
 			storeCategoryBig);
 
+		List<StoreListResponseDto> closedStores = new ArrayList<>();
+
 		List<StoreListResponseDto> stores = new ArrayList<>();
 		for (StoreCategorySelected s : storeCategorySelectedList) {
 			Store store = s.getStore();
@@ -118,8 +120,15 @@ public class StoreService {
 					.latitude(store.getLatitude())
 					.isOpened(store.getIsOpened())
 					.build();
-			stores.add(res);
+
+			if(store.getIsOpened()) {
+				stores.add(res);
+			} else {
+				closedStores.add(res);
+			}
 		}
+		stores.addAll(closedStores);
+
 		return stores;
 
 	}
