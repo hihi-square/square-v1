@@ -37,6 +37,7 @@ import Finish from "../customer/deal/Finish";
 import PickUp from "../customer/deal/PickUp";
 import SSEComponent from "./SSEComponent";
 import Error from "./error/Error";
+import BoardForm from "./main/board/BoardForm";
 
 type data = {
   id: number;
@@ -211,6 +212,7 @@ export default function Customer() {
         <Route path="/store/:store" element={<Store />} />
         <Route path="/map" element={<Map />} />
         <Route path="/board" element={<Board />} />
+        <Route path="/board/write" element={<BoardForm />} />
         <Route path="/board/:id" element={<BoardDetail />} />
 
         <Route path="/chat" element={<Chat />} />
