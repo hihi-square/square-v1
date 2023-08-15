@@ -30,23 +30,23 @@ public class OrderEventListener implements ApplicationListener<OrderEvent> {
 		if (order.getStatus() == OrderStatus.PAYMENT_COMPLETE) {
 			Store store = order.getStore();
 			notificationService.send(store, NotificationType.READY, "order", event.getContent(),
-				"/order/" + order.getOrdId());
+				store.getStoreName());
 		}
 		//가게에서 주문 수락 or 취소 시
 		else if (status == OrderStatus.ORDER_ACCEPT) {
 			Customer customer = order.getCustomer();
 			notificationService.send(customer, NotificationType.ACCEPT, "order", event.getContent(),
-				"/order/" + order.getOrdId());
+				order.getStore().getStoreName());
 		} else if (status == OrderStatus.ORDER_REJECT) {
 			Customer customer = order.getCustomer();
 			notificationService.send(customer, NotificationType.REJECT, "order", event.getContent(),
-				"/order/" + order.getOrdId());
+				order.getStore().getStoreName());
 		}
 		//고객이 픽업을 완료했을 때
 		else if (status == OrderStatus.PICKUP_COMPLETE) {
 			Customer customer = order.getCustomer();
 			notificationService.send(customer, NotificationType.COMPLETED, "pickup", event.getContent(),
-				"/order/" + order.getOrdId());
+				order.getStore().getStoreName());
 		}
 	}
 }
