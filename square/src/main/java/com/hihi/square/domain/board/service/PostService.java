@@ -1,25 +1,11 @@
 package com.hihi.square.domain.board.service;
 
-import java.io.File;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.hihi.square.domain.board.dto.request.PostUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.PostWriteRequestDto;
 import com.hihi.square.domain.board.dto.response.CommentListDto;
 import com.hihi.square.domain.board.dto.response.PostDetailResponseDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
-import com.hihi.square.domain.board.entity.Board;
-import com.hihi.square.domain.board.entity.Post;
-import com.hihi.square.domain.board.entity.PostDibs;
-import com.hihi.square.domain.board.entity.PostImage;
-import com.hihi.square.domain.board.entity.Status;
+import com.hihi.square.domain.board.entity.*;
 import com.hihi.square.domain.board.repository.CommentRepository;
 import com.hihi.square.domain.board.repository.PostDibsRepository;
 import com.hihi.square.domain.board.repository.PostImageRepository;
@@ -27,8 +13,14 @@ import com.hihi.square.domain.board.repository.PostRepository;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.s3.dto.FileThumbDto;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -137,6 +129,7 @@ public class PostService {
 		List<PostImage> postImages = postImageService.findByPost(post);
 		Optional<PostDibs> optionalPostDibs = postDibsService.findByUserAndPost(user, post);
 		List<CommentListDto> commentList = commentService.findPostDetailComment(post);
+		Integer commentCnt = commentRepository.countByPostAndStateEquals(post, Status.S01);
 
 		List<FileThumbDto> images = new ArrayList<>();
 		for(PostImage image : postImages) {
@@ -154,6 +147,7 @@ public class PostService {
 			.boardName(post.getBoard().getName())
 			.userId(post.getUser().getUsrId())
 			.userNickname(post.getUser().getNickname())
+			.userProfile(post.getUser().getProfile())
 			.emdAddress(post.getEmdAddress())
 			.viewCnt(post.getViewCnt())
 			.title(post.getTitle())
@@ -165,6 +159,7 @@ public class PostService {
 			.images(images)
 			.isLikePost(optionalPostDibs.isPresent())
 			.comments(commentList)
+			.commentCnt(commentCnt)
 			.build();
 		return response;
 	}
