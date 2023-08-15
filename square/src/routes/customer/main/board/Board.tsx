@@ -1,4 +1,6 @@
 import * as React from "react";
+import { REST_API } from "redux/redux";
+import axios from "axios";
 import { Grid, Button, Typography, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Footer from "routes/customer/Footer";
@@ -12,8 +14,12 @@ function Board() {
 
   const navigate = useNavigate();
 
+  type Board = {
+    id: number
+  }
+
   type Post = {
-    id: string;
+    id: number;
     title: string;
     author: string;
     date: string;
@@ -32,7 +38,7 @@ function Board() {
   const dummyPosts: { [key: string]: Post[] } = {
     Today: [
       {
-        id: "1",
+        id: 1,
         title: "오늘의 메뉴",
         author: "동네빵집",
         date: "2023-08-09",
@@ -41,7 +47,7 @@ function Board() {
         thumbnail: "URL1",
       },
       {
-        id: "2",
+        id:2,
         title: "오늘의 초밥",
         author: "코우지",
         date: "2023-08-09",
@@ -50,7 +56,7 @@ function Board() {
         thumbnail: "URL1",
       },
       {
-        id: "3",
+        id:3,
         title: "장사 안합니다",
         author: "펭소연",
         date: "2023-08-09",
@@ -61,7 +67,7 @@ function Board() {
     ],
     "사장님 게시판": [
       {
-        id: "1",
+        id: 4,
         title: "처음보는 진상유형",
         author: "카페사장",
         date: "2023-08-08",
@@ -70,7 +76,7 @@ function Board() {
         thumbnail: "URL2",
       },
       {
-        id: "2",
+        id:5,
         title: "펭소 저격합니다",
         author: "오다가다 오다희",
         date: "2023-08-08",
@@ -83,11 +89,21 @@ function Board() {
 
   React.useEffect(() => {
     const dummyLocation = "대전광역시 유성구 구암동";
-
+    const bCode = 3020011300;
+    const depth = 1;
+    getPosts();
+    
     setUserLocation(dummyLocation);
   }, []);
 
-  const handlePostClick = (postId: string) => {
+  const getPosts= () => {
+    axios({
+      url: `${REST_API}`
+    })
+  }
+
+
+  const handlePostClick = (postId: number) => {
     if (selectedBoard) {
       navigate(`/board/${selectedBoard}/${postId}`, {
         state: {
