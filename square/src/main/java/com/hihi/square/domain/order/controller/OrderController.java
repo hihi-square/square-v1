@@ -385,7 +385,7 @@ public class OrderController {
 	// 주문 내역 전체 조회 가게별로
 	@Transactional(readOnly = true)
 	@GetMapping("/store")
-	public ResponseEntity<?> findOrderByStoreId(Authentication authentication, @PathVariable Integer stoId) {
+	public ResponseEntity<?> findOrderByStoreId(Authentication authentication) {
 
 		// 로그인한 유저와 가게가 다를때
 		String uid = authentication.getName();
