@@ -67,6 +67,7 @@ public class PostService {
 					.userProfile(post.getUser().getProfile())
 					.latitude(post.getLatitude())
 					.longitude(post.getLongitude())
+					.viewCount(post.getViewCnt())
 					.build()
 			);
 		}
@@ -187,6 +188,7 @@ public class PostService {
 					.userProfile(post.getUser().getProfile())
 					.latitude(post.getLatitude())
 					.longitude(post.getLongitude())
+					.viewCount(post.getViewCnt())
 					.build()
 			);
 		}

@@ -46,16 +46,19 @@ public class CommentService {
 			for(Comment c : recommentList) {
 				recomments.add(
 					ReCommentListDto.builder()
+						.commentId(c.getId())
 						.comment(c.getComment())
 						.createdAt(c.getCreatedAt())
 						.modifiedAt(c.getModifiedAt())
 						.userId(c.getUser().getUsrId())
 						.userNickname(c.getUser().getNickname())
+						.userProfile(c.getUser().getProfile())
 						.build()
 				);
 			}
 			result.add(
 				CommentListDto.builder()
+					.commentId(comment.getId())
 					.comment(comment.getComment())
 					.createdAt(comment.getCreatedAt())
 					.modifiedAt(comment.getModifiedAt())
