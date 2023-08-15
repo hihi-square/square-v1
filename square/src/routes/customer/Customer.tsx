@@ -28,6 +28,8 @@ import MessageForm from "../customer/main/MessageForm"
 import Finish from "../customer/deal/Finish"
 import PickUp from "../customer/deal/PickUp"
 import SSEComponent from "./SSEComponent";
+import SSEtest from "./SSEtest";
+
 
 export default function Customer() {
   return (
@@ -73,8 +75,10 @@ export default function Customer() {
         <Route path="/message/:userId" element={<MessageForm />} />
 
         <Route path="/test" element={<SSEComponent />} />
+        <Route path="/testtt" element={<SSEtest />} />
       </Routes>
     </Grid>
   );
 }
+
 
