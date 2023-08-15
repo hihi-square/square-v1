@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { REST_API } from "redux/redux";
+import { Unstable_Grid2 as Grid } from "@mui/material";
 
 function NaverRedirect() {
   console.log(REST_API);
@@ -34,7 +35,15 @@ function NaverRedirect() {
     }
   }, [code, navigate]);
 
-  return <></>;
+  return (
+    <Grid
+      container
+      xs={12}
+      md={8}
+      justifyContent="center"
+      sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
+    ></Grid>
+  );
 }
 
 export default NaverRedirect;
