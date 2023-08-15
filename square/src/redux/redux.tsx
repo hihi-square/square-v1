@@ -14,6 +14,14 @@ const user = createSlice({
   reducers: {},
 });
 
+type data = {
+  id: number,
+  content: string,
+  url: string,
+  isRead: boolean
+}
+
+
 type Sticky = {
   pageType: "main" | "store";
   value: number;
@@ -35,6 +43,39 @@ const sticky = createSlice({
     },
   },
 });
+
+const notifications = createSlice({
+  name: "notifications",
+  initialState: {
+    orderData: null as data | null,
+    pickUpData: null as data | null,
+    messageData: null as data | null,
+    noticeData: null as data | null
+  },
+  reducers: {
+    setOrderData: (state, action: PayloadAction<data>) => {
+      state.orderData = action.payload;
+    },
+    setPickUpData: (state, action: PayloadAction<data>) => {
+      state.pickUpData = action.payload;
+    },
+    setMessageData: (state, action: PayloadAction<data>) => {
+      state.messageData = action.payload;
+    },
+    setNoticeData: (state, action: PayloadAction<data>) => {
+      state.noticeData = action.payload;
+    }
+  },
+});
+
+export const {
+  setOrderData,
+  setPickUpData,
+  setMessageData,
+  setNoticeData
+} = notifications.actions;
+
+
 
 const page = createSlice({
   name: "page",
@@ -150,6 +191,7 @@ export const store = configureStore({
     sticky: sticky.reducer,
     page: page.reducer,
     choice: choice.reducer,
+    notifications: notifications.reducer, // 추가된 코드
   },
 });
 

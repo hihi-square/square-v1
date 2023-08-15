@@ -27,6 +27,7 @@ import Finish from "../customer/deal/Finish";
 import PickUp from "../customer/deal/PickUp";
 import SSEComponent from "./SSEComponent";
 import Error from "./error/Error";
+import SSEtest from "./SSEtest";
 
 export default function Customer() {
   return (
@@ -71,6 +72,7 @@ export default function Customer() {
 
         <Route path="/test" element={<SSEComponent />} />
         <Route path="/*" element={<Main />} />
+        <Route path="/testtt" element={<SSEtest />} />
       </Routes>
     </Grid>
   );
