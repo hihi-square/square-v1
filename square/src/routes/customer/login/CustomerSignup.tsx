@@ -89,7 +89,7 @@ export default function CustomerSignUp() {
 
   const handleSignUp = () => {
     axios
-      .post(`${REST_API}user`, form)
+      .post(`${REST_API}user`, { ...form, bcode: 3020011300 })
       .then((response) => {
         if (response.status === 201) {
           setOpen("성공");
