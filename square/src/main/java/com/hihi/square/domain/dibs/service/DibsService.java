@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.hihi.square.domain.menu.entity.Menu;
+import com.hihi.square.domain.menu.entity.MenuStatus;
 import com.hihi.square.domain.menu.repository.MenuRepository;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +49,10 @@ public class DibsService {
 		for (Dibs d : dibsList) {
 			Store store = d.getStore();
 
-			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrueAndStatus((User)store, MenuStatus.ON);
 
 			if(menuList.size() == 0) {
-				menuList = menuRepository.findAllByUserId(store.getUsrId());
+				menuList = menuRepository.findAllByUserAndStatus((User)store, MenuStatus.ON);
 			}
 
 			// 인기메뉴가 3개 이상이면 3개만 가져오도록 함

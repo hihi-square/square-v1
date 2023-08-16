@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.hihi.square.domain.menu.entity.MenuStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,10 +92,10 @@ public class StoreService {
 		List<StoreListResponseDto> stores = new ArrayList<>();
 		for (StoreCategorySelected s : storeCategorySelectedList) {
 			Store store = s.getStore();
-			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrueAndStatus((User)store, MenuStatus.ON);
 
 			if(menuList.size() == 0) {
-				menuList = menuRepository.findAllByUserId(store.getUsrId());
+				menuList = menuRepository.findAllByUserAndStatus((User)store, MenuStatus.ON);
 			}
 
 			// 인기메뉴가 3개 이상이면 3개만 가져오도록 함
@@ -140,7 +141,7 @@ public class StoreService {
 			emdAddressList);
 		List<StoreListResponseDto> stores = new ArrayList<>();
 		for (Store s : storeCategorySelectedList) {
-			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)s);
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrueAndStatus((User)s, MenuStatus.ON);
 			String menuName = "";
 			int size = menuList.size() < 3 ? menuList.size() : 3;
 			for (int i = 0; i < size; i++) {
@@ -179,7 +180,7 @@ public class StoreService {
 						.build()
 				);
 			}
-			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrueAndStatus((User)store, MenuStatus.ON);
 
 			// 인기메뉴가 3개 이상이면 3개만 가져오도록 함
 			int size = menuList.size() >= 3 ? 3 : menuList.size();
@@ -222,7 +223,7 @@ public class StoreService {
 		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdAddress.getAemId(), depth);
 		List<Store> stores = storeRepository.findByEmdAddressAndQuery(emdAddressList, query);
 		for (Store store : stores) {
-			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrueAndStatus((User)store, MenuStatus.ON);
 			String menuName = "";
 			int size = menuList.size() < 3 ? menuList.size() : 3;
 			for (int i = 0; i < size; i++) {
@@ -258,7 +259,7 @@ public class StoreService {
 		List<EmdAddress> emdAddressList = emdAddressService.getEmdAddressWithDepth(emdAddress.getAemId(), depth);
 		List<Store> stores = storeRepository.findByEmdAddress(emdAddressList);
 		for (Store store : stores) {
-			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrue((User)store);
+			List<Menu> menuList = menuRepository.findByUserAndPopularityIsTrueAndStatus((User)store, MenuStatus.ON);
 			String menuName = "";
 			int size = menuList.size() < 3 ? menuList.size() : 3;
 			for (int i = 0; i < size; i++) {
