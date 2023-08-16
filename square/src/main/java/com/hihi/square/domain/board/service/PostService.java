@@ -66,7 +66,7 @@ public class PostService {
 		return result;
 	}
 	@Transactional
-	public void writePost(User user, Board board, EmdAddress emdAddress, PostWriteRequestDto request) {
+	public Integer writePost(User user, Board board, EmdAddress emdAddress, PostWriteRequestDto request) {
 		Post post = Post.builder()
 			.board(board)
 			.emdAddress(emdAddress)
@@ -92,6 +92,7 @@ public class PostService {
 					.build()
 			);
 		}
+		return post.getId();
 	}
 
 	public Optional<Post> findById(Integer postId) {

@@ -25,7 +25,7 @@ public class PostListDto {
 	private Integer userId;
 	private String userNickname;
 	private String userProfile;
-	private Float latitude;
-	private Float longitude;
+	private Double latitude;
+	private Double longitude;
 	private Integer viewCount;
 }

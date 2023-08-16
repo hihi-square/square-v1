@@ -72,8 +72,8 @@ public class Post extends BaseTime {
 	@Builder.Default
 	private List<Comment> commentList = new ArrayList<>();
 
-	private Float latitude;
-	private Float longitude;
+	private Double latitude;
+	private Double longitude;
 
 	public void updatePost(PostUpdateRequestDto request) {
 		this.title = request.getTitle();

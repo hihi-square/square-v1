@@ -11,10 +11,10 @@ import lombok.Data;
 @Data
 public class PostWriteRequestDto {
 	private Integer boardId;
-	private Long bCode;
+	private Long bcode;
 	private String title;
 	private String content;
 	private List<FileThumbDto> images = new ArrayList<>();
-	private Float latitude;
-	private Float longitude;
+	private Double latitude;
+	private Double longitude;
 }
