@@ -5,6 +5,7 @@ import Appbar from "./Appbar.js";
 import Main from "./main/Main";
 // import Product from "./product/Product";
 import ProductList from "./product/ProductList";
+import Feed from "./feed/Feed";
 // import Sale from "./sale/Sale.js";
 import Order from "./order/Order";
 import "../Seller.css";
@@ -79,7 +80,12 @@ export default function Seller() {
               주문 관리
             </Typography>
           </Box>
-          <Box className="button">
+          <Box
+            className="button"
+            onClick={() => {
+              navigate("feed");
+            }}
+          >
             <Typography
               variant="h5"
               component="div"
@@ -99,6 +105,7 @@ export default function Seller() {
             <Route path="/" element={<Main />} />
             <Route path="/order" element={<Order />} />
             <Route path="/product" element={<ProductList />} />
+            <Route path="/feed" element={<Feed />} />
           </Routes>
         </Grid>
       </Grid>
