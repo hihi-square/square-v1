@@ -14,6 +14,13 @@ const user = createSlice({
   reducers: {},
 });
 
+type data = {
+  id: number;
+  content: string;
+  storeName: string;
+  isRead: boolean;
+};
+
 type Sticky = {
   pageType: "main" | "store";
   value: number;
@@ -35,6 +42,47 @@ const sticky = createSlice({
     },
   },
 });
+
+const emdSlice = createSlice({
+  name: "emd",
+  initialState: {
+    emdCode: "",
+    currentName: "",
+  },
+  reducers: {
+    setEmdCode: (state, action) => {
+      state.emdCode = action.payload;
+    },
+    setCurrentName: (state, action) => {
+      state.currentName = action.payload;
+    },
+  },
+});
+
+export const { setEmdCode, setCurrentName } = emdSlice.actions;
+
+const notifications = createSlice({
+  name: "notifications",
+  initialState: {
+    orderData: [] as data[],
+    messageData: null as data | null,
+    noticeData: null as data | null,
+  },
+  reducers: {
+    pushOrderData: (state, action: PayloadAction<data>) => {
+      state.orderData.push(action.payload);
+    },
+    setMessageData: (state, action: PayloadAction<data>) => {
+      state.messageData = action.payload;
+    },
+    setNoticeData: (state, action: PayloadAction<data>) => {
+      state.noticeData = action.payload;
+    },
+  },
+});
+
+export const { pushOrderData, setMessageData, setNoticeData } =
+  notifications.actions;
 
 const page = createSlice({
   name: "page",
@@ -150,6 +198,8 @@ export const store = configureStore({
     sticky: sticky.reducer,
     page: page.reducer,
     choice: choice.reducer,
+    notifications: notifications.reducer, // 추가된 코드
+    emd: emdSlice.reducer,
   },
 });
 

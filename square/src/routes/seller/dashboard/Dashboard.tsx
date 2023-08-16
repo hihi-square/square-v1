@@ -17,10 +17,10 @@ export default function Seller() {
       xs={12}
       container
       flexDirection="column"
-      sx={{ width: "1500px", height: "1000px" }}
+      sx={{ width: "1500px", height: "auto" }}
     >
       <Appbar />
-      <Grid xs={12} container sx={{ flexGrow: 1 }}>
+      <Grid xs={12} container>
         <Grid xs={2} className="sidebar">
           <Box
             className="button"
@@ -89,7 +89,12 @@ export default function Seller() {
             </Typography>
           </Box>
         </Grid>
-        <Grid xs={10} container className="component-page">
+        <Grid
+          xs={10}
+          container
+          className="component-page"
+          sx={{ overflow: "auto" }}
+        >
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/order" element={<Order />} />

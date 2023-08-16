@@ -27,6 +27,7 @@
     "animate.css": "^4.1.1",
     "axios": "^1.4.0",
     "eslint-config-naver": "^2.1.0",
+    "event-source-polyfill": "^1.0.31",
     "geojson": "^0.5.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
@@ -75,6 +76,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/event-source-polyfill": "^1.0.1",
     "@types/geojson": "^7946.0.10",
     "@types/react-window": "^1.8.5",
     "cross-env": "^7.0.3",

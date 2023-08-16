@@ -13,15 +13,14 @@ import {
 
 interface Props {
   setAni: React.Dispatch<React.SetStateAction<boolean>> | null;
-  name: string;
 }
 
-export default function StoreHeader({ setAni, name }: Props) {
+export default function StoreHeader({ setAni }: Props) {
   const navigate = useNavigate();
   const sticky = useSelector((state: RootState) => state.sticky);
 
   const handleCartClick = () => {
-    // 장바구니 ㄱㄱ
+    navigate("/deal/cart");
   };
 
   return (
@@ -61,9 +60,7 @@ export default function StoreHeader({ setAni, name }: Props) {
               variant="h5"
               component="h5"
               sx={{ fontWeight: 600, textAlign: "center" }}
-            >
-              {name}
-            </Typography>
+            ></Typography>
           )}
         </Grid>
         <Grid
