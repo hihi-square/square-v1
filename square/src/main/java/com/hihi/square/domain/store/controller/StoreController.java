@@ -69,6 +69,9 @@ public class StoreController {
 	private final ImageService imageService;
 	private final SaleService saleService;
 
+
+
+
 	// 가게 회원정보 보기
 	@GetMapping
 	public ResponseEntity viewMyInfo(Authentication authentication) {

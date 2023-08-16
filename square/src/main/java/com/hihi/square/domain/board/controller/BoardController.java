@@ -27,6 +27,7 @@ import com.hihi.square.domain.board.dto.response.PostDetailResponseDto;
 import com.hihi.square.domain.board.dto.response.PostListDto;
 import com.hihi.square.domain.board.dto.response.PostListResponseDto;
 import com.hihi.square.domain.board.dto.response.PostUpdateResponseDto;
+import com.hihi.square.domain.board.dto.response.PostWriteSuccessResponseDto;
 import com.hihi.square.domain.board.entity.Board;
 import com.hihi.square.domain.board.entity.Post;
 import com.hihi.square.domain.board.entity.PostDibs;
@@ -60,8 +61,9 @@ public class BoardController {
 	private final PostImageService postImageService;
 
 	// 읍면동과 depth에 따른 포스트 가져오기
-	@GetMapping("/{boardId}/{emdId}/{depth}")
-	public ResponseEntity getBoardPosts(Authentication authentication,@PathVariable("boardId") Integer boardId, @PathVariable("emdId") Integer emdId, @PathVariable("depth") Integer depth, @PathParam("query") String query){
+	@GetMapping("/{boardId}/{bCode}/{depth}")
+	public ResponseEntity getBoardPosts(Authentication authentication,@PathVariable("boardId") Integer boardId, @PathVariable("bCode") Long bCode, @PathVariable("depth") Integer depth, @PathParam("query") String query){
+
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 		Optional<Board> optionalBoard = boardService.findById(boardId);
@@ -69,7 +71,8 @@ public class BoardController {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_BOARD_ID").build(), HttpStatus.BAD_REQUEST);
 		}
 		Board board = optionalBoard.get();
-		List<EmdAddress> emdList = emdAddressService.getEmdAddressWithDepth(emdId, depth);
+		EmdAddress emdAddress = emdAddressService.findByBCode(bCode).get();
+		List<EmdAddress> emdList = emdAddressService.getEmdAddressWithDepth(emdAddress.getAemId(), depth);
 		List<PostListDto> result = postService.findByEmdListAndBoardWithQuery(emdList, board, query, user);
 		return new ResponseEntity<>(PostListResponseDto.builder().statusCode(200).posts(result).build(), HttpStatus.OK);
 	}
@@ -84,14 +87,15 @@ public class BoardController {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_BOARD_ID").build(), HttpStatus.BAD_REQUEST);
 		}
 		Board board = optionalBoard.get();
-		Optional<EmdAddress> optionalEmdAddress = emdAddressService.findById(request.getEmdId());
+		System.out.println("dddd"+request.getBcode());
+		Optional<EmdAddress> optionalEmdAddress = emdAddressService.findByBCode(request.getBcode());
 		if (optionalEmdAddress.isEmpty()){
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_EMDADDRESS").build(), HttpStatus.BAD_REQUEST);
 		}
 		EmdAddress emdAddress = optionalEmdAddress.get();
 		if ((user instanceof Customer && board.getUserWrite()) || (user instanceof Store && board.getStoreWrite())) {
-			postService.writePost(user, board, emdAddress, request);
-			return new ResponseEntity(CommonResponseDto.builder().statusCode(201).message("SUCCESS").build(), HttpStatus.CREATED);
+			Integer id = postService.writePost(user, board, emdAddress, request);
+			return new ResponseEntity(PostWriteSuccessResponseDto.builder().id(id).build(), HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE_BOARD").build(), HttpStatus.BAD_REQUEST);
 		}

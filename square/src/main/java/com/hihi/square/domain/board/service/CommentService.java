@@ -1,24 +1,5 @@
 package com.hihi.square.domain.board.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
-import net.bytebuddy.asm.Advice;
-
 import com.hihi.square.domain.board.dto.request.CommentUpdateRequestDto;
 import com.hihi.square.domain.board.dto.request.CommentWriteRequestDto;
 import com.hihi.square.domain.board.dto.request.RecommentWriteRequestDto;
@@ -29,8 +10,14 @@ import com.hihi.square.domain.board.entity.Post;
 import com.hihi.square.domain.board.entity.Status;
 import com.hihi.square.domain.board.repository.CommentRepository;
 import com.hihi.square.domain.user.entity.User;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,22 +33,26 @@ public class CommentService {
 			for(Comment c : recommentList) {
 				recomments.add(
 					ReCommentListDto.builder()
+						.commentId(c.getId())
 						.comment(c.getComment())
 						.createdAt(c.getCreatedAt())
 						.modifiedAt(c.getModifiedAt())
 						.userId(c.getUser().getUsrId())
 						.userNickname(c.getUser().getNickname())
+						.userProfile(c.getUser().getProfile())
 						.build()
 				);
 			}
 			result.add(
 				CommentListDto.builder()
+					.commentId(comment.getId())
 					.comment(comment.getComment())
 					.createdAt(comment.getCreatedAt())
 					.modifiedAt(comment.getModifiedAt())
 					.userId(comment.getUser().getUsrId())
 					.userNickname(comment.getUser().getNickname())
 					.isDeleted(comment.getState().equals(Status.S02))
+					.userProfile(comment.getUser().getProfile())
 					.recommentList(recomments)
 					.build()
 			);
@@ -117,7 +108,12 @@ public class CommentService {
 				commentRepository.save(comment);
 			}
 		} else {
+			Comment parent = comment.getReComment();
 			commentRepository.delete(comment);
+			if (parent.getState().equals(Status.S02) && commentRepository.findReCommentByComment(parent).size() == 0){
+				commentRepository.delete(parent);
+			}
+
 		}
 
 	}
