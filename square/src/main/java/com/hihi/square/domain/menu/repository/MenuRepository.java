@@ -2,6 +2,7 @@ package com.hihi.square.domain.menu.repository;
 
 import java.util.List;
 
+import com.hihi.square.domain.menu.entity.MenuStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -44,7 +45,9 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 	@Query(value = "delete from menu_option_category where men_id = :menId", nativeQuery = true)
 	void deleteOptionCategoryByMenuId(@Param("menId") Long menId);
 
-	List<Menu> findByUserAndPopularityIsTrue(User user);
+	List<Menu> findByUserAndPopularityIsTrueAndStatus(User user, MenuStatus status);
+
+	List<Menu> findAllByUserAndStatus(User user, MenuStatus status);
 
 	List<Menu> findByMenuCategoryAndUserOrderBySequence(MenuCategory menuCategory, User user);
 }

@@ -391,6 +391,7 @@ public class OrderController {
 		String uid = authentication.getName();
 		Store store = (Store)userService.findByUid(uid).get();
 
+
 		List<OrderResponseDto> response = new ArrayList<>();
 		List<Optional<Order>> orders = orderService.findByStore(store);
 
