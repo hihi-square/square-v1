@@ -2,6 +2,7 @@ package com.hihi.square.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.hihi.square.domain.user.repository.UserRepository;
 import com.hihi.square.domain.user.service.LoginService;
@@ -52,24 +54,52 @@ public class SecurityConfig {
 		//				.authorizeHttpRequests(requests -> requests.request("/*").permitAll().anyRequest().authenticated())
 		// rest api만을 고려하여 기본설정 해제
 		http
-			.httpBasic().disable()
+			.httpBasic()
+			.disable()
 			// 서버에 인증정보를 저장하지 않기 때문에 csrf를 사용하지 않음
-			.csrf().disable()
-			.cors().and()
+			.csrf()
+			.disable()
+			.cors()
+			.and()
 			// session 기반의 인증을 하지 않기 때문에 stateless로 바꿔줌
 			.sessionManagement((sessionManagement) ->
 				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 
 			// 기본 로그인페이지 없애기
-			.formLogin().disable()
+			.formLogin()
+			.disable()
+			//인증, 권한 처리 필터 적용
+			.addFilterBefore(jwtAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+			//요청에 대한 권한 설정
 			.authorizeRequests()
-			.antMatchers("/user/login").permitAll()
-			// .antMatchers("/store").permitAll()
-			// .antMatchers("/store").hasAuthority("UA02")
-			.antMatchers("/store").hasAuthority("ROLE_UA02")
+			//1. 회원가입 모두 허용
+			.antMatchers("/user/**", "/api/v1/user", "/community/**")
+			.permitAll()
+			.antMatchers(HttpMethod.POST, "/store")
+			.permitAll()
+			//2. 가게에 대한 권한 설정
+			.antMatchers(HttpMethod.GET, "/store", "/store/business-license/**", "/scb/store", "/store/daily/list",
+				"/order/store/**", "/coupon/store/issue", "/coupon/store")
+			.hasRole("UA02")
+			.antMatchers(HttpMethod.POST, "/store/**", "/scb/**", "/coupon/store")
+			.hasRole("UA02")
+			.antMatchers(HttpMethod.PATCH, "/store/**", "/order/store-acceptance/**", "/order/store-denied/**",
+				"/order/store-pickup/**",
+				"/scb/**", "/coupon/store")
+			.hasRole("UA02")
+			.antMatchers(HttpMethod.DELETE, "/store/**", "/scb/**")
+			.hasRole("UA02")
+			.antMatchers(HttpMethod.GET, "/review/*").hasRole("UA02")
+			//3. 회원에 대한 권한 설정
+			.antMatchers("/user/address", "/review", "/order/**", "/dibs/**").hasRole("UA01")
+			.antMatchers(HttpMethod.GET, "/store/daily/dibs", "/coupon/store/*")
+			.hasRole("UA01")
+			//4. 관리자에 대한 권한 설정
+			// .antMatchers("/store/**").hasAuthority("UA02")
 			// .antMatchers("/user/login", "/user", "/store", "/user/find/id").permitAll()
-			.antMatchers("/**").permitAll()
+			.antMatchers("/**")
+			.permitAll()
 		// 위 3가지(로그인, 구매자/가게 회원가입)을 제외한 POST 요청을 막아둠
 		// .antMatchers(HttpMethod.POST, "/**").authenticated()
 		// 토큰을 활용하는 경우 모든 요청에 대해 인가에 대해서 적용

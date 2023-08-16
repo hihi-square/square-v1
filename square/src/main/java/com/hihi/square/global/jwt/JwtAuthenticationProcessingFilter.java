@@ -155,11 +155,18 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 		//        if (password == null) { // 소셜 로그인 유저의 비밀번호 임의로 설정 하여 소셜 로그인 유저도 인증 되도록 설정
 		//            password = PasswordUtil.generateRandomPassword();
 		//        }
+
+		// List<GrantedAuthority> authorities = new ArrayList<>();
+		// authorities.add(new SimpleGrantedAuthority(myUser.getDecriminatorValue()));
+
 		UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
 			.username(myUser.getUid()) // String type이라서 uid 넣은 것!
 			.password(password)
+			// .authorities(authorities)
 			.roles(myUser.getDecriminatorValue())
 			.build();
+		// log.info("authorities : {}", authorities.toString());
+		log.info("auth mapper : {}", authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
 
 		Authentication authentication =
 			new UsernamePasswordAuthenticationToken(userDetailsUser, null,

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hihi.square.domain.dibs.respository.DibsRepository;
-import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
 import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserChangePasswordDto;
@@ -61,10 +60,10 @@ public class UserController {
 			return new ResponseEntity(CommonResponseDto.builder().message("NOT_EXISTS_USER").statusCode(400).build(),
 				HttpStatus.BAD_REQUEST);
 		}
-		if (optionalUser.get() instanceof Store) {
-			return new ResponseEntity(CommonResponseDto.builder().message("NOT_CUSTOMER_USER").statusCode(400).build(),
-				HttpStatus.BAD_REQUEST);
-		}
+		// if (optionalUser.get() instanceof Store) {
+		// 	return new ResponseEntity(CommonResponseDto.builder().message("NOT_CUSTOMER_USER").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 		Customer customer = (Customer)optionalUser.get();
 		UserInfoDto userInfo = userService.getMyInfo(uid);
 		Integer dibs = dibsRepository.countByCustomer(customer);

@@ -13,7 +13,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.global.BaseTime;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

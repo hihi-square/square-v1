@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import com.hihi.square.domain.board.dto.request.CommentUpdateRequestDto;
 import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.global.BaseTime;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

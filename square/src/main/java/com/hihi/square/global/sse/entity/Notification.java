@@ -16,7 +16,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.global.BaseTime;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AccessLevel;
 import lombok.Builder;

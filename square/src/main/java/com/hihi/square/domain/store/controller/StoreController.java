@@ -43,7 +43,6 @@ import com.hihi.square.domain.store.service.CategoryService;
 import com.hihi.square.domain.store.service.StoreCategoryService;
 import com.hihi.square.domain.store.service.StoreService;
 import com.hihi.square.domain.user.dto.response.UserInfoDto;
-import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.EmdAddressService;
@@ -73,9 +72,7 @@ public class StoreController {
 	// 가게 회원정보 보기
 	@GetMapping
 	public ResponseEntity viewMyInfo(Authentication authentication) {
-		log.info("authentication : {}", authentication);
 		String uid = authentication.getName();
-		log.info("uid : {}", uid);
 		// if (!(userService.findByUid(uid).get() instanceof Store)) {
 		// 	return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_STORE_USER").statusCode(400).build(),
 		// 		HttpStatus.BAD_REQUEST);
@@ -165,10 +162,10 @@ public class StoreController {
 	public ResponseEntity<?> updateStoreInfo(Authentication authentication,
 		@RequestBody @Valid StoreUpdateRequestDto request) {
 		String uid = authentication.getName();
-		if (!(userService.findByUid(uid).get() instanceof Store)) {
-			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
-				HttpStatus.BAD_REQUEST);
-		}
+		// if (!(userService.findByUid(uid).get() instanceof Store)) {
+		// 	return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 		Store store = storeService.findByUid(uid).get();
 		storeService.updateStoreInfo(store, request);
 
@@ -220,13 +217,13 @@ public class StoreController {
 			.statusCode(201)
 			.message("CREATE_SUCCESS")
 			.build();
-		String uid = authentication.getName();
+		// String uid = authentication.getName();
 		// 판매자가 아니라면 등록불가
-		if (!(userService.findByUid(uid).get() instanceof Store)) {
-			response.setStatusCode(400);
-			response.setMessage("NOT_AUTHENTICATE");
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
+		// if (!(userService.findByUid(uid).get() instanceof Store)) {
+		// 	response.setStatusCode(400);
+		// 	response.setMessage("NOT_AUTHENTICATE");
+		// 	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		// }
 		Store store = storeService.findByUsrId(request.getUsrId()).get();
 		StoreCategoryBig storeCategoryBig = categoryService.findById(request.getScbId()).get();
 
@@ -254,10 +251,10 @@ public class StoreController {
 		@PathVariable List<Integer> id) {
 		String uid = authentication.getName();
 		// 판매자가 아니라면 등록불가
-		if (!(userService.findByUid(uid).get() instanceof Store)) {
-			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE").build(),
-				HttpStatus.BAD_REQUEST);
-		}
+		// if (!(userService.findByUid(uid).get() instanceof Store)) {
+		// 	return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NOT_AUTHENTICATE").build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 		Store store = storeService.findByUid(uid).get();
 
 		Integer registeredCategoryCount = storeCategoryService.countByStore(store);
@@ -309,6 +306,7 @@ public class StoreController {
 	@GetMapping("/menu/{usrId}")
 	public ResponseEntity<?> getAllMenuByCategory(@PathVariable Integer usrId) {
 		User user = userService.findByUsrId(usrId).get();
+		log.info("user : {}", user);
 		List<StoreSaleDto> sales = saleService.getStoreInProgressSales((Store)user);
 		List<MenuCategoryDto> menus = menuCategoryService.getAllMenuByCategory(user);
 
@@ -328,10 +326,10 @@ public class StoreController {
 			return new ResponseEntity(CommonResponseDto.builder().message("INVALID_USER").statusCode(400).build(),
 				HttpStatus.BAD_REQUEST);
 		}
-		if (optionalUser.get() instanceof Customer) {
-			return new ResponseEntity(CommonResponseDto.builder().message("NOT_STORE_USER").statusCode(400).build(),
-				HttpStatus.BAD_REQUEST);
-		}
+		// if (optionalUser.get() instanceof Customer) {
+		// 	return new ResponseEntity(CommonResponseDto.builder().message("NOT_STORE_USER").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 		Store store = (Store)optionalUser.get();
 		storeService.setStoreOpenClose(store, num == 1 ? true : false);
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS_SET_STORE_OPEN").build(),

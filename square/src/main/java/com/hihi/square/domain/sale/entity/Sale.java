@@ -19,7 +19,7 @@ import javax.persistence.Table;
 import com.hihi.square.domain.board.entity.Status;
 import com.hihi.square.domain.sale.dto.request.SaleUpdateRequestDto;
 import com.hihi.square.domain.store.entity.Store;
-import com.hihi.square.global.BaseTime;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

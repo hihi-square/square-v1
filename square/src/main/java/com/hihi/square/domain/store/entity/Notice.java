@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.hihi.square.domain.user.entity.EmdAddress;
-import com.hihi.square.global.BaseTime;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

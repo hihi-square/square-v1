@@ -15,7 +15,7 @@ import com.hihi.square.domain.order.entity.Order;
 import com.hihi.square.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.global.BaseTime;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

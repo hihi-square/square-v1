@@ -1,6 +1,5 @@
 package com.hihi.square.domain.dibs.controller;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ import com.hihi.square.domain.dibs.dto.response.DibsResponseDto;
 import com.hihi.square.domain.dibs.dto.response.UserDibsResponseDto;
 import com.hihi.square.domain.dibs.entity.Dibs;
 import com.hihi.square.domain.dibs.service.DibsService;
-import com.hihi.square.domain.report.entity.Report;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
@@ -35,24 +33,26 @@ public class DibsController {
 	private final DibsService dibsService;
 	private final UserService userService;
 
-
 	//찜하기
 	@PostMapping("/{storeId}")
-	public ResponseEntity<CommonResponseDto> dibStore(Authentication authentication, @PathVariable(name = "storeId") Integer storeId){
-		String uid =authentication.getName();
-		Optional<User> optionalUser =userService.findByUid(uid);
+	public ResponseEntity<CommonResponseDto> dibStore(Authentication authentication,
+		@PathVariable(name = "storeId") Integer storeId) {
+		String uid = authentication.getName();
+		Optional<User> optionalUser = userService.findByUid(uid);
 		Optional<User> optionalStore = userService.findByUsrId(storeId);
-		if (!optionalUser.isPresent() || !(optionalUser.get() instanceof Customer)){
+		if (!optionalUser.isPresent()
+			// || !(optionalUser.get() instanceof Customer)
+		) {
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_UID").build(),
 				HttpStatus.BAD_REQUEST);
 		}
-		if (!optionalStore.isPresent() || !(optionalStore.get() instanceof Store)){
+		if (!optionalStore.isPresent() || !(optionalStore.get() instanceof Store)) {
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE").build(),
 				HttpStatus.BAD_REQUEST);
 		}
 		Customer customer = (Customer)optionalUser.get();
 		Store store = (Store)optionalStore.get();
-		if(dibsService.getDib(customer, store).isPresent()){
+		if (dibsService.getDib(customer, store).isPresent()) {
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("ALREADY_DIB").build(),
 				HttpStatus.BAD_REQUEST);
 		}
@@ -61,25 +61,28 @@ public class DibsController {
 			HttpStatus.CREATED);
 
 	}
-	
+
 	//찜취소
 	@DeleteMapping("/{storeId}")
-	public ResponseEntity<CommonResponseDto> dibCancel(Authentication authentication, @PathVariable(name = "storeId") Integer storeId){
-		String uid =authentication.getName();
-		Optional<User> optionalUser =userService.findByUid(uid);
+	public ResponseEntity<CommonResponseDto> dibCancel(Authentication authentication,
+		@PathVariable(name = "storeId") Integer storeId) {
+		String uid = authentication.getName();
+		Optional<User> optionalUser = userService.findByUid(uid);
 		Optional<User> optionalStore = userService.findByUsrId(storeId);
-		if (!optionalUser.isPresent() || !(optionalUser.get() instanceof Customer)){
+		if (!optionalUser.isPresent()
+			// || !(optionalUser.get() instanceof Customer)
+		) {
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_UID").build(),
 				HttpStatus.BAD_REQUEST);
 		}
-		if (!optionalStore.isPresent() || !(optionalStore.get() instanceof Store)){
+		if (!optionalStore.isPresent() || !(optionalStore.get() instanceof Store)) {
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE").build(),
 				HttpStatus.BAD_REQUEST);
 		}
 		Customer customer = (Customer)optionalUser.get();
 		Store store = (Store)optionalStore.get();
 		Optional<Dibs> optionalDibs = dibsService.getDib(customer, store);
-		if(!optionalDibs.isPresent()){
+		if (!optionalDibs.isPresent()) {
 			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("NOT_EXISTS_DIB").build(),
 				HttpStatus.BAD_REQUEST);
 		}
@@ -89,26 +92,33 @@ public class DibsController {
 	}
 
 	@GetMapping
-	public ResponseEntity getUserDibsList(Authentication authentication){
+	public ResponseEntity getUserDibsList(Authentication authentication) {
 		String uid = authentication.getName();
 		Customer customer = (Customer)userService.findByUid(uid).get();
 		List<DibsResponseDto> result = dibsService.getUserDibs(customer);
-		return new ResponseEntity(UserDibsResponseDto.builder().statusCode(200).message("COMPLETE").dibsList(result).build(), HttpStatus.OK);
+		return new ResponseEntity(
+			UserDibsResponseDto.builder().statusCode(200).message("COMPLETE").dibsList(result).build(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity isLikedStore(Authentication authentication, @PathVariable("id") Integer storeId) {
 		String uid = authentication.getName();
 		Optional<User> user = userService.findByUid(uid);
-		if (!user.isPresent() || !(user.get() instanceof Customer)){
-			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_CUSTOMER").build(), HttpStatus.BAD_REQUEST);
+		if (!user.isPresent()
+			// || !(user.get() instanceof Customer)
+		) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_CUSTOMER").build(),
+				HttpStatus.BAD_REQUEST);
 		}
-		Customer customer = (Customer) user.get();
+		Customer customer = (Customer)user.get();
 		user = userService.findByUsrId(storeId);
-		if (!user.isPresent() || !(user.get() instanceof Store)){
-			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE").build(), HttpStatus.BAD_REQUEST);
+		if (!user.isPresent() || !(user.get() instanceof Store)) {
+			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("INVALID_STORE").build(),
+				HttpStatus.BAD_REQUEST);
 		}
-		Optional<Dibs> dibs = dibsService.getDib(customer, (Store) user.get());
-		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message(dibs.isPresent()?"EXISTS":"NOT_EXISTS").build(), HttpStatus.OK);
+		Optional<Dibs> dibs = dibsService.getDib(customer, (Store)user.get());
+		return new ResponseEntity(
+			CommonResponseDto.builder().statusCode(200).message(dibs.isPresent() ? "EXISTS" : "NOT_EXISTS").build(),
+			HttpStatus.OK);
 	}
 }

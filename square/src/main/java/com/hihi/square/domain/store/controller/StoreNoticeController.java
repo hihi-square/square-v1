@@ -59,10 +59,10 @@ public class StoreNoticeController {
 		@RequestBody @Valid StoreNoticeWriteRequestDto request) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
-		if (!(user instanceof Store)) {
-			return new ResponseEntity(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
-				HttpStatus.BAD_GATEWAY);
-		}
+		// if (!(user instanceof Store)) {
+		// 	return new ResponseEntity(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
+		// 		HttpStatus.BAD_GATEWAY);
+		// }
 
 		Notice notice = storeNoticeService.write((Store)user, request);
 
@@ -79,10 +79,10 @@ public class StoreNoticeController {
 	public ResponseEntity getStoreNotices(Authentication authentication) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
-		if (!(user instanceof Store)) {
-			return new ResponseEntity(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
-				HttpStatus.BAD_REQUEST);
-		}
+		// if (!(user instanceof Store)) {
+		// 	return new ResponseEntity(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 		StoreNoticesResponseDto result = StoreNoticesResponseDto.builder()
 			.notices(storeNoticeService.getNoticeList((Store)user))
 			.statusCode(200)
@@ -95,7 +95,8 @@ public class StoreNoticeController {
 	@GetMapping("/list/{storeId}")
 	public ResponseEntity getStoreNotices(@PathVariable("storeId") Integer storeId) {
 		User user = userService.findByUsrId(storeId).get();
-		if (!(user instanceof Store) || user.getUsrId() != storeId) {
+		if (// !(user instanceof Store) ||
+			user.getUsrId() != storeId) {
 			return new ResponseEntity(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
 				HttpStatus.BAD_GATEWAY);
 		}
