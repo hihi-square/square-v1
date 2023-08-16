@@ -185,6 +185,7 @@ public class PostService {
 					.latitude(post.getLatitude())
 					.longitude(post.getLongitude())
 					.viewCount(post.getViewCnt())
+					.boardId(post.getBoard().getId())
 					.build()
 			);
 		}
