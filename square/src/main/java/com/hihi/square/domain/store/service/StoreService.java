@@ -58,12 +58,12 @@ public class StoreService {
 		biRepostiory.save(businessInformation);
 		
 		//회원 가입 시, 메뉴 default category 생성
-		MenuCategoryRequestDto menuCategoryRequestDto = MenuCategoryRequestDto.builder()
-			.user(store)
-			.name("미분류")
-			.sequence(0)
-			.build();
-		menuCategoryService.saveMenuCategory(menuCategoryRequestDto.toEntity());
+		// MenuCategoryRequestDto menuCategoryRequestDto = MenuCategoryRequestDto.builder()
+		// 	.user(store)
+		// 	.name("미분류")
+		// 	.sequence(0)
+		// 	.build();
+		// menuCategoryService.saveMenuCategory(menuCategoryRequestDto.toEntity());
 	}
 
 	@Transactional
