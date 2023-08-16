@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+// import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate, useParams } from "react-router-dom";
 import { Grid, Typography, Avatar, Box, Button } from "@mui/material";
 import CommentForm from "./CommentForm";
 
-interface CommentProps {
-  comment: Comment;
-  idx: number;
-}
-
-type Comment = {
+type CommentEntity = {
   commentId: number;
   comment: string;
   createdAt: number[];
@@ -19,16 +15,24 @@ type Comment = {
   userId: number;
   userNickname: string;
   userProfile: string;
-  recommentList: Comment[];
+  recommentList: CommentEntity[];
 };
 
-function Comment({ comment, idx }: CommentProps) {
+interface CommentProps {
+  comment: CommentEntity;
+  commentKey: number;
+  onCommentSubmit: (comment: CommentEntity) => void;
+}
+
+
+function Comment({ comment, commentKey, onCommentSubmit }: CommentProps) {
   const token = sessionStorage.getItem("accessToken");
   const loginUserId = Number(sessionStorage.getItem("userId"));
 
   useEffect(() => {}, []);
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = (event: any) => {
     // 댓글 제출 완료 후 필요한 작업을 수행하는 로직
+    onCommentSubmit(event);
   };
 
   const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
@@ -51,14 +55,14 @@ function Comment({ comment, idx }: CommentProps) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }).then(({ data }) => {
-      console.log(data);
+    }).then(() => {
+      handleCommentSubmit(event);
     });
   };
 
   return (
     <Box
-      key={idx}
+      key={commentKey}
       border="1px solid #e0e0e0"
       borderRadius="5px"
       marginY="10px"
@@ -102,7 +106,7 @@ function Comment({ comment, idx }: CommentProps) {
       {comment &&
         comment.recommentList.map((recomment) => (
           <Box
-            key={idx}
+            key={recomment.commentId}
             border="1px solid #e0e0e0"
             borderRadius="5px"
             marginY="10px"

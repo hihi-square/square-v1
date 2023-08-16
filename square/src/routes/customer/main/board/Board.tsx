@@ -1,7 +1,7 @@
 import * as React from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
-import { Grid, Button, Typography, Divider } from "@mui/material";
+import { Grid, Button, Typography, Divider, Box } from "@mui/material";
 // import { Grid, Typography, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Footer from "routes/customer/Footer";
@@ -126,6 +126,9 @@ function Board() {
               </Grid>
             </React.Fragment>
           ))}
+          <Box sx={{
+            position: "absolute"
+          }}>
         <Button
           sx={{
             width: "100%",
@@ -139,6 +142,7 @@ function Board() {
         >
           작성
         </Button>
+        </Box>
       </Grid>
       <Footer now={5} />
     </div>

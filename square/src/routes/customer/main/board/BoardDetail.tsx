@@ -4,10 +4,10 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Grid, Typography, Avatar, Button, Divider, Box } from "@mui/material";
 import CommentForm from "./comment/CommentForm"; // CommentForm 컴포넌트의 경로를 적절히 수정
-import CommentEntity from "./comment/Comment";
-import { createNoSubstitutionTemplateLiteral } from "typescript";
+import Comment from "./comment/Comment";
+// import { createNoSubstitutionTemplateLiteral } from "typescript";
 
-type Comment = {
+type CommentEntity = {
   commentId: number;
   comment: string;
   createdAt: number[];
@@ -16,7 +16,7 @@ type Comment = {
   userId: number;
   userNickname: string;
   userProfile: string;
-  recommentList: Comment[];
+  recommentList: CommentEntity[];
 };
 
 type Address = {
@@ -60,7 +60,7 @@ type PostDetail = {
   userNickname: string;
   viewCnt: number;
   commentCnt: number;
-  comments: Comment[];
+  comments: CommentEntity[];
   userProfile: string;
 };
 
@@ -71,6 +71,7 @@ function BoardDetail(props: any) {
 
   const [id, setPostId] = useState<number>(); // 기본값을 undefined로 설정
   const [post, setPost] = useState<PostDetail>();
+  const [isUpdate, setIsUpdate] = useState<boolean>();
 
   useEffect(() => {
     const parsedId = Number(urlParams.id);
@@ -84,6 +85,13 @@ function BoardDetail(props: any) {
     }
   }, [id]);
 
+  useEffect(()=>{
+    if (isUpdate) {
+      getPost();
+      setIsUpdate(false);
+    }
+  }, [isUpdate]);
+
   // const postId = Number(id);
 
   const getPost = () => {
@@ -94,10 +102,10 @@ function BoardDetail(props: any) {
         Authorization: `Bearer ${token}`,
       },
     }).then(({ data }) => {
-      console.log(data);
       setPost(data);
     });
   };
+  
   const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
 
   const formatTime = (createdAt: number[]) => {
@@ -111,7 +119,9 @@ function BoardDetail(props: any) {
     return `${formattedDate} ${formattedTime}`;
   };
 
-  const handleCommentSubmit = () => {};
+  const handleCommentSubmit = () => {
+    setIsUpdate(true);
+  };
 
   return (
     <Grid container spacing={3} style={{ padding: "20px" }}>
@@ -171,8 +181,8 @@ function BoardDetail(props: any) {
 
       <Grid item xs={12}>
         {post &&
-          post.comments.map((comment, idx) => (
-            <CommentEntity comment={comment} idx={idx}></CommentEntity>
+          post.comments.map((comment) => (
+            <Comment comment={comment} commentKey={comment.commentId} onCommentSubmit={handleCommentSubmit}></Comment>
           ))}
         {post && (
           <CommentForm
@@ -182,20 +192,6 @@ function BoardDetail(props: any) {
             text="댓글 작성"
           />
         )}
-      </Grid>
-
-      <Grid item xs={12}>
-        {/* <Typography variant="body1">
-          <span style={{ cursor: 'pointer' }} onClick={() => navigate(`/board/${boardName}/${prevPostId}`)}>
-          이전 글: {getPostTitleById(prevPostId)} 
-          </span>
-        </Typography>
-        <Divider style={{ margin: '10px 0' }} />
-        <Typography variant="body1">
-          <span style={{ cursor: 'pointer' }} onClick={() => navigate(`/board/${boardName}/${nextPostId}`)}>
-          다음 글: {getPostTitleById(nextPostId)} 
-          </span>
-        </Typography> */}
       </Grid>
     </Grid>
   );

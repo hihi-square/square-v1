@@ -4,7 +4,7 @@ import { REST_API } from "redux/redux";
 
 interface CommentFormProps {
   parentId: number;
-  onCommentSubmit: (comment: Comment) => void;
+  onCommentSubmit: (event : any) => void;
   type: string;
   text: string;
 }
@@ -17,6 +17,11 @@ function CommentForm({
 }: CommentFormProps) {
   const [comment, setComment] = useState("");
   const token = sessionStorage.getItem("accessToken");
+
+  const handleSuccessSubmit = (event: any) => {
+    onCommentSubmit(event); // 부모 컴포넌트에 댓글 제출 완료를 알림
+    setComment(""); // 댓글 입력 필드 초기화
+  }
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -38,6 +43,8 @@ function CommentForm({
           Authorization: `Bearer ${token}`,
         },
         data: body,
+      }).then(()=>{
+        handleSuccessSubmit(event);
       });
     } else if (type === "recomment") {
       // 대댓글
@@ -53,6 +60,8 @@ function CommentForm({
           Authorization: `Bearer ${token}`,
         },
         data: body,
+      }).then(()=>{
+        handleSuccessSubmit(event);
       });
     } else if (type === "update") {
       // 댓글 수정
@@ -68,10 +77,10 @@ function CommentForm({
           Authorization: `Bearer ${token}`,
         },
         data: body,
+      }).then(()=>{
+        handleSuccessSubmit(event);
       });
     }
-    onCommentSubmit(event); // 부모 컴포넌트에 댓글 제출 완료를 알림
-    setComment(""); // 댓글 입력 필드 초기화
   };
 
   return (

@@ -1,53 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
-import axios from "axios";
-// import { Grid, Button, Typography, Divider } from "@mui/material";
-import { Grid, Typography, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import {   Unstable_Grid2 as Grid,
+  Typography,
+  TextField,
+  Box,
+  Button,
+  Input,
+  // Divider, 
+  TextareaAutosize} from "@mui/material";
+// import { useNavigate } from "react-router-dom";
 import Footer from "routes/customer/Footer";
+import { abort } from "process";
 
-type Post = {
-  postId: number;
-  title: string;
-  content: string;
-  createdAt: number[];
-  commentCount: number;
-  isLike: boolean;
-  latitude: number;
-  longitude: number;
-  thumbnail: {
-    url: string;
-    thumb: string;
-  };
-  userId: number;
-  userNickname: string;
-  userProfile: string | null;
-};
-
-// const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
-
-// const formatTime = (createdAt: number[]) => {
-//   const [year, month, day, hour, minute, second] = createdAt;
-
-//   const formattedDate = `${year}-${getZeroNum(month)}-${getZeroNum(day)}`;
-//   const formattedTime = `${getZeroNum(hour)}:${getZeroNum(minute)}:${
-//     second ? getZeroNum(second) : "00"
-//   }`;
-
-//   return `${formattedDate} ${formattedTime}`;
-// };
+type PostImage = {
+  url:string;
+  thumb:string;
+}
 
 function BoardForm() {
+  const token = sessionStorage.getItem("accessToken");
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [photos, setPhotos] = useState([]);
+  const [images, setImages] = useState([]);
+  // const [photos, setPhotos] = useState(d[]);
   const [selectedPhotos, setSelectedPhotos] = useState([]);
+  const [fileName, setFileName] = useState<string>("");
+  const [image, setImage] = useState<string | undefined>("");
 
-  const handleTitleChange = (e: any) => {
+
+  // // dataURL을 Blob으로 바꿉니다.
+  // const dataURLToBlob = (dataURL: string) => {
+  //   const byteString = atob(dataURL.split(",")[1]);
+  //   const mimeString = dataURL.split(",")[0].split(":")[1].split(";")[0];
+  //   const ab = new ArrayBuffer(byteString.length);
+  //   const ia = new Uint8Array(ab);
+
+  //   for (let i = 0; i < byteString.length; i++) {
+  //     ia[i] = byteString.charCodeAt(i);
+  //   }
+
+  //   return new Blob([ab], { type: mimeString });
+  // };
+
+  // // 이미지를 업로드합니다.
+  // const postImage = () => {
+   
+  // };
+
+  // // 이미지 파일을 올리면 파일을 바꿉니다.
+  // const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files;
+  //   const MAX_SIZE = 5 * 1024 * 1024; // 최대 5MB
+
+  //   if (files) {
+  //     // 여기
+     
+  //     }else {
+  //   setImage("");
+  //   setFileName("");
+  // }
+  // };
+
+
+  const handleTitle = (e: any) => {
     setTitle(e.target.value);
   };
 
-  const handleContentChange = (e: any) => {
+  const handleContent = (e: any) => {
     setContent(e.target.value);
   };
 
@@ -56,54 +79,122 @@ function BoardForm() {
     // setSelectedPhotos(selectedFiles);
   };
 
-  const handlePostSubmit = (e: any) => {
+  const handleFormSubmit = (e: any) => {
     e.preventDefault();
     // 게시글 데이터와 사진 업로드 처리
     const postData = {
-      title: title,
-      content: content,
-    };
+      boardId: 1,
+      bcode: 3020011300,
+      title,
+      content,
+      images:[],
+      latitude:36.3481000221941,
+      longitude:127.29858777113043
+  }
 
-    console.log("게시글 데이터:", postData);
     // console.log("선택된 사진:", selectedPhotos);
 
     // 서버로 데이터 전송 및 처리 로직 추가
+    axios({
+      url: `${REST_API}community`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: postData,
+    }).then(({data})=>{
+      navigate(`/board/${data.id}`);
+    });
   };
 
   return (
-    <div>
-      <h2>게시글 작성</h2>
-      <form onSubmit={handlePostSubmit}>
-        <div>
-          <label htmlFor="title">제목</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={handleTitleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="content">내용</label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={handleContentChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="photos">사진 업로드</label>
-          <input
-            type="file"
-            id="photos"
-            value={photos}
-            multiple
-            onChange={handlePhotoChange}
-          />
-        </div>
-        <button type="submit">게시글 작성</button>
-      </form>
-    </div>
+    <Grid
+    container
+    xs={12}
+    direction="column"
+    sx={{
+      backgroundColor: "white",
+    }}
+  >
+    <Grid container xs={12} justifyContent="center">
+    <Grid xs={9}>
+            <Box component="form">
+              <Box sx={{ height: "130px" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 400 }}
+                  gutterBottom
+                >
+                  제목
+                </Typography>
+                <TextField
+                  placeholder="제목"
+                  fullWidth
+                  value={title}
+                  onChange={handleTitle}
+                  autoComplete="title"
+                />
+              </Box>
+              <Box sx={{ height: "130px" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 400 }}
+                  gutterBottom
+                >
+                  내용
+                </Typography>
+                <TextareaAutosize
+                  placeholder="내용"
+                  autoComplete="content"
+                  value={content}
+                  onChange={handleContent}
+                ></TextareaAutosize>
+              </Box>
+              <Box sx={{ height: "130px" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 400 }}
+                  gutterBottom
+                >
+                  사진
+                </Typography>
+                <Input
+                  type="file"
+                  id="photos"
+                  inputProps={{ multiple: true }}
+                  onChange={handlePhotoChange}
+                  fullWidth
+                />
+            </Box>
+            </Box>
+          </Grid>
+          <Grid container xs={9} justifyContent="center">
+            <Grid xs={12}>
+              <Button
+                onClick={handleFormSubmit}
+                variant="contained"
+                color="secondary"
+                sx={{ height: "60px" }}
+                fullWidth
+              >
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: "red",
+                    fontWeight: 700,
+                    textAlign: "center",
+                  }}
+                >
+                  작성
+                </Typography>
+              </Button>
+            </Grid>
+          </Grid>
+    </Grid>
+    <Grid container xs={12} justifyContent="center">
+      <Footer now={6} />
+    </Grid>
+  </Grid>
   );
 }
 
