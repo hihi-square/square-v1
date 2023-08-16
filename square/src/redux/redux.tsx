@@ -47,11 +47,15 @@ const emdSlice = createSlice({
   name: "emd",
   initialState: {
     emdCode: "",
+    depth: 0,
     currentName: "",
   },
   reducers: {
     setEmdCode: (state, action) => {
       state.emdCode = action.payload;
+    },
+    setDepth: (state, action) => {
+      state.depth = action.payload;
     },
     setCurrentName: (state, action) => {
       state.currentName = action.payload;
@@ -59,7 +63,7 @@ const emdSlice = createSlice({
   },
 });
 
-export const { setEmdCode, setCurrentName } = emdSlice.actions;
+export const { setEmdCode, setDepth, setCurrentName } = emdSlice.actions;
 
 const notifications = createSlice({
   name: "notifications",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Chip,
@@ -14,58 +14,47 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "App.css";
 import Category from "./Category";
 
-export default function Search() {
-  const array: number[][] = [
-    [1, 2, 3, 4],
-    [5, 6, 7, 8],
-    [9, 10, 11, 12],
-  ];
-  const textArray: string[] = [
-    "도넛",
-    "주스",
-    "샐러드",
-    "커피",
-    "빵",
-    "케이크",
-    "탕후루",
-    "간편음식",
-    "분식",
-    "샌드위치",
-    "김밥",
-    "회/초밥",
-  ];
+const recommend = [
+  "그제의 추천",
+  "어제의 추천",
+  "오늘의 추천",
+  "내일의 추천",
+  "모레의 추천",
+  "글피의 추천",
+  "제경의 추천",
+  "지희의 추천",
+  "다희의 추천",
+  "동현의 추천",
+  "세훈의 추천",
+  "소연의 추천",
+];
 
+export default function Search() {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>("");
-  const [recentSearch, setRecentSearch] = useState<string[]>([]);
+  const [recomArr, setRecomArr] = useState<string[]>([]);
 
   useEffect(() => {
-    const list = JSON.parse(localStorage.getItem("search") || "[]");
+    const randomRecommend = getRandomRecommend(recommend, 10);
 
-    setRecentSearch(list);
+    setRecomArr(randomRecommend);
   }, []);
-
-  const search = () => {
-    const keyword = searchValue;
-    const tmpList = [...recentSearch];
-
-    tmpList.push(keyword);
-
-    if (tmpList.length > 10) tmpList.shift();
-    localStorage.setItem("search", JSON.stringify(tmpList));
-    setRecentSearch(tmpList);
-  };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
     setSearchValue(value);
   };
-  const handleDelete = (index: number) => {
-    const tmpList = [...recentSearch];
 
-    tmpList.splice(index, 1);
-    localStorage.setItem("search", JSON.stringify(tmpList));
-    setRecentSearch(tmpList);
+  // 랜덤 추천 함수를 만듭니다.
+  const getRandomRecommend = (arr: string[], count: number) => {
+    const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+
+    return shuffled.slice(0, count);
+  };
+
+  const search = () => {
+    navigate(`/list/${searchValue}`);
   };
 
   return (
@@ -96,7 +85,12 @@ export default function Search() {
           placeholder="가게명 혹은 검색어를 입력하세요."
           inputProps={{ "aria-label": "해시태그로 검색" }}
         />
-        <IconButton sx={{ fontSize: "20px" }} onClick={search}>
+        <IconButton
+          sx={{ fontSize: "20px" }}
+          onClick={() => {
+            search();
+          }}
+        >
           <FontAwesomeIcon icon={faSearch} style={{ color: "gray" }} />
         </IconButton>
       </Paper>
@@ -125,22 +119,20 @@ export default function Search() {
           scrollbarWidth: "none",
         }}
       >
-        {recentSearch.map((chip, idx) => (
-          <>
-            <Chip
-              label={chip}
-              size="small"
-              variant="outlined"
-              onDelete={() => {
-                handleDelete(idx);
-              }}
-              sx={{
-                padding: "0px 0px",
-              }}
-            />
-            <Box sx={{ padding: "0px 5px" }}></Box>
-          </>
-        ))}
+        {recomArr &&
+          recomArr.map((chip, idx) => (
+            <Grid key={idx}>
+              <Chip
+                label={chip}
+                size="small"
+                variant="outlined"
+                sx={{
+                  padding: "0px 0px",
+                }}
+              />
+              <Box sx={{ padding: "0px 5px" }}></Box>
+            </Grid>
+          ))}
       </Box>
 
       <Grid
@@ -150,50 +142,6 @@ export default function Search() {
         justifyContent="center"
       >
         <Category />
-      </Grid>
-      <Grid
-        container
-        xs={12}
-        sx={{ paddingTop: "20px" }}
-        justifyContent="center"
-      >
-        {array.map((row, idx) => (
-          <Grid container xs={12} justifyContent="center" key={`a${idx}`}>
-            {row.map((col, innerIdx) => (
-              <Grid
-                xs={3}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-                key={innerIdx}
-              >
-                <img
-                  src={`img/icon/icon${col}.png`}
-                  style={{ width: "60%" }}
-                  alt="hashtag"
-                />
-                <Typography
-                  variant="body1"
-                  component="div"
-                  sx={{
-                    fontWeight: 700,
-                    color: "secondary.main",
-                    padding: "0px",
-                    width: "90%",
-                    textAlign: "center",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {textArray[col - 1]}
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
-        ))}
       </Grid>
     </Grid>
   );

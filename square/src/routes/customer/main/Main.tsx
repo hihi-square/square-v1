@@ -11,18 +11,17 @@ function MainPage() {
       container
       xs={12}
       sx={{
-        flexDirection: "column",
         alignItems: "center",
         width: "100%",
         height: "100%",
       }}
     >
       <Header />
-      <Grid sx={{ height: "60px" }}></Grid>
+      <Grid xs={12} sx={{ height: "60px" }}></Grid>
       <Grid container xs={12} justifyContent="center">
         <Search />
       </Grid>
-      <Grid sx={{ height: "80px" }}></Grid>
+      <Grid xs={12} sx={{ height: "80px" }}></Grid>
       <Footer now={2} />
     </Grid>
   );
