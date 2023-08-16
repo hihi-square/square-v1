@@ -74,10 +74,12 @@ public class SecurityConfig {
 			//요청에 대한 권한 설정
 			.authorizeRequests()
 			//1. 회원가입 모두 허용
-			.antMatchers("/user/**", "/api/v1/user", "/community/**")
+			.antMatchers("/user/**", "/api/v1/user")
 			.permitAll()
 			.antMatchers(HttpMethod.POST, "/store")
 			.permitAll()
+			//2. 인가된 사용자만 허용(구매자, 판매자, 관리자)
+			.antMatchers("/community/**").authenticated()
 			//2. 가게에 대한 권한 설정
 			.antMatchers(HttpMethod.GET, "/store", "/store/business-license/**", "/scb/store", "/store/daily/list",
 				"/order/store/**", "/coupon/store/issue", "/coupon/store")
