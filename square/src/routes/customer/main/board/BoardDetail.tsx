@@ -64,6 +64,17 @@ type PostDetail = {
   userProfile: string;
 };
 
+type UserInfo = {
+  bcode: number;
+  depth: number;
+  emdName: string;
+  fullName: string;
+  sidoName: string;
+  siggName: string;
+  usrId: number;
+  usrNick: string;
+};
+
 function BoardDetail(props: any) {
   const navigate = useNavigate();
   const token = sessionStorage.getItem("accessToken");
@@ -72,11 +83,20 @@ function BoardDetail(props: any) {
   const [id, setPostId] = useState<number>(); // 기본값을 undefined로 설정
   const [post, setPost] = useState<PostDetail>();
   const [isUpdate, setIsUpdate] = useState<boolean>();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
 
   useEffect(() => {
     const parsedId = Number(urlParams.id);
 
     setPostId(parsedId); // 파싱에 실패하면 undefined로 설정
+    const storedUserInfo = sessionStorage.getItem('userInfo');
+
+    if (storedUserInfo) {
+      const parsedUserInfo: UserInfo = JSON.parse(storedUserInfo);
+      
+      setUserInfo(parsedUserInfo);
+    }
   }, [urlParams]);
 
   useEffect(() => {
@@ -122,6 +142,17 @@ function BoardDetail(props: any) {
   const handleCommentSubmit = () => {
     setIsUpdate(true);
   };
+  const handlePostDelete = () => {
+    axios(
+      {url:`${REST_API}community/${id}`,
+    method:"DELETE",
+  headers:{
+    Authorization: `Bearer ${token}`
+  }}
+    ).then(()=>{
+      navigate("/board");
+    })
+  }
 
   return (
     <Grid container spacing={3} style={{ padding: "20px" }}>
@@ -140,6 +171,35 @@ function BoardDetail(props: any) {
       </Button>
       <Grid item xs={12}>
         <Typography variant="h5">{post && post.title}</Typography>
+        {post && post.userId === userInfo?.usrId && (
+          <Box>
+        <Button
+        sx={{
+          width: "100%",
+          height: "60px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+        onClick={() => {
+          navigate(`/board/update/${id}`);
+        }}
+      >
+        수정
+      </Button>
+      <Button
+      sx={{
+        width: "100%",
+        height: "60px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+      onClick={() => {
+        handlePostDelete();
+      }}
+    >
+      삭제
+    </Button></Box>)
+      }
         <Grid item container spacing={1} alignItems="center">
           <Grid item>
             <Avatar src={post && post.userProfile} />
@@ -182,7 +242,10 @@ function BoardDetail(props: any) {
       <Grid item xs={12}>
         {post &&
           post.comments.map((comment) => (
-            <Comment comment={comment} commentKey={comment.commentId} onCommentSubmit={handleCommentSubmit}></Comment>
+            <Comment comment={comment} 
+            commentKey={comment.commentId} 
+            onCommentSubmit={handleCommentSubmit}
+            loginUserId={userInfo?.usrId||0}></Comment>
           ))}
         {post && (
           <CommentForm

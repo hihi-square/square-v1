@@ -22,12 +22,12 @@ interface CommentProps {
   comment: CommentEntity;
   commentKey: number;
   onCommentSubmit: (comment: CommentEntity) => void;
+  loginUserId: number;
 }
 
 
-function Comment({ comment, commentKey, onCommentSubmit }: CommentProps) {
+function Comment({ comment, commentKey, onCommentSubmit, loginUserId }: CommentProps) {
   const token = sessionStorage.getItem("accessToken");
-  const loginUserId = Number(sessionStorage.getItem("userId"));
 
   useEffect(() => {}, []);
   const handleCommentSubmit = (event: any) => {

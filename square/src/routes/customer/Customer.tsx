@@ -245,7 +245,8 @@ export default function Customer() {
         <Route path="/store/:store" element={<Store />} />
         <Route path="/main" element={<Main />} />
         <Route path="/board" element={<Board />} />
-        <Route path="/board/write" element={<BoardForm />} />
+        <Route path="/board/write" element={<BoardForm mode="write" />} />
+        <Route path="/board/update/:id" element={<BoardForm mode="update" />} />
         <Route path="/board/:id" element={<BoardDetail />} />
 
         <Route path="/chat" element={<Chat />} />
