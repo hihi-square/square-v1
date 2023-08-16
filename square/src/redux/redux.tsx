@@ -43,6 +43,24 @@ const sticky = createSlice({
   },
 });
 
+const emdSlice = createSlice({
+  name: "emd",
+  initialState: {
+    emdCode: "",
+    currentName: "",
+  },
+  reducers: {
+    setEmdCode: (state, action) => {
+      state.emdCode = action.payload;
+    },
+    setCurrentName: (state, action) => {
+      state.currentName = action.payload;
+    },
+  },
+});
+
+export const { setEmdCode, setCurrentName } = emdSlice.actions;
+
 const notifications = createSlice({
   name: "notifications",
   initialState: {
@@ -181,6 +199,7 @@ export const store = configureStore({
     page: page.reducer,
     choice: choice.reducer,
     notifications: notifications.reducer, // 추가된 코드
+    emd: emdSlice.reducer,
   },
 });
 

@@ -40,7 +40,7 @@ const theme = createTheme({
 
 function App() {
   return (
-    <Grid container className="App" sx={{ width: "100%", height: "auto" }}>
+    <Grid container className="App" sx={{ width: "100%", height: "100vh" }}>
       <ThemeProvider theme={theme}>
         <Grid
           container

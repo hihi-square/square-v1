@@ -10,11 +10,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
   faLayerGroup,
+  faSearch,
+  faComments,
   faMap,
-  faMessage,
-  faComment,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom"; // 이 부분을 수정
+import { useNavigate } from "react-router-dom";
 
 interface FooterProps {
   now: number;
@@ -32,7 +32,7 @@ export default function Footer({ now }: FooterProps) {
         height: "80px",
         width: "100%",
         maxWidth: "600px",
-        zIndex: 3,
+        zIndex: 15,
       }}
       elevation={0}
     >
@@ -41,22 +41,23 @@ export default function Footer({ now }: FooterProps) {
           <Button
             sx={{
               width: "100%",
-              height: "70px",
+              height: "80px",
               display: "flex",
               flexDirection: "column",
+              color: now === 1 ? "primary" : "lightgrey",
             }}
             onClick={() => {
-              if (now !== 1) navigate("/main");
+              if (now !== 1) navigate("/");
             }}
           >
             <Box component="div">
-              <FontAwesomeIcon icon={faLayerGroup} />
+              <FontAwesomeIcon icon={faMap} size="2x" />
             </Box>
             <Box component="div">
               <Typography
                 variant="body2"
                 component="div"
-                sx={{ fontWeight: 500, textAlign: "center" }}
+                sx={{ marginTop: "5px", fontWeight: 700, textAlign: "center" }}
               >
                 메인
               </Typography>
@@ -67,22 +68,23 @@ export default function Footer({ now }: FooterProps) {
           <Button
             sx={{
               width: "100%",
-              height: "60px",
+              height: "80px",
               display: "flex",
               flexDirection: "column",
+              color: now === 2 ? "primary" : "lightgrey",
             }}
             onClick={() => {
-              if (now !== 2) navigate("/map");
+              if (now !== 2) navigate("/main");
             }}
           >
             <Box component="div">
-              <FontAwesomeIcon icon={faMap} />
+              <FontAwesomeIcon icon={faSearch} size="2x" />
             </Box>
             <Box component="div">
               <Typography
                 variant="body2"
                 component="div"
-                sx={{ fontWeight: 500, textAlign: "center" }}
+                sx={{ marginTop: "5px", fontWeight: 700, textAlign: "center" }}
               >
                 검색
               </Typography>
@@ -93,22 +95,23 @@ export default function Footer({ now }: FooterProps) {
           <Button
             sx={{
               width: "100%",
-              height: "60px",
+              height: "80px",
               display: "flex",
               flexDirection: "column",
+              color: now === 3 ? "primary" : "lightgrey",
             }}
             onClick={() => {
               if (now !== 3) navigate("/board");
             }}
           >
             <Box component="div">
-              <FontAwesomeIcon icon={faComment} />
+              <FontAwesomeIcon icon={faComments} size="2x" />
             </Box>
             <Box component="div">
               <Typography
                 variant="body2"
                 component="div"
-                sx={{ fontWeight: 500, textAlign: "center" }}
+                sx={{ marginTop: "5px", fontWeight: 700, textAlign: "center" }}
               >
                 커뮤니티
               </Typography>
@@ -119,22 +122,23 @@ export default function Footer({ now }: FooterProps) {
           <Button
             sx={{
               width: "100%",
-              height: "60px",
+              height: "80px",
               display: "flex",
               flexDirection: "column",
+              color: now === 4 ? "primary" : "lightgrey",
             }}
             onClick={() => {
               if (now !== 4) navigate("/order");
             }}
           >
             <Box component="div">
-              <FontAwesomeIcon icon={faMessage} />
+              <FontAwesomeIcon icon={faLayerGroup} size="2x" />
             </Box>
             <Box component="div">
               <Typography
                 variant="body2"
                 component="div"
-                sx={{ fontWeight: 500, textAlign: "center" }}
+                sx={{ marginTop: "5px", fontWeight: 700, textAlign: "center" }}
               >
                 주문
               </Typography>
@@ -148,19 +152,20 @@ export default function Footer({ now }: FooterProps) {
               height: "60px",
               display: "flex",
               flexDirection: "column",
+              color: now === 5 ? "primary" : "lightgrey",
             }}
             onClick={() => {
               if (now !== 10) navigate("/mypage");
             }}
           >
             <Box component="div">
-              <FontAwesomeIcon icon={faUser} />
+              <FontAwesomeIcon icon={faUser} size="2x" />
             </Box>
             <Box component="div">
               <Typography
                 variant="body2"
                 component="div"
-                sx={{ fontWeight: 500, textAlign: "center" }}
+                sx={{ marginTop: "5px", fontWeight: 700, textAlign: "center" }}
               >
                 마이
               </Typography>
