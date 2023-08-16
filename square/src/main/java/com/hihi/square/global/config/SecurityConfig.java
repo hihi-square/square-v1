@@ -50,9 +50,8 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		//				.authorizeHttpRequests(requests -> requests.request("/*").permitAll().anyRequest().authenticated())
-
+		// rest api만을 고려하여 기본설정 해제
 		http
-			// rest api만을 고려하여 기본설정 해제
 			.httpBasic().disable()
 			// 서버에 인증정보를 저장하지 않기 때문에 csrf를 사용하지 않음
 			.csrf().disable()
@@ -61,10 +60,15 @@ public class SecurityConfig {
 			.sessionManagement((sessionManagement) ->
 				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
+
 			// 기본 로그인페이지 없애기
 			.formLogin().disable()
 			.authorizeRequests()
-			.antMatchers("/user/login", "/user", "/store", "/user/find/id").permitAll()
+			.antMatchers("/user/login").permitAll()
+			// .antMatchers("/store").permitAll()
+			// .antMatchers("/store").hasAuthority("UA02")
+			.antMatchers("/store").hasAuthority("ROLE_UA02")
+			// .antMatchers("/user/login", "/user", "/store", "/user/find/id").permitAll()
 			.antMatchers("/**").permitAll()
 		// 위 3가지(로그인, 구매자/가게 회원가입)을 제외한 POST 요청을 막아둠
 		// .antMatchers(HttpMethod.POST, "/**").authenticated()
