@@ -17,12 +17,12 @@ export default function List() {
       }}
     >
       <Header />
+      <Grid xs={12} sx={{ height: "60px" }}></Grid>
       <Grid container xs={12} justifyContent="center">
         <CategoryStore />
       </Grid>
-      <Grid container xs={12} justifyContent="center">
-        <Footer now={2} />
-      </Grid>
+      <Grid xs={12} sx={{ height: "80px" }}></Grid>
+      <Footer now={2} />
     </Grid>
   );
 }

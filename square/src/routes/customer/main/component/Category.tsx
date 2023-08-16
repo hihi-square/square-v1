@@ -107,10 +107,10 @@ const itemData = [
 ];
 
 const textData = [
-  ["카페/음료", "커피나 음료를 사세요."],
-  ["베이커리", "신선한 빵을 사보세요."],
-  ["조리식품", "분식과 같은 조리식품을 사드세요."],
-  ["신선식품", "신선합니다요"],
+  ["카페/음료", "커피, 차, 주스, 버블티..."],
+  ["베이커리", "쿠키, 빵, 케잌, 마카롱..."],
+  ["조리식품", "분식, 길거리음식, 패스트푸드..."],
+  ["신선식품", "샐러드, 샌드위치, 회..."],
 ];
 
 export default function Category() {
@@ -151,7 +151,7 @@ export default function Category() {
   }
 
   return (
-    <Grid xs={12} mt={2} id="stickyCategory">
+    <Grid xs={12} id="stickyCategory">
       {[0, 1, 2, 3].map((idx) => (
         <Paper
           sx={{ display: "flex", flexDirection: "column", marginTop: "20px" }}
@@ -171,7 +171,7 @@ export default function Category() {
             }}
           >
             <Typography
-              variant="h5"
+              variant="h6"
               sx={{
                 color: "black",
                 fontWeight: 700,
@@ -181,7 +181,7 @@ export default function Category() {
               {textData[idx][0]}
             </Typography>
             <Typography
-              variant="subtitle1"
+              variant="subtitle2"
               sx={{
                 color: "grey",
                 fontWeight: 400,
