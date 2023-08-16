@@ -1,20 +1,19 @@
 package com.hihi.square.domain.board.dto.response;
 
-import java.time.LocalDateTime;
-
-import com.hihi.square.domain.board.entity.PostImage;
 import com.hihi.square.global.s3.dto.FileThumbDto;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostListDto {
+	private Integer boardId;
 	private Integer postId;
 	private String title;
 	private String content;
