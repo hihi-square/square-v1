@@ -38,8 +38,6 @@ type OrderItem = {
 
 export default function Order() {
   const token = localStorage.getItem("accessToken");
-  const userInfo = localStorage.getItem("userInfo");
-  const userId = userInfo ? JSON.parse(userInfo).userId : 0;
   const [orderList, setOrderList] = useState<OrderItem[]>([]);
   const [pickList, setPickList] = useState<OrderItem[]>([]);
   const [acceptList, setAcceptList] = useState<OrderItem[]>([]);
@@ -52,7 +50,7 @@ export default function Order() {
 
   const getOrderData = () => {
     axios({
-      url: `${REST_API}order/store/${userId}`,
+      url: `${REST_API}order/store`,
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

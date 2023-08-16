@@ -19,7 +19,8 @@ export default function Pay() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = sessionStorage.getItem("accessToken");
-  const userId = sessionStorage.getItem("userId");
+  const info = sessionStorage.getItem("userInfo");
+  const userId = info ? JSON.parse(info).usrId : 0;
 
   const [phone, setPhone] = useState("");
   const [request, setRequest] = useState("정성스럽게 준비해주세요.");
@@ -124,6 +125,7 @@ export default function Pay() {
     }
     let ordId = 0;
 
+    console.log(orderItem);
     await axios({
       url: `${REST_API}order`,
       method: "POST",

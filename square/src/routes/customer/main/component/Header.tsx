@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "App.css";
@@ -25,6 +24,7 @@ export default function Header() {
         height: "60px",
         width: "100%",
         maxWidth: "600px",
+        backgroundColor: "white",
         zIndex: 3,
       }}
     >

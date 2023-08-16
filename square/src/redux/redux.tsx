@@ -17,7 +17,7 @@ const user = createSlice({
 type data = {
   id: number;
   content: string;
-  url: string;
+  storeName: string;
   isRead: boolean;
 };
 
@@ -42,6 +42,28 @@ const sticky = createSlice({
     },
   },
 });
+
+const emdSlice = createSlice({
+  name: "emd",
+  initialState: {
+    emdCode: "",
+    depth: 0,
+    currentName: "",
+  },
+  reducers: {
+    setEmdCode: (state, action) => {
+      state.emdCode = action.payload;
+    },
+    setDepth: (state, action) => {
+      state.depth = action.payload;
+    },
+    setCurrentName: (state, action) => {
+      state.currentName = action.payload;
+    },
+  },
+});
+
+export const { setEmdCode, setDepth, setCurrentName } = emdSlice.actions;
 
 const notifications = createSlice({
   name: "notifications",
@@ -181,6 +203,7 @@ export const store = configureStore({
     page: page.reducer,
     choice: choice.reducer,
     notifications: notifications.reducer, // 추가된 코드
+    emd: emdSlice.reducer,
   },
 });
 

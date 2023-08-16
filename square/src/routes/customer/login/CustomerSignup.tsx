@@ -3,332 +3,486 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 import { REST_API } from "redux/redux";
-import { Unstable_Grid2 as Grid } from "@mui/material";
+import {
+  Unstable_Grid2 as Grid,
+  Typography,
+  TextField,
+  Box,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  InputAdornment,
+  OutlinedInput,
+  Button,
+} from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+
+type Form = {
+  uid: string;
+  password: string;
+  nickname: string;
+  name: string;
+  phone: string;
+  email: string;
+  marketingAgree: boolean;
+};
 
 export default function CustomerSignUp() {
-  const [username, setName] = useState("");
-  const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
-  const [checkPw, setCheckPw] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [marketing, setMarketing] = useState(false);
+  const navigate = useNavigate();
+  const [form, setForm] = useState<Form>({
+    uid: "",
+    password: "",
+    nickname: "",
+    name: "",
+    phone: "",
+    email: "",
+    marketingAgree: false,
+  });
 
-  const [nameValid, setNameValid] = useState(false);
-  const [nicknameValid, setNicknameValid] = useState(false);
-  const [emailValid, setEmailValid] = useState(false);
-  const [phoneValid, setPhoneValid] = useState(false);
+  const [checkPw, setCheckPw] = useState<string>("");
+  const [errors, setErrors] = useState({
+    uid: "",
+    duple: "",
+    password: "",
+    same: "",
+    nickname: "",
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [marketing, setMarketing] = useState<boolean>(false);
+  const [checked, setChecked] = useState<boolean>(false);
+  const [open, setOpen] = useState<string>("");
 
-  const [idValid, setIdValid] = useState(false);
-  const [isIdDuplicated, setIsIdDuplicated] = useState(false);
-  const [pwValid, setPwValid] = useState(false);
-  const [checkPwValid, setCheckPwValid] = useState(false);
-  const [notAllow, setNotAllow] = useState(true);
+  // axios 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
-  const [message, setMessage] = useState("");
-
-  // const history = useHistory ();
-
-  const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-    if (e.target.value.length >= 2) {
-      setNameValid(true);
-    } else {
-      setNameValid(false);
-    }
-  };
-
-  const handleNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
-    if (e.target.value.length >= 2) {
-      setNicknameValid(true);
-    } else {
-      setNicknameValid(false);
-    }
-  };
-
-  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    if (e.target.value.length >= 10) {
-      setEmailValid(true);
-    } else {
-      setEmailValid(false);
-    }
-  };
-
-  const handleId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setId(e.target.value);
-    // eslint-disable-next-line no-useless-escape
-    const regex = /^[a-z]+[a-z0-9]{5,19}$/g;
-
-    if (regex.test(e.target.value)) {
-      setIdValid(true);
-    } else {
-      setIdValid(false);
-    }
-
-    setNotAllow(!idValid || !pwValid); // 이메일 유효성 검사를 기반으로 notAllow 업데이트
-  };
-
+  // 서버에 ID를 보내 중복확인을 실시합니다.
   const handleCheckId = () => {
-    // 서버에 아이디 중복 확인 요청 보내기
     axios
-      .get(`${REST_API}user/id/${id}`)
+      .get(`${REST_API}user/id/${form.uid}`)
       .then((response) => {
         // 서버 응답 처리
         if (response.data.message === "VALID") {
-          setIsIdDuplicated(false);
-          setMessage("사용 가능한 아이디 입니다.");
+          setErrors((err) => ({ ...err, duple: "" }));
+          setChecked(true);
         } else {
-          setIsIdDuplicated(true);
-          // setMessage("사용 불가능한 아이디 입니다.");
-        }
-      })
-      .catch((error) => {});
-  };
-
-  const handlePw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPw(e.target.value);
-    const regex =
-      /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-
-    if (regex.test(e.target.value)) {
-      setPwValid(true);
-    } else {
-      setPwValid(false);
-    }
-
-    setNotAllow(!idValid || !pwValid); // 비밀번호 유효성 검사를 기반으로 notAllow 업데이트
-  };
-
-  const handleCheckPw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckPw(e.target.value);
-
-    if (pw === e.target.value) {
-      setCheckPwValid(true);
-    } else {
-      setCheckPwValid(false);
-    }
-
-    setNotAllow(!idValid || !checkPwValid); // 비밀번호 유효성 검사를 기반으로 notAllow 업데이트
-  };
-
-  const handlePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value);
-    if (e.target.value.length === 11) {
-      setPhoneValid(true);
-    } else {
-      setPhoneValid(false);
-    }
-  };
-
-  const updateNotAllow = () => {
-    setNotAllow(
-      !idValid ||
-        !pwValid ||
-        !nameValid ||
-        !emailValid ||
-        !nicknameValid ||
-        !phoneValid
-    );
-  };
-
-  const handleMarketing = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMarketing(e.target.checked);
-    updateNotAllow();
-  };
-
-  const navigate = useNavigate();
-
-  const handleSignUp = () => {
-    const body = {
-      uid: id,
-      password: pw,
-      nickname,
-      name: username,
-      phone,
-      email,
-      marketingAgree: marketing,
-    };
-
-    axios
-      .post(`${REST_API}user`, body)
-      .then((response) => {
-        // 서버 응답 처리
-        if (response.status === 201) {
-          // eslint-disable-next-line no-alert
-          alert("회원가입에 성공했습니다.");
-          // 회원가입 성공 후 로그인 페이지로 이동
-          navigate("/customer/login");
-          // history.push("/customer/login"); // CustomerLogin 페이지로 이동
-        } else {
-          // eslint-disable-next-line no-alert
-          alert("이미 등록된 아이디입니다.");
+          setErrors((err) => ({
+            ...err,
+            duple: "이미 존재하는 아이디입니다.",
+          }));
         }
       })
       .catch((error) => {
-        // eslint-disable-next-line no-alert
-        alert("회원가입에 실패했습니다.");
+        setErrors((err) => ({
+          ...err,
+          duple: "서버 오류입니다.",
+        }));
       });
   };
+
+  const handleSignUp = () => {
+    axios
+      .post(`${REST_API}user`, { ...form, bcode: 3020011300 })
+      .then((response) => {
+        if (response.status === 201) {
+          setOpen("성공");
+        }
+      })
+      .catch((error) => {
+        setOpen("실패");
+      });
+  };
+
+  // axios 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  // 함수 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+  // ID로 들어올 문자열값을 체크합니다.
+  const handleId = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setForm((prev) => ({ ...prev, uid: e.target.value }));
+    setErrors((err) => ({
+      ...err,
+      duple: "아이디 중복 검사를 진행해주세요.",
+    }));
+
+    const regex = /^[a-zA-Z0-9]{6,20}$/;
+
+    if (regex.test(e.target.value)) setErrors((err) => ({ ...err, uid: "" }));
+    else
+      setErrors((err) => ({
+        ...err,
+        uid: "아이디는 영문과 숫자를 조합한 6~20자여야 합니다.",
+      }));
+  };
+
+  // ID의 오류값 텍스트를 반환합니다.
+  const idValidation = (): string => {
+    if (errors.uid) {
+      return errors.uid;
+    } else if (errors.duple) {
+      return errors.duple;
+    } else return "";
+  };
+
+  // 비밀번호로 들어올 문자열값을 체크합니다.
+  const handlePw = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, password: e.target.value }));
+
+    const regex =
+      /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
+
+    if (regex.test(e.target.value))
+      setErrors((err) => ({ ...err, password: "" }));
+    else
+      setErrors((err) => ({
+        ...err,
+        password:
+          "비밀번호는 영문과 숫자, 특수문자를 최소 1개씩 조합한 8~20자여야 합니다.",
+      }));
+  };
+
+  // 비밀번호와 비밀번호 확인이 같은지 체크합니다.
+  const handleCheckPw = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckPw(e.target.value);
+    if (e.target.value !== form.password) {
+      setErrors((err) => ({
+        ...err,
+        same: "비밀번호가 같지 않습니다.",
+      }));
+    } else {
+      setErrors((err) => ({
+        ...err,
+        same: "",
+      }));
+    }
+  };
+
+  // 닉네임이 두글자 이상인지 체크합니다.
+  const handleNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, nickname: e.target.value }));
+    if (e.target.value.length >= 2) {
+      setErrors((err) => ({ ...err, nickname: "" }));
+    } else {
+      setErrors((err) => ({
+        ...err,
+        nickname: "닉네임은 최소 두글자 이상이어야 합니다.",
+      }));
+    }
+  };
+
+  // 이름이 두글자 이상인지 체크합니다.
+  const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, name: e.target.value }));
+    if (e.target.value.length >= 2) {
+      setErrors((err) => ({ ...err, name: "" }));
+    } else {
+      setErrors((err) => ({
+        ...err,
+        name: "이름은 최소 두글자 이상이어야 합니다.",
+      }));
+    }
+  };
+
+  // 이메일 주소가 존재하는지 체크합니다.
+  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, email: e.target.value }));
+
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    if (regex.test(e.target.value)) setErrors((err) => ({ ...err, email: "" }));
+    else
+      setErrors((err) => ({
+        ...err,
+        email: "올바른 형식의 이메일을 사용해주세요.",
+      }));
+  };
+
+  // 핸드폰 번호가 존재하는지 체크합니다.
+  const handlePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, phone: e.target.value }));
+
+    const regex = /^0\d{9,10}$/;
+
+    if (regex.test(e.target.value)) setErrors((err) => ({ ...err, phone: "" }));
+    else
+      setErrors((err) => ({
+        ...err,
+        phone: "올바른 형식의 연락처를 사용해주세요.",
+      }));
+  };
+
+  // 다이얼로그가 꺼질때를 나타냅니다.
+  const handleClose = () => {
+    if (open === "성공") navigate("/login");
+    else {
+      setOpen("");
+    }
+  };
+
+  // 에러가 있는지 확인합니다.
+  const isFormValid = () =>
+    !Object.values(errors).some((error) => error !== "");
+
+  // 함수 목록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
   return (
     <Grid
       container
       xs={12}
-      md={8}
       justifyContent="center"
-      sx={{ maxWidth: "600px", height: "100%", backgroundColor: "white" }}
+      sx={{
+        maxWidth: "600px",
+        height: "100%",
+        backgroundImage: "url(/img/MobileBG.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      <div className="page">
-        <div className="titleWrap">Sign up</div>
-        <div className="contentWrap">
-          <div className="inputTitle">이름</div>
-          <div className="inputWrap">
-            <input
-              className="input"
-              type="text"
-              placeholder="홍길동"
-              value={username}
-              onChange={handleName}
+      <Grid
+        container
+        xs={12}
+        justifyContent="center"
+        sx={{ marginTop: "30px" }}
+      >
+        <Grid
+          container
+          xs={11}
+          sx={{ alignItems: "center", marginBottom: "20px" }}
+        >
+          <Grid xs={3} sx={{ display: "flex", justifyContent: "end" }}>
+            <img
+              src="/img/Square.png"
+              style={{ width: "70px", height: "auto" }}
+              alt="SQUARE 로고"
             />
-          </div>
-          <div className="errorMessageWrap">
-            {!nameValid && username.length > 0 && (
-              <div>이름을 최소 2글자 이상 입력해주세요.</div>
-            )}
-          </div>
-
-          <div className="inputTitle">닉네임</div>
-          <div className="inputWrap">
-            <input
-              className="input"
-              type="text"
-              placeholder="홍홍홍"
-              value={nickname}
-              onChange={handleNickname}
-            />
-          </div>
-          <div className="errorMessageWrap">
-            {!nicknameValid && nickname.length > 0 && (
-              <div>닉네임을 최소 2글자 이상 입력해주세요.</div>
-            )}
-          </div>
-
-          <div className="inputTitle">이메일</div>
-          <div className="inputWrap">
-            <input
-              className="input"
-              type="text"
-              placeholder="test@naver.com"
-              value={email}
-              onChange={handleEmail}
-            />
-          </div>
-          <div className="errorMessageWrap">
-            {!emailValid && email.length > 0 && (
-              <div>이메일을 제대로 입력해주세요.</div>
-            )}
-          </div>
-
-          <div style={{ marginTop: "26px" }} className="inputTitle">
-            Id
-          </div>
-          <div className="inputWrap">
-            <input
-              className="input"
-              type="text"
-              placeholder="testid"
-              value={id}
-              onChange={handleId}
-            />
-            <button onClick={handleCheckId}>중복 확인</button>
-          </div>
-          <p>{message}</p>
-          <div className="errorMessageWrap">
-            {isIdDuplicated && <div>이미 사용 중인 아이디입니다.</div>}
-          </div>
-          <div className="errorMessageWrap">
-            {!idValid && id.length > 0 && (
-              <div>올바른 아이디를 입력해주세요.</div>
-            )}
-          </div>
-
-          <div style={{ marginTop: "26px" }} className="inputTitle">
-            비밀번호
-          </div>
-          <div className="inputWrap">
-            <input
-              className="input"
+          </Grid>
+          <Grid xs={9}>
+            <Typography
+              variant="h4"
+              component="h4"
+              sx={{ fontWeight: 800, textAlign: "center", marginRight: "30px" }}
+            >
+              <Box component="span" sx={{ color: "primary.main" }}>
+                W
+              </Box>
+              elcome !!
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container xs={10}>
+          <Grid
+            container
+            xs={12}
+            sx={{ backgroundColor: "white", marginBottom: "20px" }}
+          >
+            <Grid xs={12}>
+              <Typography variant="body2" sx={{ fontWeight: 500 }} gutterBottom>
+                아이디
+              </Typography>
+              <FormControl fullWidth>
+                <OutlinedInput
+                  placeholder="회원 아이디"
+                  fullWidth
+                  value={form.uid}
+                  onChange={handleId}
+                  error={Boolean(errors.uid) || Boolean(errors.duple)}
+                  autoComplete="userid"
+                  startAdornment={
+                    checked &&
+                    !errors.uid &&
+                    !errors.duple && (
+                      <InputAdornment position="start">
+                        <FontAwesomeIcon
+                          icon={faCheck}
+                          style={{ color: "green" }}
+                        />
+                      </InputAdornment>
+                    )
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Button
+                        onClick={handleCheckId}
+                        disabled={Boolean(errors.uid)}
+                        sx={{ color: "grey" }}
+                      >
+                        중복확인
+                      </Button>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+              <FormHelperText sx={{ color: "#d32f2f", marginLeft: "15px" }}>
+                {idValidation()}
+              </FormHelperText>
+            </Grid>
+          </Grid>
+          <Grid xs={12} sx={{ backgroundColor: "white", marginBottom: "40px" }}>
+            <Typography variant="body2" sx={{ fontWeight: 500 }} gutterBottom>
+              비밀번호
+            </Typography>
+            <TextField
               type="password"
-              placeholder="영문, 숫자, 특수문자 포함 8자 이상"
-              value={pw}
+              placeholder="비밀번호"
+              fullWidth
+              autoComplete="password"
+              value={form.password}
               onChange={handlePw}
+              error={Boolean(errors.password)}
+              helperText={errors.password}
             />
-          </div>
-          <div className="errorMessageWrap">
-            {!pwValid && pw.length > 0 && (
-              <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
-            )}
-          </div>
-
-          <div style={{ marginTop: "26px" }} className="inputTitle">
-            비밀번호 확인
-          </div>
-          <div className="inputWrap">
-            <input
-              className="input"
+          </Grid>
+          <Grid xs={12} sx={{ backgroundColor: "white", marginBottom: "40px" }}>
+            <Typography variant="body1" sx={{ fontWeight: 500 }} gutterBottom>
+              비밀번호 확인
+            </Typography>
+            <TextField
               type="password"
-              placeholder="설정한 비밀번호를 정확하게 입력해주세요"
+              placeholder="비밀번호 재입력"
+              fullWidth
+              autoComplete="password"
               value={checkPw}
               onChange={handleCheckPw}
+              error={Boolean(errors.same)}
+              helperText={errors.same}
             />
-          </div>
-          <div className="errorMessageWrap">
-            {!checkPwValid && checkPw.length > 0 && (
-              <div>비밀번호가 일치하지 않습니다.</div>
-            )}
-          </div>
-        </div>
+          </Grid>
+          <Grid xs={12} sx={{ backgroundColor: "white", marginBottom: "20px" }}>
+            <Typography variant="body1" sx={{ fontWeight: 500 }} gutterBottom>
+              닉네임
+            </Typography>
+            <TextField
+              placeholder="닉네임"
+              fullWidth
+              value={form.nickname}
+              onChange={handleNickname}
+              error={Boolean(errors.nickname)}
+              autoComplete="usernick"
+              helperText={errors.nickname}
+            />
+          </Grid>
+          <Grid xs={12} sx={{ backgroundColor: "white", marginBottom: "20px" }}>
+            <Typography variant="body1" sx={{ fontWeight: 500 }} gutterBottom>
+              이름
+            </Typography>
+            <TextField
+              placeholder="이름"
+              fullWidth
+              value={form.name}
+              onChange={handleName}
+              error={Boolean(errors.name)}
+              autoComplete="username"
+              helperText={errors.name}
+            />
+          </Grid>
 
-        <div style={{ marginTop: "26px" }} className="inputTitle">
-          핸드폰번호
-        </div>
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="number"
-            placeholder="01012345678"
-            value={phone}
-            onChange={handlePhone}
-          />
-        </div>
-        <div className="errorMessageWrap">
-          {!pwValid && pw.length > 0 && (
-            <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
-          )}
-        </div>
+          <Grid xs={12} sx={{ backgroundColor: "white", marginBottom: "20px" }}>
+            <Typography variant="body1" sx={{ fontWeight: 500 }} gutterBottom>
+              이메일
+            </Typography>
+            <TextField
+              placeholder="square.example.com"
+              fullWidth
+              type="email"
+              value={form.email}
+              onChange={handleEmail}
+              error={Boolean(errors.email)}
+              autoComplete="email"
+              helperText={errors.email}
+            />
+          </Grid>
+          <Grid xs={12} sx={{ backgroundColor: "white", marginBottom: "20px" }}>
+            <Typography variant="body1" sx={{ fontWeight: 500 }} gutterBottom>
+              핸드폰번호
+            </Typography>
+            <TextField
+              placeholder="-를 뺀 숫자를 나열"
+              fullWidth
+              type="tel"
+              value={form.phone}
+              onChange={handlePhone}
+              error={Boolean(errors.phone)}
+              autoComplete="tel"
+              helperText={errors.phone}
+            />
+          </Grid>
 
-        <div style={{ marginTop: "26px" }}>
-          <input
-            type="checkbox"
-            checked={marketing}
-            onChange={handleMarketing}
-          />
-          마케팅 동의
-        </div>
+          <Grid xs={12} sx={{ backgroundColor: "white", marginBottom: "20px" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={() => {
+                    setMarketing(!marketing);
+                  }}
+                />
+              }
+              label="마케팅 수신에 동의합니다."
+            />
+            <FormHelperText sx={{ color: "#d32f2f", marginLeft: "15px" }}>
+              {!marketing && "마케팅 수신에 동의해야 가입할 수 있습니다."}
+            </FormHelperText>
+          </Grid>
 
-        <div>
-          <button
-            onClick={handleSignUp}
-            disabled={notAllow}
-            className="bottomButton"
-          >
-            가입하기
-          </button>
-        </div>
-      </div>
+          <Grid container xs={12} justifyContent="center">
+            <Grid xs={12}>
+              <Button
+                onClick={handleSignUp}
+                disabled={!isFormValid() || !marketing}
+                variant="contained"
+                color="primary"
+                sx={{ height: "60px", marginBottom: "10px" }}
+                fullWidth
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 500, textAlign: "center" }}
+                >
+                  가입하기
+                </Typography>
+              </Button>
+            </Grid>
+            <Button
+              onClick={() => {
+                navigate("/login");
+              }}
+              variant="contained"
+              color="secondary"
+              sx={{ height: "60px" }}
+              fullWidth
+            >
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 500, textAlign: "center" }}
+              >
+                뒤로가기
+              </Typography>
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Dialog open={Boolean(open)} onClose={handleClose}>
+        <DialogTitle>
+          {open === "성공"
+            ? `${form.nickname}님, 가입을 축하드립니다 !`
+            : "가입에 실패했습니다."}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {open === "성공"
+              ? "Square에서 우리 동네의 여러가지 물품들을 구매해보세요! 프로필 사진을 등록하고, 커뮤니티에서 활동할 수도 있습니다 !"
+              : "알 수 없는 오류로 인해 가입에 실패하였습니다."}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>확인</Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 }

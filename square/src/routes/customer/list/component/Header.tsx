@@ -1,18 +1,41 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "App.css";
 import "animate.css";
 import { Unstable_Grid2 as Grid, Typography, IconButton } from "@mui/material";
-import { RootState } from "redux/redux";
-import { BiCartAlt } from "react-icons/bi";
+import { BiCartAlt, BiArrowBack } from "react-icons/bi";
 
 export default function Header() {
+  const { query } = useParams<{ query?: string }>();
+  const [name, setName] = useState<string>(query || "");
   const navigate = useNavigate();
-  const currentName = useSelector((state: RootState) => state.emd.currentName);
   const handleCartClick = () => {
     navigate("/deal/cart");
   };
+  const goBack = () => {
+    navigate(-1);
+  };
+
+  useEffect(() => {
+    switch (query) {
+      case "1":
+        setName("커피/음료");
+        break;
+      case "2":
+        setName("베이커리");
+        break;
+
+      case "3":
+        setName("조리식품");
+        break;
+      case "4":
+        setName("신선식품");
+        break;
+
+      default:
+        break;
+    }
+  }, [query]);
 
   return (
     <Grid
@@ -26,9 +49,14 @@ export default function Header() {
         width: "100%",
         maxWidth: "600px",
         zIndex: 3,
+        backgroundColor: "white",
       }}
     >
-      <Grid xs={2}></Grid>
+      <Grid xs={2}>
+        <IconButton onClick={goBack}>
+          <BiArrowBack size="24" color="#3d3d3d" />
+        </IconButton>
+      </Grid>
       <Grid xs>
         <Typography
           variant="h5"
@@ -40,7 +68,7 @@ export default function Header() {
             textAlign: "center",
           }}
         >
-          {currentName}
+          {name}
         </Typography>
       </Grid>
       <Grid
