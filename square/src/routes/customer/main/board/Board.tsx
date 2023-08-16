@@ -1,10 +1,11 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
 import { Grid, Button, Typography, Divider, Box } from "@mui/material";
 // import { Grid, Typography, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Footer from "routes/customer/Footer";
+import { HiPencilAlt } from "react-icons/hi";
 
 type Post = {
   postId: number;
@@ -25,6 +26,17 @@ type Post = {
   viewCount: number;
 };
 
+type UserInfo = {
+  bcode: number;
+  depth: number;
+  emdName: string;
+  fullName: string;
+  sidoName: string;
+  siggName: string;
+  usrId: number;
+  usrNick: string;
+};
+
 const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
 
 const formatTime = (createdAt: number[]) => {
@@ -40,30 +52,43 @@ const formatTime = (createdAt: number[]) => {
 
 function Board() {
   const token = sessionStorage.getItem("accessToken");
-  const [userLocation, setUserLocation] = React.useState<string>("");
-  const [posts, setPosts] = React.useState<Post[]>();
+  const [userLocation, setUserLocation] = useState<string>("");
+  const [posts, setPosts] = useState<Post[]>();
+  // const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [bCode, setBCode] = useState<number>(3020011300);
+  const [depth, setDepth] = useState<number>(1);
 
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const dummyLocation = "대전광역시 유성구 구암동";
-    const bCode = 3020011300;
-    const depth = 1;
+    const storedUserInfo = sessionStorage.getItem("userInfo");
 
-    getPosts(bCode, depth);
-    setUserLocation(dummyLocation);
+    if (storedUserInfo) {
+      const parsedUserInfo: UserInfo = JSON.parse(storedUserInfo);
+
+      // setUserInfo(parsedUserInfo);
+      setUserLocation(parsedUserInfo.fullName);
+      setBCode(parsedUserInfo.bcode);
+      setDepth(parsedUserInfo.depth);
+    }
   }, []);
 
-  const getPosts = (bCode: number, depth: number) => {
-    axios({
-      url: `${REST_API}community/1/${bCode}/${depth}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(({ data }) => {
-      setPosts(data.posts);
-    });
+  React.useEffect(() => {
+    if (bCode !== undefined && depth !== undefined) getPosts(); // setBCode와 setDepth 이후에 실행됩니다.
+  }, [bCode, depth]);
+
+  const getPosts = () => {
+    if (bCode !== undefined && depth !== undefined) {
+      axios({
+        url: `${REST_API}community/1/${bCode}/${depth}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(({ data }) => {
+        setPosts(data.posts);
+      });
+    }
   };
 
   const handlePostClick = (postId: number) => {
@@ -129,21 +154,32 @@ function Board() {
           ))}
         <Box
           sx={{
-            position: "absolute",
+            position: "fixed",
+            bottom: 100,
+            right: 20,
+            width: "70px",
+            height: "70px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#bbdfc8",
+            borderRadius: 100,
+            boxShadow: "0px 0px 4px 2px rgba(24, 57, 43, 0.4)",
           }}
         >
           <Button
             sx={{
-              width: "100%",
-              height: "60px",
+              width: "70px",
+              height: "70px",
               display: "flex",
+              borderRadius: 100,
               flexDirection: "column",
             }}
             onClick={() => {
               navigate("/board/write");
             }}
           >
-            작성
+            <HiPencilAlt fontSize={30} />
           </Button>
         </Box>
       </Grid>
