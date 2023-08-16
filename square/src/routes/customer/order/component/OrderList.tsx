@@ -54,7 +54,7 @@ export default function Order() {
         setOrderList(array);
       })
       .catch((error) => {
-        navigate("/error", { state: error });
+        navigate("/error");
       });
   };
 

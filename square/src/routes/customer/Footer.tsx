@@ -21,20 +21,27 @@ interface FooterProps {
 }
 
 export default function Footer({ now }: FooterProps) {
-  // const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
 
   return (
     <Paper
-      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-      elevation={3}
+      sx={{
+        backgroundColor: "white",
+        position: "fixed",
+        bottom: 0,
+        height: "80px",
+        width: "100%",
+        maxWidth: "600px",
+        zIndex: 3,
+      }}
+      elevation={0}
     >
-      <Grid container xs={12}>
+      <Grid container xs={12} alignItems="center">
         <Grid xs>
           <Button
             sx={{
               width: "100%",
-              height: "60px",
+              height: "70px",
               display: "flex",
               flexDirection: "column",
             }}
@@ -77,7 +84,7 @@ export default function Footer({ now }: FooterProps) {
                 component="div"
                 sx={{ fontWeight: 500, textAlign: "center" }}
               >
-                지도
+                검색
               </Typography>
             </Box>
           </Button>
