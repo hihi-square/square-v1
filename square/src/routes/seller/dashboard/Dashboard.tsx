@@ -8,6 +8,9 @@ import ProductList from "./product/ProductList";
 // import Sale from "./sale/Sale.js";
 import Order from "./order/Order";
 import "../Seller.css";
+import Community from "./community/Community";
+import CommunityDetail from "./community/CommunityDetail";
+import CommunityForm from "./community/CommunityForm";
 
 export default function Seller() {
   const navigate = useNavigate();
@@ -88,6 +91,20 @@ export default function Seller() {
               피드 관리
             </Typography>
           </Box>
+          <Box
+            className="button"
+            onClick={() => {
+              navigate("community");
+            }}
+          >
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
+            >
+              커뮤니티
+            </Typography>
+          </Box>
         </Grid>
         <Grid
           xs={10}
@@ -99,6 +116,16 @@ export default function Seller() {
             <Route path="/" element={<Main />} />
             <Route path="/order" element={<Order />} />
             <Route path="/product" element={<ProductList />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/community/:id" element={<CommunityDetail />} />
+            <Route
+              path="/community/write"
+              element={<CommunityForm mode="write" />}
+            />
+            <Route
+              path="/community/update/:id"
+              element={<CommunityForm mode="update" />}
+            />
           </Routes>
         </Grid>
       </Grid>

@@ -3,7 +3,6 @@ import { REST_API } from "redux/redux";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Grid, Typography, Avatar, Button, Divider, Box } from "@mui/material";
-import Footer from "routes/customer/Footer";
 import CommentForm from "./comment/CommentForm"; // CommentForm 컴포넌트의 경로를 적절히 수정
 import Comment from "./comment/Comment";
 // import { createNoSubstitutionTemplateLiteral } from "typescript";
@@ -65,35 +64,29 @@ type PostDetail = {
   userProfile: string;
 };
 
-type UserInfo = {
-  bcode: number;
-  depth: number;
-  emdName: string;
-  fullName: string;
-  sidoName: string;
-  siggName: string;
-  usrId: number;
-  usrNick: string;
+type StoreInfo = {
+  userId: number;
+  userNick: string;
 };
 
 function BoardDetail(props: any) {
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
   const urlParams = useParams<{ id: string }>();
 
   const [id, setPostId] = useState<number>(); // 기본값을 undefined로 설정
   const [post, setPost] = useState<PostDetail>();
   const [isUpdate, setIsUpdate] = useState<boolean>();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [userInfo, setUserInfo] = useState<StoreInfo | null>(null);
 
   useEffect(() => {
     const parsedId = Number(urlParams.id);
 
     setPostId(parsedId); // 파싱에 실패하면 undefined로 설정
-    const storedUserInfo = sessionStorage.getItem("userInfo");
+    const storedUserInfo = localStorage.getItem("userInfo");
 
     if (storedUserInfo) {
-      const parsedUserInfo: UserInfo = JSON.parse(storedUserInfo);
+      const parsedUserInfo: StoreInfo = JSON.parse(storedUserInfo);
 
       setUserInfo(parsedUserInfo);
     }
@@ -150,7 +143,7 @@ function BoardDetail(props: any) {
         Authorization: `Bearer ${token}`,
       },
     }).then(() => {
-      navigate("/board");
+      navigate("/seller/dashboard/community");
     });
   };
 
@@ -164,14 +157,14 @@ function BoardDetail(props: any) {
           flexDirection: "column",
         }}
         onClick={() => {
-          navigate("/board");
+          navigate("/seller/dashboard/community");
         }}
       >
         &lt;
       </Button>
       <Grid item xs={12}>
         <Typography variant="h5">{post && post.title}</Typography>
-        {post && post.userId === userInfo?.usrId && (
+        {post && post.userId === userInfo?.userId && (
           <Box>
             <Button
               sx={{
@@ -181,7 +174,7 @@ function BoardDetail(props: any) {
                 flexDirection: "column",
               }}
               onClick={() => {
-                navigate(`/board/update/${id}`);
+                navigate(`/seller/dashboard/community/update/${id}`);
               }}
             >
               수정
@@ -247,7 +240,7 @@ function BoardDetail(props: any) {
               comment={comment}
               commentKey={comment.commentId}
               onCommentSubmit={handleCommentSubmit}
-              loginUserId={userInfo?.usrId || 0}
+              loginUserId={userInfo?.userId || 0}
             ></Comment>
           ))}
         {post && (
@@ -259,7 +252,6 @@ function BoardDetail(props: any) {
           />
         )}
       </Grid>
-      <Footer now={3} />
     </Grid>
   );
 }
