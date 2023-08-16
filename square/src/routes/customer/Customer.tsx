@@ -17,7 +17,6 @@ import {
 } from "redux/redux";
 
 import List from "./list/List";
-import StoreListByLocation from "./map/component/storeListByLocation";
 import Store from "./store/Store";
 import Board from "./main/board/Board";
 import BoardForm from "./main/board/BoardForm";
@@ -239,7 +238,6 @@ export default function Customer() {
       <Routes>
         <Route path="/error" element={<Error />} />
         <Route path="/list/:category" element={<List />} />
-        <Route path="/lList/location" element={<StoreListByLocation />} />
 
         <Route path="/store/:store" element={<Store />} />
         <Route path="/main" element={<Main />} />

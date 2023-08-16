@@ -11,13 +11,14 @@ import {
 import { Map, MapMarker, Polygon, MarkerClusterer } from "react-kakao-maps-sdk";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   faHouse,
   faLocationCrosshairs,
   faGear,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import { REST_API } from "redux/redux";
+import { REST_API, setEmdCode, setCurrentName, RootState } from "redux/redux";
 import axios from "axios";
 import geojson from "geojson/Daejeon.json";
 import "../Map.css";
@@ -44,6 +45,7 @@ export default function MapLayer() {
   const token = sessionStorage.getItem("accessToken");
   const mapRef = useRef<any>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // 맵의 높이와 맵의 중심좌표 위치
   const [userInfo, setUserInfo] = useState<UserInfo>();
@@ -54,8 +56,7 @@ export default function MapLayer() {
   });
 
   // 자신의 초기 동네와, 기타등등
-  const [currentName, setCurrentName] = useState<string>();
-  const [emdCode, setEmdCode] = useState<string>();
+  const emdCode = useSelector((state: RootState) => state.emd.emdCode);
   const [currDepth, setCurrDepth] = useState<number>(1);
   const [myLocation, setMyLocation] = useState({
     lat: 36.35052946607953,
@@ -95,7 +96,6 @@ export default function MapLayer() {
 
   // 내 구역에 해당하는 폴리곤을 가져옵니다.
   const getPolygonData = () => {
-    console.log(myLocation);
     axios({
       url: `${REST_API}emd/${emdCode}/${currDepth}`,
       method: "GET",
@@ -174,8 +174,8 @@ export default function MapLayer() {
 
   // 내 활동반경으로 기준을 변경합니다.
   const changeBound = () => {
-    setEmdCode(userInfo?.bcode);
-    setCurrentName(userInfo?.fullName);
+    dispatch(setEmdCode(userInfo?.bcode));
+    dispatch(setCurrentName(userInfo?.fullName));
   };
 
   // 맵이 만들어질 때마다, 크기를 Resize합니다.
@@ -213,8 +213,8 @@ export default function MapLayer() {
         pos.coords.latitude,
         (result: any, status: any) => {
           if (status === window.kakao.maps.services.Status.OK) {
-            setEmdCode(result[0].code);
-            setCurrentName(result[0].address_name);
+            dispatch(setEmdCode(result[0].code));
+            dispatch(setCurrentName(result[0].address_name));
           }
         },
         null
@@ -331,7 +331,6 @@ export default function MapLayer() {
                         usrNick: userInfo?.usrNick ? userInfo.usrNick : "",
                       };
 
-                      console.log(result[0]);
                       setTmpInfo(tmp);
                     }
                   },
@@ -444,60 +443,11 @@ export default function MapLayer() {
         sx={{
           position: "fixed",
           zIndex: 10,
-          bottom: "60px",
+          bottom: "80px",
           width: "100%",
-          backgroundColor: "rgba(255, 255, 255, 0.6)",
+          maxWidth: "600px",
         }}
       >
-        <Grid xs={12} container>
-          <Grid xs={12}>
-            <Typography
-              variant="subtitle1"
-              component="div"
-              sx={{
-                fontWeight: 600,
-                textAlign: "center",
-                whiteSpace: "pre-line",
-              }}
-            >
-              {`${currentName}`}
-            </Typography>
-          </Grid>
-          <Grid xs={4}>
-            <Button onClick={changeBound} sx={{ width: "100%" }}>
-              <FontAwesomeIcon icon={faHouse} style={{ color: "black" }} />
-              우리동네
-            </Button>
-          </Grid>
-          <Grid xs={4}>
-            <Button onClick={getCurrentPos} sx={{ width: "100%" }}>
-              <FontAwesomeIcon
-                icon={faLocationCrosshairs}
-                style={{ color: "black" }}
-              />
-              현재위치
-            </Button>
-          </Grid>
-          <Grid xs={4}>
-            {seePolygon ? (
-              <Button
-                sx={{ width: "100%" }}
-                onClick={() => {
-                  updateBoundary();
-                }}
-              >
-                {" "}
-                <FontAwesomeIcon icon={faCheck} style={{ color: "black" }} />
-                구역 완료
-              </Button>
-            ) : (
-              <Button onClick={handleBoundary} sx={{ width: "100%" }}>
-                <FontAwesomeIcon icon={faGear} style={{ color: "black" }} />
-                동네설정
-              </Button>
-            )}
-          </Grid>
-        </Grid>
         <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }}>
           <Slider
             aria-label="Restricted values"
@@ -508,8 +458,94 @@ export default function MapLayer() {
             step={null}
             marks={depthSlider}
             disabled={seePolygon}
-            sx={{ width: "80%" }}
+            sx={{
+              width: "90%",
+              color: "#225a41",
+              height: 8,
+              "& .MuiSlider-track": {
+                border: "1px solid",
+              },
+              "& .MuiSlider-thumb": {
+                height: 24,
+                width: 24,
+                backgroundColor: "#fff",
+                border: "2px solid currentColor",
+                "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
+                  boxShadow: "inherit",
+                },
+                "&:before": {
+                  display: "none",
+                },
+              },
+            }}
           />
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        sx={{
+          position: "fixed",
+          zIndex: 10,
+          top: "60px",
+          width: "100%",
+          maxWidth: "600px",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+        }}
+      >
+        <Grid xs={12} container>
+          <Grid xs={4}>
+            <Button
+              onClick={changeBound}
+              sx={{ fontSize: "18px", fontWeight: 700, width: "100%" }}
+            >
+              <FontAwesomeIcon
+                icon={faHouse}
+                style={{ margin: "0px 10px", color: "#225a41" }}
+              />
+              우리동네
+            </Button>
+          </Grid>
+          <Grid xs={4}>
+            <Button
+              onClick={getCurrentPos}
+              sx={{ fontSize: "18px", fontWeight: 700, width: "100%" }}
+            >
+              <FontAwesomeIcon
+                icon={faLocationCrosshairs}
+                style={{ margin: "0px 10px", color: "#225a41" }}
+              />
+              현재위치
+            </Button>
+          </Grid>
+          <Grid xs={4}>
+            {seePolygon ? (
+              <Button
+                sx={{ fontSize: "18px", fontWeight: 700, width: "100%" }}
+                onClick={() => {
+                  updateBoundary();
+                }}
+              >
+                {" "}
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  style={{ margin: "0px 10px", color: "#225a41" }}
+                />
+                설정완료
+              </Button>
+            ) : (
+              <Button
+                onClick={handleBoundary}
+                sx={{ fontSize: "18px", fontWeight: 700, width: "100%" }}
+              >
+                <FontAwesomeIcon
+                  icon={faGear}
+                  style={{ margin: "0px 10px", color: "#225a41" }}
+                />
+                동네설정
+              </Button>
+            )}
+          </Grid>
         </Grid>
       </Grid>
 

@@ -1,32 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "App.css";
 import "animate.css";
-import {
-  Unstable_Grid2 as Grid,
-  Select,
-  Box,
-  Typography,
-  MenuItem,
-  SelectChangeEvent,
-  Divider,
-  Button,
-  IconButton,
-} from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { Unstable_Grid2 as Grid, Typography, IconButton } from "@mui/material";
+import { RootState } from "redux/redux";
+import { BiCartAlt } from "react-icons/bi";
 
-interface Props {
-  cateNum: Number;
-  setAni: React.Dispatch<React.SetStateAction<boolean>> | null;
-}
-
-export default function Header({ cateNum, setAni }: Props) {
+export default function Header() {
   const navigate = useNavigate();
-  const [location, setLocation] = useState("loc1");
-  const handleChange = (event: SelectChangeEvent) => {
-    setLocation(event.target.value);
-  };
+  const currentName = useSelector((state: RootState) => state.emd.currentName);
   const handleCartClick = () => {
     navigate("/deal/cart");
   };
@@ -37,7 +20,6 @@ export default function Header({ cateNum, setAni }: Props) {
       xs={12}
       alignItems="center"
       sx={{
-        backgroundColor: "white",
         position: "fixed",
         top: 0,
         height: "60px",
@@ -46,58 +28,29 @@ export default function Header({ cateNum, setAni }: Props) {
         zIndex: 3,
       }}
     >
+      <Grid xs={2}></Grid>
       <Grid xs>
-        <Button sx={{ paddingLeft: "0px" }}>
-          <Select
-            value={location}
-            onChange={handleChange}
-            size="small"
-            sx={{
-              width: "100px",
-              height: "100%",
-              fontSize: "17px",
-              fontWeight: "800",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderWidth: 0,
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderWidth: 0,
-              },
-            }}
-          >
-            <MenuItem value={"loc1"}>덕암동</MenuItem>
-            <MenuItem value={"loc2"}>구암동</MenuItem>
-            <MenuItem value={"loc3"}>봉명동</MenuItem>
-            <Divider></Divider>
-            <MenuItem value={"loc4"}>내위치 설정</MenuItem>
-          </Select>
-        </Button>
-      </Grid>
-      <Grid xs flexGrow={1}>
         <Typography
-          variant="h4"
-          component="h4"
-          sx={{ fontWeight: 800, textAlign: "center" }}
+          variant="h5"
+          sx={{
+            fontWeight: 500,
+            margin: "auto",
+            width: "100%",
+            textAlign: "center",
+          }}
         >
-          <Box component="span" sx={{ color: "primary.main" }}>
-            S
-          </Box>
-          quare
+          {currentName}
         </Typography>
       </Grid>
       <Grid
-        xs
+        xs={2}
         container
-        flexGrow={1}
         justifyContent="right"
         sx={{ marginRight: "15px" }}
       >
         <Grid>
-          <IconButton onClick={handleCartClick} sx={{ fontSize: "20px" }}>
-            <FontAwesomeIcon
-              icon={faShoppingCart}
-              style={{ color: "#000000" }}
-            />
+          <IconButton onClick={handleCartClick}>
+            <BiCartAlt size="28" color="#3d3d3d" />
           </IconButton>
         </Grid>
       </Grid>
