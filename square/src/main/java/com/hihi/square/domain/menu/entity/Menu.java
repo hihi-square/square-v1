@@ -14,8 +14,8 @@ import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

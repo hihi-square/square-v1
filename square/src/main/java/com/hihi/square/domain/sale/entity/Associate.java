@@ -1,11 +1,18 @@
 package com.hihi.square.domain.sale.entity;
 
-import com.hihi.square.domain.BaseTime;
-import com.hihi.square.domain.board.entity.Status;
-import lombok.Getter;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.hihi.square.domain.board.entity.Status;
+import com.hihi.square.global.entity.BaseTime;
+
+import lombok.Getter;
 
 @Entity
 @Getter

@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.BaseTime;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.Getter;
 

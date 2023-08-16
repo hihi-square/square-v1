@@ -34,6 +34,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("update User u set u.password = :password where u.uid = :uid")
 	void updatePassword(@Param("uid") String uid, @Param("password") String newPassword);
 
+	// @Query(value = "select * from user where usr_id=:usrId", nativeQuery = true)
 	Optional<User> findByUsrId(Integer usrId);
 
 }

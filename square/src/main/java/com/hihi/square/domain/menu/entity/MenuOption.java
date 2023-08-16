@@ -12,8 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.global.entity.BaseTime;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

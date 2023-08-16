@@ -1,8 +1,31 @@
 package com.hihi.square.domain.user.controller;
 
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hihi.square.domain.dibs.respository.DibsRepository;
-import com.hihi.square.domain.store.entity.Store;
-import com.hihi.square.domain.user.dto.request.*;
+import com.hihi.square.domain.user.dto.request.CustomerRegisterRequestDto;
+import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
+import com.hihi.square.domain.user.dto.request.UserChangePasswordDto;
+import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
+import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
 import com.hihi.square.domain.user.dto.response.CustomerInfoResponseDto;
 import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
 import com.hihi.square.domain.user.dto.response.UserInfoDto;
@@ -10,24 +33,14 @@ import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.domain.user.entity.UserRankType;
 import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.service.CustomerService;
 import com.hihi.square.domain.user.service.EmdAddressService;
 import com.hihi.square.domain.user.service.UserService;
 import com.hihi.square.global.common.CommonResponseDto;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -46,11 +59,13 @@ public class UserController {
 	public ResponseEntity updateMyAddress(Authentication authentication, @PathVariable(name = "bCode") Long bCode) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
-		if (user instanceof Store) {
-			return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("ONLY_CUSTOMER").build(), HttpStatus.BAD_REQUEST);
-		}
+		// if (user instanceof Store) {
+		// 	return new ResponseEntity(CommonResponseDto.builder().statusCode(400).message("ONLY_CUSTOMER").build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 		userService.updateUserAddress(user, bCode);
-		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(),
+			HttpStatus.OK);
 	}
 
 	// 내 정보 보기
@@ -59,12 +74,14 @@ public class UserController {
 		String uid = authentication.getName();
 		Optional<User> optionalUser = userService.findByUid(uid);
 		if (optionalUser.isEmpty()) {
-			return new ResponseEntity(CommonResponseDto.builder().message("NOT_EXISTS_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity(CommonResponseDto.builder().message("NOT_EXISTS_USER").statusCode(400).build(),
+				HttpStatus.BAD_REQUEST);
 		}
-		if (optionalUser.get() instanceof Store) {
-			return new ResponseEntity(CommonResponseDto.builder().message("NOT_CUSTOMER_USER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
-		}
-		Customer customer = (Customer) optionalUser.get();
+		// if (optionalUser.get() instanceof Store) {
+		// 	return new ResponseEntity(CommonResponseDto.builder().message("NOT_CUSTOMER_USER").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
+		Customer customer = (Customer)optionalUser.get();
 		UserInfoDto userInfo = userService.getMyInfo(uid);
 		Integer dibs = dibsRepository.countByCustomer(customer);
 		CustomerInfoResponseDto response = CustomerInfoResponseDto.builder()
@@ -78,17 +95,17 @@ public class UserController {
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
-
 	//회원가입
 	@PostMapping
 	public ResponseEntity<CommonResponseDto> singup(@RequestBody @Valid CustomerRegisterRequestDto request) {
-		Customer customer =  request.toEntity();
+		log.info("request : {}", request);
+		Customer customer = request.toEntity();
 		CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(409)
-				.message("ALREADY_EXISTS_UID")
-				.build();
+			.statusCode(409)
+			.message("ALREADY_EXISTS_UID")
+			.build();
 		//아이디 중복 체크
-		if (userService.validateDuplicateUid(customer.getUid())){
+		if (userService.validateDuplicateUid(customer.getUid())) {
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 		//닉네임 중복 체크
@@ -112,12 +129,12 @@ public class UserController {
 
 	// 아이디 중복확인
 	@GetMapping("/id/{id}")
-	public ResponseEntity<CommonResponseDto> validateUid(@PathVariable String id){
+	public ResponseEntity<CommonResponseDto> validateUid(@PathVariable String id) {
 		CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(200)
-				.message("INVALID")
-				.build();
-		if (userService.validateDuplicateUid(id)){
+			.statusCode(200)
+			.message("INVALID")
+			.build();
+		if (userService.validateDuplicateUid(id)) {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			response.setMessage("VALID");
@@ -127,22 +144,23 @@ public class UserController {
 
 	// 로그인
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody @Valid UserLoginRequestDto request){
+	public ResponseEntity<?> login(@RequestBody @Valid UserLoginRequestDto request) {
 		CommonResponseDto fResponse = CommonResponseDto.builder().statusCode(400).build();
-		Optional<User> optionalUser =userService.findByUid(request.getUid());
+		Optional<User> optionalUser = userService.findByUid(request.getUid());
 		// 아이디 존재하지 않음
-		if (!optionalUser.isPresent()){
+		if (!optionalUser.isPresent()) {
 			fResponse.setMessage("INVALID_UID");
 			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
 		}
 		// 비밀번호 틀림
-		User user= optionalUser.get();
+		User user = optionalUser.get();
 		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			fResponse.setMessage("INVALID_PASSWORD");
 			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
 		}
 		// 접근 권한이 없음 || // 로그인 방법 상이
-		if(!request.getAuthenticate().toString().equals(user.getDecriminatorValue()) || ((user instanceof Customer) && !((Customer)user).getSocial().equals(
+		if (!request.getAuthenticate().toString().equals(user.getDecriminatorValue()) || ((user instanceof Customer)
+			&& !((Customer)user).getSocial().equals(
 			UserSocialLoginType.DEFAULT))) {
 			fResponse.setMessage("NOT_AUTHENTICATED");
 			return new ResponseEntity<>(fResponse, HttpStatus.BAD_REQUEST);
@@ -152,58 +170,75 @@ public class UserController {
 
 		return new ResponseEntity<>(sResponse, HttpStatus.OK);
 	}
-	
-	
+
 	// 아이디 찾기
 	@PostMapping("/find/id")
 	public ResponseEntity<?> findUserId(@RequestBody @Valid UserFindIdRequestDto request) {
 		Optional<User> optionalUser = userService.findUserId(request);
-		if (!optionalUser.isPresent()){
-			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID").build(), HttpStatus.BAD_REQUEST);
+		if (!optionalUser.isPresent()) {
+			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID").build(),
+				HttpStatus.BAD_REQUEST);
 		} else {
-			return new ResponseEntity<>(UserFindIdResponseDto.builder().statusCode(200).message("VALID").uid(optionalUser.get().getUid()).build(), HttpStatus.OK);
+			return new ResponseEntity<>(UserFindIdResponseDto.builder()
+				.statusCode(200)
+				.message("VALID")
+				.uid(optionalUser.get().getUid())
+				.build(), HttpStatus.OK);
 		}
 	}
 
 	// 비밀번호 변경
 	@PatchMapping("/password")
-	public ResponseEntity<CommonResponseDto> changePassword(Authentication authentication, @RequestBody @Valid UserChangePasswordDto request) {
+	public ResponseEntity<CommonResponseDto> changePassword(Authentication authentication,
+		@RequestBody @Valid UserChangePasswordDto request) {
 		String uid = authentication.getName();
 		Optional<User> optionalUser = userService.findByUid(uid);
-		if (!optionalUser.isPresent()){
-			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INVALID_ACCESS_TOKEN").build(), HttpStatus.BAD_REQUEST);
+		if (!optionalUser.isPresent()) {
+			return new ResponseEntity<>(
+				CommonResponseDto.builder().statusCode(400).message("INVALID_ACCESS_TOKEN").build(),
+				HttpStatus.BAD_REQUEST);
 		}
 		User user = optionalUser.get();
-		if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
-			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(400).message("INCORRECT_PASSWORD").build(), HttpStatus.BAD_REQUEST);
+		if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+			return new ResponseEntity<>(
+				CommonResponseDto.builder().statusCode(400).message("INCORRECT_PASSWORD").build(),
+				HttpStatus.BAD_REQUEST);
 		}
 		userService.updatePassword(uid, request.getNewPassword());
-		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("CHANGED_PASSWORD").build(), HttpStatus.OK);
+		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("CHANGED_PASSWORD").build(),
+			HttpStatus.OK);
 	}
 
 	// 로그아웃
 	@GetMapping("/logout")
-	public ResponseEntity<CommonResponseDto> logout(Authentication authentication){
+	public ResponseEntity<CommonResponseDto> logout(Authentication authentication) {
 		userService.logout(authentication.getName());
-		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_LOGOUT").build(), HttpStatus.OK);
+		return new ResponseEntity<>(CommonResponseDto.builder().statusCode(200).message("SUCCESS_LOGOUT").build(),
+			HttpStatus.OK);
 	}
 
 	// 구매자 정보 수정
 	@PatchMapping
 	@Transactional
-	public ResponseEntity updateCustomer(Authentication authentication, @Valid @RequestBody CustomerUpdateRequestDto request){
+	public ResponseEntity updateCustomer(Authentication authentication,
+		@Valid @RequestBody CustomerUpdateRequestDto request) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 		// 닉네임은 유니크 !
-		if (!user.getNickname().equals(request.getNickname()) && userService.validateDuplicateNickname(request.getNickname())){
-			return new ResponseEntity<>(CommonResponseDto.builder().statusCode(409).message("ALREADY_EXISTS_NICKNAME").build(), HttpStatus.CONFLICT);
+		if (!user.getNickname().equals(request.getNickname()) && userService.validateDuplicateNickname(
+			request.getNickname())) {
+			return new ResponseEntity<>(
+				CommonResponseDto.builder().statusCode(409).message("ALREADY_EXISTS_NICKNAME").build(),
+				HttpStatus.CONFLICT);
 		}
 		userService.updateUserInfo(uid, request);
-		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(), HttpStatus.OK);
+		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(),
+			HttpStatus.OK);
 	}
 
 	@PostMapping("/profile")
-	public ResponseEntity setProfileImage(Authentication authentication, @RequestPart MultipartFile profile, @RequestPart MultipartFile thumb){
+	public ResponseEntity setProfileImage(Authentication authentication, @RequestPart MultipartFile profile,
+		@RequestPart MultipartFile thumb) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 		userService.updateUserProfile(user, profile, thumb);

@@ -1,31 +1,10 @@
 package com.hihi.square.domain.user.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hihi.square.domain.user.dto.request.CustomerAddressCreateRequestDto;
-import com.hihi.square.domain.user.dto.response.CustomerAddressDto;
-import com.hihi.square.domain.user.dto.response.CustomerAddressListResponseDto;
-import com.hihi.square.domain.user.entity.Customer;
-import com.hihi.square.domain.user.entity.EmdAddress;
-import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.CustomerAddressService;
 import com.hihi.square.domain.user.service.UserService;
-import com.hihi.square.global.common.CommonResponseDto;
 
 import lombok.RequiredArgsConstructor;
 

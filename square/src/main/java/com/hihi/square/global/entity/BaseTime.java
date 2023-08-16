@@ -1,4 +1,4 @@
-package com.hihi.square.domain;
+package com.hihi.square.global.entity;
 
 import java.time.LocalDateTime;
 

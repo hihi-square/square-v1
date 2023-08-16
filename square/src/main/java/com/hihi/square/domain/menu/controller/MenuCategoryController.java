@@ -20,7 +20,6 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuCategory;
 import com.hihi.square.domain.menu.service.MenuCategoryService;
-import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
@@ -67,9 +66,9 @@ public class MenuCategoryController {
 		User user = userService.findByUid(uid).get();
 
 		//가게, 관리자만 접근 가능
-		if (user instanceof Customer) {
-			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
-		}
+		// if (user instanceof Customer) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		// }
 
 		request.setUser(user);
 		MenuCategory menuCategory = request.toEntity();
@@ -89,9 +88,9 @@ public class MenuCategoryController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
-		if (user instanceof Customer) {
-			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
-		}
+		// if (user instanceof Customer) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		// }
 
 		request.setId(id);
 		request.setUser(user);
@@ -104,10 +103,10 @@ public class MenuCategoryController {
 		@RequestBody MenuCategoryRequestDto request) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
-
-		if (user instanceof Customer) {
-			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
-		}
+		//
+		// if (user instanceof Customer) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		// }
 
 		List<MenuCategoryRequestDto> requestDtos = request.getData();
 		menuCategoryService.updateMenuList(user, requestDtos);

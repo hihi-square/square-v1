@@ -21,7 +21,6 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuOptionResponseDto;
 import com.hihi.square.domain.menu.entity.MenuOption;
 import com.hihi.square.domain.menu.service.MenuOptionService;
-import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
@@ -87,9 +86,9 @@ public class MenuOptionController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
-		if (user instanceof Customer) {
-			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
-		}
+		// if (user instanceof Customer) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		// }
 
 		request.setUser(user);
 
@@ -104,9 +103,9 @@ public class MenuOptionController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
-		if (user instanceof Customer) {
-			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
-		}
+		// if (user instanceof Customer) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		// }
 
 		request.setId(id);
 		request.setUser(user);
@@ -120,9 +119,9 @@ public class MenuOptionController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
-		if (user instanceof Customer) {
-			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
-		}
+		// if (user instanceof Customer) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		// }
 
 		List<MenuOptionRequestDto> menuOptionList = request.getData();
 		log.info("optionList : {}", menuOptionList);

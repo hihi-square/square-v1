@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amazonaws.Response;
 import com.hihi.square.domain.coupon.dto.response.OrderCouponResponseDto;
 import com.hihi.square.domain.coupon.entity.Coupon;
 import com.hihi.square.domain.coupon.entity.IssueCoupon;
@@ -102,15 +101,17 @@ public class OrderController {
 	// 주문 등록
 	@Transactional
 	@PostMapping
-	public ResponseEntity<?> registerOrder(Authentication authentication, @RequestBody OrderRequestDto request) {
+	public ResponseEntity<?> registerOrder(
+		// Authentication authentication,
+		@RequestBody OrderRequestDto request) {
 
 		Customer customer = customerRepository.findById(request.getCusId()).get();
 
-		String uid = authentication.getName();
-		if (!(userService.findByUid(uid).get() instanceof Customer)) {
-			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(),
-				HttpStatus.BAD_REQUEST);
-		}
+		// String uid = authentication.getName();
+		// if (!(userService.findByUid(uid).get() instanceof Customer)) {
+		// 	return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 
 		// 만약 입력한 포인트가 사용자가 보유한 포인트보다 많을 시에
 		if (request.getUsedPoint() > customer.getPoint()) {
@@ -149,10 +150,10 @@ public class OrderController {
 
 		// 주문자가 고객이 아닐때
 		String uid = authentication.getName();
-		if (!(userService.findByUid(uid).get() instanceof Customer)) {
-			return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(),
-				HttpStatus.BAD_REQUEST);
-		}
+		// if (!(userService.findByUid(uid).get() instanceof Customer)) {
+		// 	return new ResponseEntity<>(CommonResponseDto.builder().message("NOT_CUSTOMER").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 
 		// 주문자가 고객이지만 로그인한 유저와 같지 않을 때
 		Customer LoginCustomer = (Customer)userService.findByUid(uid).get();
@@ -217,14 +218,14 @@ public class OrderController {
 		Order order = orderService.findByOrderId(ordId).get();
 
 		// 가게 주인이 아닐때
-		String uid = authentication.getName();
-		if (storeRepository.findByUid(uid).get() != order.getStore()) {
-			CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(400)
-				.message("NO_AUTHORIZATION")
-				.build();
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
+		// String uid = authentication.getName();
+		// if (storeRepository.findByUid(uid).get() != order.getStore()) {
+		// 	CommonResponseDto response = CommonResponseDto.builder()
+		// 		.statusCode(400)
+		// 		.message("NO_AUTHORIZATION")
+		// 		.build();
+		// 	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		// }
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
@@ -258,14 +259,14 @@ public class OrderController {
 		Order order = orderService.findByOrderId(ordId).get();
 
 		// 가게 주인이 아닐때
-		String uid = authentication.getName();
-		if (storeRepository.findByUid(uid).get() != order.getStore()) {
-			CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(400)
-				.message("NO_AUTHORIZATION")
-				.build();
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
+		// String uid = authentication.getName();
+		// if (storeRepository.findByUid(uid).get() != order.getStore()) {
+		// 	CommonResponseDto response = CommonResponseDto.builder()
+		// 		.statusCode(400)
+		// 		.message("NO_AUTHORIZATION")
+		// 		.build();
+		// 	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		// }
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {
@@ -301,14 +302,14 @@ public class OrderController {
 		Order order = orderService.findByOrderId(ordId).get();
 
 		// 가게 주인이 아닐때
-		String uid = authentication.getName();
-		if (storeRepository.findByUid(uid).get() != order.getStore()) {
-			CommonResponseDto response = CommonResponseDto.builder()
-				.statusCode(400)
-				.message("NO_AUTHORIZATION")
-				.build();
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		}
+		// String uid = authentication.getName();
+		// if (storeRepository.findByUid(uid).get() != order.getStore()) {
+		// 	CommonResponseDto response = CommonResponseDto.builder()
+		// 		.statusCode(400)
+		// 		.message("NO_AUTHORIZATION")
+		// 		.build();
+		// 	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		// }
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.ORDER_ACCEPT) {
@@ -346,21 +347,23 @@ public class OrderController {
 	public ResponseEntity getPaymentAndOrderAcceptNumber(Authentication authentication) {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
-		if (user instanceof Store) {
-			return new ResponseEntity(CommonResponseDto.builder().message("ONLY_CUSTOMER").statusCode(400).build(), HttpStatus.BAD_REQUEST);
-		}
+		// if (user instanceof Store) {
+		// 	return new ResponseEntity(CommonResponseDto.builder().message("ONLY_CUSTOMER").statusCode(400).build(),
+		// 		HttpStatus.BAD_REQUEST);
+		// }
 		List<OrderStatusCountDto> cntRes = orderService.getOrderStatusCountByUser(user);
 
 		PaymentAndOrderAcceptNumberResponseDto response = new PaymentAndOrderAcceptNumberResponseDto();
-		for(OrderStatusCountDto c : cntRes) {
-			System.out.println(c.getStatus()+" "+c.getCount());
-			if (c.getStatus().equals(OrderStatus.PAYMENT_COMPLETE)) response.setPaymentComplete(c.getCount().intValue());
-			else if (c.getStatus().equals(OrderStatus.ORDER_ACCEPT)) response.setOrderAccept(c.getCount().intValue());
+		for (OrderStatusCountDto c : cntRes) {
+			System.out.println(c.getStatus() + " " + c.getCount());
+			if (c.getStatus().equals(OrderStatus.PAYMENT_COMPLETE))
+				response.setPaymentComplete(c.getCount().intValue());
+			else if (c.getStatus().equals(OrderStatus.ORDER_ACCEPT))
+				response.setOrderAccept(c.getCount().intValue());
 		}
 
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
-
 
 	// 주문 내역 전체 조회 사용자별로
 	@Transactional(readOnly = true)
@@ -402,7 +405,5 @@ public class OrderController {
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
-
 
 }

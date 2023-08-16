@@ -20,7 +20,6 @@ import com.hihi.square.domain.menu.dto.response.CommonResponseDto;
 import com.hihi.square.domain.menu.dto.response.MenuOptionCategoryResponseDto;
 import com.hihi.square.domain.menu.entity.MenuOptionCategory;
 import com.hihi.square.domain.menu.service.MenuOptionCategoryService;
-import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.UserService;
 
@@ -64,9 +63,9 @@ public class MenuOptionCategoryController {
 		String uid = authentication.getName();
 		User user = userService.findByUid(uid).get();
 
-		if (user instanceof Customer) {
-			return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
-		}
+		// if (user instanceof Customer) {
+		// 	return ResponseEntity.ok(CommonResponseDto.error(403, "Only Store Access"));
+		// }
 
 		MenuOptionCategory menuOptionCategory = request.toEntity();
 

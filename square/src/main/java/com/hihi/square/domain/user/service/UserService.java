@@ -1,5 +1,13 @@
 package com.hihi.square.domain.user.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.response.UserInfoDto;
@@ -7,19 +15,12 @@ import com.hihi.square.domain.user.dto.response.UserLoginAddressInfo;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
-import com.hihi.square.domain.user.repository.CustomerRepository;
 import com.hihi.square.domain.user.repository.UserRepository;
 import com.hihi.square.global.jwt.JwtService;
 import com.hihi.square.global.s3.S3Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,23 +35,22 @@ public class UserService {
 	private final S3Service s3Service;
 
 	public boolean validateDuplicateUid(String uid) {
-
 		Optional<User> user = userRepository.findByUid(uid);
 		return user.isPresent();
-
 	}
 
 	public boolean validateDuplicateNickname(String nickname) {
 		Optional<User> user = userRepository.findByNickname(nickname);
 		return user.isPresent();
 	}
+
 	public boolean validateDuplicateEmail(String email) {
 		Optional<User> user = userRepository.findByEmail(email);
 		return user.isPresent();
 	}
 
 	@Transactional
-	public void save(User user){
+	public void save(User user) {
 		user.passwordEncode(passwordEncoder);
 		userRepository.save(user);
 	}
@@ -69,21 +69,20 @@ public class UserService {
 		String refreshToken = jwtService.createRefreshToken(user.getUid());
 		EmdAddress emdAddress = user.getMainAddress();
 		UserLoginResponseDto successLogin = UserLoginResponseDto.builder()
-				.statusCode(200)
-				.message("SUCCESS_LOGIN")
-				.accessToken(jwtService.createAccessToken(user.getUid()))
-				.refreshToken(refreshToken)
-				.userUid(user.getUid())
-				.usrId(user.getUsrId())
-				.userNickname(user.getNickname())
-				.address(UserLoginAddressInfo.builder()
-					.bCode(emdAddress.getBCode())
-					.sidoName(emdAddress.getSidoName())
-					.siggName(emdAddress.getSiggName())
-					.emdName(emdAddress.getName())
-					.fullName(emdAddress.getFullName())
-					.build())
-				.build();
+			.message("SUCCESS_LOGIN")
+			.accessToken(jwtService.createAccessToken(user.getUid()))
+			.refreshToken(refreshToken)
+			.userUid(user.getUid())
+			.usrId(user.getUsrId())
+			.userNickname(user.getNickname())
+			.address(UserLoginAddressInfo.builder()
+				.bCode(emdAddress.getBCode())
+				.sidoName(emdAddress.getSidoName())
+				.siggName(emdAddress.getSiggName())
+				.emdName(emdAddress.getName())
+				.fullName(emdAddress.getFullName())
+				.build())
+			.build();
 		userRepository.updateRefreshToken(refreshToken, LocalDateTime.now(), user.getUid());
 		return successLogin;
 
@@ -105,6 +104,7 @@ public class UserService {
 	}
 
 	public Optional<User> findByUsrId(Integer usrId) {
+		log.info("usrId : {}", usrId);
 		return userRepository.findByUsrId(usrId);
 	}
 
@@ -128,6 +128,7 @@ public class UserService {
 		user.updateUserProfile(null, null);
 		userRepository.save(user);
 	}
+
 	public UserInfoDto getMyInfo(String uid) {
 		User user = userRepository.findByUid(uid).get();
 		return UserInfoDto.builder()
