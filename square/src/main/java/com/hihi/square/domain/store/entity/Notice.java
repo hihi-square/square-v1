@@ -9,9 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.BaseTime;
-import com.hihi.square.domain.store.dto.request.StoreNoticeUpdateRequestDto;
 import com.hihi.square.domain.user.entity.EmdAddress;
+import com.hihi.square.global.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,11 +22,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@Table(name="notice")
+@Table(name = "notice")
 public class Notice extends BaseTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="sno_id")
+	@Column(name = "sno_id")
 	private Integer snoId;
 
 	@JoinColumn(name = "aem_id")
@@ -36,7 +35,7 @@ public class Notice extends BaseTime {
 
 	private String content;
 
-	@JoinColumn(name="usr_id")
+	@JoinColumn(name = "usr_id")
 	@ManyToOne
 	private Store store;
 

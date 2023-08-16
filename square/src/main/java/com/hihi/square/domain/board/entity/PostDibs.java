@@ -11,14 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
@@ -29,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class PostDibs {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="pod_id")
+	@Column(name = "pod_id")
 	private Integer id;
 
 	@ManyToOne

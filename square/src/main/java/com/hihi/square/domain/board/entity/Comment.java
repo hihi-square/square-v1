@@ -11,12 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedStoredProcedureQueries;
 import javax.persistence.Table;
 
-import com.hihi.square.domain.BaseTime;
 import com.hihi.square.domain.board.dto.request.CommentUpdateRequestDto;
 import com.hihi.square.domain.user.entity.User;
+import com.hihi.square.global.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +43,7 @@ public class Comment extends BaseTime {
 	private Comment reComment;    //대댓글
 
 	@ManyToOne
-	@JoinColumn(name="pos_id")
+	@JoinColumn(name = "pos_id")
 	private Post post;
 
 	private String comment;
