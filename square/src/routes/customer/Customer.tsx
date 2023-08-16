@@ -239,7 +239,7 @@ export default function Customer() {
 
       <Routes>
         <Route path="/error" element={<Error />} />
-        <Route path="/list/:category" element={<List />} />
+        <Route path="/list/:query" element={<List />} />
 
         <Route path="/store/:store" element={<Store />} />
         <Route path="/main" element={<Main />} />

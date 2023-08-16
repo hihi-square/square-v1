@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Choice, setChoice, REST_API } from "redux/redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Choice, setChoice, REST_API, RootState } from "redux/redux";
 import {
   Unstable_Grid2 as Grid,
   Typography,
@@ -13,37 +13,59 @@ import {
 } from "@mui/material";
 import "App.css";
 
+type BigList = {
+  scbId: number;
+  storeId: number;
+  storeName: string;
+  content: string;
+  storeAddress: string;
+  mainMenu: string;
+  logo: string;
+};
+
 export default function CategoryStore() {
-  type BigList = {
-    scbId: number;
-    storeId: number;
-    storeName: string;
-    content: string;
-    storeAddress: string;
-    mainMenu: string;
-    logo: string;
-  };
   const [stores, setStores] = useState<BigList[]>([]);
-  const { category } = useParams<{ category?: string }>();
+
+  const { query } = useParams<{ query?: string }>();
+  const emdCode = useSelector((state: RootState) => state.emd.emdCode);
+  const depth = useSelector((state: RootState) => state.emd.depth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = sessionStorage.getItem("accessToken") || "";
 
   useEffect(() => {
-    if (category) {
-      axios({
-        url: `${REST_API}store/big-category/${Number(category)}`,
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          setStores(response.data);
+    if (query) {
+      let url = "";
+
+      if (!depth || !emdCode) {
+        navigate("/");
+      } else {
+        switch (query) {
+          case "1":
+          case "2":
+          case "3":
+          case "4":
+            url = `${REST_API}store/big-category/${query}/${emdCode}/${depth}`;
+            break;
+          default:
+            url = `${REST_API}store/search/${emdCode}/${depth}?query=${query}}`;
+            break;
+        }
+        axios({
+          url,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
-        .catch((error) => {});
+          .then((response) => {
+            console.log(response);
+            setStores(response.data);
+          })
+          .catch((error) => {});
+      }
     }
-  }, [category, navigate]);
+  }, []);
 
   return (
     <Grid xs={11} pt={5}>

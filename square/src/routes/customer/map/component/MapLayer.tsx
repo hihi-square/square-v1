@@ -18,7 +18,13 @@ import {
   faGear,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import { REST_API, setEmdCode, setCurrentName, RootState } from "redux/redux";
+import {
+  REST_API,
+  setEmdCode,
+  setCurrentName,
+  setDepth,
+  RootState,
+} from "redux/redux";
 import axios from "axios";
 import geojson from "geojson/Daejeon.json";
 import "../Map.css";
@@ -126,6 +132,9 @@ export default function MapLayer() {
           ? JSON.parse(tokenInfo)
           : undefined;
 
+        dispatch(setEmdCode(parsedInfo.bcode));
+        dispatch(setCurrentName(parsedInfo.fullName));
+        dispatch(setDepth(currDepth));
         setUserInfo(parsedInfo); // 유저 정보 설정
       })
       .catch((error) => {});
@@ -140,7 +149,7 @@ export default function MapLayer() {
   // 이후 헤더와 푸터의 높이를 제거한 일정 높이를 맵의 높이로 설정합니다.
   // 또한 자신의 현재 위치로 바꿉니다.
   useEffect(() => {
-    if (!token) {
+    if (!token || !sessionStorage.getItem("userInfo")) {
       navigate("/login");
     } else {
       const height = window.innerHeight - 200;
@@ -149,6 +158,9 @@ export default function MapLayer() {
         ? JSON.parse(tokenInfo)
         : undefined;
 
+      dispatch(setEmdCode(parsedInfo.bcode));
+      dispatch(setCurrentName(parsedInfo.fullName));
+      dispatch(setDepth(0));
       setUserInfo(parsedInfo); // 유저 정보 설정
       setTmpInfo(parsedInfo); // 비교용 유저 정보 설정
       if (window.kakao.maps.services) getCurrentPos(); // 현재위치
@@ -166,6 +178,9 @@ export default function MapLayer() {
     if (emdCode && currDepth) {
       getStoreData();
       getPolygonData();
+      dispatch(setEmdCode(emdCode));
+
+      dispatch(setDepth(currDepth));
     }
   }, [currDepth, emdCode]);
 
@@ -215,6 +230,7 @@ export default function MapLayer() {
           if (status === window.kakao.maps.services.Status.OK) {
             dispatch(setEmdCode(result[0].code));
             dispatch(setCurrentName(result[0].address_name));
+            dispatch(setDepth(currDepth));
           }
         },
         null
@@ -273,6 +289,7 @@ export default function MapLayer() {
       const tmpDepth = cur / 50 + 1;
 
       setCurrDepth(tmpDepth);
+      dispatch(setDepth(tmpDepth));
 
       const newData = { ...userInfo, depth: tmpDepth };
 
