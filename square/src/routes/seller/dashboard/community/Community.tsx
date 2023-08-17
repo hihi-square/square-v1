@@ -105,13 +105,34 @@ export default function Community() {
   };
 
   return (
-    <Grid container xs={12} flexDirection="column">
-      <Grid>
-        <Button onClick={() => handleBoardId(1)}>자유 게시판</Button>
-        <Button onClick={() => handleBoardId(3)}>사장님 게시판</Button>
-        <Button onClick={() => handleBoardId(4)}>내 게시물</Button>
+    <Grid container xs={12} sx={{marginTop: 6, marginLeft: 5, marginRight: 10}} flexDirection="column">
+       <Typography variant="h3" sx={{marginBottom: 2, color: "#225a41", fontWeight: 700}}> 커뮤니티 </Typography>
+      <Grid sx={{marginTop: 1}}>
+        <Button sx={{fontSize: 18, color:boardId === 1 ? '#8ec7a7' : '#225a41'}} onClick={() => handleBoardId(1)}>자유 게시판</Button>
+        <Button sx={{fontSize: 18, color:boardId === 3 ? '#8ec7a7' : '#225a41'}} onClick={() => handleBoardId(3)}>사장님 게시판</Button>
+        <Button sx={{fontSize: 18, color:boardId === 4 ? '#8ec7a7' : '#225a41'}} onClick={() => handleBoardId(4)}>내 게시물</Button>
+        <Box sx={{ borderBottom: '3px solid #e0e0e0' }} />
+        <div style={{ position: 'relative' }}>
+        <Grid container justifyContent="flex-end" style={{ position: 'fixed', bottom: 30, left: -70, width: '100%' }}><Button
+            sx={{
+              background: "#8ec7a7",
+              width: "90px",
+              height: "60px",
+              fontSize: 20,
+              marginTop: 1,
+              marginRight: 2,
+              '&:hover': {
+                background: "#bbdfc8", // 호버 시 배경색 변경
+              },
+            }}
+            onClick={() => {
+              navigate("/seller/dashboard/community/write");
+            }}
+          >
+            글 작성
+          </Button></Grid></div>
       </Grid>
-      <Grid container spacing={2} style={{ marginTop: "20px" }}>
+      <Grid container spacing={2} style={{ marginTop: "5px" }}>
         {posts &&
           posts.map((post: Post, index: number) => (
             <React.Fragment key={post.postId}>
@@ -121,7 +142,9 @@ export default function Community() {
                   sx={{ width: "100%", margin: "10px 0" }}
                 />
               )}
-              <Grid xs={12}>
+              <Grid xs={12} sx={{'&:hover': {
+                background: "#dcefe2", // 호버 시 배경색 변경
+              },}}>
                 <Box
                   style={{
                     display: "flex",
@@ -137,8 +160,8 @@ export default function Community() {
                     </Box>
                   )}
                   <Box style={{ flexGrow: 1 }}>
-                    <Typography variant="h6">{post.title}</Typography>
-                    <Typography variant="body2">
+                    <Typography variant="h5" sx={{padding: "10px 0", fontWeight: "600"}}>{post.title}</Typography>
+                    <Typography variant="body2" sx={{color: "gray"}}>
                       {post.userNickname} | {formatTime(post.createdAt)} |
                       조회수: {post.viewCount}{" "}
                       {boardId === 4 && `| ${post.boardId}`}
@@ -148,12 +171,19 @@ export default function Community() {
                     <Typography
                       variant="body1"
                       style={{
+                        width: "50px",
+                        height: "70px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
                         backgroundColor: "#eee",
-                        borderRadius: "50%",
+                        borderRadius: "30%",
                         padding: "5px 10px",
                       }}
                     >
-                      {post.commentCount}
+                      <span>{post.commentCount}</span>
+                      <span>댓글</span>
                     </Typography>
                   </Box>
                 </Box>
@@ -165,7 +195,7 @@ export default function Community() {
             position: "absolute",
           }}
         >
-          <Button
+          {/* <Button
             sx={{
               width: "100%",
               height: "60px",
@@ -177,7 +207,7 @@ export default function Community() {
             }}
           >
             작성
-          </Button>
+          </Button> */}
         </Box>
       </Grid>
     </Grid>

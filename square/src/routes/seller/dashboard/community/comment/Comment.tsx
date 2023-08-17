@@ -67,32 +67,34 @@ function Comment({
   return (
     <Box
       key={commentKey}
-      border="1px solid #e0e0e0"
+      // border="1px solid #e0e0e0"
       borderRadius="5px"
-      marginY="10px"
-      padding="10px"
+      // marginY="10px"
+      // padding="10px"
     >
       {comment.isDeleted && <Grid>삭제된 댓글</Grid>}
       {!comment.isDeleted && (
         <Grid item container spacing={1} alignItems="center">
           <Grid item>
-            <Avatar src={comment.userProfile} sx={{ width: 24, height: 24 }} />
+            <Avatar src={comment.userProfile} sx={{ width: 35, height: 35 }} />
           </Grid>
           <Grid item>
-            <Typography variant="body2">{comment.userNickname}</Typography>
+            <Grid item>
+              <Typography variant="body2">{comment.userNickname}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2">
+                {formatTime(comment.createdAt)}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="body2">
-              {formatTime(comment.createdAt)}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1" paragraph>
+          <Grid item xs={12} sx={{marginLeft: 5}}>
+            <Typography variant="body1" paragraph style={{marginBottom: 0}}>
               {comment.comment}
             </Typography>
           </Grid>
           {comment && comment.userId === loginUserId && (
-            <Grid>
+            <Grid sx={{marginLeft: 4}}>
               <Button onClick={() => commentDelete(comment.commentId)}>
                 삭제
               </Button>
@@ -100,7 +102,7 @@ function Comment({
                 parentId={comment?.commentId}
                 onCommentSubmit={handleCommentSubmit}
                 type="update"
-                text="댓글 수정"
+                text="수정"
               />
             </Grid>
           )}
@@ -111,7 +113,7 @@ function Comment({
         comment.recommentList.map((recomment) => (
           <Box
             key={recomment.commentId}
-            border="1px solid #e0e0e0"
+            // border="1px solid #e0e0e0"
             borderRadius="5px"
             marginY="10px"
             padding="10px"
@@ -148,7 +150,7 @@ function Comment({
                   parentId={recomment?.commentId}
                   onCommentSubmit={handleCommentSubmit}
                   type="update"
-                  text="댓글 수정"
+                  text="수정"
                 />
               </Grid>
             )}
@@ -159,7 +161,7 @@ function Comment({
           parentId={comment?.commentId}
           onCommentSubmit={handleCommentSubmit}
           type="recomment"
-          text="대댓글 작성"
+          text="작성"
         />
       )}
     </Box>
