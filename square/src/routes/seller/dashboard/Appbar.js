@@ -30,6 +30,7 @@ const theme = createTheme({
 export default function Appbar() {
   const navigate = useNavigate();
   const user = localStorage.getItem("userInfo");
+  const userNick = JSON.parse(user);
 
   return (
     <ThemeProvider theme={theme}>
@@ -65,7 +66,7 @@ export default function Appbar() {
               </Typography>
               QUARE
             </Typography>
-            <Button color="inherit">{user}님, 환영합니다.</Button>
+            <Button color="inherit">{userNick.userNick}님, 환영합니다.</Button>
           </Toolbar>
         </AppBar>
       </Grid>

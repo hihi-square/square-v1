@@ -150,20 +150,45 @@ function BoardDetail(props: any) {
   };
 
   return (
-    <Grid container spacing={3} style={{ padding: "20px 10px", marginLeft: 5, marginRight: 50 }}>
-      <Grid container direction="row" alignItems="center" spacing={1} sx={{marginTop: 2}}>
-      <Button
-        sx={{
-          // width: "100%",
-          height: "60px",
-          display: "flex",
-          justifyContent: "flex-start",
-        }}
-        onClick={() => {
-          navigate("/seller/dashboard/community");
-        }}
+
+    // <Grid container spacing={3} style={{ padding: "20px 10px", marginLeft: 5, marginRight: 50 }}>
+    //   <Grid container direction="row" alignItems="center" spacing={1} sx={{marginTop: 2}}>
+    //   <Button
+    //     sx={{
+    //       // width: "100%",
+    //       height: "60px",
+    //       display: "flex",
+    //       justifyContent: "flex-start",
+    //     }}
+    //     onClick={() => {
+    //       navigate("/seller/dashboard/community");
+    //     }}
+    //   >
+    //     <TbArrowBackUp size="30px" style={{marginLeft: 10}}/>
+    <Grid
+      container
+      spacing={3}
+      style={{ padding: "20px 10px", marginLeft: 5, marginRight: 50 }}
+    >
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        sx={{ marginTop: 2 }}
       >
-        <TbArrowBackUp size="30px" style={{marginLeft: 10}}/>
+        <Button
+          sx={{
+            // width: "100%",
+            height: "60px",
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
+          onClick={() => {
+            navigate("/seller/dashboard/community");
+          }}
+        >
+          <TbArrowBackUp size="30px" style={{ marginLeft: 10 }} />
         </Button>
         {post && post.userId === userInfo?.userId && (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
@@ -172,7 +197,7 @@ function BoardDetail(props: any) {
                 // width: "100%",
                 height: "60px",
                 fontSize: "18px",
-                fontWeight: "200px"
+                fontWeight: "200px",
                 // display: "flex",
                 // flexDirection: "column",
               }}
@@ -187,7 +212,7 @@ function BoardDetail(props: any) {
                 // width: "100%",
                 height: "60px",
                 fontSize: "18px",
-                fontWeight: "200px"
+                fontWeight: "200px",
                 // display: "flex",
                 // flexDirection: "column",
               }}
@@ -200,9 +225,20 @@ function BoardDetail(props: any) {
           </Box>
         )}
       </Grid>
-      <Grid item xs={12} sx={{paddingTop: 0}}>
+      {/* <Grid item xs={12} sx={{paddingTop: 0}}>
         <Typography variant="h4" sx={{paddingBottom: 3, fontWeight: "600"}}>{post && post.title}</Typography>
-        <Grid item container spacing={1} alignItems="center" sx={{paddingBottom: 2}}>
+        <Grid item container spacing={1} alignItems="center" sx={{paddingBottom: 2}}> */}
+      <Grid item xs={12} sx={{ paddingTop: 0 }}>
+        <Typography variant="h4" sx={{ paddingBottom: 3, fontWeight: "600" }}>
+          {post && post.title}
+        </Typography>
+        <Grid
+          item
+          container
+          spacing={1}
+          alignItems="center"
+          sx={{ paddingBottom: 2 }}
+        >
           <Grid item>
             <Avatar src={post && post.userProfile} />
           </Grid>
@@ -224,7 +260,6 @@ function BoardDetail(props: any) {
             </Grid>
           </Grid>
         </Grid>
-        
         <Divider style={{ margin: "10px 0" }} />
         <Box minHeight="100px">
           <Typography variant="body1" paragraph>
@@ -238,7 +273,7 @@ function BoardDetail(props: any) {
           post.images.map((photo) => <img src={photo.url}></img>)}
       </Grid>
       <Grid item xs={12}>
-        <Divider style={{ marginTop: "10px"}} />
+        {/* <Divider style={{ marginTop: "10px"}} />
       </Grid>
       <Grid item xs>
         <Typography align="left" sx={{fontSize: "16px", fontWeight: "500"}}>댓글 {post && post.commentCnt}</Typography>
@@ -259,7 +294,35 @@ function BoardDetail(props: any) {
             ></Comment>)}
           )
           // )
-          }
+          } */}
+        <Divider style={{ marginTop: "10px" }} />
+      </Grid>
+      <Grid item xs>
+        <Typography align="left" sx={{ fontSize: "16px", fontWeight: "500" }}>
+          댓글 {post && post.commentCnt}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        {
+          post &&
+            post.comments.map((comment) =>
+              // (
+              {
+                console.log("Comment Depth:", comment.depth);
+
+                return (
+                  <Comment
+                    depth={comment.depth}
+                    comment={comment}
+                    commentKey={comment.commentId}
+                    onCommentSubmit={handleCommentSubmit}
+                    loginUserId={userInfo?.userId || 0}
+                  ></Comment>
+                );
+              }
+            )
+          // )
+        }
         {post && (
           <CommentForm
             parentId={post.postId}

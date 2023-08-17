@@ -170,7 +170,7 @@ function BoardForm({ mode }: FormTypeProps) {
         backgroundColor: "white",
       }}
     >
-      <Grid xs={12} sx={{marginTop: 6, marginLeft: 5, marginRight: 10}}>
+      {/* <Grid xs={12} sx={{marginTop: 6, marginLeft: 5, marginRight: 10}}>
       <Typography variant="h3" sx={{marginBottom: 2, color: "#225a41", fontWeight: 700}}> 글 작성 </Typography>
       <Grid container xs={12}>
         <Grid xs={10}>
@@ -193,8 +193,10 @@ function BoardForm({ mode }: FormTypeProps) {
                   control={<Radio />}
                   label="사장님 게시판"
                 />
-                {/* 추가 게시판 선택 라디오 버튼 */}
-              </RadioGroup>
+                {/* 추가 게시판 선택 라디오 버튼 */
+                // }
+              // {
+                /* </RadioGroup>
             </FormControl>
 
             <Box sx={{ height: "130px", marginTop: "20px"}}>
@@ -255,12 +257,120 @@ function BoardForm({ mode }: FormTypeProps) {
                 sx={{
                   // color: "red",
                   fontWeight: 700,
-                  textAlign: "center",
+                  textAlign: "center", */} 
+      <Grid xs={12} sx={{ marginTop: 6, marginLeft: 5, marginRight: 10 }}>
+        <Typography
+          variant="h3"
+          sx={{ marginBottom: 2, color: "#225a41", fontWeight: 700 }}
+        >
+          {" "}
+          글 작성{" "}
+        </Typography>
+        <Grid container xs={12}>
+          <Grid xs={10}>
+            <Box component="form">
+              <FormControl component="fieldset">
+                <RadioGroup
+                  row
+                  aria-label="board"
+                  name="board"
+                  value={boardId}
+                  onChange={handleBoardChange}
+                >
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="자유게시판"
+                  />
+                  <FormControlLabel
+                    value="3"
+                    control={<Radio />}
+                    label="사장님 게시판"
+                  />
+                  {/* 추가 게시판 선택 라디오 버튼 */}
+                </RadioGroup>
+              </FormControl>
+
+              <Box sx={{ height: "130px", marginTop: "20px" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "#225a41", fontSize: "22px", fontWeight: 500 }}
+                  gutterBottom
+                >
+                  제목
+                </Typography>
+                <TextField
+                  placeholder="제목"
+                  fullWidth
+                  value={title}
+                  onChange={handleTitle}
+                  autoComplete="title"
+                />
+              </Box>
+              <Box sx={{ height: "130px" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "#225a41", fontSize: "22px", fontWeight: 500 }}
+                  gutterBottom
+                >
+                  내용
+                </Typography>
+                <TextareaAutosize
+                  // placeholder="내용"
+                  autoComplete="content"
+                  value={content}
+                  onChange={handleContent}
+                  style={{ resize: "none", width: "100%", height: "50px" }}
+                ></TextareaAutosize>
+              </Box>
+              <Box sx={{ height: "130px" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "#225a41", fontSize: "22px", fontWeight: 500 }}
+                  gutterBottom
+                >
+                  사진
+                </Typography>
+                <Input
+                  type="file"
+                  id="photos"
+                  inputProps={{ multiple: true }}
+                  onChange={handlePhotoChange}
+                  fullWidth
+                />
+              </Box>
+            </Box>
+          </Grid>
+          <Grid container xs={9} justifyContent="center">
+            <Grid xs={2}>
+              <Button
+                onClick={handleFormSubmit}
+                variant="contained"
+                color="secondary"
+                sx={{
+                  height: "60px",
+                  background: "#8ec7a7",
+                  fontSize: 18,
+                  marginTop: 1,
+                  marginRight: 2,
+                  "&:hover": {
+                    background: "#bbdfc8", // 호버 시 배경색 변경
+                  },
                 }}
+                fullWidth
               >
-                {mode === "write" ? "작성" : "수정"}
-              </Typography>
-            </Button>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    // color: "red",
+                    fontWeight: 700,
+                    textAlign: "center",
+                  }}
+                >
+                  {mode === "write" ? "작성" : "수정"}
+                </Typography>
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

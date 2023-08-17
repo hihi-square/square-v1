@@ -22,7 +22,6 @@ import {
 } from "@mui/material";
 
 import ImagePreview from "./ImagePreview";
-import Options from "./Options";
 
 interface Props {
   open: boolean;
@@ -254,10 +253,6 @@ export default function ProductForm({
                   value={currProduct.description}
                   onChange={handleProductChange}
                 />
-              </Grid>
-              <Grid xs={12}>
-                <DialogContentText>추가 옵션</DialogContentText>
-                <Options></Options>
               </Grid>
             </Grid>
           </DialogContent>

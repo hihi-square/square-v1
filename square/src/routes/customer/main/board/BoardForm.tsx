@@ -10,26 +10,46 @@ import {
   TextField,
   Box,
   Button,
-  Input,
-  // Divider,
   TextareaAutosize,
 } from "@mui/material";
 // import { useNavigate } from "react-router-dom";
-import Footer from "routes/customer/Footer";
 
 // type PostImage = {
 //   url:string;
 //   thumb:string;
 // }
+
+type UserInfo = {
+  bcode: number;
+  depth: number;
+  emdName: string;
+  fullName: string;
+  sidoName: string;
+  siggName: string;
+  usrId: number;
+  usrNick: string;
+};
+
 interface FormTypeProps {
   mode: string;
 }
 function BoardForm({ mode }: FormTypeProps) {
   const token = sessionStorage.getItem("accessToken");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const { id } = useParams();
+
+  useEffect(() => {
+    const storedUserInfo = sessionStorage.getItem("userInfo");
+
+    if (storedUserInfo) {
+      const parsedUserInfo: UserInfo = JSON.parse(storedUserInfo);
+
+      setUserInfo(parsedUserInfo);
+    }
+  }, []);
 
   useEffect(() => {
     if (mode === "update") {
@@ -81,7 +101,6 @@ function BoardForm({ mode }: FormTypeProps) {
 
   //   if (files) {
   //     // 여기
-
   //     }else {
   //   setImage("");
   //   setFileName("");
@@ -96,18 +115,14 @@ function BoardForm({ mode }: FormTypeProps) {
     setContent(e.target.value);
   };
 
-  const handlePhotoChange = (e: any) => {
-    // const selectedFiles = Array.from(e.target.files);
-    // setSelectedPhotos(selectedFiles);
-  };
-
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
+    if (title.trim() === "" || content.trim() === "") return;
     // 게시글 데이터와 사진 업로드 처리
     if (mode === "write") {
       const postData = {
         boardId: 1,
-        bcode: 3020011300,
+        bcode: userInfo?.bcode,
         title,
         content,
         images: [],
@@ -153,21 +168,25 @@ function BoardForm({ mode }: FormTypeProps) {
   };
 
   return (
-    <Grid
-      container
-      xs={12}
-      direction="column"
-      sx={{
-        backgroundColor: "white",
-      }}
-    >
+    <Grid container xs={12} direction="column">
       <Grid container xs={12} justifyContent="center">
         <Grid xs={9}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 700,
+              textAlign: "center",
+              marginBottom: "10px",
+            }}
+          >
+            글작성
+          </Typography>
           <Box component="form">
-            <Box sx={{ height: "130px" }}>
-              <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
-                제목
-              </Typography>
+            <Box
+              sx={{
+                marginBottom: "20PX",
+              }}
+            >
               <TextField
                 placeholder="제목"
                 fullWidth
@@ -176,27 +195,18 @@ function BoardForm({ mode }: FormTypeProps) {
                 autoComplete="title"
               />
             </Box>
-            <Box sx={{ height: "130px" }}>
-              <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
-                내용
-              </Typography>
+            <Box sx={{ height: "40vh", marginBottom: "15px" }}>
               <TextareaAutosize
                 placeholder="내용"
-                autoComplete="content"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  boxSizing: "border-box",
+                  padding: "15px",
+                }}
                 value={content}
                 onChange={handleContent}
-              ></TextareaAutosize>
-            </Box>
-            <Box sx={{ height: "130px" }}>
-              <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
-                사진
-              </Typography>
-              <Input
-                type="file"
-                id="photos"
-                inputProps={{ multiple: true }}
-                onChange={handlePhotoChange}
-                fullWidth
+                autoComplete="content"
               />
             </Box>
           </Box>
@@ -206,14 +216,13 @@ function BoardForm({ mode }: FormTypeProps) {
             <Button
               onClick={handleFormSubmit}
               variant="contained"
-              color="secondary"
               sx={{ height: "60px" }}
               fullWidth
             >
               <Typography
                 variant="h5"
                 sx={{
-                  color: "red",
+                  color: "white",
                   fontWeight: 700,
                   textAlign: "center",
                 }}
@@ -223,9 +232,6 @@ function BoardForm({ mode }: FormTypeProps) {
             </Button>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container xs={12} justifyContent="center">
-        <Footer now={6} />
       </Grid>
     </Grid>
   );

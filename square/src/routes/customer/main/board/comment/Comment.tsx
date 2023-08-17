@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-// import React, { useEffect, useState } from "react";
+// import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
 // import { useNavigate, useParams } from "react-router-dom";
 import { Grid, Typography, Avatar, Box, Button } from "@mui/material";
+import { HiOutlineDotsCircleHorizontal } from "react-icons/hi";
 import CommentForm from "./CommentForm";
 
 type CommentEntity = {
@@ -23,6 +24,7 @@ interface CommentProps {
   commentKey: number;
   onCommentSubmit: (comment: CommentEntity) => void;
   loginUserId: number;
+  depth: number;
 }
 
 function Comment({
@@ -30,24 +32,46 @@ function Comment({
   commentKey,
   onCommentSubmit,
   loginUserId,
+  depth,
 }: CommentProps) {
   const token = sessionStorage.getItem("accessToken");
+  const [toggleBtn, setToggleBtn] = useState<boolean>(false);
+  // const [recommentToggleBtn, setRecommentToggleBtn] = useState<boolean>(false);
+  const [viewUpdateForm, setViewUpdateForm] = useState<boolean>(false);
+  const [viewRecommentForm, setViewRecommentForm] = useState<boolean>(false);
 
-  useEffect(() => {}, []);
+  const handleToggleBtn = () => {
+    setToggleBtn(!toggleBtn);
+  };
+  const handleUpdateForm = (state: boolean) => {
+    if (state && viewRecommentForm) {
+      handleRecommentForm(false);
+    }
+    setViewUpdateForm(state);
+    setToggleBtn(false);
+  };
+  const handleRecommentForm = (state: boolean) => {
+    if (state && viewUpdateForm) {
+      handleUpdateForm(false);
+    }
+    setViewRecommentForm(state);
+    setToggleBtn(false);
+  };
   const handleCommentSubmit = (event: any) => {
     // 댓글 제출 완료 후 필요한 작업을 수행하는 로직
+    setToggleBtn(false);
+    setViewUpdateForm(false);
+    setViewRecommentForm(false);
     onCommentSubmit(event);
   };
 
   const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
 
   const formatTime = (createdAt: number[]) => {
-    const [year, month, day, hour, minute, second] = createdAt;
+    const [year, month, day, hour, minute] = createdAt;
 
-    const formattedDate = `${year}-${getZeroNum(month)}-${getZeroNum(day)}`;
-    const formattedTime = `${getZeroNum(hour)}:${getZeroNum(minute)}:${
-      second ? getZeroNum(second) : "00"
-    }`;
+    const formattedDate = `${year}.${getZeroNum(month)}.${getZeroNum(day)}`;
+    const formattedTime = `${getZeroNum(hour)}:${getZeroNum(minute)}`;
 
     return `${formattedDate} ${formattedTime}`;
   };
@@ -67,34 +91,139 @@ function Comment({
   return (
     <Box
       key={commentKey}
-      border="1px solid #e0e0e0"
-      borderRadius="5px"
-      marginY="10px"
-      padding="10px"
+      paddingLeft={depth === 1 ? "10px" : "20px"}
+      sx={{
+        borderRadius: "5px",
+        marginY: "10px",
+        borderBottom: "1px solid #eee",
+        paddingTop: "10px",
+      }}
     >
       {comment.isDeleted && <Grid>삭제된 댓글</Grid>}
       {!comment.isDeleted && (
-        <Grid item container spacing={1} alignItems="center">
-          <Grid item>
-            <Avatar src={comment.userProfile} sx={{ width: 24, height: 24 }} />
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">{comment.userNickname}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">
-              {formatTime(comment.createdAt)}
-            </Typography>
+        <Grid
+          item
+          container
+          spacing={1}
+          alignItems="center"
+          sx={{
+            position: "relative",
+          }}
+        >
+          <Grid
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <Grid
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Grid
+                item
+                sx={{
+                  marginRight: "10px",
+                }}
+              >
+                <Avatar
+                  src={comment.userProfile}
+                  sx={{ width: "33px", height: "33px" }}
+                />
+              </Grid>
+              <Grid>
+                <Grid item>
+                  <Typography variant="body2">
+                    {comment.userNickname}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="body2">
+                    {formatTime(comment.createdAt)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Button
+              onClick={() => handleToggleBtn()}
+              sx={{
+                fontSize: "20px",
+                opacity: "0.5",
+              }}
+            >
+              <HiOutlineDotsCircleHorizontal />
+            </Button>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" paragraph>
               {comment.comment}
             </Typography>
           </Grid>
-          {comment && comment.userId === loginUserId && (
-            <Grid>
-              <Button onClick={() => commentDelete(comment.commentId)}>
-                삭제
+          {toggleBtn && (
+            <Grid
+              sx={{
+                display: "flex",
+                position: "absolute",
+                backgroundColor: "#eee",
+                flexDirection: "column",
+                right: "0",
+                top: "40px",
+                zIndex: "10",
+              }}
+            >
+              {depth === 1 && (
+                <Button
+                  sx={{
+                    padding: "10px 20px",
+                  }}
+                  onClick={() => handleRecommentForm(true)}
+                >
+                  대댓글
+                </Button>
+              )}
+
+              {comment && comment.userId === loginUserId && (
+                <Button
+                  sx={{
+                    padding: "10px 20px",
+                  }}
+                  onClick={() => handleUpdateForm(true)}
+                >
+                  수정
+                </Button>
+              )}
+              {comment && comment.userId === loginUserId && (
+                <Button
+                  sx={{
+                    padding: "10px 20px",
+                  }}
+                  onClick={() => commentDelete(comment.commentId)}
+                >
+                  삭제
+                </Button>
+              )}
+            </Grid>
+          )}
+          {viewUpdateForm && comment && comment.userId === loginUserId && (
+            <Grid
+              sx={{
+                position: "relative",
+                width: "100%",
+              }}
+            >
+              <Button
+                onClick={() => handleUpdateForm(false)}
+                sx={{
+                  position: "absolute",
+                  zIndex: 5,
+                  right: 0,
+                  bottom: 0,
+                }}
+              >
+                수정 취소
               </Button>
               <CommentForm
                 parentId={comment?.commentId}
@@ -108,59 +237,35 @@ function Comment({
       )}
 
       {comment &&
+        depth === 1 &&
         comment.recommentList.map((recomment) => (
-          <Box
-            key={recomment.commentId}
-            border="1px solid #e0e0e0"
-            borderRadius="5px"
-            marginY="10px"
-            padding="10px"
-          >
-            <Grid item container spacing={1} alignItems="center">
-              <Grid item>
-                <Avatar
-                  src={recomment.userProfile}
-                  sx={{ width: 24, height: 24 }}
-                />
-              </Grid>
-              <Grid item>
-                <Typography variant="body2">
-                  {recomment.userNickname}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="body2">
-                  {formatTime(recomment.createdAt)}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1" paragraph>
-                  {recomment.comment}
-                </Typography>
-              </Grid>
-            </Grid>
-            {recomment && recomment.userId === loginUserId && (
-              <Grid>
-                <Button onClick={() => commentDelete(recomment.commentId)}>
-                  삭제
-                </Button>
-                <CommentForm
-                  parentId={recomment?.commentId}
-                  onCommentSubmit={handleCommentSubmit}
-                  type="update"
-                  text="댓글 수정"
-                />
-              </Grid>
-            )}
-          </Box>
+          <Comment
+            comment={recomment}
+            commentKey={recomment.commentId}
+            onCommentSubmit={handleCommentSubmit}
+            loginUserId={loginUserId || 0}
+            depth={2}
+          ></Comment>
         ))}
-      {comment && comment.userId === loginUserId && (
-        <CommentForm
-          parentId={comment?.commentId}
-          onCommentSubmit={handleCommentSubmit}
-          type="recomment"
-          text="대댓글 작성"
-        />
+      {viewRecommentForm && comment && (
+        <Grid
+          sx={{
+            position: "relative",
+          }}
+        >
+          <Button
+            onClick={() => handleRecommentForm(false)}
+            sx={{ position: "absolute", zIndex: 5, bottom: 0, right: 0 }}
+          >
+            작성 취소
+          </Button>
+          <CommentForm
+            parentId={comment?.commentId}
+            onCommentSubmit={handleCommentSubmit}
+            type="recomment"
+            text="댓글 작성"
+          />
+        </Grid>
       )}
     </Box>
   );

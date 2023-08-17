@@ -6,6 +6,7 @@ import {
   Unstable_Grid2 as Grid,
   Collapse,
   IconButton,
+  Button,
 } from "@mui/material";
 import { REST_API } from "redux/redux";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ type OrderList = {
   stoId: number;
   createdAt: number[];
   finalPrice: number;
+  review: boolean;
   menuList: {
     menuName: string;
     price: number;
@@ -75,11 +77,10 @@ export default function Order() {
       dateArray[2],
       dateArray[3],
       dateArray[4],
-      dateArray[5]
+      dateArray[5] ? dateArray[5] : 0
     );
 
   const convertStatus = (stat: string): string[] => {
-    console.log(stat);
     switch (stat) {
       case "PAYMENT_COMPLETE":
         return ["수락 대기중", "grey"];
@@ -102,7 +103,7 @@ export default function Order() {
 
   return (
     <>
-      <Grid xs={11} container spacing={3}>
+      <Grid xs={11} container>
         {orderList &&
           orderList.map((order, index) => (
             <Grid xs={12} key={index}>
@@ -115,7 +116,7 @@ export default function Order() {
                 }}
               >
                 <Box>
-                  <Typography variant="h6">{`SQUA${order.ordId}`}</Typography>
+                  <Typography variant="h6">{order.storeName}</Typography>
                   <Typography variant="subtitle1">
                     {convertToDateArray(order.createdAt).toLocaleString()}
                   </Typography>
@@ -148,10 +149,7 @@ export default function Order() {
                     <ExpandMoreIcon />
                   </IconButton>
                 </Box>
-                <Collapse
-                  in={openProductIndex === index}
-                  style={{ maxHeight: "40px", overflow: "auto" }}
-                >
+                <Collapse in={openProductIndex === index}>
                   {order.menuList &&
                     order.menuList.map((product, pIndex) => (
                       <Box
@@ -160,13 +158,12 @@ export default function Order() {
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "center",
-                          height: "15px",
-                          fontSize: "0.8rem",
                         }}
                       >
-                        <Typography>{product.menuName}</Typography>
-                        <Typography>총 {product.quantity} 개</Typography>
-                        <Typography>
+                        <Typography fontSize={"0.9rem"}>
+                          {product.menuName} x {product.quantity}
+                        </Typography>
+                        <Typography fontSize={"0.9rem"}>
                           총 {product.price * product.quantity}원{" "}
                         </Typography>
                       </Box>
@@ -194,23 +191,72 @@ export default function Order() {
                 </Box>
                 <Collapse
                   in={openPaymentIndex === index}
-                  style={{ maxHeight: "15px", overflow: "auto" }}
+                  style={{ overflow: "auto" }}
                 >
                   <Box
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      height: "15px",
-                      fontSize: "0.8rem",
+                      flexDirection: "column",
                     }}
                   >
-                    <Typography>총액: {order.totalPrice}원</Typography>
-                    <Typography>할인: {order.usedPoint}원</Typography>
-                    <Typography>결제액: {order.finalPrice}원</Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      }}
+                    >
+                      <Typography fontSize={"0.9rem"}>총액</Typography>
+                      <Typography fontSize={"0.9rem"}>
+                        {" "}
+                        {order.totalPrice}원
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      }}
+                    >
+                      <Typography fontSize={"0.9rem"}>할인</Typography>
+                      <Typography fontSize={"0.9rem"}>
+                        {" "}
+                        {order.usedPoint}원
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      }}
+                    >
+                      <Typography fontSize={"0.9rem"}>결제액</Typography>
+                      <Typography fontSize={"0.9rem"}>
+                        {" "}
+                        {order.finalPrice}원
+                      </Typography>
+                    </Box>
                   </Box>
                 </Collapse>
               </Box>
+              {order.status === "PICKUP_COMPLETE" && order.review && (
+                <Button
+                  sx={{
+                    width: "100%",
+                    backgroundColor: "#eee",
+                    height: "50px",
+                    marginBottom: "10px",
+                    borderRadius: "4px",
+                  }}
+                  onClick={() => navigate(`/review/write/${order.ordId}`)}
+                >
+                  리뷰 작성
+                </Button>
+              )}
             </Grid>
           ))}
       </Grid>
