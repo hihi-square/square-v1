@@ -77,6 +77,9 @@ const notifications = createSlice({
     pushOrderData: (state, action: PayloadAction<data>) => {
       state.orderData.push(action.payload);
     },
+    resetOrderData: (state) => {
+      state.orderData = [];
+    },
     setMessageData: (state, action: PayloadAction<data>) => {
       state.messageData = action.payload;
     },
@@ -86,7 +89,7 @@ const notifications = createSlice({
   },
 });
 
-export const { pushOrderData, setMessageData, setNoticeData } =
+export const { pushOrderData, setMessageData, setNoticeData, resetOrderData } =
   notifications.actions;
 
 const page = createSlice({

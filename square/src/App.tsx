@@ -1,9 +1,12 @@
+import React, { useState, useEffect } from "react";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Routes, Route } from "react-router-dom";
 import { Unstable_Grid2 as Grid } from "@mui/material";
 import { green } from "@mui/material/colors";
 import "./App.css";
-import Seller from "./routes/seller/Seller";
+import Logo from "./Logo";
+import SellerRouter from "./routes/seller/SellerRouter";
 import Customer from "./routes/customer/Customer";
 import CustomerLogin from "./routes/customer/login/Login";
 import CustomerSignUp from "./routes/customer/login/CustomerSignup";
@@ -39,27 +42,40 @@ const theme = createTheme({
 });
 
 function App() {
+  const [showLogo, setShowLogo] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLogo(false);
+    }, 1000);
+
+    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 제거
+  }, []);
+
   return (
-    <Grid container className="App" sx={{ width: "100%", height: "100vh" }}>
+    <Grid
+      container
+      className="App"
+      sx={{ width: "100vw", height: "100vh", justifyContent: "center" }}
+    >
       <ThemeProvider theme={theme}>
-        <Grid
-          container
-          justifyContent="center"
-          xs={12}
-          sx={{ width: "100%", height: "100vh" }}
-        >
+        {showLogo ? (
+          <Logo />
+        ) : (
           <Routes>
-            <Route path="/*" element={<Customer />} />
-            <Route path="/login" element={<CustomerLogin />} />
+            <Route path="*" element={<Customer />} />
+            <Route path="/seller/*" element={<SellerRouter />} />
+            <Route path="/error/*" element={<Error />} />
+
+            <Route path="/login/" element={<CustomerLogin />} />
             <Route path="/signup" element={<CustomerSignUp />} />
             <Route path="/login/KakaoRedirect" element={<KakaoRedirect />} />
             <Route path="/login/GoogleRedirect" element={<GoogleRedirect />} />
             <Route path="/login/NaverRedirect" element={<NaverRedirect />} />
-            <Route path="/seller/*" element={<Seller />} />
-            <Route path="/error/*" element={<Error />} />
+
             <Route path="/test/file" element={<File />} />
           </Routes>
-        </Grid>
+        )}
       </ThemeProvider>
     </Grid>
   );
