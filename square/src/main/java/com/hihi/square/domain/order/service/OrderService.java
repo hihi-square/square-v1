@@ -196,8 +196,10 @@ public class OrderService {
         Customer customer = order.getCustomer();
 
         // 포인트 반환
-        pointService.save(order.getOrdId(), customer, order.getUsedPoint(), 1);
-        customer.updatePoint(customer.getPoint() + order.getUsedPoint());
+        if(order.getUsedPoint() > 0) {
+            customer.updatePoint(customer.getPoint() + order.getUsedPoint());
+            pointService.save(order.getOrdId(), customer, order.getUsedPoint(), 1);
+        }
 
         // 상태 변경
         order.updateOrderStatus(OrderStatus.ORDER_REJECT);
