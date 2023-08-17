@@ -99,7 +99,7 @@ export default function Seller() {
           xs={10}
           container
           className="component-page"
-          sx={{ overflow: "auto" }}
+          sx={{ overflow: "scroll" }}
         >
           <Routes>
             <Route path="/" element={<Main />} />
