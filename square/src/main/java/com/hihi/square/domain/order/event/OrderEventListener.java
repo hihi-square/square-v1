@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderEventListener implements ApplicationListener<OrderEvent> {
 
-	private final SseService notificationService;
+	private final SseService sseService;
 	private final OrderService orderService;
 
 	@Override
@@ -29,23 +29,23 @@ public class OrderEventListener implements ApplicationListener<OrderEvent> {
 		//결제 완료 시에 가게에 알림 전송
 		if (order.getStatus() == OrderStatus.PAYMENT_COMPLETE) {
 			Store store = order.getStore();
-			notificationService.send(store, NotificationType.READY, "order", event.getContent(),
+			sseService.send(store, NotificationType.READY, "order", event.getContent(),
 				store.getStoreName());
 		}
 		//가게에서 주문 수락 or 취소 시
 		else if (status == OrderStatus.ORDER_ACCEPT) {
 			Customer customer = order.getCustomer();
-			notificationService.send(customer, NotificationType.ACCEPT, "order", event.getContent(),
+			sseService.send(customer, NotificationType.ACCEPT, "order", event.getContent(),
 				order.getStore().getStoreName());
 		} else if (status == OrderStatus.ORDER_REJECT) {
 			Customer customer = order.getCustomer();
-			notificationService.send(customer, NotificationType.REJECT, "order", event.getContent(),
+			sseService.send(customer, NotificationType.REJECT, "order", event.getContent(),
 				order.getStore().getStoreName());
 		}
 		//고객이 픽업을 완료했을 때
 		else if (status == OrderStatus.PICKUP_COMPLETE) {
 			Customer customer = order.getCustomer();
-			notificationService.send(customer, NotificationType.COMPLETED, "pickup", event.getContent(),
+			sseService.send(customer, NotificationType.COMPLETED, "pickup", event.getContent(),
 				order.getStore().getStoreName());
 		}
 	}

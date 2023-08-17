@@ -16,7 +16,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
@@ -69,7 +68,7 @@ public class User {
 	@Column(name = "refresh_token")
 	private String refreshToken;
 	private String profile;
-	@Column(name="profile_thumb")
+	@Column(name = "profile_thumb")
 	private String profileThumb;
 
 	public User(String uid, String name, String nickname, String email) {

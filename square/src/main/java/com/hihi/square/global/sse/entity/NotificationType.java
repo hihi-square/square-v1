@@ -10,7 +10,9 @@ public enum NotificationType {
 	//거절
 	REJECT,
 	//완료
-	COMPLETED;
+	COMPLETED,
+	//쪽지
+	MESSAGE;
 
 	@JsonCreator
 	public static NotificationType from(String value) {

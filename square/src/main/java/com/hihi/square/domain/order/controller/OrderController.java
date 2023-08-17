@@ -56,10 +56,10 @@ public class OrderController {
 	private final StoreRepository storeRepository;
 	private final OrderService orderService;
 	private final PointService pointService;
-	private final ApplicationEventPublisher eventPublisher;
-	private final SseService notificationService;
 	private final IssueCouponService issueCouponService;
 	private final UserService userService;
+	private final ApplicationEventPublisher eventPublisher;
+	private final SseService sseService;
 
 	// order 에서 사용가능한 쿠폰 리스트 불러주기
 	@Transactional
@@ -128,7 +128,7 @@ public class OrderController {
 
 		// 주문 등록
 		Integer ordId = orderService.saveOrder(customer, request);
-		notificationService.subscribe(request.getStoId().longValue(), "");
+		sseService.subscribe(request.getStoId().longValue(), "");
 
 		return new ResponseEntity<>(OrderIdResponseDto.builder().ordId(ordId).status(200).message("SUCCESS").build(),
 			HttpStatus.CREATED);
@@ -186,7 +186,7 @@ public class OrderController {
 				customerRepository.save(customer);
 			}
 			//store에게 주문 도착 알림 전송
-			notificationService.subscribe(customer.getUsrId().longValue(), "");
+			sseService.subscribe(customer.getUsrId().longValue(), "");
 
 			log.info("status : {}", order.getStatus());
 			log.info("orderId : {}", order.getOrdId());
@@ -372,7 +372,7 @@ public class OrderController {
 
 		// 로그인한 유저와 주문한 사용자가 다를때
 		String uid = authentication.getName();
-		Customer customer = (Customer) userService.findByUid(uid).get();
+		Customer customer = (Customer)userService.findByUid(uid).get();
 
 		List<OrderResponseDto> response = new ArrayList<>();
 		List<Optional<Order>> orders = orderService.findByCustomer(customer);
@@ -393,7 +393,6 @@ public class OrderController {
 		// 로그인한 유저와 가게가 다를때
 		String uid = authentication.getName();
 		Store store = (Store)userService.findByUid(uid).get();
-
 
 		List<OrderResponseDto> response = new ArrayList<>();
 		List<Optional<Order>> orders = orderService.findByStore(store);
