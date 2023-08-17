@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,9 +59,11 @@ public class PointService {
 
         for(Optional<Point> p : pointList) {
             if(p.get().getAmount() != 0) {
+                String formatDate = p.get().getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+
                 PointResponseDto pointDto = PointResponseDto.builder()
                         .pointId(p.get().getUpo_id())
-                        .createAt(p.get().getCreatedAt())
+                        .createAt(formatDate)
                         .storeName(p.get().getOrder().getStore().getStoreName())
                         .type(p.get().getType())
                         .point(p.get().getAmount())

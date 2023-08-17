@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class PointResponseDto {
 
     private Integer pointId;
-    private LocalDateTime createAt;
+    private String createAt;
     private String storeName;
     private Integer type;
     private Long point;
