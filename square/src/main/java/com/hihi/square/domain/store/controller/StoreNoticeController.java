@@ -31,6 +31,7 @@ import com.hihi.square.domain.store.entity.Notice;
 import com.hihi.square.domain.store.entity.Store;
 import com.hihi.square.domain.store.event.StoreNoticeEvent;
 import com.hihi.square.domain.store.service.StoreNoticeService;
+import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.service.EmdAddressService;
@@ -95,10 +96,9 @@ public class StoreNoticeController {
 	@GetMapping("/list/{storeId}")
 	public ResponseEntity getStoreNotices(@PathVariable("storeId") Integer storeId) {
 		User user = userService.findByUsrId(storeId).get();
-		if (// !(user instanceof Store) ||
-			user.getUsrId() != storeId) {
+		if (user instanceof Customer) {
 			return new ResponseEntity(CommonResponseDto.builder().message("NOT_AUTHENTICATE").statusCode(400).build(),
-				HttpStatus.BAD_GATEWAY);
+				HttpStatus.BAD_REQUEST);
 		}
 		StoreNoticesResponseDto result = StoreNoticesResponseDto.builder()
 			.notices(storeNoticeService.getNoticeListPublic((Store)user))
