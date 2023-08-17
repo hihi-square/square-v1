@@ -22,6 +22,7 @@ public class OrderResponseDto {
     private Long finalPrice;
     private OrderStatus status;
     private LocalDateTime createdAt;
+    private Boolean review;
 
     // 결제 내역 결제 테이블에서 가져오기
 

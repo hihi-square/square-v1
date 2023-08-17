@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.hihi.square.domain.user.dto.response.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,10 +27,6 @@ import com.hihi.square.domain.user.dto.request.CustomerUpdateRequestDto;
 import com.hihi.square.domain.user.dto.request.UserChangePasswordDto;
 import com.hihi.square.domain.user.dto.request.UserFindIdRequestDto;
 import com.hihi.square.domain.user.dto.request.UserLoginRequestDto;
-import com.hihi.square.domain.user.dto.response.CustomerInfoResponseDto;
-import com.hihi.square.domain.user.dto.response.UserFindIdResponseDto;
-import com.hihi.square.domain.user.dto.response.UserInfoDto;
-import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
 import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
@@ -254,5 +251,14 @@ public class UserController {
 		return new ResponseEntity(CommonResponseDto.builder().statusCode(200).message("SUCCESS").build(),
 			HttpStatus.OK);
 
+	}
+
+	// 내 등급 정보 ( 구매자)
+	@GetMapping("/rank")
+	public ResponseEntity<?> getRankInfo(Authentication authentication) {
+		String uid = authentication.getName();
+		Customer customer = (Customer)userService.findByUid(uid).get();
+		CustomerRankInfoResponseDto response = customerService.getRankInfo(customer);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
