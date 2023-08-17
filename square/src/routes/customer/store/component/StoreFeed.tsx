@@ -1,98 +1,77 @@
-import React, { useState } from "react";
-import { Card, CardContent, Typography, Grid, Container, Box, CardMedia } from "@mui/material";
+import React, { useEffect, useState } from "react";
+
+import { Unstable_Grid2 as Grid, Box } from "@mui/material";
+import axios from "axios";
+import { REST_API } from "redux/redux";
+import FeedImage from "./FeedImage";
+
+type Image = {
+  imgId: number;
+  url: string;
+  order: number;
+  type: string;
+  connectedId: number;
+  thumbnail: string;
+};
+
+type Notice = {
+  snoId: number;
+  storeName: string;
+  storeId: number;
+  storeLogo: string;
+  content: string;
+  state: string;
+  createdAt: number[];
+  modifiedAt: number[];
+  images: Image[];
+};
 
 function StoreFeed({ storeId }: { storeId?: string }) {
-  const [notices] = useState<any[]>([
+  const [notices, setNotices] = useState<Notice[]>();
 
-    {
-      modifiedAt: ["2023", "08", "10"],
-      createdAt: ["2023", "07", "10"],
-      images: [
-        { url: "이미지1_URL" },
-        { url: "이미지2_URL" }
-      ],
-      content: "공지사항1의 내용입니다."
-    },
-    {
-      modifiedAt: ["2023", "08", "05"],
-      images: [],
-      content: "공지사항2의 내용입니다. (이미지 없음)"
-    },    {
-      modifiedAt: ["2023", "08", "10"],
-      createdAt: ["2023", "07", "10"],
-      images: [
-        { url: "이미지1_URL" },
-        { url: "이미지2_URL" }
-      ],
-      content: "공지사항1의 내용입니다."
-    },
-    {
-      modifiedAt: ["2023", "08", "05"],
-      images: [],
-      content: "공지사항2의 내용입니다. (이미지 없음)"
-    },    {
-      modifiedAt: ["2023", "08", "10"],
-      createdAt: ["2023", "07", "10"],
-      images: [
-        { url: "이미지1_URL" },
-        { url: "이미지2_URL" }
-      ],
-      content: "공지사항1의 내용입니다."
-    },
-    {
-      modifiedAt: ["2023", "08", "05"],
-      images: [],
-      content: "공지사항2의 내용입니다. (이미지 없음)"
-    }
-  ]);
-
-  // useEffect(() => {
-  //   axios.get(`${REST_API}store/daily/list/${storeId}`)
-  //     .then(response => {
-  //       setNotices(response.data.notices);
-  //     })
-  //     .catch(error => {
-  //       console.error("공지 정보를 불러오는데 실패했습니다.", error);
-  //     });
-  // }, [storeId]);
+  useEffect(() => {
+    axios
+      .get(`${REST_API}store/daily/list/${storeId}`)
+      .then(({ data }) => {
+        setNotices(data.notices);
+      })
+      .catch((error) => {
+        console.error("공지 정보를 불러오는데 실패했습니다.", error);
+      });
+  }, [storeId]);
 
   return (
-    <Container>      
-      <Grid container spacing={3}>
-        {notices.map((notice, idx) => (
-          <Grid item xs={12} key={idx}>
-            <Card>
-              <CardContent>
-                <Grid container justifyContent="space-between" alignItems="center">
-                  <Typography variant="h6">공지글입니다 !!</Typography>
-                  <Typography color="textSecondary">
-                    {notice.modifiedAt?.join('-') || notice.createdAt.join('-')}
-                  </Typography>
-                </Grid>
-                
-                {notice.images && notice.images.length > 0 && (
-                  <Box mt={2}>
-                    {notice.images.map((image: { url: string }, imgIdx: number) => (
-                      <Box mt={1} key={imgIdx}>
-                        <CardMedia
-                          component="img"
-                          image={image.url}
-                          alt={`이미지-${imgIdx}`}
-                        />
-                      </Box>
-                    ))}
-                  </Box>
-                )}
-                
-                <Typography variant="body1" color="textPrimary" mt={2}>
-                  {notice.content}
-                </Typography>
-              </CardContent>
-            </Card>
+    <Grid
+      xs={12}
+      sx={{
+        marginBottom: "30px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "30px",
+      }}
+    >
+      {notices &&
+        notices.map((notice, idx) => (
+          <Grid
+            key={idx}
+            sx={{
+              marginBottom: "20px",
+              width: "80%",
+              padding: "10px",
+              paddingBottom: "30px",
+              border: "1px solid rgba(0, 0, 0, 0.3)",
+              borderRadius: "5px",
+            }}
+          >
+            <Box>
+              {notice.createdAt[0]}.{notice.createdAt[1]}.{notice.createdAt[2]}
+            </Box>
+            <Box>{notice.images && <FeedImage images={notice.images} />}</Box>
+            <Box>{notice.content}</Box>
           </Grid>
         ))}
-      </Grid>
-    </Container>
+    </Grid>
   );
 }
 

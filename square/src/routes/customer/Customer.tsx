@@ -39,6 +39,7 @@ import MessageForm from "../customer/main/MessageForm";
 import Finish from "../customer/deal/Finish";
 import PickUp from "../customer/deal/PickUp";
 import Error from "./error/Error";
+import ReviewForm from "./order/ReviewForm";
 
 type data = {
   id: number;
@@ -268,6 +269,8 @@ export default function Customer() {
         <Route path="/message" element={<Message />} />
         <Route path="/finish" element={<Finish />} />
         <Route path="/message/:userId" element={<MessageForm />} />
+
+        <Route path="/review/write/:orderId" element={<ReviewForm />} />
 
         <Route path="/*" element={<Map />} />
       </Routes>

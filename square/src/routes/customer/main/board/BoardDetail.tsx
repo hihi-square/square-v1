@@ -192,7 +192,7 @@ function BoardDetail(props: any) {
               fontSize: "20px",
             }}
             onClick={() => {
-              navigate("/board");
+              navigate(-1);
             }}
           >
             <BiArrowBack />

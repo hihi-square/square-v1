@@ -21,7 +21,7 @@ export default function My() {
         <MyPage />
       </Grid>
       <Grid sx={{ height: "70px" }}></Grid>
-      <Footer now={1} />
+      <Footer now={5} />
     </Grid>
   );
 }

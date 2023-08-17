@@ -184,7 +184,6 @@ function BoardForm({ mode }: FormTypeProps) {
           width: "100vw",
           position: "fixed",
           zIndex: 5,
-          backgroundColor: "#eee",
           height: "70px",
         }}
       >
