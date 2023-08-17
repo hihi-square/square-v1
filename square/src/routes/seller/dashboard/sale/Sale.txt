@@ -1,7 +1,7 @@
 // =======================================IMPORT 구문========================================== //
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "redux/store";
+
 
 import {
   Unstable_Grid2 as Grid,
@@ -16,9 +16,8 @@ import {
   Typography,
   Pagination,
 } from "@mui/material";
-import { Iproduct, Icategory, Itype } from "modules/types";
 
-import ProductForm from "./ProductForm";
+import ProductForm from "../product/ProductForm";
 import "../../Seller.css";
 // ============================================================================================ //
 export default function Product() {

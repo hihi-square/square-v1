@@ -65,7 +65,7 @@ function MyDibs() {
       .catch((error) => {});
   }, []);
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box sx={{ padding: 3, width: "100%" }}>
       {/* Header */}
       <Box
         sx={{
@@ -100,7 +100,7 @@ function MyDibs() {
         </Box>
       </Box>
       {/* iteration */}
-      <Grid container>
+      <Grid xs={12} container>
         {dibs.map((dib, index) => (
           <Paper
             key={index}
@@ -113,9 +113,9 @@ function MyDibs() {
             {/* 전체 테두리 */}
             {/* : 버튼 쓰면 height 12vh 로 아니면 16vh  */}
             <Grid
-              xs={12}
               container
               sx={{
+                width: "100%",
                 py: 1,
                 borderBottom: 1,
                 borderColor: "#e7e7e7",
@@ -123,6 +123,7 @@ function MyDibs() {
               }}
             >
               <Grid
+                xs={12}
                 sx={{
                   display: "flex",
                   direction: "row",
@@ -133,14 +134,14 @@ function MyDibs() {
               >
                 {/* 이미지 */}
                 <Grid
-                  xs={3}
                   sx={{
+                    width: "30%",
                     display: "flex",
                     justifyContent: "center",
                     direction: "column",
                   }}
                 >
-                  <Grid xs={12} position={"relative"}>
+                  <Grid xs={12} position={"relative"} sx={{ width: "100%" }}>
                     {dib.logo != null ? (
                       <img
                         src={dib.logo}
@@ -202,10 +203,7 @@ function MyDibs() {
                   </Grid>
                 </Grid>
                 {/* 정보 */}
-                <Grid
-                  xs={9}
-                  sx={{ display: "felx", direction: "column", px: "10px" }}
-                >
+                <Grid sx={{ width: "70%", px: "10px" }}>
                   <Grid
                     sx={{
                       display: "flex",

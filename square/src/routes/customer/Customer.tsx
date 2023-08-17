@@ -15,6 +15,7 @@ import {
   pushOrderData,
   setMessageData,
   setNoticeData,
+  resetOrderData,
   RootState,
 } from "redux/redux";
 
@@ -32,6 +33,8 @@ import MyRegular from "./my/component/MyRegular";
 import MyReview from "./my/component/MyReview";
 import MyBoard from "./my/component/MyBoard";
 import MyDibs from "./my/component/MyDibs";
+import MyRank from "./my/component/MyRank";
+import MyPoint from "./my/component/MyPoint";
 import Main from "./main/Main";
 import Map from "./map/Map";
 import Message from "../customer/main/Message";
@@ -198,8 +201,15 @@ export default function Customer() {
             </Typography>
             <Divider sx={{ margin: "10px" }}></Divider>
             <Grid sx={{ display: "flex", width: "100%" }}>
-              <Button sx={{ flexGrow: 1 }}>확인</Button>
-              <Button sx={{ flexGrow: 1 }}>닫기</Button>
+              <Button
+                sx={{ flexGrow: 1 }}
+                onClick={() => {
+                  resetOrderData();
+                  navigate("/order");
+                }}
+              >
+                확인
+              </Button>
             </Grid>
 
             {orderMessage.length > 1 && (
@@ -261,6 +271,8 @@ export default function Customer() {
         <Route path="/myregular" element={<MyRegular />} />
         <Route path="/myreview" element={<MyReview />} />
         <Route path="/myboard" element={<MyBoard />} />
+        <Route path="/myrank" element={<MyRank />} />
+        <Route path="/mypoint" element={<MyPoint />} />
         <Route path="/deal/*" element={<Deal />} />
 
         <Route path="/pickup" element={<PickUp />} />

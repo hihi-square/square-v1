@@ -18,6 +18,11 @@
   background-color: whitesmoke;
 }
 
+.flexbox {
+  display: flex;
+  justify-content: center;
+}
+
 .button {
   height: 10%;
   display: flex;
