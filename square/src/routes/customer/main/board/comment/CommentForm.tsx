@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { REST_API } from "redux/redux";
+import {
+  Unstable_Grid2 as Grid,
+  Button,
+  TextareaAutosize,
+} from "@mui/material";
 
 interface CommentFormProps {
   parentId: number;
-  onCommentSubmit: (event : any) => void;
+  onCommentSubmit: (event: any) => void;
   type: string;
   text: string;
 }
@@ -21,7 +26,7 @@ function CommentForm({
   const handleSuccessSubmit = (event: any) => {
     onCommentSubmit(event); // 부모 컴포넌트에 댓글 제출 완료를 알림
     setComment(""); // 댓글 입력 필드 초기화
-  }
+  };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -43,7 +48,7 @@ function CommentForm({
           Authorization: `Bearer ${token}`,
         },
         data: body,
-      }).then(()=>{
+      }).then(() => {
         handleSuccessSubmit(event);
       });
     } else if (type === "recomment") {
@@ -60,7 +65,7 @@ function CommentForm({
           Authorization: `Bearer ${token}`,
         },
         data: body,
-      }).then(()=>{
+      }).then(() => {
         handleSuccessSubmit(event);
       });
     } else if (type === "update") {
@@ -77,21 +82,43 @@ function CommentForm({
           Authorization: `Bearer ${token}`,
         },
         data: body,
-      }).then(()=>{
+      }).then(() => {
         handleSuccessSubmit(event);
       });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea
+    <Grid
+      sx={{
+        display: "flex",
+        position: "relative",
+        backgroundColor: "gray",
+        width: "100%",
+      }}
+    >
+      <TextareaAutosize
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder={text}
+        minRows={3}
+        style={{
+          width: "100%",
+          resize: "none",
+          padding: "10px 60px 10px 10px",
+        }}
       />
-      <button type="submit">{text}</button>
-    </form>
+      <Button
+        type="submit"
+        onClick={handleSubmit}
+        sx={{
+          position: "absolute",
+          right: 0,
+        }}
+      >
+        {text}
+      </Button>
+    </Grid>
   );
 }
 

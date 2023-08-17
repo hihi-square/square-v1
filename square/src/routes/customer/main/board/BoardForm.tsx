@@ -11,41 +11,64 @@ import {
   Box,
   Button,
   Input,
-  TextareaAutosize} from "@mui/material";
+  TextareaAutosize,
+} from "@mui/material";
 // import { useNavigate } from "react-router-dom";
 import Footer from "routes/customer/Footer";
+import { BiArrowBack } from "react-icons/bi";
 
 // type PostImage = {
 //   url:string;
 //   thumb:string;
 // }
+
+type UserInfo = {
+  bcode: number;
+  depth: number;
+  emdName: string;
+  fullName: string;
+  sidoName: string;
+  siggName: string;
+  usrId: number;
+  usrNick: string;
+};
+
 interface FormTypeProps {
   mode: string;
 }
 function BoardForm({ mode }: FormTypeProps) {
   const token = sessionStorage.getItem("accessToken");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const { id } = useParams();
 
-  
-  useEffect(() => {    
-    if (mode === 'update') {
+  useEffect(() => {
+    const storedUserInfo = sessionStorage.getItem("userInfo");
+
+    if (storedUserInfo) {
+      const parsedUserInfo: UserInfo = JSON.parse(storedUserInfo);
+
+      setUserInfo(parsedUserInfo);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (mode === "update") {
       // 기존 데이터를 불러와서 표시
       axios({
-        url:`${REST_API}community/update/${id}`,
-        method:"GET",
+        url: `${REST_API}community/update/${id}`,
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       })
-        .then(({data}) => {
+        .then(({ data }) => {
           setTitle(data.title);
           setContent(data.content);
         })
-        .catch(error => {
-        });
+        .catch((error) => {});
     }
   }, [mode, id]);
 
@@ -71,7 +94,7 @@ function BoardForm({ mode }: FormTypeProps) {
 
   // // 이미지를 업로드합니다.
   // const postImage = () => {
-   
+
   // };
 
   // // 이미지 파일을 올리면 파일을 바꿉니다.
@@ -102,11 +125,12 @@ function BoardForm({ mode }: FormTypeProps) {
 
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
+    if (title.trim() === "" || content.trim() === "") return;
     // 게시글 데이터와 사진 업로드 처리
     if (mode === "write") {
       const postData = {
         boardId: 1,
-        bcode: 3020011300,
+        bcode: userInfo?.bcode,
         title,
         content,
         images: [],
@@ -152,93 +176,109 @@ function BoardForm({ mode }: FormTypeProps) {
   };
 
   return (
-    <Grid
-    container
-    xs={12}
-    direction="column"
-    sx={{
-      backgroundColor: "white",
-    }}
-  >
-    <Grid container xs={12} justifyContent="center">
-    <Grid xs={9}>
-        <Box component="form">
-          <Box sx={{ height: "130px" }}>
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: 400 }}
-              gutterBottom
-            >
-              제목
-            </Typography>
-            <TextField
-              placeholder="제목"
-              fullWidth
-              value={title}
-              onChange={handleTitle}
-              autoComplete="title"
-            />
-          </Box>
-          <Box sx={{ height: "130px" }}>
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: 400 }}
-              gutterBottom
-            >
-              내용
-            </Typography>
-            <TextareaAutosize
-              placeholder="내용"
-              autoComplete="content"
-              value={content}
-              onChange={handleContent}
-            ></TextareaAutosize>
-          </Box>
-          <Box sx={{ height: "130px" }}>
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: 400 }}
-              gutterBottom
-            >
-              사진
-            </Typography>
-            <Input
-              type="file"
-              id="photos"
-              inputProps={{ multiple: true }}
-              onChange={handlePhotoChange}
-              fullWidth
-            />
-        </Box>
-        </Box>
-      </Grid>
-      <Grid container xs={9} justifyContent="center">
-        <Grid xs={12}>
+    <Grid container xs={12} direction="column">
+      <Grid
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          width: "100vw",
+          position: "fixed",
+          zIndex: 5,
+          backgroundColor: "#eee",
+          height: "70px",
+        }}
+      >
+        <Grid xs={2} sx={{ display: "flex", justifyContent: "end" }}>
           <Button
-            onClick={handleFormSubmit}
-            variant="contained"
-            color="secondary"
-            sx={{ height: "60px" }}
-            fullWidth
+            sx={{
+              fontSize: "20px",
+            }}
+            onClick={() => {
+              navigate("/board");
+            }}
           >
-            <Typography
-              variant="h5"
-              sx={{
-                color: "red",
-                fontWeight: 700,
-                textAlign: "center",
-              }}
-            >
-              {mode === "write" ? "작성" : "수정"}
-            </Typography>
+            <BiArrowBack />
           </Button>
         </Grid>
+        <Typography variant="h6">글 작성</Typography>
+      </Grid>
+      <Grid
+        container
+        xs={12}
+        justifyContent="center"
+        sx={{
+          marginTop: "100px",
+        }}
+      >
+        <Grid xs={9}>
+          <Box component="form">
+            <Box
+              sx={{
+                marginBottom: "20PX",
+              }}
+            >
+              <TextField
+                placeholder="제목"
+                fullWidth
+                value={title}
+                onChange={handleTitle}
+                autoComplete="title"
+              />
+            </Box>
+            <Box sx={{ height: "40vh", marginBottom: "15px" }}>
+              <TextareaAutosize
+                placeholder="내용"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  boxSizing: "border-box",
+                  padding: "15px",
+                }}
+                value={content}
+                onChange={handleContent}
+                autoComplete="content"
+              />
+            </Box>
+            <Box sx={{ height: "130px" }}>
+              <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
+                사진
+              </Typography>
+              <Input
+                type="file"
+                id="photos"
+                inputProps={{ multiple: true }}
+                onChange={handlePhotoChange}
+                fullWidth
+              />
+            </Box>
+          </Box>
+        </Grid>
+        <Grid container xs={9} justifyContent="center">
+          <Grid xs={12}>
+            <Button
+              onClick={handleFormSubmit}
+              variant="contained"
+              sx={{ height: "60px" }}
+              fullWidth
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  color: "white",
+                  fontWeight: 700,
+                  textAlign: "center",
+                }}
+              >
+                {mode === "write" ? "작성" : "수정"}
+              </Typography>
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid container xs={12} justifyContent="center">
+        <Footer now={3} />
       </Grid>
     </Grid>
-    <Grid container xs={12} justifyContent="center">
-      <Footer now={6} />
-    </Grid>
-  </Grid>
   );
 }
 

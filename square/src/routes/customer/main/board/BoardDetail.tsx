@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
+import { BiArrowBack } from "react-icons/bi";
+import { FaBars } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { Grid, Typography, Avatar, Button, Divider, Box } from "@mui/material";
+import {
+  Unstable_Grid2 as Grid,
+  Typography,
+  Avatar,
+  Button,
+  Divider,
+  Box,
+} from "@mui/material";
 import Footer from "routes/customer/Footer";
 import CommentForm from "./comment/CommentForm"; // CommentForm 컴포넌트의 경로를 적절히 수정
 import Comment from "./comment/Comment";
@@ -85,6 +94,7 @@ function BoardDetail(props: any) {
   const [post, setPost] = useState<PostDetail>();
   const [isUpdate, setIsUpdate] = useState<boolean>();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [headerToggleBox, setHeaderToggleBox] = useState<Boolean>(false);
 
   useEffect(() => {
     const parsedId = Number(urlParams.id);
@@ -126,12 +136,16 @@ function BoardDetail(props: any) {
     });
   };
 
+  const handleHeaderToggleBtn = () => {
+    setHeaderToggleBox(!headerToggleBox);
+  };
+
   const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
 
   const formatTime = (createdAt: number[]) => {
     const [year, month, day, hour, minute, second] = createdAt;
 
-    const formattedDate = `${year}-${getZeroNum(month)}-${getZeroNum(day)}`;
+    const formattedDate = `${year}.${getZeroNum(month)}.${getZeroNum(day)}`;
     const formattedTime = `${getZeroNum(hour)}:${getZeroNum(minute)}:${
       second ? getZeroNum(second) : "00"
     }`;
@@ -155,109 +169,246 @@ function BoardDetail(props: any) {
   };
 
   return (
-    <Grid container spacing={3} style={{ padding: "20px" }}>
-      <Button
+    <Grid
+      sx={{
+        width: "100%",
+      }}
+    >
+      <Grid
         sx={{
-          width: "100%",
-          height: "60px",
           display: "flex",
-          flexDirection: "column",
-        }}
-        onClick={() => {
-          navigate("/board");
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100vw",
+          position: "fixed",
+          zIndex: 5,
+          backgroundColor: "#eee",
+          height: "70px",
         }}
       >
-        &lt;
-      </Button>
-      <Grid item xs={12}>
-        <Typography variant="h5">{post && post.title}</Typography>
-        {post && post.userId === userInfo?.usrId && (
-          <Box>
-            <Button
-              sx={{
-                width: "100%",
-                height: "60px",
-                display: "flex",
-                flexDirection: "column",
-              }}
-              onClick={() => {
-                navigate(`/board/update/${id}`);
-              }}
-            >
-              수정
-            </Button>
-            <Button
-              sx={{
-                width: "100%",
-                height: "60px",
-                display: "flex",
-                flexDirection: "column",
-              }}
-              onClick={() => {
-                handlePostDelete();
-              }}
-            >
-              삭제
-            </Button>
-          </Box>
-        )}
-        <Grid item container spacing={1} alignItems="center">
-          <Grid item>
-            <Avatar src={post && post.userProfile} />
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle1">
-              {post && post.userNickname}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">
-              {post && formatTime(post.createdAt)}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">
-              조회수: {post && post.viewCnt}
-            </Typography>
-          </Grid>
-          <Grid item xs>
-            <Typography align="right">{post && post.commentCnt}</Typography>
-          </Grid>
+        <Grid xs={1} sx={{ display: "flex", justifyContent: "end" }}>
+          <Button
+            sx={{
+              fontSize: "20px",
+            }}
+            onClick={() => {
+              navigate("/board");
+            }}
+          >
+            <BiArrowBack />
+          </Button>
         </Grid>
-        <Divider style={{ margin: "10px 0" }} />
-        <Box minHeight="100px">
-          <Typography variant="body1" paragraph>
-            {post && post.content}
+        <Grid xs={8}>
+          <Typography variant="h6">{userInfo?.fullName}</Typography>
+        </Grid>
+        <Grid xs={1} sx={{ display: "flex", justifyContent: "end" }}>
+          <Button
+            sx={{
+              fontSize: "20px",
+            }}
+            onClick={() => {
+              handleHeaderToggleBtn();
+            }}
+          >
+            <FaBars />
+          </Button>{" "}
+        </Grid>
+      </Grid>
+      {headerToggleBox && (
+        <Grid
+          sx={{
+            position: "fixed",
+            zIndex: 4,
+            backgroundColor: "#F3F3F3",
+            right: 0,
+            width: "150px",
+            marginTop: "70px",
+            borderRadius: "2px 2px 10px 10px",
+          }}
+        >
+          {post && post.userId === userInfo?.usrId && (
+            <Box>
+              <Button
+                sx={{
+                  width: "100%",
+                  height: "60px",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+                onClick={() => {
+                  navigate(`/board/update/${id}`);
+                }}
+              >
+                수정
+              </Button>
+              <Button
+                sx={{
+                  width: "100%",
+                  height: "60px",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+                onClick={() => {
+                  handlePostDelete();
+                }}
+              >
+                삭제
+              </Button>{" "}
+            </Box>
+          )}
+          <Button
+            sx={{
+              width: "100%",
+              height: "60px",
+              display: "flex",
+              flexDirection: "column",
+            }}
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            새로고침
+          </Button>
+        </Grid>
+      )}
+      <Grid
+        container
+        // spacing={3}
+        style={{ padding: "20px", marginTop: "70px" }}
+      >
+        <Grid xs={12}>
+          <Typography
+            variant="h5"
+            sx={{
+              marginBottom: "20px",
+            }}
+          >
+            {post && post.title}
           </Typography>
-        </Box>
-      </Grid>
-
-      <Grid>
-        {post?.images &&
-          post.images.map((photo) => <img src={photo.url}></img>)}
-      </Grid>
-      <Grid item xs={12}>
-        <Divider style={{ margin: "20px 0" }} />
-      </Grid>
-
-      <Grid item xs={12}>
-        {post &&
-          post.comments.map((comment) => (
-            <Comment
-              comment={comment}
-              commentKey={comment.commentId}
-              onCommentSubmit={handleCommentSubmit}
-              loginUserId={userInfo?.usrId || 0}
-            ></Comment>
-          ))}
-        {post && (
-          <CommentForm
-            parentId={post.postId}
-            onCommentSubmit={handleCommentSubmit}
-            type="post"
-            text="댓글 작성"
-          />
+          <Grid
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Grid
+              spacing={1}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: "10px",
+                }}
+              >
+                <Avatar
+                  src={post && post.userProfile}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+              </Grid>
+              <Grid>
+                <Box>
+                  <Typography variant="subtitle1">
+                    {post && post.userNickname}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                  }}
+                >
+                  <Grid
+                    sx={{
+                      marginRight: "10px",
+                    }}
+                  >
+                    <Typography variant="body2">
+                      {post && formatTime(post.createdAt)}
+                    </Typography>
+                  </Grid>
+                  <Grid>
+                    <Typography variant="body2">
+                      조회수: {post && post.viewCnt}
+                    </Typography>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid>
+              <Box>
+                <Typography
+                  variant="body1"
+                  style={{
+                    // backgroundColor: "#eee",
+                    borderRadius: "50%",
+                    width: "40px",
+                    height: "40px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    border: "1px solid rgba(0, 0, 0, 0.2)",
+                  }}
+                >
+                  {post?.commentCnt}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+          <Divider style={{ margin: "20px 0 30px 0" }} />
+          <Box minHeight="100px">
+            <Typography variant="body1" paragraph>
+              {post && post.content}
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid
+          sx={{
+            width: "100%",
+          }}
+        >
+          {post?.images &&
+            post.images.map((photo) => <img src={photo.url}></img>)}
+        </Grid>
+        {post && post.comments.length > 0 && (
+          <Grid xs={12}>
+            <Divider style={{ marginTop: "20px" }} />
+          </Grid>
         )}
+        <Grid
+          xs={12}
+          sx={{
+            marginBottom: "100px",
+          }}
+        >
+          {post &&
+            post.comments.map((comment) => (
+              <Comment
+                comment={comment}
+                commentKey={comment.commentId}
+                onCommentSubmit={handleCommentSubmit}
+                loginUserId={userInfo?.usrId || 0}
+                depth={1}
+              ></Comment>
+            ))}
+          {post && (
+            <CommentForm
+              parentId={post.postId}
+              onCommentSubmit={handleCommentSubmit}
+              type="post"
+              text="댓글 작성"
+            />
+          )}
+        </Grid>
       </Grid>
       <Footer now={3} />
     </Grid>
