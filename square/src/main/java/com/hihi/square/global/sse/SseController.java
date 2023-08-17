@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/notification")
 public class SseController {
-	private final SseService notificationService;
+	private final SseService sseService;
 	private final UserService userService;
 
 	// @ApiOperation(value = "알림 구독", notes = "알림을 구독한다.")
@@ -39,13 +39,13 @@ public class SseController {
 		String uName = authentication.getName();
 		//UserId Integer -> Long type으로 변경 필요
 		Long userId = userService.findByUid(uName).get().getUsrId().longValue();
-		return notificationService.subscribe(userId, lastEventId);
+		return sseService.subscribe(userId, lastEventId);
 	}
 
 	//알림 전체 조회
 	@GetMapping("/all")
 	public ResponseEntity<CommonResponseDto<?>> getAllNotification() {
-		List<Notification> notificationList = notificationService.findAll();
+		List<Notification> notificationList = sseService.findAll();
 		List<NotificationResponseDto> responseList = new ArrayList<>();
 		for (Notification notification : notificationList) {
 			responseList.add(new NotificationResponseDto(notification));
@@ -59,6 +59,6 @@ public class SseController {
 	public void sendData(@PathVariable Integer userId) {
 		User user = userService.findByUsrId(userId).get();
 		// User user = userService.findByUid(name).get();
-		notificationService.send(user, NotificationType.READY, "test", "test", "data");
+		sseService.send(user, NotificationType.READY, "test", "test", "data");
 	}
 }

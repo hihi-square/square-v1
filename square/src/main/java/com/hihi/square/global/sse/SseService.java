@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.hihi.square.domain.dm.dto.response.DMResponseDto;
+import com.hihi.square.domain.dm.entity.DM;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.global.sse.dto.NotificationResponseDto;
 import com.hihi.square.global.sse.entity.Notification;
@@ -83,9 +85,9 @@ public class SseService {
 	}
 
 	// @TransactionalEventListener
-	public void send(User receiver, NotificationType notificationType, String type, String content, String url) {
+	public void send(User receiver, NotificationType notificationType, String type, String content, String data) {
 		Notification notification = notificationRepository.save(
-			createNotification(receiver, notificationType, content, url));
+			createNotification(receiver, notificationType, content, data));
 
 		String receiverId = String.valueOf(receiver.getUsrId());
 		String eventId = receiverId + "_" + System.currentTimeMillis();
@@ -98,13 +100,34 @@ public class SseService {
 		);
 	}
 
+	public void sendMessage(User receiver, String type, String content,
+		String data, DM dm) {
+		String receiverId = String.valueOf(receiver.getUsrId());
+		String eventId = receiverId + "_" + System.currentTimeMillis();
+		Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverId);
+
+		//응답 쪽지 객체 생성
+		DMResponseDto dmResponseDto = DMResponseDto.builder()
+			.id(dm.getId())
+			.content(dm.getContent())
+			.user(data)
+			.isRead(dm.getIsRead())
+			.build();
+		emitters.forEach(
+			(key, emitter) -> {
+				emitterRepository.saveEventCache(key, dm);
+				sendNotification(emitter, eventId, key, type, dmResponseDto);
+			}
+		);
+	}
+
 	private Notification createNotification(User receiver, NotificationType notificationType, String content,
-		String url) {
+		String data) {
 		return Notification.builder()
 			.receiver(receiver)
 			.notificationType(notificationType)
 			.content(content)
-			.url(url)
+			.data(data)
 			.isRead(false)
 			.build();
 	}

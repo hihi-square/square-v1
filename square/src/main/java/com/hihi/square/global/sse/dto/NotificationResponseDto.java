@@ -3,12 +3,11 @@ package com.hihi.square.global.sse.dto;
 import com.hihi.square.global.sse.entity.Notification;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-// @Schema(description = "알림 Dto")
-@Getter
-@Setter
+// @Getter
+// @Setter
+@Data
 public class NotificationResponseDto {
 	private Long id;
 	private String content;
@@ -19,8 +18,7 @@ public class NotificationResponseDto {
 	public NotificationResponseDto(Notification notification) {
 		this.id = notification.getId();
 		this.content = notification.getContent();
-		this.storeName = notification.getUrl();
+		this.storeName = notification.getData();
 		this.isRead = notification.getIsRead();
 	}
-
 }

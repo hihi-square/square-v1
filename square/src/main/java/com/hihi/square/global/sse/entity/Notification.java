@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "notification")
-@EqualsAndHashCode(of = "id", callSuper=false)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Notification extends BaseTime {
 
 	@Id
@@ -39,7 +39,7 @@ public class Notification extends BaseTime {
 	private String content;
 
 	@Column(name = "related_url")
-	private String url;
+	private String data;
 
 	@Column(name = "is_read", nullable = false)
 	private Boolean isRead;
@@ -54,12 +54,12 @@ public class Notification extends BaseTime {
 	private User receiver;
 
 	@Builder
-	public Notification(User receiver, NotificationType notificationType, String content, String url,
+	public Notification(User receiver, NotificationType notificationType, String content, String data,
 		Boolean isRead) {
 		this.receiver = receiver;
 		this.notificationType = notificationType;
 		this.content = content;
-		this.url = url;
+		this.data = data;
 		this.isRead = isRead;
 	}
 }
