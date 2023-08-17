@@ -48,7 +48,6 @@ public class CommentService {
 						.depth(c.getDepth())
 						.build()
 				);
-				log.info("depth: {}", c.getDepth());
 			}
 			result.add(
 				CommentListDto.builder()
@@ -64,7 +63,6 @@ public class CommentService {
 					.depth(comment.getDepth())
 					.build()
 			);
-			log.info("depth2: {}", comment.getDepth());
 		}
 		return result;
 	}
