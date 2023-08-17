@@ -25,8 +25,12 @@ interface CommentProps {
   loginUserId: number;
 }
 
-
-function Comment({ comment, commentKey, onCommentSubmit, loginUserId }: CommentProps) {
+function Comment({
+  comment,
+  commentKey,
+  onCommentSubmit,
+  loginUserId,
+}: CommentProps) {
   const token = sessionStorage.getItem("accessToken");
 
   useEffect(() => {}, []);

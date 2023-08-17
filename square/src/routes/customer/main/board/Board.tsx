@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
@@ -126,7 +127,7 @@ function Board() {
                 >
                   {post.thumbnail && post.thumbnail.url && (
                     <Box style={{ marginRight: "10px" }}>
-                      <img src={post.thumbnail.url} width={50} />
+                      <img src={post.thumbnail.url} width={50} alt="썸네일" />
                     </Box>
                   )}
                   <Box style={{ flexGrow: 1 }}>

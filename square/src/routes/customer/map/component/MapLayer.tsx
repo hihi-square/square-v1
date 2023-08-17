@@ -250,24 +250,29 @@ export default function MapLayer() {
 
   // 가게 데이터를 모두 핀으로 만들기 위해, 핀 좌표를 설정합니다.
   // 또한 핀의 데이터를 바탕으로 지도의 레벨을 변화시킵니다.
+
   const makeStoreMarker = (datas: any[]) => {
-    const tmpArray = [];
-    const map = mapRef.current;
-    const bound = new window.kakao.maps.LatLngBounds();
-
-    for (const data of datas) {
-      const coord = { lat: data.latitude, lng: data.longitude };
-
-      tmpArray.push(coord);
-    }
-
-    tmpArray.forEach((point) => {
-      bound.extend(new window.kakao.maps.LatLng(point.lat, point.lng));
-    });
-    if (map) map.setBounds(bound);
-
     setStoreMarker(datas);
   };
+
+  // const makeStoreMarker = (datas: any[]) => {
+  //   const tmpArray = [];
+  //   const map = mapRef.current;
+  //   const bound = new window.kakao.maps.LatLngBounds();
+
+  //   for (const data of datas) {
+  //     const coord = { lat: data.latitude, lng: data.longitude };
+
+  //     tmpArray.push(coord);
+  //   }
+
+  //   tmpArray.forEach((point) => {
+  //     bound.extend(new window.kakao.maps.LatLng(point.lat, point.lng));
+  //   });
+  //   if (map) map.setBounds(bound);
+
+  //   setStoreMarker(datas);
+  // };
 
   // 내 구역을 설정하기 위해 폴리곤이 나오는 화면으로 변경합니다.
   const handleBoundary = () => {

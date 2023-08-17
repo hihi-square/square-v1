@@ -21,6 +21,7 @@ import {
 import List from "./list/List";
 import Store from "./store/Store";
 import Board from "./main/board/Board";
+import BoardForm from "./main/board/BoardForm";
 import BoardDetail from "./main/board/BoardDetail";
 import Chat from "./chat/chat";
 import MyPage from "./my/My";
@@ -30,6 +31,7 @@ import MyInfo from "./my/component/MyInfo";
 import MyRegular from "./my/component/MyRegular";
 import MyReview from "./my/component/MyReview";
 import MyBoard from "./my/component/MyBoard";
+import MyDibs from "./my/component/MyDibs";
 import Main from "./main/Main";
 import Map from "./map/Map";
 import Message from "../customer/main/Message";
@@ -37,7 +39,6 @@ import MessageForm from "../customer/main/MessageForm";
 import Finish from "../customer/deal/Finish";
 import PickUp from "../customer/deal/PickUp";
 import Error from "./error/Error";
-import BoardForm from "./main/board/BoardForm";
 
 type data = {
   id: number;
@@ -255,6 +256,7 @@ export default function Customer() {
 
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/myinfo" element={<MyInfo />} />
+        <Route path="/mydibs" element={<MyDibs />} />
 
         <Route path="/myregular" element={<MyRegular />} />
         <Route path="/myreview" element={<MyReview />} />

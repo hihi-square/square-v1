@@ -15,18 +15,66 @@ import "App.css";
 import Category from "./Category";
 
 const recommend = [
-  "그제의 추천",
-  "어제의 추천",
-  "오늘의 추천",
-  "내일의 추천",
-  "모레의 추천",
-  "글피의 추천",
-  "제경의 추천",
-  "지희의 추천",
-  "다희의 추천",
-  "동현의 추천",
-  "세훈의 추천",
-  "소연의 추천",
+  "아메리카노",
+  "아이스아메리카노",
+  "카페라떼",
+  "카페모카",
+  "당근주스",
+  "사과주스",
+  "토마토주스",
+  "흑당버블티",
+  "당근케이크",
+  "초코케이크",
+  "말차케이크",
+  "얼그레이쉬폰케이크",
+  "쉬림프샐러드",
+  "치킨샐러드",
+  "연어샐러드",
+  "참치샐러드",
+  "로티세리치킨샐러드",
+  "스테이크샐러드",
+  "에그샐러드",
+  "콥샐러드",
+  "BLT샐러드",
+  "아보카도샐러드",
+  "연어초밥",
+  "새우초밥",
+  "고등어초밥",
+  "후토마키",
+  "광어초밥",
+  "도미초밥",
+  "장어초밥",
+  "계란초밥",
+  "전갱이초밥",
+  "마라떡볶이",
+  "짜장떡볶이",
+  "로제떡볶이",
+  "물만두",
+  "군만두",
+  "야끼소바",
+  "오꼬노미야끼",
+  "물국수",
+  "비빔국수",
+  "비빔냉면",
+  "물냉면",
+  "라면",
+  "만두라면",
+  "해장라면",
+  "떡라면",
+  "순대",
+  "치즈버거",
+  "불고기버거",
+  "오징어버거",
+  "짜장면",
+  "간짜장",
+  "짬뽕",
+  "차돌짬뽕",
+  "고추짜장",
+  "잡채밥",
+  "고추잡채",
+  "유산슬",
+  "팔보채",
+  "멘보샤",
 ];
 
 export default function Search() {
@@ -105,13 +153,14 @@ export default function Search() {
           textAlign: "left",
         }}
       >
-        최근 검색 목록
+        검색어 추천
       </Typography>
       <Box
         sx={{
           display: "flex",
           paddingTop: "5px",
           maxWidth: "90%",
+          whiteSpace: "nowrap",
           overflowX: "auto",
           "&::-webkit-scrollbar": {
             display: "none",
@@ -121,26 +170,20 @@ export default function Search() {
       >
         {recomArr &&
           recomArr.map((chip, idx) => (
-            <Grid key={idx}>
-              <Chip
-                label={chip}
-                size="small"
-                variant="outlined"
-                sx={{
-                  padding: "0px 0px",
-                }}
-              />
-              <Box sx={{ padding: "0px 5px" }}></Box>
-            </Grid>
+            <Chip
+              key={idx}
+              label={chip}
+              size="small"
+              variant="outlined"
+              onClick={() => {
+                navigate(`/list/${chip}`);
+              }}
+              sx={{ margin: "0px 5px" }}
+            />
           ))}
       </Box>
 
-      <Grid
-        container
-        xs={12}
-        sx={{ paddingTop: "10px" }}
-        justifyContent="center"
-      >
+      <Grid container xs={12} justifyContent="center">
         <Category />
       </Grid>
     </Grid>

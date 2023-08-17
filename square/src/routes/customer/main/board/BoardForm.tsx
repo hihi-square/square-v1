@@ -4,14 +4,13 @@ import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import {   
+import {
   Unstable_Grid2 as Grid,
   Typography,
   TextField,
   Box,
   Button,
   Input,
-  // Divider, 
   TextareaAutosize} from "@mui/material";
 // import { useNavigate } from "react-router-dom";
 import Footer from "routes/customer/Footer";
@@ -23,7 +22,7 @@ import Footer from "routes/customer/Footer";
 interface FormTypeProps {
   mode: string;
 }
-function BoardForm({mode}: FormTypeProps) {
+function BoardForm({ mode }: FormTypeProps) {
   const token = sessionStorage.getItem("accessToken");
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -31,8 +30,7 @@ function BoardForm({mode}: FormTypeProps) {
   const { id } = useParams();
 
   
-  useEffect(() => {
-    
+  useEffect(() => {    
     if (mode === 'update') {
       // 기존 데이터를 불러와서 표시
       axios({
@@ -56,7 +54,6 @@ function BoardForm({mode}: FormTypeProps) {
   // const [selectedPhotos, setSelectedPhotos] = useState([]);
   // const [fileName, setFileName] = useState<string>("");
   // const [image, setImage] = useState<string | undefined>("");
-
 
   // // dataURL을 Blob으로 바꿉니다.
   // const dataURLToBlob = (dataURL: string) => {
@@ -84,13 +81,11 @@ function BoardForm({mode}: FormTypeProps) {
 
   //   if (files) {
   //     // 여기
-     
   //     }else {
   //   setImage("");
   //   setFileName("");
   // }
   // };
-
 
   const handleTitle = (e: any) => {
     setTitle(e.target.value);
@@ -114,13 +109,13 @@ function BoardForm({mode}: FormTypeProps) {
         bcode: 3020011300,
         title,
         content,
-        images:[],
-        latitude:36.3481000221941,
-        longitude:127.29858777113043
-    }
-  
+        images: [],
+        latitude: 36.3481000221941,
+        longitude: 127.29858777113043,
+      };
+
       // console.log("선택된 사진:", selectedPhotos);
-  
+
       // 서버로 데이터 전송 및 처리 로직 추가
       axios({
         url: `${REST_API}community`,
@@ -129,20 +124,19 @@ function BoardForm({mode}: FormTypeProps) {
           Authorization: `Bearer ${token}`,
         },
         data: postData,
-      }).then(({data})=>{
+      }).then(({ data }) => {
         navigate(`/board/${data.id}`);
       });
-
     } else if (mode === "update") {
       const postData = {
         postId: id,
         title,
         content,
-        images:[],
-    }
-  
+        images: [],
+      };
+
       // console.log("선택된 사진:", selectedPhotos);
-  
+
       // 서버로 데이터 전송 및 처리 로직 추가
       axios({
         url: `${REST_API}community`,
@@ -151,12 +145,10 @@ function BoardForm({mode}: FormTypeProps) {
           Authorization: `Bearer ${token}`,
         },
         data: postData,
-      }).then(()=>{
+      }).then(() => {
         navigate(`/board/${id}`);
       });
-
     }
-    
   };
 
   return (
