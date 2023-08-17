@@ -1,22 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "animate.css";
 import { Unstable_Grid2 as Grid } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { setPage } from "redux/redux";
-import { useParams } from "react-router-dom";
+
 import CategoryStore from "./component/CategoryStore";
-import Header from "../Header";
+import Header from "./component/Header";
 import Footer from "../Footer";
 
 export default function List() {
-  const { category } = useParams<{ category?: string }>();
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setPage("가게 목록"));
-  }, [dispatch, category]);
-
   return (
     <Grid
       container
@@ -26,13 +16,13 @@ export default function List() {
         backgroundColor: "white",
       }}
     >
-      <Header cateNum={Number(category)} setAni={null} />
+      <Header />
+      <Grid xs={12} sx={{ height: "60px" }}></Grid>
       <Grid container xs={12} justifyContent="center">
         <CategoryStore />
       </Grid>
-      <Grid container xs={12} justifyContent="center">
-        <Footer now={6} />
-      </Grid>
+      <Grid xs={12} sx={{ height: "80px" }}></Grid>
+      <Footer now={2} />
     </Grid>
   );
 }

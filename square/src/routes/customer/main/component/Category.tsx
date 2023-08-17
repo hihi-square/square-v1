@@ -1,21 +1,117 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSticky } from "redux/redux";
 import {
   Unstable_Grid2 as Grid,
-  // Typography,
+  Typography,
   // TextField,
-  // Box,
+  Paper,
   // Button,
-  // Divider,
   ImageList,
   ImageListItem,
   ImageListItemBar,
-  Paper,
 } from "@mui/material";
 
 import "App.css";
+
+const itemData = [
+  [
+    {
+      img: "/img/categories/drink.png",
+      title: "음료",
+      rows: 2,
+      cols: 2,
+      rep: true,
+    },
+    {
+      img: "/img/categories/coffee.png",
+      title: "커피",
+      cols: 2,
+    },
+    {
+      img: "/img/categories/juice.png",
+      title: "쥬스",
+    },
+    {
+      img: "/img/categories/tea.png",
+      title: "버블티",
+    },
+  ],
+  [
+    {
+      img: "/img/categories/cookie.png",
+      title: "쿠키",
+      rows: 2,
+    },
+    {
+      img: "/img/categories/bakery.png",
+      title: "베이커리",
+      rows: 2,
+      cols: 2,
+      rep: true,
+    },
+    {
+      img: "/img/categories/bread.png",
+      title: "빵",
+    },
+    {
+      img: "/img/categories/cake.png",
+      title: "케이크",
+    },
+  ],
+  [
+    {
+      img: "/img/categories/salad.png",
+      title: "샐러드",
+      cols: 2,
+    },
+    {
+      img: "/img/categories/fresh.png",
+      title: "신선식품",
+      rows: 2,
+      cols: 2,
+      rep: true,
+    },
+    {
+      img: "/img/categories/sushi.png",
+      title: "초밥",
+      cols: 2,
+    },
+  ],
+  [
+    {
+      img: "/img/categories/dduck.png",
+      title: "떡볶이",
+    },
+    {
+      img: "/img/categories/cook.png",
+      title: "조리",
+      rows: 2,
+      cols: 2,
+      rep: true,
+    },
+    {
+      img: "/img/categories/burger.png",
+      title: "버거",
+    },
+    {
+      img: "/img/categories/tacho.png",
+      title: "타코야끼",
+    },
+    {
+      img: "/img/categories/kkochi.png",
+      title: "꼬치",
+    },
+  ],
+];
+
+const textData = [
+  ["카페/음료", "커피, 차, 주스, 버블티..."],
+  ["베이커리", "쿠키, 빵, 케잌, 마카롱..."],
+  ["조리식품", "분식, 길거리음식, 패스트푸드..."],
+  ["신선식품", "샐러드, 샌드위치, 회..."],
+];
 
 export default function Category() {
   const navigate = useNavigate();
@@ -41,59 +137,104 @@ export default function Category() {
     };
   }, [dispatch]);
 
-  type CategoryType = {
-    id: number;
-    name: string;
-    image: string;
+  const handleClick = (idx: number) => {
+    navigate(`/list/${idx + 1}`);
   };
 
-  // 카테고리 정보를 저장할 상태 변수
-  const [categories] = useState<Array<CategoryType>>([
-    { id: 1, name: "카페/음료", image: "drink.png" },
-    { id: 2, name: "베이커리", image: "bake.png" },
-    { id: 3, name: "분식/간식", image: "snack.png" },
-    { id: 4, name: "샐러드", image: "salad.png" },
-  ]); // 변경된 이름 사용
-
-  const handleCategoryClick = (categoryValue: Number, pageName: String) => {
-    navigate(`/list/${categoryValue}`);
-  };
+  function srcset(image: string, size: number, rows = 1, cols = 1) {
+    return {
+      src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
+      srcSet: `${image}?w=${size * cols}&h=${
+        size * rows
+      }&fit=crop&auto=format&dpr=2 2x`,
+    };
+  }
 
   return (
-    <Grid xs={11} mt={2} id="stickyCategory">
-      <Paper elevation={6}>
-        <ImageList sx={{ width: "100%", height: "auto", margin: 0 }}>
-          {categories.map((item) => (
-            <ImageListItem key={item.id}>
-              <img
-                src={`/img/categories/${item.image}`}
-                alt={item.name}
-                loading="lazy"
-                onClick={() => {
-                  handleCategoryClick(item.id, item.name);
-                }}
-              />
-              <ImageListItemBar
-                sx={{
-                  height: "20%",
-                  "& .MuiImageListItemBar-titleWrap": {
-                    paddingBottom: 0,
-                    paddingTop: 0,
-                    display: "flex",
-                    justifyContent: "end",
-                    AlignItem: "center",
-                  },
-                  "& .MuiImageListItemBar-title": {
-                    textAlign: "end",
-                    fontWeight: 600,
-                  },
-                }}
-                title={item.name}
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
-      </Paper>
+    <Grid xs={12} id="stickyCategory">
+      {[0, 1, 2, 3].map((idx) => (
+        <Paper
+          sx={{ display: "flex", flexDirection: "column", marginTop: "20px" }}
+          onClick={() => {
+            handleClick(idx);
+          }}
+          key={idx}
+          elevation={1}
+        >
+          <Grid
+            sx={{
+              display: "flex",
+              justifyContent: "start",
+              alignItems: "end ",
+              marginTop: "10px",
+              marginLeft: "10px",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                color: "black",
+                fontWeight: 700,
+                textAlign: "start",
+              }}
+            >
+              {textData[idx][0]}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: "grey",
+                fontWeight: 400,
+                marginLeft: "20px",
+                textAlign: "start",
+              }}
+            >
+              {textData[idx][1]}
+            </Typography>
+          </Grid>
+          <Grid sx={{ display: "flex", justifyContent: "center" }}>
+            <ImageList
+              sx={{ width: "95%", height: "auto", marginTop: "2px" }}
+              variant="quilted"
+              cols={4}
+              rowHeight={121}
+            >
+              {itemData[idx].map((item) => (
+                <ImageListItem
+                  key={item.img}
+                  cols={item.cols || 1}
+                  rows={item.rows || 1}
+                >
+                  <img
+                    {...srcset(item.img, 121, item.rows, item.cols)}
+                    alt={item.title}
+                  />
+                  {!item.rep && (
+                    <ImageListItemBar
+                      sx={{
+                        height: "30px",
+                        "& .MuiImageListItemBar-titleWrap": {
+                          paddingBottom: 0,
+                          paddingTop: 0,
+                          display: "flex",
+                          justifyContent: "end",
+                          AlignItem: "center",
+                          backgroundColor: "rgba(0, 0, 0, 0.1)",
+                        },
+                        "& .MuiImageListItemBar-title": {
+                          fontWeight: 500,
+                          fontSize: "16px",
+                        },
+                      }}
+                      title={item.title}
+                    />
+                  )}
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Grid>
+        </Paper>
+      ))}
     </Grid>
   );
 }

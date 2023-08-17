@@ -30,6 +30,7 @@ import MyInfo from "./my/component/MyInfo";
 import MyRegular from "./my/component/MyRegular";
 import MyReview from "./my/component/MyReview";
 import MyBoard from "./my/component/MyBoard";
+import MyDibs from "./my/component/MyDibs";
 import Main from "./main/Main";
 import Map from "./map/Map";
 import Message from "../customer/main/Message";
@@ -239,7 +240,7 @@ export default function Customer() {
 
       <Routes>
         <Route path="/error" element={<Error />} />
-        <Route path="/list/:category" element={<List />} />
+        <Route path="/list/:query" element={<List />} />
 
         <Route path="/store/:store" element={<Store />} />
         <Route path="/main" element={<Main />} />
@@ -252,6 +253,7 @@ export default function Customer() {
 
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/myinfo" element={<MyInfo />} />
+        <Route path="/mydibs" element={<MyDibs />} />
 
         <Route path="/myregular" element={<MyRegular />} />
         <Route path="/myreview" element={<MyReview />} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Chip,
@@ -14,58 +14,95 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "App.css";
 import Category from "./Category";
 
-export default function Search() {
-  const array: number[][] = [
-    [1, 2, 3, 4],
-    [5, 6, 7, 8],
-    [9, 10, 11, 12],
-  ];
-  const textArray: string[] = [
-    "도넛",
-    "주스",
-    "샐러드",
-    "커피",
-    "빵",
-    "케이크",
-    "탕후루",
-    "간편음식",
-    "분식",
-    "샌드위치",
-    "김밥",
-    "회/초밥",
-  ];
+const recommend = [
+  "아메리카노",
+  "아이스아메리카노",
+  "카페라떼",
+  "카페모카",
+  "당근주스",
+  "사과주스",
+  "토마토주스",
+  "흑당버블티",
+  "당근케이크",
+  "초코케이크",
+  "말차케이크",
+  "얼그레이쉬폰케이크",
+  "쉬림프샐러드",
+  "치킨샐러드",
+  "연어샐러드",
+  "참치샐러드",
+  "로티세리치킨샐러드",
+  "스테이크샐러드",
+  "에그샐러드",
+  "콥샐러드",
+  "BLT샐러드",
+  "아보카도샐러드",
+  "연어초밥",
+  "새우초밥",
+  "고등어초밥",
+  "후토마키",
+  "광어초밥",
+  "도미초밥",
+  "장어초밥",
+  "계란초밥",
+  "전갱이초밥",
+  "마라떡볶이",
+  "짜장떡볶이",
+  "로제떡볶이",
+  "물만두",
+  "군만두",
+  "야끼소바",
+  "오꼬노미야끼",
+  "물국수",
+  "비빔국수",
+  "비빔냉면",
+  "물냉면",
+  "라면",
+  "만두라면",
+  "해장라면",
+  "떡라면",
+  "순대",
+  "치즈버거",
+  "불고기버거",
+  "오징어버거",
+  "짜장면",
+  "간짜장",
+  "짬뽕",
+  "차돌짬뽕",
+  "고추짜장",
+  "잡채밥",
+  "고추잡채",
+  "유산슬",
+  "팔보채",
+  "멘보샤",
+];
 
+export default function Search() {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>("");
-  const [recentSearch, setRecentSearch] = useState<string[]>([]);
+  const [recomArr, setRecomArr] = useState<string[]>([]);
 
   useEffect(() => {
-    const list = JSON.parse(localStorage.getItem("search") || "[]");
+    const randomRecommend = getRandomRecommend(recommend, 10);
 
-    setRecentSearch(list);
+    setRecomArr(randomRecommend);
   }, []);
-
-  const search = () => {
-    const keyword = searchValue;
-    const tmpList = [...recentSearch];
-
-    tmpList.push(keyword);
-
-    if (tmpList.length > 10) tmpList.shift();
-    localStorage.setItem("search", JSON.stringify(tmpList));
-    setRecentSearch(tmpList);
-  };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
     setSearchValue(value);
   };
-  const handleDelete = (index: number) => {
-    const tmpList = [...recentSearch];
 
-    tmpList.splice(index, 1);
-    localStorage.setItem("search", JSON.stringify(tmpList));
-    setRecentSearch(tmpList);
+  // 랜덤 추천 함수를 만듭니다.
+  const getRandomRecommend = (arr: string[], count: number) => {
+    const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+
+    return shuffled.slice(0, count);
+  };
+
+  const search = () => {
+    navigate(`/list/${searchValue}`);
   };
 
   return (
@@ -96,7 +133,12 @@ export default function Search() {
           placeholder="가게명 혹은 검색어를 입력하세요."
           inputProps={{ "aria-label": "해시태그로 검색" }}
         />
-        <IconButton sx={{ fontSize: "20px" }} onClick={search}>
+        <IconButton
+          sx={{ fontSize: "20px" }}
+          onClick={() => {
+            search();
+          }}
+        >
           <FontAwesomeIcon icon={faSearch} style={{ color: "gray" }} />
         </IconButton>
       </Paper>
@@ -111,13 +153,14 @@ export default function Search() {
           textAlign: "left",
         }}
       >
-        최근 검색 목록
+        검색어 추천
       </Typography>
       <Box
         sx={{
           display: "flex",
           paddingTop: "5px",
           maxWidth: "90%",
+          whiteSpace: "nowrap",
           overflowX: "auto",
           "&::-webkit-scrollbar": {
             display: "none",
@@ -125,75 +168,23 @@ export default function Search() {
           scrollbarWidth: "none",
         }}
       >
-        {recentSearch.map((chip, idx) => (
-          <>
+        {recomArr &&
+          recomArr.map((chip, idx) => (
             <Chip
+              key={idx}
               label={chip}
               size="small"
               variant="outlined"
-              onDelete={() => {
-                handleDelete(idx);
+              onClick={() => {
+                navigate(`/list/${chip}`);
               }}
-              sx={{
-                padding: "0px 0px",
-              }}
+              sx={{ margin: "0px 5px" }}
             />
-            <Box sx={{ padding: "0px 5px" }}></Box>
-          </>
-        ))}
+          ))}
       </Box>
 
-      <Grid
-        container
-        xs={12}
-        sx={{ paddingTop: "10px" }}
-        justifyContent="center"
-      >
+      <Grid container xs={12} justifyContent="center">
         <Category />
-      </Grid>
-      <Grid
-        container
-        xs={12}
-        sx={{ paddingTop: "20px" }}
-        justifyContent="center"
-      >
-        {array.map((row, idx) => (
-          <Grid container xs={12} justifyContent="center" key={`a${idx}`}>
-            {row.map((col, innerIdx) => (
-              <Grid
-                xs={3}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-                key={innerIdx}
-              >
-                <img
-                  src={`img/icon/icon${col}.png`}
-                  style={{ width: "60%" }}
-                  alt="hashtag"
-                />
-                <Typography
-                  variant="body1"
-                  component="div"
-                  sx={{
-                    fontWeight: 700,
-                    color: "secondary.main",
-                    padding: "0px",
-                    width: "90%",
-                    textAlign: "center",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {textArray[col - 1]}
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
-        ))}
       </Grid>
     </Grid>
   );

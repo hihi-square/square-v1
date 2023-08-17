@@ -9,14 +9,21 @@ import {
   Unstable_Grid2 as Grid,
   Avatar,
   Typography,
-  // Box,
+  Box,
   List,
   ListItem,
   IconButton,
 } from "@mui/material";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AiOutlineEdit } from "react-icons/ai";
+import {
+  BiCommentDetail,
+  BiMessageSquareDots,
+  BiDollarCircle,
+  BiCog,
+  BiChevronRight,
+} from "react-icons/bi";
 
 function MyPage() {
   const navigate = useNavigate();
@@ -36,6 +43,7 @@ function MyPage() {
     };
     point: number;
     rank: string;
+    dibsCount: number;
   };
 
   // eslint-disable-next-line no-console
@@ -60,77 +68,258 @@ function MyPage() {
       });
   }, []); // storeId가 변경될 때마다 API 호출을 다시 합니다.
 
-  const goToSettings = () => {
-    navigate("/myinfo");
+  const handleImageUpload = () => {
+    // Implement the image upload functionality here
   };
 
   return (
-    <Grid container xs={12} flexDirection="column" alignItems="center">
+    <Grid
+      container
+      xs={12}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* (사진, 수정), 이름 한묶음 */}
       <Grid
         xs={12}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          minHeight: "25vh",
           justifyContent: "center",
+          minHeight: "25vh",
+          mb: "2vh",
         }}
       >
-        <Avatar
-          src={user && user.info.profile}
-          sx={{ width: 250, height: 250, mb: 2 }}
-        />
-      </Grid>
-      <Grid container xs={12}>
-        <Grid xs={2}></Grid>
+        {/* 사진 및 수정 */}
         <Grid
-          xs={8}
+          xs={12}
           sx={{
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
+            justifyContent: "center",
           }}
         >
+          {/* 사진 */}
+          <Box sx={{ position: "relative" }}>
+            <Avatar
+              src={user && user.info.profile}
+              sx={{ width: 90, height: 90, mb: 2 }}
+            />
+
+            {/* 수정 아이콘 */}
+            <Box
+              sx={{
+                zIndex: "tooltip",
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                backgroundColor: "white",
+                borderRadius: 5,
+              }}
+            >
+              <IconButton onClick={handleImageUpload}>
+                <AiOutlineEdit size="20" />
+              </IconButton>
+            </Box>
+          </Box>
+        </Grid>
+
+        {/* 회원 이름 */}
+        <Grid xs={12}>
           <Typography
-            variant="h5"
-            component="h5"
-            sx={{ fontWeight: 700, textAlign: "center" }}
+            sx={{ fontWeight: 700, textAlign: "center", color: "#3d3d3d" }}
           >
             {user && user.info.nickname}
           </Typography>
         </Grid>
-        <Grid xs={2}>
-          <IconButton onClick={goToSettings}>
-            <FontAwesomeIcon
-              icon={faGear}
-              style={{ color: "#000000" }}
-              size="1x"
-            />
-          </IconButton>
+      </Grid>
+
+      {/* 회색 섹션 <내등급, 포인트, 찜> */}
+      <Grid
+        xs={11}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around",
+          backgroundColor: "#e7e7e7",
+          borderRadius: 1,
+          py: 1.5,
+        }}
+      >
+        {/* 1. 내등급 */}
+        <Grid
+          xs={3}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            sx={{ fontWeight: 700, textAlign: "center", color: "#3d3d3d" }}
+          >
+            내 등급
+          </Typography>
+          <Typography variant="subtitle1" component="div">
+            {user && user.rank}
+          </Typography>
+        </Grid>
+
+        {/* 2. 포인트 */}
+        <Grid
+          xs={3}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            sx={{ fontWeight: 700, textAlign: "center", color: "#3d3d3d" }}
+          >
+            내 포인트
+          </Typography>
+          <Typography variant="subtitle1" component="div">
+            {user && user.point}
+          </Typography>
+        </Grid>
+
+        {/* 3. 찜 */}
+        <Grid
+          xs={3}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+          onClick={() => navigate("/mydibs")}
+        >
+          <Typography
+            sx={{ fontWeight: 700, textAlign: "center", color: "#3d3d3d" }}
+          >
+            단골 가게
+          </Typography>
+          <Typography variant="subtitle1" component="div">
+            {user && user.dibsCount}
+          </Typography>
         </Grid>
       </Grid>
-      <Typography
-        variant="subtitle1"
-        component="div"
-        sx={{ fontWeight: 700, textAlign: "right" }}
-      >
-        {user && user.rank}
-      </Typography>
-      <Typography variant="subtitle1">{`잔여 포인트: ${
-        user && user.point
-      }`}</Typography>
 
-      <List component="nav">
-        <ListItem button onClick={() => navigate("/myreview")}>
-          <Typography variant="body1">내 리뷰 확인</Typography>
-        </ListItem>
-        <ListItem button onClick={() => navigate("/myregular")}>
-          <Typography variant="body1">내 단골 가게</Typography>
-        </ListItem>
-        <ListItem button onClick={() => navigate("/myboard")}>
-          <Typography variant="body1">내 커뮤니티 글 보기</Typography>
-        </ListItem>
-      </List>
+      {/* List */}
+      <Grid xs={11} sx={{ display: "flex", flexDirection: "column", py: 2 }}>
+        <List component="nav">
+          <ListItem button onClick={() => navigate("/myreview")}>
+            <Grid
+              sx={{
+                my: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <BiCommentDetail size="20" />
+                <Typography sx={{ ml: 1 }} variant="body1">
+                  내 리뷰 확인
+                </Typography>
+              </Grid>
+              <BiChevronRight size="20" />
+            </Grid>
+          </ListItem>
+          <ListItem button onClick={() => navigate("/myboard")}>
+            <Grid
+              sx={{
+                my: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <BiMessageSquareDots size="20" />
+                <Typography sx={{ ml: 1 }} variant="body1">
+                  내가 쓴 글
+                </Typography>
+              </Grid>
+              <BiChevronRight size="20" />
+            </Grid>
+          </ListItem>
+          <ListItem button onClick={() => navigate("/myregular")}>
+            <Grid
+              sx={{
+                my: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <BiDollarCircle size="20" />
+                <Typography sx={{ ml: 1 }} variant="body1">
+                  내 쿠폰함
+                </Typography>
+              </Grid>
+              <BiChevronRight size="20" />
+            </Grid>
+          </ListItem>
+          <ListItem button onClick={() => navigate("/myinfo")}>
+            <Grid
+              sx={{
+                my: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <BiCog size="20" />
+                <Typography sx={{ ml: 1 }} variant="body1">
+                  회원정보 수정
+                </Typography>
+              </Grid>
+              <BiChevronRight size="20" />
+            </Grid>
+          </ListItem>
+        </List>
+      </Grid>
     </Grid>
   );
 }
