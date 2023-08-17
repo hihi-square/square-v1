@@ -29,12 +29,16 @@ const theme = createTheme({
 
 export default function Appbar() {
   const navigate = useNavigate();
-  const user = localStorage.getItem("userNick");
+  const user = localStorage.getItem("userInfo");
 
   return (
     <ThemeProvider theme={theme}>
       <Grid xs={12}>
-        <AppBar position="static" color="appbar" sx={{ height: 70 }}>
+        <AppBar
+          position="sticky"
+          color="appbar"
+          sx={{ top: 0, height: "70px" }}
+        >
           <Toolbar>
             <IconButton
               size="large"

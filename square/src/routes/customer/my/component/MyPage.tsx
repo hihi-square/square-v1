@@ -160,6 +160,7 @@ function MyPage() {
             flexDirection: "column",
             alignItems: "center",
           }}
+          onClick={() => navigate("/myrank")}
         >
           <Typography
             sx={{ fontWeight: 700, textAlign: "center", color: "#3d3d3d" }}
@@ -179,6 +180,7 @@ function MyPage() {
             flexDirection: "column",
             alignItems: "center",
           }}
+          onClick={() => navigate("/mypoint")}
         >
           <Typography
             sx={{ fontWeight: 700, textAlign: "center", color: "#3d3d3d" }}
