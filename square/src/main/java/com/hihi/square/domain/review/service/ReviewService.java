@@ -138,4 +138,8 @@ public class ReviewService {
         }
         return result;
     }
+
+    public Boolean existReviewByOrder(Order order) {
+        return reviewRepository.existsReviewByOrder(order);
+    }
 }

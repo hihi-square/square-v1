@@ -22,4 +22,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     Float getAverageRating(Store store);
 
     List<Review> findByCustomerOrderByCreatedAtDesc(Customer customer);
+
+    Boolean existsReviewByOrder(Order order);
 }
