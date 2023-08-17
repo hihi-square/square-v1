@@ -18,6 +18,7 @@ type CommentEntity = {
   userNickname: string;
   userProfile: string;
   recommentList: CommentEntity[];
+  depth: number;
 };
 
 type Address = {
@@ -244,14 +245,21 @@ function BoardDetail(props: any) {
       </Grid>
       <Grid item xs={12}>
         {post &&
-          post.comments.map((comment) => (
-            <Comment
+          post.comments.map((comment) => 
+          // (
+            {
+              console.log("Comment Depth:", comment.depth);
+
+            return(<Comment
+              depth={comment.depth}
               comment={comment}
               commentKey={comment.commentId}
               onCommentSubmit={handleCommentSubmit}
               loginUserId={userInfo?.userId || 0}
-            ></Comment>
-          ))}
+            ></Comment>)}
+          )
+          // )
+          }
         {post && (
           <CommentForm
             parentId={post.postId}

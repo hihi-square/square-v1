@@ -170,8 +170,10 @@ function BoardForm({ mode }: FormTypeProps) {
         backgroundColor: "white",
       }}
     >
-      <Grid container xs={12} justifyContent="center">
-        <Grid xs={9}>
+      <Grid xs={12} sx={{marginTop: 6, marginLeft: 5, marginRight: 10}}>
+      <Typography variant="h3" sx={{marginBottom: 2, color: "#225a41", fontWeight: 700}}> 글 작성 </Typography>
+      <Grid container xs={12}>
+        <Grid xs={10}>
           <Box component="form">
             <FormControl component="fieldset">
               <RadioGroup
@@ -195,8 +197,8 @@ function BoardForm({ mode }: FormTypeProps) {
               </RadioGroup>
             </FormControl>
 
-            <Box sx={{ height: "130px" }}>
-              <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
+            <Box sx={{ height: "130px", marginTop: "20px"}}>
+              <Typography variant="body1" sx={{color: "#225a41", fontSize: "22px", fontWeight: 500 }} gutterBottom>
                 제목
               </Typography>
               <TextField
@@ -208,18 +210,19 @@ function BoardForm({ mode }: FormTypeProps) {
               />
             </Box>
             <Box sx={{ height: "130px" }}>
-              <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
+              <Typography variant="body1" sx={{color: "#225a41", fontSize: "22px", fontWeight: 500 }} gutterBottom>
                 내용
               </Typography>
               <TextareaAutosize
-                placeholder="내용"
+                // placeholder="내용"
                 autoComplete="content"
                 value={content}
                 onChange={handleContent}
+                style={{resize: "none", width: "100%", height: "50px"}}
               ></TextareaAutosize>
             </Box>
             <Box sx={{ height: "130px" }}>
-              <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
+              <Typography variant="body1" sx={{color: "#225a41", fontSize: "22px", fontWeight: 500 }} gutterBottom>
                 사진
               </Typography>
               <Input
@@ -233,18 +236,24 @@ function BoardForm({ mode }: FormTypeProps) {
           </Box>
         </Grid>
         <Grid container xs={9} justifyContent="center">
-          <Grid xs={12}>
+          <Grid xs={2}>
             <Button
               onClick={handleFormSubmit}
               variant="contained"
               color="secondary"
-              sx={{ height: "60px" }}
+              sx={{ height: "60px", background: "#8ec7a7",
+              fontSize: 18,
+              marginTop: 1,
+              marginRight: 2,
+              '&:hover': {
+                background: "#bbdfc8", // 호버 시 배경색 변경
+              }, }}
               fullWidth
             >
               <Typography
                 variant="h5"
                 sx={{
-                  color: "red",
+                  // color: "red",
                   fontWeight: 700,
                   textAlign: "center",
                 }}
@@ -255,6 +264,7 @@ function BoardForm({ mode }: FormTypeProps) {
           </Grid>
         </Grid>
       </Grid>
+    </Grid>
     </Grid>
   );
 }

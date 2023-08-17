@@ -126,11 +126,14 @@ function CommentForm({
       </Grid>
       <Grid item xs={1}>
       <button type="submit" style={{ marginLeft: "10px",
-      background: "#8ec7a7",
-      width: "100px",
+      // background: "#8ec7a7",
+      backgroundColor: "#dcefe2",
+      width: "80px",
       height: "50px",
-      fontSize: 18,
-      fontWeight: "500",
+      fontSize: 15,
+      fontWeight: "800",
+      color: "#1d4835",
+      cursor:"pointer",
       marginTop: 1,
       marginRight: 2,
       border: 0,
