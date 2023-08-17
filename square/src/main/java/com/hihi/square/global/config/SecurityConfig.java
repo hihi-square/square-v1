@@ -78,6 +78,7 @@ public class SecurityConfig {
 			.permitAll()
 			.antMatchers(HttpMethod.POST, "/store")
 			.permitAll()
+			.antMatchers(HttpMethod.GET, "/review").permitAll()
 			//2. 인가된 사용자만 허용(구매자, 판매자, 관리자)
 			.antMatchers("/community/**").authenticated()
 			//2. 가게에 대한 권한 설정
