@@ -217,15 +217,15 @@ public class OrderController {
 	public ResponseEntity<?> updateOrderSuccess(Authentication authentication, @PathVariable Integer ordId) {
 		Order order = orderService.findByOrderId(ordId).get();
 
-		// 가게 주인이 아닐때
-		// String uid = authentication.getName();
-		// if (storeRepository.findByUid(uid).get() != order.getStore()) {
-		// 	CommonResponseDto response = CommonResponseDto.builder()
-		// 		.statusCode(400)
-		// 		.message("NO_AUTHORIZATION")
-		// 		.build();
-		// 	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		// }
+//		 가게 주인이 아닐때
+//		 String uid = authentication.getName();
+//		 if (storeRepository.findByUid(uid).get() != order.getStore()) {
+//		 	CommonResponseDto response = CommonResponseDto.builder()
+//		 		.statusCode(400)
+//		 		.message("NO_AUTHORIZATION")
+//		 		.build();
+//		 	return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//		 }
 
 		// 잘못된 요청일때
 		if (order.getStatus() != OrderStatus.PAYMENT_COMPLETE) {

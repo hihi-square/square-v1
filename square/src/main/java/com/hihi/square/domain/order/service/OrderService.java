@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -218,8 +219,9 @@ public class OrderService {
     public void updateOrderPickup(Order order) {
         Customer customer = order.getCustomer();
 
+        Integer date = LocalDateTime.now().getDayOfMonth();
         // rank 반영
-        Integer orderCount = orderRepository.countOrderByCustomerAndCreatedAtBetween(customer, LocalDateTime.now().minusDays(30), LocalDateTime.now());
+        Integer orderCount = orderRepository.countOrderByCustomerAndCreatedAtBetween(customer, LocalDateTime.now().minusDays(date-1), LocalDateTime.now());
         Integer earningRate = 0;
         if(orderCount >= 30) {
             customer.updateRank(UserRankType.UR04);
@@ -265,4 +267,5 @@ public class OrderService {
 	public List<OrderStatusCountDto> getOrderStatusCountByUser(User user) {
         return orderRepository.findPaymentAndOrderAcceptNumberByUser((Customer) user);
 	}
+
 }
