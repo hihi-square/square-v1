@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.bytebuddy.matcher.FilterableList;
-
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,6 +19,7 @@ public class CommentListDto {
 	private String userNickname;
 	private Boolean isDeleted;
 	private String userProfile;
+	private Integer depth;
 	@Builder.Default
 	private List<ReCommentListDto> recommentList = new ArrayList<>();
 
