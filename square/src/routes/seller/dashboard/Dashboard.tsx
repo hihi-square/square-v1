@@ -3,11 +3,13 @@ import { Unstable_Grid2 as Grid, Box, Typography } from "@mui/material";
 
 import Appbar from "./Appbar.js";
 import Main from "./main/Main";
-// import Product from "./product/Product";
 import ProductList from "./product/ProductList";
 import Feed from "./feed/Feed";
 // import Sale from "./sale/Sale.js";
 import Order from "./order/Order";
+import Community from "./community/Community";
+import CommunityDetail from "./community/CommunityDetail";
+import CommunityForm from "./community/CommunityForm";
 import "../Seller.css";
 
 export default function Seller() {
@@ -94,6 +96,20 @@ export default function Seller() {
               피드 관리
             </Typography>
           </Box>
+          <Box
+            className="button"
+            onClick={() => {
+              navigate("community");
+            }}
+          >
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ flexGrow: 1, fontWeight: 700, textAlign: "center" }}
+            >
+              커뮤니티
+            </Typography>
+          </Box>
         </Grid>
         <Grid
           xs={10}
@@ -105,6 +121,16 @@ export default function Seller() {
             <Route path="/" element={<Main />} />
             <Route path="/order" element={<Order />} />
             <Route path="/product" element={<ProductList />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/community/:id" element={<CommunityDetail />} />
+            <Route
+              path="/community/write"
+              element={<CommunityForm mode="write" />}
+            />
+            <Route
+              path="/community/update/:id"
+              element={<CommunityForm mode="update" />}
+            />
             <Route path="/feed" element={<Feed />} />
           </Routes>
         </Grid>
