@@ -16,7 +16,6 @@ import "./Seller.css";
 const menus = [
   ["가게 관리", ""],
   ["상품 관리", "product"],
-  ["세일 관리", "sale"],
   ["주문 관리", "order"],
   ["피드 관리", "feed"],
   ["커뮤니티", "community"],

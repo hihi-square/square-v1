@@ -21,9 +21,7 @@ import {
 
 import List from "./list/List";
 import Store from "./store/Store";
-import Board from "./main/board/Board";
-import BoardForm from "./main/board/BoardForm";
-import BoardDetail from "./main/board/BoardDetail";
+import BoardLayout from "./main/board/BoardLayout";
 import Chat from "./chat/chat";
 import MyPage from "./my/My";
 import Deal from "./deal/Deal";
@@ -42,6 +40,7 @@ import MessageForm from "../customer/main/MessageForm";
 import Finish from "../customer/deal/Finish";
 import PickUp from "../customer/deal/PickUp";
 import Error from "./error/Error";
+import ReviewForm from "./order/ReviewForm";
 
 type data = {
   id: number;
@@ -120,8 +119,6 @@ export default function Customer() {
       };
 
       eventSource.onerror = (event) => {
-        console.error("SSE 연결에 오류가 발생했습니다.", event);
-
         setTimeout(() => {
           console.log("SSE 다시 연결 시도중...");
         }, 5000);
@@ -204,7 +201,7 @@ export default function Customer() {
               <Button
                 sx={{ flexGrow: 1 }}
                 onClick={() => {
-                  resetOrderData();
+                  dispatch(resetOrderData());
                   navigate("/order");
                 }}
               >
@@ -255,10 +252,7 @@ export default function Customer() {
 
         <Route path="/store/:store" element={<Store />} />
         <Route path="/main" element={<Main />} />
-        <Route path="/board" element={<Board />} />
-        <Route path="/board/write" element={<BoardForm mode="write" />} />
-        <Route path="/board/update/:id" element={<BoardForm mode="update" />} />
-        <Route path="/board/:id" element={<BoardDetail />} />
+        <Route path="/board/*" element={<BoardLayout />} />
 
         <Route path="/chat" element={<Chat />} />
 
@@ -280,6 +274,8 @@ export default function Customer() {
         <Route path="/message" element={<Message />} />
         <Route path="/finish" element={<Finish />} />
         <Route path="/message/:userId" element={<MessageForm />} />
+
+        <Route path="/review/write/:orderId" element={<ReviewForm />} />
 
         <Route path="/*" element={<Map />} />
       </Routes>

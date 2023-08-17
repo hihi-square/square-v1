@@ -102,7 +102,7 @@ export default function StorePage() {
       case "피드":
         return <StoreFeed storeId={store} />;
       case "리뷰":
-        return <StoreReview />;
+        return <StoreReview storeId={store} />;
       default:
         return (
           <StoreMenu
@@ -115,7 +115,27 @@ export default function StorePage() {
   };
 
   const handleZzim = () => {
-    console.log("gd");
+    if (isZzim) {
+      axios({
+        url: `${REST_API}dibs/${store}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(() => {
+        setZzim(false);
+      });
+    } else {
+      axios({
+        url: `${REST_API}dibs/${store}`,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(() => {
+        setZzim(true);
+      });
+    }
   };
 
   // 맵이 형성될 때 마다, 맵의 크기를 변경해 주어 오류가 나지 않도록 합니다.

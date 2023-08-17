@@ -109,15 +109,33 @@ export default function Login() {
           navigate("/seller/dashboard");
         })
         .catch((error) => {
-          console.log(error);
-          console.log("gd");
           setFailed(true);
         });
+  };
+
+  const toCustomerLogin = () => {
+    navigate("/login");
   };
 
   return (
     <>
       <Grid container xs={12} md={8}>
+        <Button
+          onClick={toCustomerLogin}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            padding: "6px 12px",
+            fontSize: "0.9rem",
+            backgroundColor: "rgba(255,255,255,0.9)",
+            "&:hover": {
+              backgroundColor: "rgba(255,255,255,1)",
+            },
+          }}
+        >
+          구매자 로그인
+        </Button>
         <Grid
           container
           xs
@@ -129,25 +147,27 @@ export default function Login() {
             <Typography
               variant="h2"
               component="h2"
-              sx={{ fontWeight: 800, textAlign: { xs: "center", md: "start" } }}
+              sx={{ fontWeight: 800, textAlign: "center" }} // 가운데 정렬로 변경
               gutterBottom
             >
               <Box component="span" sx={{ color: "secondary.main" }}>
                 S
               </Box>
               quare
-              <Typography
-                variant="h3"
-                component="span"
-                sx={{
-                  fontWeight: 700,
-                  textAlign: "center",
-                  marginLeft: "10px",
-                }}
-                gutterBottom
-              >
-                판매자
-              </Typography>
+            </Typography>
+            <Typography
+              variant="h3"
+              component="span"
+              sx={{
+                fontWeight: 700,
+                textAlign: "center", // 가운데 정렬로 변경
+                fontSize: "120%", // 폰트 크기 70%로 조절
+                display: "block", // 아래로 내리기 위해 block 요소로 설정
+                // marginTop: "10px" // 스퀘어와의 간격 조절 (원하시는 값으로 조절 가능)
+              }}
+              gutterBottom
+            >
+              Seller
             </Typography>
           </Grid>
           <Grid xs={9}>
@@ -207,7 +227,7 @@ export default function Login() {
                 <Typography
                   variant="h5"
                   sx={{
-                    color: "red",
+                    color: "black",
                     fontWeight: 700,
                     textAlign: "center",
                   }}
@@ -232,40 +252,6 @@ export default function Login() {
                 </Typography>
               </Grid>
             )}
-            <Grid
-              container
-              xs={12}
-              justifyContent="space-between"
-              sx={{ marginTop: "30px" }}
-            >
-              <Grid xs={3}>
-                <Button>
-                  <img
-                    src="/img/icon/naver.png"
-                    alt="네이버 로그인"
-                    style={{ width: "60px", height: "60px" }}
-                  />
-                </Button>
-              </Grid>
-              <Grid xs={3}>
-                <Button>
-                  <img
-                    src="/img/icon/kakao.png"
-                    alt="카카오 로그인"
-                    style={{ width: "60px", height: "60px" }}
-                  />
-                </Button>
-              </Grid>
-              <Grid xs={3}>
-                <Button>
-                  <img
-                    src="/img/icon/google.png"
-                    alt="구글 로그인"
-                    style={{ width: "60px", height: "60px" }}
-                  />
-                </Button>
-              </Grid>
-            </Grid>
           </Grid>
           <Grid container xs={10}>
             <Grid xs={12}>

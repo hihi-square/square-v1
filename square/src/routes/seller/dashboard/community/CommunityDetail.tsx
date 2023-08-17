@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
+import { TbArrowBackUp } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router-dom";
 import { Grid, Typography, Avatar, Button, Divider, Box } from "@mui/material";
 import CommentForm from "./comment/CommentForm"; // CommentForm 컴포넌트의 경로를 적절히 수정
@@ -17,6 +18,7 @@ type CommentEntity = {
   userNickname: string;
   userProfile: string;
   recommentList: CommentEntity[];
+  depth: number;
 };
 
 type Address = {
@@ -148,30 +150,41 @@ function BoardDetail(props: any) {
   };
 
   return (
-    <Grid container spacing={3} style={{ padding: "20px" }}>
-      <Button
-        sx={{
-          width: "100%",
-          height: "60px",
-          display: "flex",
-          flexDirection: "column",
-        }}
-        onClick={() => {
-          navigate("/seller/dashboard/community");
-        }}
+    <Grid
+      container
+      spacing={3}
+      style={{ padding: "20px 10px", marginLeft: 5, marginRight: 50 }}
+    >
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        sx={{ marginTop: 2 }}
       >
-        &lt;
-      </Button>
-      <Grid item xs={12}>
-        <Typography variant="h5">{post && post.title}</Typography>
+        <Button
+          sx={{
+            // width: "100%",
+            height: "60px",
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
+          onClick={() => {
+            navigate("/seller/dashboard/community");
+          }}
+        >
+          <TbArrowBackUp size="30px" style={{ marginLeft: 10 }} />
+        </Button>
         {post && post.userId === userInfo?.userId && (
-          <Box>
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Button
               sx={{
-                width: "100%",
+                // width: "100%",
                 height: "60px",
-                display: "flex",
-                flexDirection: "column",
+                fontSize: "18px",
+                fontWeight: "200px",
+                // display: "flex",
+                // flexDirection: "column",
               }}
               onClick={() => {
                 navigate(`/seller/dashboard/community/update/${id}`);
@@ -181,10 +194,12 @@ function BoardDetail(props: any) {
             </Button>
             <Button
               sx={{
-                width: "100%",
+                // width: "100%",
                 height: "60px",
-                display: "flex",
-                flexDirection: "column",
+                fontSize: "18px",
+                fontWeight: "200px",
+                // display: "flex",
+                // flexDirection: "column",
               }}
               onClick={() => {
                 handlePostDelete();
@@ -194,7 +209,18 @@ function BoardDetail(props: any) {
             </Button>
           </Box>
         )}
-        <Grid item container spacing={1} alignItems="center">
+      </Grid>
+      <Grid item xs={12} sx={{ paddingTop: 0 }}>
+        <Typography variant="h4" sx={{ paddingBottom: 3, fontWeight: "600" }}>
+          {post && post.title}
+        </Typography>
+        <Grid
+          item
+          container
+          spacing={1}
+          alignItems="center"
+          sx={{ paddingBottom: 2 }}
+        >
           <Grid item>
             <Avatar src={post && post.userProfile} />
           </Grid>
@@ -202,21 +228,21 @@ function BoardDetail(props: any) {
             <Typography variant="subtitle1">
               {post && post.userNickname}
             </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">
-              {post && formatTime(post.createdAt)}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">
-              조회수: {post && post.viewCnt}
-            </Typography>
-          </Grid>
-          <Grid item xs>
-            <Typography align="right">{post && post.commentCnt}</Typography>
+            <Grid item container spacing={1} alignItems="center">
+              <Grid item>
+                <Typography variant="body2">
+                  {post && formatTime(post.createdAt)}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2">
+                  조회수: {post && post.viewCnt}
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
+
         <Divider style={{ margin: "10px 0" }} />
         <Box minHeight="100px">
           <Typography variant="body1" paragraph>
@@ -230,25 +256,40 @@ function BoardDetail(props: any) {
           post.images.map((photo) => <img src={photo.url}></img>)}
       </Grid>
       <Grid item xs={12}>
-        <Divider style={{ margin: "20px 0" }} />
+        <Divider style={{ marginTop: "10px" }} />
       </Grid>
-
+      <Grid item xs>
+        <Typography align="left" sx={{ fontSize: "16px", fontWeight: "500" }}>
+          댓글 {post && post.commentCnt}
+        </Typography>
+      </Grid>
       <Grid item xs={12}>
-        {post &&
-          post.comments.map((comment) => (
-            <Comment
-              comment={comment}
-              commentKey={comment.commentId}
-              onCommentSubmit={handleCommentSubmit}
-              loginUserId={userInfo?.userId || 0}
-            ></Comment>
-          ))}
+        {
+          post &&
+            post.comments.map((comment) =>
+              // (
+              {
+                console.log("Comment Depth:", comment.depth);
+
+                return (
+                  <Comment
+                    depth={comment.depth}
+                    comment={comment}
+                    commentKey={comment.commentId}
+                    onCommentSubmit={handleCommentSubmit}
+                    loginUserId={userInfo?.userId || 0}
+                  ></Comment>
+                );
+              }
+            )
+          // )
+        }
         {post && (
           <CommentForm
             parentId={post.postId}
             onCommentSubmit={handleCommentSubmit}
             type="post"
-            text="댓글 작성"
+            text="작성"
           />
         )}
       </Grid>

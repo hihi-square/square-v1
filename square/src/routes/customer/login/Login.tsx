@@ -133,6 +133,10 @@ export default function Login() {
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=167666714068-su36v2r5mu1j6spjan4cda8q42hbdhf3.apps.googleusercontent.com&redirect_uri=https://i9b208.p.ssafy.io/login/GoogleRedirect&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile email`;
   };*/
 
+  const toSellerLogin = () => {
+    navigate("/seller/login");
+  };
+
   return (
     <Grid
       container
@@ -144,8 +148,25 @@ export default function Login() {
         backgroundImage: "url(/img/MobileBG.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        position: "relative", // 추가: 상위 컨테이너에 position 속성 추가
       }}
     >
+      <Button
+        onClick={toSellerLogin}
+        sx={{
+          position: "absolute", // 절대위치를 이용해서 우측 상단에 위치시키기
+          top: 8, // 상단에서의 간격 (원하는대로 조절 가능)
+          right: 8, // 우측에서의 간격 (원하는대로 조절 가능)
+          padding: "6px 12px", // 버튼 내부 패딩
+          fontSize: "0.9rem", // 폰트 사이즈 조절
+          backgroundColor: "rgba(255,255,255,0.9)", // 약간의 투명도를 가진 흰색 배경
+          "&:hover": {
+            backgroundColor: "rgba(255,255,255,1)", // 호버시 투명도 없애기
+          },
+        }}
+      >
+        판매자 로그인
+      </Button>
       <Grid container xs={8}>
         <Grid
           container

@@ -13,7 +13,7 @@ import {
 import {
   Unstable_Grid2 as Grid,
   Button,
-  Divider,
+  // Divider,
   Paper,
   Pagination,
   Typography,
@@ -152,7 +152,6 @@ export default function Order() {
     })
       .then((response) => {
         setRender(true);
-        console.log("수락");
       })
       .catch((error) => {
         // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
@@ -169,7 +168,6 @@ export default function Order() {
     })
       .then((response) => {
         setRender(true);
-        console.log("거절");
       })
       .catch((error) => {
         // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
@@ -186,7 +184,6 @@ export default function Order() {
     })
       .then((response) => {
         setRender(true);
-        console.log("픽업");
       })
       .catch((error) => {
         // console.error("메뉴 정보를 불러오는데 실패했습니다.", error);
@@ -195,19 +192,26 @@ export default function Order() {
 
   return (
     <Grid container xs={12} flexDirection="column">
-      <Grid xs={12} sx={{ paddingBottom: "10px" }}>
+      <Grid xs={12} sx={{ marginTop: 3, marginLeft: 5, paddingBottom: "10px" }}>
         <Typography
-          variant="h4"
-          component="div"
-          sx={{ flexGrow: 1, textAlign: "left", fontWeight: 800 }}
+          variant="h3"
+          sx={{ marginBottom: 1, color: "#225a41", fontWeight: 700 }}
         >
-          주문 관리
+          {" "}
+          주문관리{" "}
         </Typography>
         <Typography
+          variant="h6"
           component="div"
-          sx={{ flexGrow: 1, textAlign: "left", fontWeight: 500 }}
+          sx={{
+            color: "primary.main",
+            flexGrow: 1,
+
+            textAlign: "left",
+            fontWeight: 400,
+          }}
         >
-          가게의 주문을 관리합니다.
+          가게에 들어온 주문들을 관리하고 통계 정보를 볼 수 있습니다.
         </Typography>
       </Grid>
       <Grid xs={12} container>
@@ -216,19 +220,29 @@ export default function Order() {
             elevation={3}
             sx={{
               width: "95%",
-              height: "500px",
+              height: "450px",
               margin: "10px",
               overflow: "hidden",
             }}
           >
-            <Grid container sx={{ width: "100%" }}>
+            <Grid
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                position: "relative",
+              }}
+            >
               <Grid
                 xs={12}
                 container
                 sx={{
-                  justifyContent: "left",
-                  marginLeft: "10px",
-                  marginTop: "10px",
+                  justifyContent: "space-between",
+                  margin: "10px 10px",
+                  position: "absolute",
+                  top: 0,
                 }}
               >
                 <Grid
@@ -241,7 +255,7 @@ export default function Order() {
                   <Typography
                     variant="h5"
                     component="div"
-                    sx={{ textAlign: "left", fontWeight: 700 }}
+                    sx={{ textAlign: "center", fontWeight: 700 }}
                   >
                     픽업 대기중
                   </Typography>
@@ -256,7 +270,7 @@ export default function Order() {
                   <Typography
                     variant="h5"
                     component="div"
-                    sx={{ textAlign: "left", fontWeight: 700 }}
+                    sx={{ textAlign: "center", fontWeight: 700 }}
                   >
                     수락 대기중
                   </Typography>
@@ -271,56 +285,61 @@ export default function Order() {
                   <Typography
                     variant="h5"
                     component="div"
-                    sx={{ textAlign: "left", fontWeight: 700 }}
+                    sx={{ textAlign: "center", fontWeight: 700 }}
                   >
                     전체 리스트
                   </Typography>
                 </Grid>
-              </Grid>
-              <Grid xs={12}>
-                <Divider></Divider>
-              </Grid>
 
-              <Grid container xs={12}>
-                <Grid xs={3}>
-                  <Typography
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ textAlign: "center", fontWeight: 600 }}
-                  >
-                    주문 일시
-                  </Typography>
-                </Grid>
-                <Grid xs={3}>
-                  <Typography
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ textAlign: "center", fontWeight: 600 }}
-                  >
-                    연락처
-                  </Typography>
-                </Grid>
-                <Grid xs={3}>
-                  <Typography
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ textAlign: "center", fontWeight: 600 }}
-                  >
-                    총 가격
-                  </Typography>
-                </Grid>
-                <Grid xs={3}>
-                  <Typography
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ textAlign: "center", fontWeight: 600 }}
-                  >
-                    상태
-                  </Typography>
+                <Grid
+                  container
+                  xs={12}
+                  sx={{ justifyContent: "space-between" }}
+                >
+                  <Grid xs={3}>
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      sx={{ textAlign: "center", fontWeight: 600 }}
+                    >
+                      주문 일시
+                    </Typography>
+                  </Grid>
+                  <Grid xs={3}>
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      sx={{ textAlign: "center", fontWeight: 600 }}
+                    >
+                      연락처
+                    </Typography>
+                  </Grid>
+                  <Grid xs={3}>
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      sx={{ textAlign: "center", fontWeight: 600 }}
+                    >
+                      총 가격
+                    </Typography>
+                  </Grid>
+
+                  <Grid xs={3}>
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      sx={{ textAlign: "center", fontWeight: 600 }}
+                    >
+                      상태
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
               {tab === 1 && (
-                <>
+                <Grid
+                  xs={12}
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
                   {pickList?.slice((page - 1) * 10, page * 10).map((order) => (
                     <Grid container xs={12} key={`a${order.ordId}`}>
                       <Grid xs={3}>
@@ -372,8 +391,9 @@ export default function Order() {
                     count={Math.ceil(pickList.length / 10)}
                     page={page}
                     onChange={(event, value) => setPage(value)}
+                    sx={{ width: "100%" }}
                   />
-                </>
+                </Grid>
               )}
               {tab === 2 && (
                 <>
