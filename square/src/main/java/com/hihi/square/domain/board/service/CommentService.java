@@ -21,9 +21,11 @@ import com.hihi.square.domain.board.repository.CommentRepository;
 import com.hihi.square.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CommentService {
 	private final CommentRepository commentRepository;
 
@@ -46,6 +48,7 @@ public class CommentService {
 						.depth(c.getDepth())
 						.build()
 				);
+				log.info("depth: {}", c.getDepth());
 			}
 			result.add(
 				CommentListDto.builder()
@@ -61,6 +64,7 @@ public class CommentService {
 					.depth(comment.getDepth())
 					.build()
 			);
+			log.info("depth2: {}", comment.getDepth());
 		}
 		return result;
 	}
