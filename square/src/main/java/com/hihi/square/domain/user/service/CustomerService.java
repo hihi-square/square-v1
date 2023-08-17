@@ -35,9 +35,9 @@ public class CustomerService {
 			case UR01:
 				return "뚜벅이";
 			case UR02:
-				return "슝슝이";
-			case UR03:
 				return "씽씽이";
+			case UR03:
+				return "슝슝이";
 			case UR04:
 				return "붕붕이";
 		}
@@ -73,9 +73,9 @@ public class CustomerService {
 	public String getNextRankName(UserRankType type) {
 		switch (type) {
 			case UR01:
-				return "슝슝이";
-			case UR02:
 				return "씽씽이";
+			case UR02:
+				return "슝슝이";
 			case UR03:
 				return "붕붕이";
 		}
