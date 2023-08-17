@@ -17,6 +17,7 @@ import com.hihi.square.domain.order.entity.*;
 import com.hihi.square.domain.order.repository.OrderRepository;
 import com.hihi.square.domain.order.repository.OrderMenuRespository;
 import com.hihi.square.domain.point.service.PointService;
+import com.hihi.square.domain.review.service.ReviewService;
 import com.hihi.square.domain.sale.entity.Sale;
 import com.hihi.square.domain.sale.repository.SaleRepository;
 import com.hihi.square.domain.store.entity.Store;
@@ -51,6 +52,7 @@ public class OrderService {
     private final CustomerRepository customerRepository;
     private final CouponService couponService;
     private final IssueCouponService issueCouponService;
+    private final ReviewService reviewService;
 
     public Integer saveOrder(Customer customer, OrderRequestDto request) {
 
@@ -113,6 +115,16 @@ public class OrderService {
     public OrderResponseDto findOrderById(Integer id) {
         Order order = orderRepository.findById(id).get();
 
+        Boolean review = reviewService.existReviewByOrder(order);
+        Boolean reviewable = false;
+        LocalDateTime limit = LocalDateTime.now().minusDays(5);
+
+        // 만약 리뷰가 없으면 리뷰어블 true
+        // 상세조건 주문이 5일 안쪽이면
+        if(!review && order.getCreatedAt().isAfter(limit)) {
+            reviewable = true;
+        }
+
         List<OrderMenu> orderMenuList = orderMenuRepository.findByOrder(order);
         List<OrderMenuResponseDto> menuList = new ArrayList<>();
         for(OrderMenu orderMenu : orderMenuList) {
@@ -151,6 +163,7 @@ public class OrderService {
                 .finalPrice(order.getFinalPrice())
                 .status(order.getStatus())
                 .createdAt(order.getCreatedAt())
+                .review(reviewable)
                 .build();
 
         return orderResponse;
