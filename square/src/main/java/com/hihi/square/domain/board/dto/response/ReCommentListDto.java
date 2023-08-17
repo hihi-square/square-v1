@@ -15,4 +15,5 @@ public class ReCommentListDto {
 	private Integer userId;
 	private String userNickname;
 	private String userProfile;
+	private Integer depth;
 }
