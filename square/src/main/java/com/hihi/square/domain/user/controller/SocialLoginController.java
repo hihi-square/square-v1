@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hihi.square.domain.store.entity.Store;
+import com.hihi.square.domain.user.dto.response.UserLoginAddressInfo;
 import com.hihi.square.domain.user.dto.response.UserLoginResponseDto;
 import com.hihi.square.domain.user.entity.Customer;
+import com.hihi.square.domain.user.entity.EmdAddress;
 import com.hihi.square.domain.user.entity.User;
 import com.hihi.square.domain.user.entity.UserSocialLoginType;
 import com.hihi.square.domain.user.service.SocialLoginService;
@@ -103,7 +105,7 @@ public class SocialLoginController {
 
 		String token = jwtService.createAccessToken(dbUser.getUid());
 		String refreshToken = jwtService.createRefreshToken(dbUser.getUid());
-		// 로그인
+
 		UserLoginResponseDto response = UserLoginResponseDto.builder()
 			.statusCode(200)
 			.message("SUCCESS")
@@ -112,6 +114,13 @@ public class SocialLoginController {
 			.userUid(dbUser.getUid())
 			.usrId(dbUser.getUsrId())
 			.userNickname(dbUser.getNickname())
+			.address(UserLoginAddressInfo.builder()
+				.bCode(dbUser.getMainAddress().getBCode())
+				.sidoName(dbUser.getMainAddress().getSidoName())
+				.siggName(dbUser.getMainAddress().getSiggName())
+				.emdName(dbUser.getMainAddress().getName())
+				.fullName(dbUser.getMainAddress().getFullName())
+				.build())
 			.build();
 
 		dbUser.updateRefreshToken(refreshToken);

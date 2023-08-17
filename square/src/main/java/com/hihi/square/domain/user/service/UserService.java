@@ -57,6 +57,7 @@ public class UserService {
 
 	@Transactional
 	public void saveSocialUser(User user) {
+		user.updateUserAddress(emdAddressService.findById(1340).get());
 		userRepository.save(user);
 	}
 
