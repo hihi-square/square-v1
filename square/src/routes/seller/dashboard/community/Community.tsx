@@ -1,12 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { REST_API } from "redux/redux";
+import {
+  Unstable_Grid2 as Grid,
+  Button,
+  Divider,
+  //   Paper,
+  //   Pagination,
+  Typography,
+  Box,
+} from "@mui/material";
 import axios from "axios";
-import { Grid, Button, Typography, Divider, Box } from "@mui/material";
-// import { Grid, Typography, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Footer from "routes/customer/Footer";
-import { HiPencilAlt } from "react-icons/hi";
 
 type Post = {
   postId: number;
@@ -25,17 +30,7 @@ type Post = {
   userNickname: string;
   userProfile: string | null;
   viewCount: number;
-};
-
-type UserInfo = {
-  bcode: number;
-  depth: number;
-  emdName: string;
-  fullName: string;
-  sidoName: string;
-  siggName: string;
-  usrId: number;
-  usrNick: string;
+  boardId: number;
 };
 
 const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
@@ -51,60 +46,71 @@ const formatTime = (createdAt: number[]) => {
   return `${formattedDate} ${formattedTime}`;
 };
 
-function Board() {
-  const token = sessionStorage.getItem("accessToken");
-  const [userLocation, setUserLocation] = useState<string>("");
+export default function Community() {
+  const token = localStorage.getItem("accessToken");
   const [posts, setPosts] = useState<Post[]>();
-  // const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [boardId, setBoardId] = useState<number>(1);
   const [bCode, setBCode] = useState<number>(3020011300);
   const [depth, setDepth] = useState<number>(1);
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const storedUserInfo = sessionStorage.getItem("userInfo");
-
-    if (storedUserInfo) {
-      const parsedUserInfo: UserInfo = JSON.parse(storedUserInfo);
-
-      // setUserInfo(parsedUserInfo);
-      setUserLocation(parsedUserInfo.fullName);
-      setBCode(parsedUserInfo.bcode);
-      setDepth(parsedUserInfo.depth);
-    }
+  useEffect(() => {
+    setBCode(3020011300);
+    setDepth(2);
+    setBoardId(boardId);
+    getPosts();
   }, []);
 
-  React.useEffect(() => {
-    if (bCode !== undefined && depth !== undefined) getPosts(); // setBCode와 setDepth 이후에 실행됩니다.
-  }, [bCode, depth]);
-
-  const getPosts = () => {
-    if (bCode !== undefined && depth !== undefined) {
+  useEffect(() => {
+    if (boardId === 4) {
       axios({
-        url: `${REST_API}community/1/${bCode}/${depth}`,
+        url: `${REST_API}community`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }).then(({ data }) => {
-        setPosts(data.posts);
-      });
+      })
+        .then(({ data }) => {
+          console.log(data);
+          setPosts(data.posts);
+        })
+        .catch((error) => console.log(error));
+    } else {
+      getPosts();
     }
+  }, [boardId]);
+
+  const getPosts = () => {
+    axios({
+      url: `${REST_API}community/${boardId}/${bCode}/${depth}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(({ data }) => {
+        console.log(data);
+        setPosts(data.posts);
+      })
+      .catch((error) => console.log(error));
   };
 
   const handlePostClick = (postId: number) => {
-    navigate(`/board/${postId}`);
+    navigate(`/seller/dashboard/community/${postId}`);
+  };
+
+  const handleBoardId = (boardNum: number) => {
+    setBoardId(boardNum);
   };
 
   return (
-    <Box>
-      <Typography
-        variant="h6"
-        align="center"
-        style={{ marginTop: "15px", marginBottom: "5px" }}
-      >
-        {userLocation}
-      </Typography>
+    <Grid container xs={12} flexDirection="column">
+      <Grid>
+        <Button onClick={() => handleBoardId(1)}>자유 게시판</Button>
+        <Button onClick={() => handleBoardId(3)}>사장님 게시판</Button>
+        <Button onClick={() => handleBoardId(4)}>내 게시물</Button>
+      </Grid>
       <Grid container spacing={2} style={{ marginTop: "20px" }}>
         {posts &&
           posts.map((post: Post, index: number) => (
@@ -115,7 +121,7 @@ function Board() {
                   sx={{ width: "100%", margin: "10px 0" }}
                 />
               )}
-              <Grid item xs={12}>
+              <Grid xs={12}>
                 <Box
                   style={{
                     display: "flex",
@@ -127,14 +133,15 @@ function Board() {
                 >
                   {post.thumbnail && post.thumbnail.url && (
                     <Box style={{ marginRight: "10px" }}>
-                      <img src={post.thumbnail.url} width={50} alt="썸네일" />
+                      <img src={post.thumbnail.url} width={50} />
                     </Box>
                   )}
                   <Box style={{ flexGrow: 1 }}>
                     <Typography variant="h6">{post.title}</Typography>
                     <Typography variant="body2">
                       {post.userNickname} | {formatTime(post.createdAt)} |
-                      조회수: {post.viewCount}
+                      조회수: {post.viewCount}{" "}
+                      {boardId === 4 && `| ${post.boardId}`}
                     </Typography>
                   </Box>
                   <Box>
@@ -155,38 +162,24 @@ function Board() {
           ))}
         <Box
           sx={{
-            position: "fixed",
-            bottom: 100,
-            right: 20,
-            width: "70px",
-            height: "70px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#bbdfc8",
-            borderRadius: 100,
-            boxShadow: "0px 0px 4px 2px rgba(24, 57, 43, 0.4)",
+            position: "absolute",
           }}
         >
           <Button
             sx={{
-              width: "70px",
-              height: "70px",
+              width: "100%",
+              height: "60px",
               display: "flex",
-              borderRadius: 100,
               flexDirection: "column",
             }}
             onClick={() => {
-              navigate("/board/write");
+              navigate("/seller/dashboard/community/write");
             }}
           >
-            <HiPencilAlt fontSize={30} />
+            작성
           </Button>
         </Box>
       </Grid>
-      <Footer now={3} />
-    </Box>
+    </Grid>
   );
 }
-
-export default Board;

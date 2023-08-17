@@ -11,11 +11,15 @@ import {
   Box,
   Button,
   Input,
+  FormControl,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
   // Divider,
   TextareaAutosize,
 } from "@mui/material";
 // import { useNavigate } from "react-router-dom";
-import Footer from "routes/customer/Footer";
+// import { loadPostcode } from "react-daum-postcode";
 
 // type PostImage = {
 //   url:string;
@@ -25,8 +29,9 @@ interface FormTypeProps {
   mode: string;
 }
 function BoardForm({ mode }: FormTypeProps) {
-  const token = sessionStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+  const [boardId, setBoardId] = useState<number>(1);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const { id } = useParams();
@@ -101,12 +106,16 @@ function BoardForm({ mode }: FormTypeProps) {
     // setSelectedPhotos(selectedFiles);
   };
 
+  const handleBoardChange = (e: any) => {
+    setBoardId(e.target.value);
+  };
+
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
     // 게시글 데이터와 사진 업로드 처리
     if (mode === "write") {
       const postData = {
-        boardId: 1,
+        boardId,
         bcode: 3020011300,
         title,
         content,
@@ -126,7 +135,7 @@ function BoardForm({ mode }: FormTypeProps) {
         },
         data: postData,
       }).then(({ data }) => {
-        navigate(`/board/${data.id}`);
+        navigate(`/seller/dashboard/community/${data.id}`);
       });
     } else if (mode === "update") {
       const postData = {
@@ -147,7 +156,7 @@ function BoardForm({ mode }: FormTypeProps) {
         },
         data: postData,
       }).then(() => {
-        navigate(`/board/${id}`);
+        navigate(`/seller/dashboard/community/${id}`);
       });
     }
   };
@@ -164,6 +173,28 @@ function BoardForm({ mode }: FormTypeProps) {
       <Grid container xs={12} justifyContent="center">
         <Grid xs={9}>
           <Box component="form">
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                aria-label="board"
+                name="board"
+                value={boardId}
+                onChange={handleBoardChange}
+              >
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label="자유게시판"
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio />}
+                  label="사장님 게시판"
+                />
+                {/* 추가 게시판 선택 라디오 버튼 */}
+              </RadioGroup>
+            </FormControl>
+
             <Box sx={{ height: "130px" }}>
               <Typography variant="body1" sx={{ fontWeight: 400 }} gutterBottom>
                 제목
@@ -223,9 +254,6 @@ function BoardForm({ mode }: FormTypeProps) {
             </Button>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container xs={12} justifyContent="center">
-        <Footer now={6} />
       </Grid>
     </Grid>
   );
