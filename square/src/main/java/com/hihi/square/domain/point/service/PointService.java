@@ -39,7 +39,7 @@ public class PointService {
     }
 
     public List<Optional<Point>> findAllPointByCustomer(Customer customer) {
-        return pointRepository.findAllByCustomer(customer);
+        return pointRepository.findAllByCustomerOrderByCreatedAtDesc(customer);
     }
 
     public PointInfoResponseDto getPointInfo(Customer customer) {

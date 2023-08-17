@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface PointRepository extends JpaRepository<Point, Integer> {
 
-    List<Optional<Point>> findAllByCustomer(Customer customer);
+    List<Optional<Point>> findAllByCustomerOrderByCreatedAtDesc(Customer customer);
 }
