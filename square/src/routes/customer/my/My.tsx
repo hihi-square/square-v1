@@ -16,12 +16,12 @@ export default function My() {
   return (
     <Grid container xs={12} direction="column">
       <Header />
-      <Grid sx={{ height: "70px" }}></Grid>
+      <Grid sx={{ paddingTop: "40px" }}></Grid>
       <Grid container xs={12} justifyContent="center">
         <MyPage />
       </Grid>
       <Grid sx={{ height: "70px" }}></Grid>
-      <Footer now={1} />
+      <Footer now={5} />
     </Grid>
   );
 }

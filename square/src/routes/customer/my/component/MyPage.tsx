@@ -20,6 +20,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 import {
   BiCommentDetail,
   BiMessageSquareDots,
+  BiLogOut,
   // BiDollarCircle,
   BiCog,
   BiChevronRight,
@@ -70,6 +71,13 @@ function MyPage() {
 
   const handleImageUpload = () => {
     // Implement the image upload functionality here
+  };
+
+  const logout = () => {
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("userInfo");
+    navigate("/");
   };
 
   return (
@@ -315,6 +323,32 @@ function MyPage() {
                 <BiCog size="20" />
                 <Typography sx={{ ml: 1 }} variant="body1">
                   회원정보 수정
+                </Typography>
+              </Grid>
+              <BiChevronRight size="20" />
+            </Grid>
+          </ListItem>
+          <ListItem button onClick={logout}>
+            <Grid
+              sx={{
+                my: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <BiLogOut size="20" />
+                <Typography sx={{ ml: 1 }} variant="body1">
+                  로그아웃
                 </Typography>
               </Grid>
               <BiChevronRight size="20" />

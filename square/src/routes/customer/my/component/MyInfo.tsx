@@ -23,13 +23,6 @@ function MyInfo() {
 
   const [open, setOpen] = useState(false);
 
-  const logout = () => {
-    sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("refreshToken");
-    sessionStorage.removeItem("userInfo");
-    navigate("/");
-  };
-
   const handleToggle = () => {
     setOpen(!open);
   };
@@ -88,7 +81,6 @@ function MyInfo() {
         </Grid>
         <Grid item xs={12}>
           <Button onClick={handleToggle}>{open ? "닫기" : "약관 보기"}</Button>
-          <Button onClick={logout}>로그아웃</Button>
           <Collapse in={open}>
             <Box
               sx={{

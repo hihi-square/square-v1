@@ -19,7 +19,7 @@ function MainPage() {
       }}
     >
       <Header />
-      <Grid xs={12} sx={{ height: "60px" }}></Grid>
+      {/* <Grid xs={12} sx={{ height: "60px" }}></Grid> */}
       <Grid container xs={12} justifyContent="center">
         <Routes>
           <Route path="*" element={<Board />} />
