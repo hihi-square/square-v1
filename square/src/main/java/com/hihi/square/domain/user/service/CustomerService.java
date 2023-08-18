@@ -84,8 +84,24 @@ public class CustomerService {
 
 	public CustomerRankInfoResponseDto getRankInfo(Customer customer) {
 
-		UserRankType type = customer.getRank();
 		Integer orderCount = orderRepository.countOrderByCustomerAndCreatedAtBetween(customer, LocalDateTime.now().minusDays(30), LocalDateTime.now());
+
+		if(orderCount >= 30) {
+			customer.updateRank(UserRankType.UR04);
+		}
+		else if(orderCount >= 15) {
+			customer.updateRank(UserRankType.UR03);
+		}
+		else if(orderCount >= 5) {
+			customer.updateRank(UserRankType.UR02);
+		}
+		else{
+			customer.updateRank(UserRankType.UR01);
+		}
+
+		customerRepository.save(customer);
+		UserRankType type = customer.getRank();
+
 
 		if(type.equals(UserRankType.UR04)){
 			CustomerRankInfoResponseDto response = CustomerRankInfoResponseDto.builder()
