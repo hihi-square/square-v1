@@ -89,6 +89,7 @@ export default function Main() {
   const [isBanner, setBanner] = useState<boolean>(false);
   const [isLogo, setLogo] = useState<boolean>(false);
   const [changed, setChanged] = useState<boolean>(false);
+  const [isOpened, setIsOpen] = useState<boolean>(false);
   // const [control, setControl] = useState<boolean[]>([false, false, false]);
 
   // const handleForm = (index: number) => {
@@ -117,6 +118,18 @@ export default function Main() {
     setMyTag(curr);
   };
 
+  const handleStoreOpen = () => {
+    axios({
+      url: `${REST_API}store/open/${isOpened ? 0 : 1}`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(() => {
+      setIsOpen(!isOpened);
+    });
+  };
+
   const handleDelete = (index: number) => {
     const tmpList = [...tags];
 
@@ -136,6 +149,7 @@ export default function Main() {
         .then((res) => {
           console.log(res);
           setStoreInfo({ ...res.data.storeInfo });
+          setIsOpen(res.data.storeInfo.isOpened);
         })
         .catch(() => {
           navigate("/error");
@@ -169,7 +183,6 @@ export default function Main() {
         },
       })
         .then((res) => {
-          console.log(res);
           setReload(true);
           setChanged(false);
         })
@@ -454,8 +467,9 @@ export default function Main() {
                 }}
               >
                 <Button
+                  onClick={handleStoreOpen}
                   variant="contained"
-                  color={storeInfo?.isOpened ? "secondary" : "secondary"}
+                  color={isOpened ? "secondary" : "secondary"}
                   sx={{ height: "70%" }}
                 >
                   <Typography
@@ -465,7 +479,7 @@ export default function Main() {
                       fontWeight: 500,
                     }}
                   >
-                    {storeInfo?.isOpened ? "가게 닫기" : "가게 열기"}
+                    {isOpened ? "가게 닫기" : "가게 열기"}
                   </Typography>
                 </Button>
               </Grid>

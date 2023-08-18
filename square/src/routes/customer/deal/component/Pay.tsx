@@ -183,7 +183,7 @@ export default function Pay() {
               },
             })
               .then((response) => {
-                console.log(response.data);
+                setOpen(true);
               })
               .catch((error) => {
                 console.log(error);
@@ -203,7 +203,7 @@ export default function Pay() {
               },
             })
               .then((response) => {
-                setOpen(true);
+                console.log(response);
               })
               .catch((eror) => {
                 console.log(eror);
