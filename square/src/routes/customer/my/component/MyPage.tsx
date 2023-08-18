@@ -20,7 +20,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 import {
   BiCommentDetail,
   BiMessageSquareDots,
-  BiDollarCircle,
+  // BiDollarCircle,
   BiCog,
   BiChevronRight,
 } from "react-icons/bi";
@@ -268,7 +268,7 @@ function MyPage() {
               <BiChevronRight size="20" />
             </Grid>
           </ListItem>
-          <ListItem button onClick={() => navigate("/myregular")}>
+          {/* <ListItem button onClick={() => navigate("/myregular")}>
             <Grid
               sx={{
                 my: 1,
@@ -293,7 +293,7 @@ function MyPage() {
               </Grid>
               <BiChevronRight size="20" />
             </Grid>
-          </ListItem>
+          </ListItem> */}
           <ListItem button onClick={() => navigate("/myinfo")}>
             <Grid
               sx={{

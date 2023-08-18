@@ -9,6 +9,11 @@ import {
   Button,
   Checkbox,
   Divider,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   TextField,
   Typography,
 } from "@mui/material";
@@ -21,6 +26,7 @@ export default function Pay() {
   const token = sessionStorage.getItem("accessToken");
   const info = sessionStorage.getItem("userInfo");
   const userId = info ? JSON.parse(info).usrId : 0;
+  const [open, setOpen] = useState<boolean>(false);
 
   const [phone, setPhone] = useState("");
   const [request, setRequest] = useState("정성스럽게 준비해주세요.");
@@ -78,6 +84,11 @@ export default function Pay() {
       newPoints = totalPrice;
     }
     setPoints(newPoints);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    navigate("/");
   };
 
   const handleCheckboxChange = (isChecked: boolean) => {
@@ -192,7 +203,7 @@ export default function Pay() {
               },
             })
               .then((response) => {
-                console.log(response.data);
+                setOpen(true);
               })
               .catch((eror) => {
                 console.log(eror);
@@ -419,6 +430,17 @@ export default function Pay() {
           </Button>
         </Grid>
       </Grid>
+      <Dialog open={Boolean(open)} onClose={handleClose}>
+        <DialogTitle>주문에 성공하셨습니다.</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            가게에서 주문을 수락하거나 거절하면, 알림이 도착합니다.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>확인</Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 }

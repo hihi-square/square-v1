@@ -2,10 +2,8 @@
 import React, { useState } from "react";
 import { REST_API } from "redux/redux";
 import axios from "axios";
-import { Grid, Button, Typography, Divider, Box } from "@mui/material";
-// import { Grid, Typography, Divider } from "@mui/material";
+import { Grid, Button, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Footer from "routes/customer/Footer";
 import { HiPencilAlt } from "react-icons/hi";
 
 type Post = {
@@ -41,21 +39,25 @@ type UserInfo = {
 const getZeroNum = (num: number) => (num < 10 ? `0${num}` : num);
 
 const formatTime = (createdAt: number[]) => {
-  const [year, month, day, hour, minute, second] = createdAt;
+  const [year, month, day, hour, minute] = createdAt;
+  const date = new Date();
 
-  const formattedDate = `${year}-${getZeroNum(month)}-${getZeroNum(day)}`;
-  const formattedTime = `${getZeroNum(hour)}:${getZeroNum(minute)}:${
-    second ? getZeroNum(second) : "00"
-  }`;
+  const formattedDate = `${year}.${getZeroNum(month)}.${getZeroNum(day)}`;
+  const formattedTime = `${getZeroNum(hour)}:${getZeroNum(minute)}`;
 
-  return `${formattedDate} ${formattedTime}`;
+  const postDate = `${year}-${month}-${day}`;
+  const nowDate = `${date.getFullYear()}-${
+    date.getMonth() + 1
+  }-${date.getDate()}`;
+
+  if (nowDate > postDate) return formattedDate;
+  else return formattedTime;
 };
 
 function Board() {
   const token = sessionStorage.getItem("accessToken");
-  const [userLocation, setUserLocation] = useState<string>("");
+
   const [posts, setPosts] = useState<Post[]>();
-  // const [userInfo, setUserInfo] = useState<UserInfo>();
   const [bCode, setBCode] = useState<number>(3020011300);
   const [depth, setDepth] = useState<number>(1);
 
@@ -67,8 +69,6 @@ function Board() {
     if (storedUserInfo) {
       const parsedUserInfo: UserInfo = JSON.parse(storedUserInfo);
 
-      // setUserInfo(parsedUserInfo);
-      setUserLocation(parsedUserInfo.fullName);
       setBCode(parsedUserInfo.bcode);
       setDepth(parsedUserInfo.depth);
     }
@@ -97,95 +97,143 @@ function Board() {
   };
 
   return (
-    <Box>
-      <Typography
-        variant="h6"
-        align="center"
-        style={{ marginTop: "15px", marginBottom: "5px" }}
-      >
-        {userLocation}
-      </Typography>
-      <Grid container spacing={2} style={{ marginTop: "20px" }}>
-        {posts &&
-          posts.map((post: Post, index: number) => (
-            <React.Fragment key={post.postId}>
-              {index !== 0 && (
-                <Divider
-                  variant="middle"
-                  sx={{ width: "100%", margin: "10px 0" }}
-                />
-              )}
-              <Grid item xs={12}>
+    <Grid
+      container
+      xs={12}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
+      {posts &&
+        posts.map((post: Post, index: number) => (
+          <React.Fragment key={post.postId}>
+            <Grid
+              sx={{
+                width: "100%",
+              }}
+            >
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "20px",
+                  cursor: "pointer",
+                  height: "70px",
+                  borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+                }}
+                onClick={() => handlePostClick(post.postId)}
+              >
                 <Box
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "10px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handlePostClick(post.postId)}
+                  sx={{ display: "flex", width: "85%", alignItems: "center" }}
                 >
                   {post.thumbnail && post.thumbnail.url && (
-                    <Box style={{ marginRight: "10px" }}>
-                      <img src={post.thumbnail.url} width={50} alt="썸네일" />
+                    // <Box style={{ marginRight: "10px", width: "40px" }}>
+                    //   <img src={post.thumbnail.url} width={40} alt="썸네일" />
+                    // </Box>
+                    <Box
+                      sx={{
+                        marginRight: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        src="/img/store/store1.png"
+                        alt="썸네일"
+                        style={{
+                          width: "65px",
+                          height: "65px",
+                          borderRadius: "4px",
+                        }}
+                      />
                     </Box>
                   )}
-                  <Box style={{ flexGrow: 1 }}>
-                    <Typography variant="h6">{post.title}</Typography>
+                  <Box
+                    sx={{
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      width: "90%",
+                      height: "55px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {post.title}
+                    </Typography>
                     <Typography variant="body2">
-                      {post.userNickname} | {formatTime(post.createdAt)} |
-                      조회수: {post.viewCount}
+                      {post.userNickname} {formatTime(post.createdAt)} 조회{" "}
+                      {post.viewCount}회
                     </Typography>
                   </Box>
+                </Box>
+                {post.commentCount > 0 && (
                   <Box>
                     <Typography
                       variant="body1"
                       style={{
-                        backgroundColor: "#eee",
+                        // backgroundColor: "#eee",
                         borderRadius: "50%",
-                        padding: "5px 10px",
+                        width: "40px",
+                        height: "40px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
                       }}
                     >
                       {post.commentCount}
                     </Typography>
                   </Box>
-                </Box>
-              </Grid>
-            </React.Fragment>
-          ))}
-        <Box
+                )}
+              </Box>
+            </Grid>
+          </React.Fragment>
+        ))}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 100,
+          right: 20,
+          width: "70px",
+          height: "70px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#bbdfc8",
+          borderRadius: 100,
+          boxShadow: "0px 0px 4px 2px rgba(24, 57, 43, 0.4)",
+        }}
+      >
+        <Button
           sx={{
-            position: "fixed",
-            bottom: 100,
-            right: 20,
             width: "70px",
             height: "70px",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#bbdfc8",
             borderRadius: 100,
-            boxShadow: "0px 0px 4px 2px rgba(24, 57, 43, 0.4)",
+            flexDirection: "column",
+          }}
+          onClick={() => {
+            navigate("/board/write");
           }}
         >
-          <Button
-            sx={{
-              width: "70px",
-              height: "70px",
-              display: "flex",
-              borderRadius: 100,
-              flexDirection: "column",
-            }}
-            onClick={() => {
-              navigate("/board/write");
-            }}
-          >
-            <HiPencilAlt fontSize={30} />
-          </Button>
-        </Box>
-      </Grid>
-      <Footer now={3} />
-    </Box>
+          <HiPencilAlt fontSize={30} />
+        </Button>
+      </Box>
+    </Grid>
   );
 }
 

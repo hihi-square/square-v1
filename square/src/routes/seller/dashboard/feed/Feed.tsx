@@ -177,15 +177,18 @@ export default function Feed() {
 
   return (
     <>
-      <Grid xs={12} container sx={{ margin: "10px", justifyContent: "center" }}>
-        <Grid xs={12} sx={{ position: "relative" }}>
+      <Grid xs={12} container sx={{ justifyContent: "center" }}>
+        <Grid
+          xs={12}
+          sx={{ marginTop: 3, marginLeft: 5, position: "relative" }}
+        >
           <Grid xs={12} sx={{ paddingBottom: "10px" }}>
             <Typography
-              variant="h4"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "left", fontWeight: 800 }}
+              variant="h3"
+              sx={{ marginBottom: 1, color: "#225a41", fontWeight: 700 }}
             >
-              가게 관리
+              {" "}
+              피드관리{" "}
             </Typography>
             <Typography
               variant="h6"
@@ -193,7 +196,7 @@ export default function Feed() {
               sx={{
                 color: "primary.main",
                 flexGrow: 1,
-                paddingTop: "2px",
+
                 textAlign: "left",
                 fontWeight: 400,
               }}

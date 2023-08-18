@@ -202,15 +202,18 @@ export default function Main() {
   }, [reload]);
   return (
     <>
-      <Grid xs={12} container sx={{ margin: "10px", justifyContent: "center" }}>
+      <Grid xs={12} container sx={{ justifyContent: "center" }}>
         <Grid xs={12}>
-          <Grid xs={12} sx={{ paddingBottom: "10px" }}>
+          <Grid
+            xs={12}
+            sx={{ marginTop: 3, marginLeft: 5, paddingBottom: "10px" }}
+          >
             <Typography
-              variant="h4"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: "left", fontWeight: 800 }}
+              variant="h3"
+              sx={{ marginBottom: 1, color: "#225a41", fontWeight: 700 }}
             >
-              가게 관리
+              {" "}
+              가게관리{" "}
             </Typography>
             <Typography
               variant="h6"
@@ -218,13 +221,12 @@ export default function Main() {
               sx={{
                 color: "primary.main",
                 flexGrow: 1,
-                paddingTop: "2px",
+
                 textAlign: "left",
                 fontWeight: 400,
               }}
             >
-              가게의 배너/로고를 수정하고, 가게 영업 여부를 결정하거나 검색
-              키워드를 설정합니다.
+              현재 가게의 상태를 관리합니다.
             </Typography>
           </Grid>
         </Grid>

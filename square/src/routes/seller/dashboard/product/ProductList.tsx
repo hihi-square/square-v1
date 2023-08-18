@@ -210,19 +210,27 @@ export default function ProductList() {
   };
 
   return (
-    <Grid xs={12} sx={{ paddingBottom: "10px" }}>
+    <Grid xs={12} sx={{ marginTop: 3, marginLeft: 5, paddingBottom: "10px" }}>
       <Typography
-        variant="h4"
-        component="div"
-        sx={{ flexGrow: 1, textAlign: "left", fontWeight: 800 }}
+        variant="h3"
+        sx={{ marginBottom: 1, color: "#225a41", fontWeight: 700 }}
       >
-        상품 관리
+        {" "}
+        상품관리{" "}
       </Typography>
       <Typography
+        variant="h6"
         component="div"
-        sx={{ flexGrow: 1, textAlign: "left", fontWeight: 500 }}
+        sx={{
+          color: "primary.main",
+          flexGrow: 1,
+
+          textAlign: "left",
+          fontWeight: 400,
+        }}
       >
-        가게에 등록할 상품을 관리합니다.
+        좌측에는 판매대기, 우측에는 판매중인 상품을 드래그앤드랍으로 관리합니다.
+        구성되는 상품이 없는 카테고리는 자동적으로 삭제됩니다.
       </Typography>
       <DragDrop
         realProduct={realProduct}

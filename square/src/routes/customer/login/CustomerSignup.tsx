@@ -218,6 +218,7 @@ export default function CustomerSignUp() {
   };
 
   // 다이얼로그가 꺼질때를 나타냅니다.
+
   const handleClose = () => {
     if (open === "성공") navigate("/login");
     else {

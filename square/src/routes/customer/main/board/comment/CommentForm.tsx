@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { REST_API } from "redux/redux";
+import {
+  Unstable_Grid2 as Grid,
+  Button,
+  TextareaAutosize,
+} from "@mui/material";
 
 interface CommentFormProps {
   parentId: number;
@@ -84,14 +89,36 @@ function CommentForm({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea
+    <Grid
+      sx={{
+        display: "flex",
+        position: "relative",
+        backgroundColor: "gray",
+        width: "100%",
+      }}
+    >
+      <TextareaAutosize
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder={text}
+        minRows={3}
+        style={{
+          width: "100%",
+          resize: "none",
+          padding: "10px 60px 10px 10px",
+        }}
       />
-      <button type="submit">{text}</button>
-    </form>
+      <Button
+        type="submit"
+        onClick={handleSubmit}
+        sx={{
+          position: "absolute",
+          right: 0,
+        }}
+      >
+        {text}
+      </Button>
+    </Grid>
   );
 }
 
