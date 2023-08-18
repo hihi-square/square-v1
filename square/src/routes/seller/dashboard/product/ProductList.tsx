@@ -150,6 +150,9 @@ export default function ProductList() {
     axios({
       url: `${REST_API}store/menuitem/${realProduct.current.id}`,
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then(() => {
         // 상품 데이터를 보내고 응답이 왔다면 다시 렌더링합니다.
