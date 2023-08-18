@@ -29,7 +29,7 @@ function MainPage() {
         </Routes>
       </Grid>
       <Grid xs={12} sx={{ height: "80px" }}></Grid>
-      <Footer now={2} />
+      <Footer now={3} />
     </Grid>
   );
 }

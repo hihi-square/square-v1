@@ -1,77 +1,222 @@
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Typography, Box, Card, CardContent, CardMedia, Grid  } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Unstable_Grid2 as Grid,
+  IconButton,
+} from "@mui/material";
+import { BiArrowBack, BiCartAlt, BiHomeAlt } from "react-icons/bi";
+import { GrFormNext } from "react-icons/gr";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import axios from "axios";
+import { REST_API } from "redux/redux";
+import Footer from "routes/customer/Footer";
+
+type Image = {
+  url: string;
+  thumb: string;
+};
+
+type Review = {
+  reviewId: number;
+  orderId: number;
+  storeId: number;
+  storeName: string;
+  rating: number;
+  content: string;
+  createdAt: [number, number, number, number, number, number]; // [year, month, day, hour, minute, second]
+  images: Image[];
+};
 
 function MyReview() {
-    const navigate = useNavigate();
+  const token = sessionStorage.getItem("accessToken");
+  const navigate = useNavigate();
+  const [reviews, setReviews] = useState<Review[]>();
 
-    const goBack = () => {
-        navigate(-1);
-    };
+  const getReviews = () => {
+    axios({
+      url: `${REST_API}review`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(({ data }) => {
+      setReviews(data.reviews);
+    });
+  };
 
-    const navigateToStorePage = (storeId: string) => {
-        navigate(`/store/${storeId}`);
-    };
+  const handleDeleteReview = (id: number) => {
+    axios({
+      url: `${REST_API}review/${id}`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(() => {
+      getReviews();
+    });
+  };
 
-    const dummyReviews = [
-        {
-            storeId: "1",
-            storeThumbnail: "가게이미지URL1",
-            storeName: "가게1",
-            daysAgo: "5일 전",
-            menu: "메뉴A",
-            reviewImage: "리뷰이미지URL1",
-            reviewContent: "리뷰 내용1"
-        },
-        {
-            storeId: "2",
-            storeThumbnail: "가게이미지URL2",
-            storeName: "가게2",
-            daysAgo: "2일 전",
-            menu: "메뉴B",
-            reviewImage: "리뷰이미지URL2",
-            reviewContent: "리뷰 내용2"
-        },
-        {
-            storeId: "3",
-            storeThumbnail: "가게이미지URL3",
-            storeName: "가게3",
-            daysAgo: "1일 전",
-            menu: "메뉴C",
-            reviewImage: "리뷰이미지URL3",
-            reviewContent: "리뷰 내용3"
-        },
-    ];
+  useEffect(() => {
+    getReviews();
+  }, []);
 
-    return (
-        <>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <ArrowBackIcon onClick={goBack} />
-                <Typography variant="h6" sx={{ margin: "auto" }}>
-                    내 리뷰
+  const goBack = () => {
+    navigate(-1);
+  };
+
+  const navigateToStorePage = (storeId: number) => {
+    navigate(`/store/${storeId}`);
+  };
+  const handleCartClick = () => {
+    navigate("/deal/cart");
+  };
+  const handleHome = () => {
+    navigate("/main");
+  };
+
+  return (
+    <Grid sx={{ padding: 3, width: "100%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        {/* 뒤로가기 */}
+        <IconButton
+          onClick={goBack}
+          sx={{ width: "20%", display: "flex", justifyContent: "left" }}
+        >
+          <BiArrowBack size="24" color="#3d3d3d" />
+        </IconButton>
+        {/* 내 단골가게 */}
+        <Typography
+          variant="h6"
+          sx={{ margin: "auto", width: "60%", textAlign: "center" }}
+        >
+          내 리뷰
+        </Typography>
+        {/* 홈버튼, 장바구니 버튼  */}
+        <Box sx={{ display: "flex", width: "20%" }}>
+          <IconButton onClick={handleHome}>
+            <BiHomeAlt size="24" color="#3d3d3d" />
+          </IconButton>
+          <IconButton onClick={handleCartClick}>
+            <BiCartAlt size="24" color="#3d3d3d" />
+          </IconButton>
+        </Box>
+      </Box>
+
+      <Grid
+        xs={11}
+        sx={{
+          paddingBottom: "100px",
+        }}
+      >
+        {reviews &&
+          reviews.map((review: Review, index: number) => (
+            <Grid
+              key={index}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "20px",
+                boxSizing: "border-box",
+                flexDirection: "column",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                onClick={() => navigateToStorePage(review.storeId)}
+              >
+                <Typography sx={{ marginRight: "5px" }}>
+                  {review.storeName}
                 </Typography>
-            </Box>
-            <Grid container spacing={2}>
-                {dummyReviews.map((review, index) => (
-                    <Grid item xs={12} md={4} key={index}>
-                        <Card>
-                            <CardContent>
-                                <Box sx={{ display: "flex", alignItems: "center", marginBottom: 1 }}>
-                                    <CardMedia component="img" image={review.storeThumbnail} sx={{ width: 50, height: 50, marginRight: 2 }} />
-                                    <Typography variant="h6" onClick={() => navigateToStorePage(review.storeId)} style={{ cursor: "pointer" }}>
-    {review.storeName}
-</Typography>
-                                    <Typography variant="subtitle1" color="textSecondary" sx={{ marginLeft: "auto" }}>{review.daysAgo}</Typography>
-                                </Box>
-                                <Typography variant="subtitle2" color="textSecondary">{review.menu}</Typography>
-                                <CardMedia component="img" image={review.reviewImage} sx={{ width: "100%", height: "auto", marginY: 2 }} />
-                                <Typography>{review.reviewContent}</Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
+                <Typography
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <GrFormNext />
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "10px",
+                    }}
+                  >
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <Box
+                        key={value}
+                        sx={{
+                          fontSize: "13px",
+                          color: "#ffcc33",
+                        }}
+                      >
+                        {review.rating && review.rating >= value ? (
+                          <AiFillStar />
+                        ) : (
+                          <AiOutlineStar />
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
+                  <Typography>
+                    {review.createdAt[0]}.
+                    {review.createdAt[1] < 10
+                      ? `0${review.createdAt[1]}`
+                      : review.createdAt[1]}
+                    .
+                    {review.createdAt[2] < 10
+                      ? `0${review.createdAt[2]}`
+                      : review.createdAt[2]}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    color: "#c2291b",
+                    fontSize: "0.8em",
+                  }}
+                  onClick={() => handleDeleteReview(review.reviewId)}
+                >
+                  삭제
+                </Box>
+              </Box>
+              <Typography
+                sx={{
+                  whiteSpace: "wrap",
+                  wordWrap: "break-word",
+                }}
+              >
+                {review.content}
+              </Typography>
             </Grid>
-        </>
-    );
+          ))}
+      </Grid>
+      <Footer now={5} />
+    </Grid>
+  );
 }
 export default MyReview;

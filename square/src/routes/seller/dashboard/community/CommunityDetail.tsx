@@ -145,7 +145,7 @@ function BoardDetail(props: any) {
         Authorization: `Bearer ${token}`,
       },
     }).then(() => {
-      navigate("/seller/dashboard/community");
+      navigate("/seller/community");
     });
   };
 
@@ -170,7 +170,7 @@ function BoardDetail(props: any) {
             justifyContent: "flex-start",
           }}
           onClick={() => {
-            navigate("/seller/dashboard/community");
+            navigate("/seller/community");
           }}
         >
           <TbArrowBackUp size="30px" style={{ marginLeft: 10 }} />
@@ -187,7 +187,7 @@ function BoardDetail(props: any) {
                 // flexDirection: "column",
               }}
               onClick={() => {
-                navigate(`/seller/dashboard/community/update/${id}`);
+                navigate(`/seller/community/update/${id}`);
               }}
             >
               수정

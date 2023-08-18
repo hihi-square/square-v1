@@ -182,7 +182,7 @@ function BoardDetail(props: any) {
             backgroundColor: "#F3F3F3",
             right: 0,
             width: "150px",
-            marginTop: "70px",
+            // marginTop: "70px",
             borderRadius: "2px 2px 10px 10px",
           }}
         >
@@ -353,8 +353,8 @@ function BoardDetail(props: any) {
             width: "100%",
           }}
         >
-          {post?.images &&
-            post.images.map((photo) => <img src={photo.url}></img>)}
+          {/* {post?.images &&
+            post.images.map((photo) => <img src={photo.url}></img>)} */}
         </Grid>
         {post && post.comments.length > 0 && (
           <Grid xs={12}>
