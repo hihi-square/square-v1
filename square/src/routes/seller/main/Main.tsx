@@ -441,9 +441,7 @@ export default function Main() {
                   }}
                 >
                   현재 가게는
-                  {storeInfo?.isOpened
-                    ? " 영업 중입니다."
-                    : " 영업이 종료되었습니다."}
+                  {isOpened ? " 영업 중입니다." : " 영업이 종료되었습니다."}
                 </Typography>
                 <Typography
                   variant="h6"
@@ -454,7 +452,7 @@ export default function Main() {
                     paddingBottom: "20px",
                   }}
                 >
-                  {storeInfo?.isOpened
+                  {isOpened
                     ? "오늘의 판매를 종료하려면 가게를 닫아주세요."
                     : "오늘의 판매를 시작하려면 가게를 열어주세요."}
                 </Typography>
