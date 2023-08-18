@@ -328,6 +328,9 @@ export default function ProductList({
               axios({
                 url: `${REST_API}store/menucategory/${del.id}`,
                 method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
               })
                 .then(() => {
                   setReload(true);
