@@ -76,6 +76,7 @@ public class SecurityConfig {
 			//1. 회원가입 모두 허용
 			.antMatchers("/user/**", "/api/v1/user")
 			.permitAll()
+			.antMatchers(HttpMethod.DELETE, "/store/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/store")
 			.permitAll()
 			.antMatchers(HttpMethod.GET, "/review/**").permitAll()
