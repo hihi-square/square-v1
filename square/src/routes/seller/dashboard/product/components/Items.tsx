@@ -86,12 +86,11 @@ export default function ReadyItems({
               justifyContent: "space-between",
             }}
           >
-            <Typography component="h4" variant="h4" color="text.primary">
+            <Typography component="h5" variant="h5" color="text.primary">
               {product.name}
-              {product.id}
             </Typography>
             <Typography component="h5" variant="h5" color="red">
-              {product.price}
+              {product.price}원
             </Typography>
           </Box>
           <Box

@@ -415,7 +415,7 @@ export default function ProductList({
                   {...provided.droppableProps}
                   sx={{
                     width: "100%",
-                    maxWidth: 500,
+
                     maxHeight: 600,
                     bgcolor: "white",
                     overflow: "auto",
