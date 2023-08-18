@@ -364,7 +364,7 @@ export default function ProductList({
     <DragDropContext onDragEnd={onDragEnd}>
       <Grid xs={12} container>
         <Grid xs={6} sx={{ height: "80%", paddingBottom: "10px" }}>
-          <Paper elevation={1} className="full-compo" sx={{ margin: "10px" }}>
+          <Paper elevation={1} sx={{ height: "500px", margin: "10px" }}>
             <Droppable droppableId="a">
               {(provided) => (
                 <List
@@ -372,8 +372,8 @@ export default function ProductList({
                   {...provided.droppableProps}
                   sx={{
                     width: "100%",
-                    maxWidth: 500,
-                    maxHeight: 600,
+
+                    maxHeight: 500,
                     bgcolor: "white",
                     overflow: "auto",
                   }}
@@ -403,7 +403,10 @@ export default function ProductList({
           </Paper>
         </Grid>
         <Grid xs={6} sx={{ height: "80%", paddingBottom: "10px" }}>
-          <Paper elevation={1} className="full-compo" sx={{ margin: "10px" }}>
+          <Paper
+            elevation={1}
+            sx={{ height: "500px", width: "100%", margin: "10px" }}
+          >
             <Droppable droppableId="b">
               {(provided) => (
                 <List
