@@ -102,7 +102,6 @@ public class CustomerService {
 		customerRepository.save(customer);
 		UserRankType type = customer.getRank();
 
-
 		if(type.equals(UserRankType.UR04)){
 			CustomerRankInfoResponseDto response = CustomerRankInfoResponseDto.builder()
 					.cusId(customer.getUsrId())
