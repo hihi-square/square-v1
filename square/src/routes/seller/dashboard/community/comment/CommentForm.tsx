@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import React, { useState, useRef, useEffect  } from "react";
+=======
 import React, { useState, useRef, useEffect } from "react";
+>>>>>>> 9e55e332dc35c275ce79bdd1c79415d9d3df6259
 import axios from "axios";
 import { REST_API } from "redux/redux";
 import { Grid } from "@mui/material";
@@ -100,6 +104,48 @@ function CommentForm({
   };
 
   return (
+<<<<<<< HEAD
+    <form onSubmit={handleSubmit} style={{ display: "flex", alignItems: "center", marginRight: "20px"}}>
+      <Grid container alignItems="center" spacing={2}>
+      <Grid item xs={11}>
+      <textarea
+        ref={textareaRef}
+        style={{width: "100%", 
+        height: "auto", 
+        fontSize: "15px", 
+        border: "0",
+        borderRadius: "15px",
+        outline: "0",
+        paddingLeft: "10px",
+        backgroundColor: "rgb(233, 233, 233)",
+        resize: "none",
+        lineHeight: "25px"
+        }}
+        value={comment}
+        onChange={(e) => {
+          setComment(e.target.value);
+          adjustTextareaHeight(); // 텍스트 변경 시 텍스트 크기 조정
+        }}
+        placeholder=""
+      />
+      </Grid>
+      <Grid item xs={1}>
+      <button type="submit" style={{ marginLeft: "10px",
+      // background: "#8ec7a7",
+      backgroundColor: "#dcefe2",
+      width: "80px",
+      height: "50px",
+      fontSize: 15,
+      fontWeight: "800",
+      color: "#1d4835",
+      cursor:"pointer",
+      marginTop: 1,
+      marginRight: 2,
+      border: 0,
+      borderRadius: "15px",
+    }} >{text}</button>
+      </Grid>
+=======
     <form
       onSubmit={handleSubmit}
       style={{ display: "flex", alignItems: "center", marginRight: "20px" }}
@@ -150,6 +196,7 @@ function CommentForm({
             {text}
           </button>
         </Grid>
+>>>>>>> 9e55e332dc35c275ce79bdd1c79415d9d3df6259
       </Grid>
     </form>
   );

@@ -261,7 +261,11 @@ function Comment({
           />
           <Button
             onClick={() => handleRecommentForm(false)}
+<<<<<<< HEAD
+            sx={{zIndex: 5, bottom: 0, right: 0 }}
+=======
             sx={{ zIndex: 5, bottom: 0, right: 0 }}
+>>>>>>> 9e55e332dc35c275ce79bdd1c79415d9d3df6259
           >
             작성 취소
           </Button>

@@ -105,6 +105,32 @@ export default function Community() {
   };
 
   return (
+    // <Grid container xs={12} sx={{marginTop: 6, marginLeft: 5, marginRight: 10}} flexDirection="column">
+    //    <Typography variant="h3" sx={{marginBottom: 2, color: "#225a41", fontWeight: 700}}> 커뮤니티 </Typography>
+    //   <Grid sx={{marginTop: 1}}>
+    //     <Button sx={{fontSize: 18, color:boardId === 1 ? '#8ec7a7' : '#225a41'}} onClick={() => handleBoardId(1)}>자유 게시판</Button>
+    //     <Button sx={{fontSize: 18, color:boardId === 3 ? '#8ec7a7' : '#225a41'}} onClick={() => handleBoardId(3)}>사장님 게시판</Button>
+    //     <Button sx={{fontSize: 18, color:boardId === 4 ? '#8ec7a7' : '#225a41'}} onClick={() => handleBoardId(4)}>내 게시물</Button>
+    //     <Box sx={{ borderBottom: '3px solid #e0e0e0' }} />
+    //     <div style={{ position: 'relative' }}>
+    //     <Grid container justifyContent="flex-end" style={{ position: 'fixed', bottom: 30, left: -70, width: '100%' }}><Button
+    //         sx={{
+    //           background: "#8ec7a7",
+    //           width: "90px",
+    //           height: "60px",
+    //           fontSize: 20,
+    //           marginTop: 1,
+    //           marginRight: 2,
+    //           '&:hover': {
+    //             background: "#bbdfc8", // 호버 시 배경색 변경
+    //           },
+    //         }}
+    //         onClick={() => {
+    //           navigate("/seller/dashboard/community/write");
+    //         }}
+    //       >
+    //         글 작성
+    //       </Button></Grid></div>
     <Grid
       container
       xs={12}
@@ -175,6 +201,10 @@ export default function Community() {
                   sx={{ width: "100%", margin: "10px 0" }}
                 />
               )}
+
+              {/* // <Grid xs={12} sx={{'&:hover': { */}
+              {/* //   background: "#dcefe2", // 호버 시 배경색 변경
+              // },}}> */}
               <Grid
                 xs={12}
                 sx={{
@@ -198,6 +228,8 @@ export default function Community() {
                     </Box>
                   )}
                   <Box style={{ flexGrow: 1 }}>
+                    {/* <Typography variant="h5" sx={{padding: "10px 0", fontWeight: "600"}}>{post.title}</Typography>
+                    <Typography variant="body2" sx={{color: "gray"}}> */}
                     <Typography
                       variant="h5"
                       sx={{ padding: "10px 0", fontWeight: "600" }}
