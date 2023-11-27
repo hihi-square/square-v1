@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'cd square'
+                sh 'gradle build'
+            }
+        }
+        stage('docker build'){
+            steps{
+                script{
+                    docker.build('spring-server')
+                }
+            }
+        }
+
+        stage('docker run'){
+            steps{
+                   sh 'docker run -d -p 8811:8811 spring-server:latest'
+            }
+        }
+
+    }
+}
