@@ -1,0 +1,226 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: lightgray;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: black;
+  padding-right: 10px;
+}
+.App-header-location {
+  font-family: "Pretendard-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background-color: lightgray;
+  color: black;
+  font-size: calc(10px + 2vmin);
+  border: none;
+  padding: 0.5em;
+  font-weight: bold;
+  margin-right: auto;
+}
+.App-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: lightgray     ;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+.App-header-button {
+  font-family: "Pretendard-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background-color: lightgray;
+  border: none;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 10px;
+  cursor: pointer;
+  padding: 10px;
+  font-weight: bold;
+}
+.App-footer-button {
+  font-family: "Pretendard-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background-color: lightgray;
+  border: none;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 10px;
+  cursor: pointer;
+  padding: 10px;
+  font-weight: bold;
+}
+.swipe-handler {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: grey;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* .App-header-search{
+  font-family: "Pretendard-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  flex-grow: 1;
+  background-color: grey;
+  border-radius: 10px;
+  padding: 0.5em;
+  margin-left: 10px;
+}
+<input className="App-header-search" type="text" /> */
+
+/* App.css */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.category-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2개의 열로 구성 */
+  gap: 10px; /* 버튼 사이의 간격 */
+  width: 100%; /* 컨테이너 전체 너비를 사용 */
+  margin-top: 20px; /* 컨테이너 위쪽 여백 설정 */
+}
+
+.category-button {
+  width: 100%; /* 버튼이 열 전체 너비를 차지하도록 설정 */
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #000;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px; /* 버튼 내용의 글자 크기 조절 */
+}
+.list-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.store-row {
+  display: flex;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.store-thumbnail {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.store-thumbnail .MuiAvatar-root {
+  width: 80px;
+  height: 80px;
+}
+
+.store-details {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.store-name,
+.store-menu,
+.store-address {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.store-name {
+  font-weight: bold;
+}
+.discountNow{
+  margin-left: 20px;
+}
+
+.discountNow-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.discount-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.discount-item img {
+  background-color: lightgray;
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+}
+
+.discount-item h4{
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 150px;
+}
+
+.discount-item div {
+  background-color: lightgray;
+  font-family: "Pretendard-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.table-text {
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
